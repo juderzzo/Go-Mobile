@@ -16,7 +16,7 @@ class SignInPageModel extends BaseModel {
   Future signInWithEmail({@required email, @required password}) async {
     setBusy(true);
 
-    var result = await _authService.signUpWithEmail(
+    var result = await _authService.signInWithEmail(
       email: email,
       password: password,
     );
@@ -25,16 +25,16 @@ class SignInPageModel extends BaseModel {
 
     if (result is bool) {
       if (result) {
-        _navigationService.navigateTo(HomePageRoute);
+        if (result) _navigationService.replaceWith(HomePageRoute);
       } else {
         await _dialogService.showDialog(
-          title: "Sign Up Error",
-          description: "There Was an Issue Signing Up. Please Try Again",
+          title: "Login Error",
+          description: "There Was an Issue Logging In. Please Try Again",
         );
       }
     } else {
       await _dialogService.showDialog(
-        title: "Sign Up Error",
+        title: "Login Error",
         description: result,
       );
     }

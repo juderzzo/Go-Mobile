@@ -88,7 +88,7 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<SignUpPageModel>.withConsumer(
-      viewModel: SignUpPageModel(),
+      viewModelBuilder: () => SignUpPageModel(),
       builder: (context, model, child) => Scaffold(
         body: GestureDetector(
           onTap: FocusScope.of(context).unfocus,
@@ -125,13 +125,18 @@ class SignUpPage extends StatelessWidget {
                         InputField(
                           placeholder: 'Confirm Password',
                           password: true,
-                          controller: passwordController,
+                          controller: confirmPasswordController,
                         ),
                         verticalSpaceMedium,
                         BusyButton(
                           title: 'Register',
+                          busy: model.busy,
                           onPressed: () {
-                            // TODO: Perform firebase login here
+                            model.signUpWithEmail(
+                              email: emailController.text,
+                              password: passwordController.text,
+                              confirmPassword: confirmPasswordController.text,
+                            );
                           },
                         ),
                         verticalSpaceMedium,
