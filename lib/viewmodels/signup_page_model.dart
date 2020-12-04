@@ -25,7 +25,7 @@ class SignUpPageModel extends BaseModel {
 
     if (result is bool) {
       if (result) {
-        _navigationService.navigateTo(HomePageRoute);
+        navigateToHomePage();
       } else {
         await _dialogService.showDialog(
           title: "Sign Up Error",
@@ -38,5 +38,14 @@ class SignUpPageModel extends BaseModel {
         description: result,
       );
     }
+  }
+
+  ///NAVIGATION
+  replaceWithSignInPage() {
+    _navigationService.replaceWith(SignInPageRoute);
+  }
+
+  navigateToHomePage() {
+    _navigationService.navigateTo(HomePageRoute);
   }
 }

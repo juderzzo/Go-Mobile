@@ -1,59 +1,174 @@
+import 'dart:io';
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
+import 'package:go/ui/widgets/auth_buttons/apple_auth_button.dart';
+import 'package:go/ui/widgets/auth_buttons/fb_auth_button.dart';
+import 'package:go/ui/widgets/auth_buttons/google_auth_button.dart';
 import 'package:go/ui/widgets/busy_button.dart';
 import 'package:go/ui/widgets/input_field.dart';
+import 'package:go/utils/url_handler.dart';
 import 'package:go/viewmodels/signup_page_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
 class SignUpPage extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  Widget orTextLabel() {
+    return Text(
+      'or sign up with',
+      style: TextStyle(
+        color: Colors.black54,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
+    );
+  }
+
+  Widget signInWithAccountText(BuildContext context, SignUpPageModel model) {
+    return Container(
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: "Already Have an Account? ",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            TextSpan(
+              text: 'Sign In Here',
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.w500,
+              ),
+              recognizer: TapGestureRecognizer()..onTap = () => model.replaceWithSignInPage(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget serviceAgreement(BuildContext context) {
+    return Container(
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: 'By Registering, You agree to the ',
+              style: TextStyle(color: Colors.black),
+            ),
+            TextSpan(
+              text: 'Terms and Conditions ',
+              style: TextStyle(color: Colors.blue),
+              recognizer: TapGestureRecognizer()..onTap = () => UrlHandler().launchInWebViewOrVC(context, ""),
+            ),
+            TextSpan(
+              text: 'and ',
+              style: TextStyle(color: Colors.black),
+            ),
+            TextSpan(
+              text: 'Privacy Policy. ',
+              style: TextStyle(color: Colors.blue),
+              recognizer: TapGestureRecognizer()..onTap = () => UrlHandler().launchInWebViewOrVC(context, ""),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<SignUpPageModel>.withConsumer(
       viewModel: SignUpPageModel(),
       builder: (context, model, child) => Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Sign Up',
-                style: TextStyle(
-                  fontSize: 38,
-                ),
-              ),
-              verticalSpaceLarge,
-              // TODO: Add additional user data here to save (episode 2)
-              InputField(
-                placeholder: 'Email',
-                controller: emailController,
-              ),
-              verticalSpaceSmall,
-              InputField(
-                placeholder: 'Password',
-                password: true,
-                controller: passwordController,
-                additionalNote: 'Password has to be a minimum of 6 characters.',
-              ),
-              verticalSpaceMedium,
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
+        body: GestureDetector(
+          onTap: FocusScope.of(context).unfocus,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+            child: Center(
+              child: ListView(
+                shrinkWrap: true,
                 children: [
-                  BusyButton(
-                    title: 'Sign Up',
-                    onPressed: () {
-                      // TODO: Perform firebase login here
-                    },
-                  )
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 120,
+                          child: Image.asset('assets/images/go_logo.png'),
+                        ),
+                        verticalSpaceLarge,
+                        InputField(
+                          placeholder: 'Email',
+                          controller: emailController,
+                        ),
+                        verticalSpaceSmall,
+                        InputField(
+                          placeholder: 'Password',
+                          password: true,
+                          controller: passwordController,
+                        ),
+                        verticalSpaceSmall,
+                        InputField(
+                          placeholder: 'Confirm Password',
+                          password: true,
+                          controller: passwordController,
+                        ),
+                        verticalSpaceMedium,
+                        BusyButton(
+                          title: 'Register',
+                          onPressed: () {
+                            // TODO: Perform firebase login here
+                          },
+                        ),
+                        verticalSpaceMedium,
+                        orTextLabel(),
+                        verticalSpaceSmall,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FacebookAuthButton(
+                              action: null,
+                            ),
+                            Platform.isIOS
+                                ? AppleAuthButton(
+                                    action: null,
+                                  )
+                                : Container(),
+                            GoogleAuthButton(
+                              action: null,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  verticalSpaceMedium,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: signInWithAccountText(context, model),
+                  ),
+                  verticalSpaceLarge,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: serviceAgreement(context),
+                  ),
                 ],
-              )
-            ],
+              ),
+            ),
           ),
         ),
       ),
