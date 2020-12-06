@@ -22,6 +22,7 @@ class AuthService {
   Future signUpWithEmail({@required String email, @required String password}) async {
     try {
       UserCredential credential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      credential.user.sendEmailVerification();
       return credential.user != null;
     } catch (e) {
       return e.message;
@@ -31,7 +32,13 @@ class AuthService {
   Future signInWithEmail({@required String email, @required String password}) async {
     try {
       UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-      return credential.user != null;
+      if (credential.user != null) {
+        if (credential.user.emailVerified) {
+          return true;
+        } else {
+          return "Email Confirmation Required";
+        }
+      }
     } catch (e) {
       return e.message;
     }

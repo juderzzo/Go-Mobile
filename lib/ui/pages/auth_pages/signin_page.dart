@@ -93,8 +93,12 @@ class SignInPage extends StatelessWidget {
                         verticalSpaceMedium,
                         BusyButton(
                           title: 'Login',
+                          busy: model.busy,
                           onPressed: () {
-                            // TODO: Perform firebase login here
+                            model.signInWithEmail(
+                              email: emailController.text,
+                              password: passwordController.text,
+                            );
                           },
                         ),
                         verticalSpaceMedium,
