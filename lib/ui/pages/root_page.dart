@@ -1,47 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:go/services/auth/auth_service.dart';
-import 'package:go/ui/pages/auth_pages/signin_page.dart';
-import 'package:go/ui/pages/home_page.dart';
+import 'package:go/page_models/root_page_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
+import 'package:provider_architecture/_viewmodel_provider.dart';
 
-enum AuthStatus {
-  unknown,
-  notSignedIn,
-  signedIn,
-}
-
-class RootPage extends StatefulWidget {
-  @override
-  _RootPageState createState() => _RootPageState();
-}
-
-class _RootPageState extends State<RootPage> {
-  AuthStatus authStatus = AuthStatus.unknown;
-
-  @override
-  void initState() {
-    super.initState();
-    AuthService().getCurrentUserID().then((res) {
-      if (res == null) {
-        authStatus = AuthStatus.notSignedIn;
-      } else {
-        authStatus = AuthStatus.signedIn;
-      }
-      setState(() {});
-    });
-  }
-
+class RootPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    switch (authStatus) {
-      case AuthStatus.unknown:
-        return Center(
-          child: CustomCircleProgressIndicator(),
-        );
-      case AuthStatus.notSignedIn:
-        return SignInPage(); //SignUpPage();
-      case AuthStatus.signedIn:
-        return HomePage(); //HomePage();
-    }
+    return ViewModelProvider<RootPageModel>.withConsumer(
+      viewModelBuilder: () => RootPageModel(),
+      onModelReady: (model) => model.checkAuthState(),
+      builder: (context, model, child) => Scaffold(
+        backgroundColor: Colors.white,
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 120,
+                  child: Image.asset('assets/images/go_logo.png'),
+                ),
+                SizedBox(height: 32.0),
+                CustomCircleProgressIndicator(
+                  color: Colors.black54,
+                  size: 30,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

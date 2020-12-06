@@ -6,7 +6,7 @@ import 'package:go/services/dialog_service.dart';
 import 'package:go/services/navigation_service.dart';
 import 'package:go/utils/string_validator.dart';
 
-import 'base_model.dart';
+import '../base_model.dart';
 
 class SignUpPageModel extends BaseModel {
   AuthService _authService = locator<AuthService>();

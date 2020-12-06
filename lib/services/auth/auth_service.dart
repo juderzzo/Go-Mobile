@@ -7,6 +7,11 @@ class AuthService {
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   //AUTH STATE
+  Future<bool> isLoggedIn() async {
+    User user = firebaseAuth.currentUser;
+    return user != null;
+  }
+
   Future<String> getCurrentUserID() async {
     User user = firebaseAuth.currentUser;
     return user != null ? user.uid : null;

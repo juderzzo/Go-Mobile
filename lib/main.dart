@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go/services/dialog_service.dart';
 import 'package:go/services/navigation_service.dart';
-import 'package:go/ui/pages/auth_pages/signin_page.dart';
+import 'package:go/ui/pages/root_page.dart';
 
 import 'locator.dart';
 import 'managers/dialog_manager.dart';
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Open Sans',
             ),
       ),
-      home: SignInPage(),
+      home: RootPage(),
       onGenerateRoute: generateRoute,
     );
   }
