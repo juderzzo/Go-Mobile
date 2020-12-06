@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go/page_models/auth_page_models/signin_page_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/auth_buttons/apple_auth_button.dart';
 import 'package:go/ui/widgets/auth_buttons/fb_auth_button.dart';
 import 'package:go/ui/widgets/auth_buttons/google_auth_button.dart';
 import 'package:go/ui/widgets/busy_button.dart';
 import 'package:go/ui/widgets/input_field.dart';
-import 'package:go/viewmodels/signin_page_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
 class SignInPage extends StatelessWidget {

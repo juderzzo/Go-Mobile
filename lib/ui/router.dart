@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go/routes/route_names.dart';
 import 'package:go/ui/pages/auth_pages/signin_page.dart';
 import 'package:go/ui/pages/auth_pages/signup_page.dart';
-import 'package:go/ui/pages/home_page.dart';
+import 'package:go/ui/pages/home_pages/home_page.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
