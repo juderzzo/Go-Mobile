@@ -7,5 +7,5 @@ class CustomColors {
   static const textFieldGray = Color.fromARGB(255, 241, 241, 241);
 
   //GO APP COLOR SWATCH
-
+  static const goGreen = Color.fromRGBO(0, 166, 140, 1.0);
 }

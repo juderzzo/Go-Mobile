@@ -6,22 +6,22 @@ import 'package:go/ui/pages/root_page.dart';
 
 import 'locator.dart';
 import 'managers/dialog_manager.dart';
-import 'ui/router.dart';
+import 'routes/router.dart';
 
 void main() async {
   // Register all the models and services before the app starts
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(GoApp());
 }
 
-class MyApp extends StatelessWidget {
+class GoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Compound',
+      title: 'Go App',
       builder: (context, child) => Navigator(
         key: locator<DialogService>().dialogNavigationKey,
         onGenerateRoute: (settings) => MaterialPageRoute(builder: (context) => DialogManager(child: child)),
@@ -35,6 +35,9 @@ class MyApp extends StatelessWidget {
             ),
       ),
       home: RootPage(),
+      routes: <String, WidgetBuilder>{
+        '/root': (BuildContext context) => RootPage(),
+      },
       onGenerateRoute: generateRoute,
     );
   }

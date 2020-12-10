@@ -44,9 +44,24 @@ dependencies:
 
   #PHONE UTILITIES
   url_launcher: ^5.4.1
+  share: ^0.6.1+1
+  permission_handler: ^5.0.1+1
+
+  #IMAGES
+  cached_network_image: ^2.0.0-rc
+  image_cropper: ^1.1.0
+  image_picker: ^0.6.7+11
+  flutter_image_compress: ^0.7.0
+
+  #UI
+  font_awesome_flutter: 8.5.0
+  shimmer: ^1.0.1
+  adaptive_dialog: ^0.9.3
 
   #OTHER
-  font_awesome_flutter: 8.5.0
+  algolia: ^0.1.7
+  flutter_typeahead: ^1.8.8
+
 
 
 dev_dependencies:
