@@ -1,12 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:go/services/dialog_service.dart';
-import 'package:go/services/navigation_service.dart';
-import 'package:go/ui/pages/root_page.dart';
+import 'package:go/app/router.gr.dart';
+import 'package:stacked_services/stacked_services.dart';
 
-import 'locator.dart';
-import 'managers/dialog_manager.dart';
-import 'routes/router.dart';
+import 'app/locator.dart';
 
 void main() async {
   // Register all the models and services before the app starts
@@ -22,11 +19,6 @@ class GoApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Go App',
-      builder: (context, child) => Navigator(
-        key: locator<DialogService>().dialogNavigationKey,
-        onGenerateRoute: (settings) => MaterialPageRoute(builder: (context) => DialogManager(child: child)),
-      ),
-      navigatorKey: locator<NavigationService>().navigationKey,
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 9, 202, 172),
         backgroundColor: Color.fromARGB(255, 26, 27, 30),
@@ -34,11 +26,9 @@ class GoApp extends StatelessWidget {
               fontFamily: 'Open Sans',
             ),
       ),
-      home: RootPage(),
-      routes: <String, WidgetBuilder>{
-        '/root': (BuildContext context) => RootPage(),
-      },
-      onGenerateRoute: generateRoute,
+      initialRoute: Routes.RootViewRoute,
+      onGenerateRoute: GoRouter().onGenerateRoute,
+      navigatorKey: locator<NavigationService>().navigatorKey,
     );
   }
 }
