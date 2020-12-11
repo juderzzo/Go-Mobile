@@ -9,7 +9,8 @@ import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../services/auth/auth_service.dart';
-import '../services/third_party_service_module.dart';
+import '../services/services_module.dart';
+import '../services/firestore/user_data_service.dart';
 
 /// adds generated dependencies
 /// to the provided [GetIt] instance
@@ -20,19 +21,21 @@ GetIt $initGetIt(
   EnvironmentFilter environmentFilter,
 }) {
   final gh = GetItHelper(get, environment, environmentFilter);
-  final thirdPartyServiceModule = _$ThirdPartyServiceModule();
-  gh.lazySingleton<AuthService>(() => thirdPartyServiceModule.authService);
-  gh.lazySingleton<DialogService>(() => thirdPartyServiceModule.dialogService);
-  gh.lazySingleton<NavigationService>(
-      () => thirdPartyServiceModule.navigationService);
+  final servicesModule = _$ServicesModule();
+  gh.lazySingleton<AuthService>(() => servicesModule.authService);
+  gh.lazySingleton<DialogService>(() => servicesModule.dialogService);
+  gh.lazySingleton<NavigationService>(() => servicesModule.navigationService);
+  gh.lazySingleton<UserDataService>(() => servicesModule.userDataService);
   return get;
 }
 
-class _$ThirdPartyServiceModule extends ThirdPartyServiceModule {
+class _$ServicesModule extends ServicesModule {
   @override
   AuthService get authService => AuthService();
   @override
   DialogService get dialogService => DialogService();
   @override
   NavigationService get navigationService => NavigationService();
+  @override
+  UserDataService get userDataService => UserDataService();
 }
