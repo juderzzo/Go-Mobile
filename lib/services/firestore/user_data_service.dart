@@ -38,4 +38,11 @@ class UserDataService {
       return e.message;
     });
   }
+
+  ///TESTING
+  Future generateDummyUserFromID(String id) async {
+    GoUser user = GoUser().generateDummyUserFromID(id);
+    var res = await createGoUser(user);
+    return res;
+  }
 }

@@ -96,7 +96,7 @@ class OnboardingView extends StatelessWidget {
         body: IntroductionScreen(
           key: introKey,
           pages: pages,
-          onDone: () => print('done'),
+          onDone: () => model.replaceWithHomeNavView(),
           //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
           showSkipButton: true,
           skipFlex: 0,
