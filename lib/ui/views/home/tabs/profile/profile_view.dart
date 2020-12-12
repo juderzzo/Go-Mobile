@@ -28,39 +28,54 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  Widget userDetails() {
-    return Container(
-      child: Column(
-        children: [
-          SizedBox(height: 16),
-          UserProfilePic(
-            userPicUrl: "",
-            size: 60,
-          ),
-          SizedBox(height: 8),
-          Text(
-            "@username",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 18.0,
+  Widget userDetails(ProfileViewModel model) {
+    return model.isBusy
+        ? Container(
+            child: Column(
+              children: [
+                SizedBox(height: 16),
+                UserProfilePic(
+                  userPicUrl: "",
+                  size: 60,
+                  isBusy: true,
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 8),
-          FollowStatsRow(
-            followersLength: 200,
-            followingLength: 1039,
-            viewFollowersAction: null,
-            viewFollowingAction: null,
-          ),
-        ],
-      ),
-    );
+          )
+        : Container(
+            child: Column(
+              children: [
+                SizedBox(height: 16),
+                UserProfilePic(
+                  userPicUrl: model.currentUser.profilePicURL,
+                  size: 60,
+                  isBusy: false,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "@${model.currentUser.username}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),
+                ),
+                SizedBox(height: 8),
+                FollowStatsRow(
+                  followersLength: model.currentUser.followers.length,
+                  followingLength: model.currentUser.following.length,
+                  viewFollowersAction: null,
+                  viewFollowingAction: null,
+                ),
+              ],
+            ),
+          );
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProfileViewModel>.reactive(
+      onModelReady: (model) => model.initialize(),
       viewModelBuilder: () => ProfileViewModel(),
       builder: (context, model, child) => Container(
         height: MediaQuery.of(context).size.height,
@@ -71,7 +86,7 @@ class ProfileView extends StatelessWidget {
             child: Column(
               children: [
                 head(model),
-                userDetails(),
+                userDetails(model),
               ],
             ),
           ),

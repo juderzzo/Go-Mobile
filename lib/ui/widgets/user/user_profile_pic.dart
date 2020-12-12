@@ -7,47 +7,69 @@ import 'package:shimmer/shimmer.dart';
 class UserProfilePic extends StatelessWidget {
   final String userPicUrl;
   final double size;
+  final bool isBusy;
 
   UserProfilePic({
     this.userPicUrl,
     this.size,
+    this.isBusy,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: size,
-      width: size,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(size / 2),
-        child: CachedNetworkImage(
-          fit: BoxFit.cover,
-          imageUrl: userPicUrl,
-          filterQuality: FilterQuality.medium,
-          placeholder: (context, url) => Container(
+    return isBusy
+        ? Container(
             height: size,
             width: size,
-            child: Shimmer.fromColors(
-                baseColor: CustomColors.iosOffWhite,
-                highlightColor: Colors.white70,
-                child: Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(size / 2),
+              child: Container(
+                height: size,
+                width: size,
+                child: Shimmer.fromColors(
+                    baseColor: CustomColors.iosOffWhite,
+                    highlightColor: Colors.white70,
+                    child: Container(
+                      height: size,
+                      width: size,
+                      color: Colors.white,
+                    )),
+              ),
+            ),
+          )
+        : Container(
+            height: size,
+            width: size,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(size / 2),
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: userPicUrl,
+                filterQuality: FilterQuality.medium,
+                placeholder: (context, url) => Container(
                   height: size,
                   width: size,
-                  color: Colors.white,
-                )),
-          ),
-          errorWidget: (
-            context,
-            url,
-            error,
-          ) =>
-              Icon(
-            FontAwesomeIcons.user,
-            color: Colors.black12,
-          ),
-          useOldImageOnUrlChange: false,
-        ),
-      ),
-    );
+                  child: Shimmer.fromColors(
+                      baseColor: CustomColors.iosOffWhite,
+                      highlightColor: Colors.white70,
+                      child: Container(
+                        height: size,
+                        width: size,
+                        color: Colors.white,
+                      )),
+                ),
+                errorWidget: (
+                  context,
+                  url,
+                  error,
+                ) =>
+                    Icon(
+                  FontAwesomeIcons.user,
+                  color: Colors.black12,
+                ),
+                useOldImageOnUrlChange: false,
+              ),
+            ),
+          );
   }
 }

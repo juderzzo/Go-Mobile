@@ -73,4 +73,29 @@ class GoUser {
         'appOpenTimeInMilliseconds': this.appOpenTimeInMilliseconds,
         'notifToken': this.notifToken,
       };
+
+  GoUser generateDummyUserFromID(String id) {
+    GoUser user = GoUser(
+      id: id,
+      fbID: null,
+      googleID: null,
+      email: null,
+      phoneNo: "+1 701-200-1000",
+      username: id.substring(0, 10),
+      profilePicURL: "https://picsum.photos/200",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+          "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+          "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+          "nisi ut aliquip ex ea commodo consequat.",
+      personalSite: "https://google.com",
+      interests: ['tag1', 'tag2', 'tag3'],
+      inspirations: [],
+      followers: [],
+      following: [],
+      blockedUsers: [],
+      appOpenTimeInMilliseconds: null,
+      notifToken: null,
+    );
+    return user;
+  }
 }
