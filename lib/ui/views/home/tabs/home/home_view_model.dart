@@ -1,4 +1,5 @@
 import 'package:go/app/locator.dart';
+import 'package:go/app/router.gr.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -13,7 +14,7 @@ class HomeViewModel extends BaseViewModel {
 //   _navigationService.replaceWith(PageRouteName);
 // }
 //
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
+  navigateToCreateCauseView() {
+    _navigationService.navigateTo(Routes.CreateCauseViewRoute);
+  }
 }

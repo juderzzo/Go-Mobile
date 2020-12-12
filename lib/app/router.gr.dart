@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 
 import '../ui/views/auth/sign_in/sign_in_view.dart';
 import '../ui/views/auth/sign_up/sign_up_view.dart';
+import '../ui/views/causes/cause/cause_view.dart';
+import '../ui/views/causes/create_cause/create_cause_view.dart';
 import '../ui/views/home/home_nav_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
@@ -22,6 +24,8 @@ class Routes {
   static const String SignInViewRoute = '/sign-in-view';
   static const String OnboardingViewRoute = '/onboarding-view';
   static const String HomeNavViewRoute = '/home-nav-view';
+  static const String CauseViewRoute = '/cause-view';
+  static const String CreateCauseViewRoute = '/create-cause-view';
   static const String SettingsViewRoute = '/settings-view';
   static const all = <String>{
     RootViewRoute,
@@ -29,6 +33,8 @@ class Routes {
     SignInViewRoute,
     OnboardingViewRoute,
     HomeNavViewRoute,
+    CauseViewRoute,
+    CreateCauseViewRoute,
     SettingsViewRoute,
   };
 }
@@ -42,6 +48,8 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.SignInViewRoute, page: SignInView),
     RouteDef(Routes.OnboardingViewRoute, page: OnboardingView),
     RouteDef(Routes.HomeNavViewRoute, page: HomeNavView),
+    RouteDef(Routes.CauseViewRoute, page: CauseView),
+    RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
     RouteDef(Routes.SettingsViewRoute, page: SettingsView),
   ];
   @override
@@ -74,6 +82,18 @@ class GoRouter extends RouterBase {
     HomeNavView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => HomeNavView(),
+        settings: data,
+      );
+    },
+    CauseView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => CauseView(),
+        settings: data,
+      );
+    },
+    CreateCauseView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => CreateCauseView(),
         settings: data,
       );
     },
