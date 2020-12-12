@@ -63,6 +63,7 @@ dependencies:
   #OTHER
   algolia: ^0.1.7
   flutter_typeahead: ^1.8.8
+  introduction_screen: ^1.0.7
 
 
 

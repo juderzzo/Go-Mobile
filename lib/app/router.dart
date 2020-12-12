@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route_annotations.dart';
 import 'package:go/ui/views/auth/sign_in/sign_in_view.dart';
 import 'package:go/ui/views/auth/sign_up/sign_up_view.dart';
 import 'package:go/ui/views/home/home_nav_view.dart';
+import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
 
@@ -12,6 +13,7 @@ import 'package:go/ui/views/settings/settings_view.dart';
     MaterialRoute(page: RootView, initial: true, name: "RootViewRoute"),
     MaterialRoute(page: SignUpView, name: "SignUpViewRoute"),
     MaterialRoute(page: SignInView, name: "SignInViewRoute"),
+    MaterialRoute(page: OnboardingView, name: "OnboardingViewRoute"),
     MaterialRoute(page: HomeNavView, name: "HomeNavViewRoute"),
     MaterialRoute(page: SettingsView, name: "SettingsViewRoute"),
   ],

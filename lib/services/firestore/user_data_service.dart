@@ -4,6 +4,17 @@ import 'package:go/models/go_user_model.dart';
 class UserDataService {
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
 
+  Future checkIfUserExists(String id) async {
+    bool userExists = false;
+    DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
+      return e.message;
+    });
+    if (snapshot.exists) {
+      userExists = true;
+    }
+    return userExists;
+  }
+
   Future createGoUser(GoUser user) async {
     await userRef.doc(user.id).set(user.toMap()).catchError((e) {
       return e.message;
