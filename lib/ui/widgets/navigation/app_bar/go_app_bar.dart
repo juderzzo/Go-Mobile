@@ -9,11 +9,18 @@ class GoAppBar {
         title,
         style: TextStyle(
           color: Colors.black,
-          fontSize: 16,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
       leading: showBackButton ? BackButton() : Container(),
+      bottom: PreferredSize(
+        child: Container(
+          color: Colors.black12,
+          height: 1.0,
+        ),
+        preferredSize: Size.fromHeight(4.0),
+      ),
     );
   }
 }

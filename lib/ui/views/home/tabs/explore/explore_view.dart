@@ -12,7 +12,7 @@ class ExploreView extends StatefulWidget {
 class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  Widget head() {
+  Widget head(ExploreViewModel model) {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,7 +26,7 @@ class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStat
             ),
           ),
           IconButton(
-            onPressed: null,
+            onPressed: () => model.navigateToCreateCauseView(),
             icon: Icon(FontAwesomeIcons.plus, color: Colors.black, size: 20),
           ),
         ],
@@ -61,7 +61,7 @@ class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStat
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                head(),
+                head(model),
                 SizedBox(height: 8),
                 tabBar(),
               ],

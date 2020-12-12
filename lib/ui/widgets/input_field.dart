@@ -21,6 +21,7 @@ class InputField extends StatefulWidget {
   final Function(String) onChanged;
   final TextInputFormatter formatter;
   final IconButton icon;
+  final Color fillColor;
 
   InputField({
     @required this.controller,
@@ -38,6 +39,7 @@ class InputField extends StatefulWidget {
     this.isReadOnly = false,
     this.smallVersion = false,
     this.icon,
+    this.fillColor,
   });
 
   @override
@@ -87,6 +89,7 @@ class _InputFieldState extends State<InputField> {
                   },
                   obscureText: isPassword,
                   readOnly: widget.isReadOnly,
+                  cursorColor: Colors.black,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     icon: widget.icon != null ? widget.icon : null,

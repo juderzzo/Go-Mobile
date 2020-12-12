@@ -4,7 +4,7 @@ import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
-  Widget head() {
+  Widget head(HomeViewModel model) {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,7 +26,7 @@ class HomeView extends StatelessWidget {
                   icon: Icon(FontAwesomeIcons.slidersH, color: Colors.black, size: 20),
                 ),
                 IconButton(
-                  onPressed: null,
+                  onPressed: () => model.navigateToCreateCauseView(),
                   icon: Icon(FontAwesomeIcons.plus, color: Colors.black, size: 20),
                 ),
               ],
@@ -50,7 +50,7 @@ class HomeView extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                head(),
+                head(model),
               ],
             ),
           ),
