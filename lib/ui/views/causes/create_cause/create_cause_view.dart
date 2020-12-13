@@ -4,6 +4,8 @@ import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/create_cause/create_cause_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
+import 'package:go/ui/widgets/causes/add_image_button.dart';
+import 'package:go/ui/widgets/causes/cause_img_preview.dart';
 import 'package:go/ui/widgets/common/text_field_container.dart';
 import 'package:go/ui/widgets/navigation/app_bar/go_app_bar.dart';
 import 'package:stacked/stacked.dart';
@@ -78,21 +80,48 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget addImagesButton() {
-    return GestureDetector(
-      onTap: null,
-      child: Text(
-        "Add Images",
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.blue,
-        ),
-      ),
+  Widget imgBtn(BuildContext context, CreateCauseViewModel model, int imgNum) {
+    double iconSize = 20;
+    double height = 75;
+    double width = 110;
+    return model.isEditing
+        ? CauseImgPreview(
+            onTap: () => model.selectImg(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+            height: height,
+            width: width,
+            imgURL: null,
+          )
+        : (imgNum == 1 && model.img1 == null) || (imgNum == 2 && model.img2 == null) || (imgNum == 3 && model.img3 == null)
+            ? AddImageButton(
+                onTap: () => model.selectImg(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                iconSize: iconSize,
+                height: height,
+                width: width,
+              )
+            : CauseImgPreview(
+                onTap: () => model.selectImg(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                height: height,
+                width: width,
+                file: imgNum == 1
+                    ? model.img1
+                    : imgNum == 2
+                        ? model.img2
+                        : model.img3,
+              );
+  }
+
+  Widget addImagesRow(BuildContext context, CreateCauseViewModel model) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        imgBtn(context, model, 1),
+        imgBtn(context, model, 2),
+        imgBtn(context, model, 3),
+      ],
     );
   }
 
-  Widget form() {
+  Widget form(BuildContext context, CreateCauseViewModel model) {
     return Container(
       child: ListView(
         shrinkWrap: true,
@@ -118,7 +147,7 @@ class CreateCauseView extends StatelessWidget {
             "Select up to three images for your cause",
           ),
           verticalSpaceSmall,
-          addImagesButton(),
+          addImagesRow(context, model),
           verticalSpaceMedium,
 
           ///GOALS FOR CAUSE
@@ -229,7 +258,7 @@ class CreateCauseView extends StatelessWidget {
             height: screenHeight(context),
             width: screenWidth(context),
             color: Colors.white,
-            child: form(),
+            child: form(context, model),
           ),
         ),
       ),

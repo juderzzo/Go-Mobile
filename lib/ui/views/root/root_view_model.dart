@@ -16,7 +16,6 @@ class RootViewModel extends BaseViewModel {
     if (isLoggedIn) {
       ///CHECK IF USER HAS CREATED PROFILE
       String uid = await _authService.getCurrentUserID();
-      print(uid);
       bool goUserExists = await _userDataService.checkIfUserExists(uid);
       if (goUserExists) {
         _navigationService.replaceWith(Routes.HomeNavViewRoute);
