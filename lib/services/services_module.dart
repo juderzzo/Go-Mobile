@@ -1,4 +1,5 @@
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -16,4 +17,6 @@ abstract class ServicesModule {
   AuthService get authService;
   @lazySingleton
   UserDataService get userDataService;
+  @lazySingleton
+  CauseDataService get causeDataService;
 }

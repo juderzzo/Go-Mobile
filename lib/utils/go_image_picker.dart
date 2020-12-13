@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 
 class GoImagePicker {
   final BuildContext context;
@@ -19,7 +18,6 @@ class GoImagePicker {
   });
 
   final ImagePicker _imagePicker = ImagePicker();
-  final MultiImagePicker _multiImagePicker = MultiImagePicker();
 
   Future<File> retrieveImageFromLibrary({double ratioX, double ratioY}) async {
     imageCache.clear();
@@ -45,20 +43,6 @@ class GoImagePicker {
       );
     }
     return croppedImageFile;
-  }
-
-  Future<List<dynamic>> retrieveMultipleImages() async {
-    imageCache.clear();
-    List<Asset> images = List<Asset>();
-    images = await MultiImagePicker.pickImages(
-      maxImages: 3,
-      enableCamera: true,
-      selectedAssets: images,
-    );
-    images.forEach((image) {
-      print(image.name);
-    });
-    return images;
   }
 
   Future<File> cropImage({File img, double ratioX, double ratioY}) async {

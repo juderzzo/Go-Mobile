@@ -9,6 +9,7 @@ import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../services/auth/auth_service.dart';
+import '../services/firestore/cause_data_service.dart';
 import '../services/services_module.dart';
 import '../services/firestore/user_data_service.dart';
 
@@ -23,6 +24,7 @@ GetIt $initGetIt(
   final gh = GetItHelper(get, environment, environmentFilter);
   final servicesModule = _$ServicesModule();
   gh.lazySingleton<AuthService>(() => servicesModule.authService);
+  gh.lazySingleton<CauseDataService>(() => servicesModule.causeDataService);
   gh.lazySingleton<DialogService>(() => servicesModule.dialogService);
   gh.lazySingleton<NavigationService>(() => servicesModule.navigationService);
   gh.lazySingleton<UserDataService>(() => servicesModule.userDataService);
@@ -32,6 +34,8 @@ GetIt $initGetIt(
 class _$ServicesModule extends ServicesModule {
   @override
   AuthService get authService => AuthService();
+  @override
+  CauseDataService get causeDataService => CauseDataService();
   @override
   DialogService get dialogService => DialogService();
   @override
