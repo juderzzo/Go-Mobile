@@ -4,10 +4,13 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/app/locator.dart';
+import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/utils/go_image_picker.dart';
+import 'package:go/utils/string_validator.dart';
+import 'package:go/utils/url_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -49,7 +52,7 @@ class CreateCauseViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  validateAndSubmitForm({
+  Future<bool> validateAndSubmitForm({
     String name,
     String goal,
     String why,
@@ -61,21 +64,33 @@ class CreateCauseViewModel extends BaseViewModel {
     String action3,
   }) async {
     String formError;
-    if (name.isEmpty) {
+    setBusy(true);
+    if (!StringValidator().isValidString(name)) {
       formError = "Cause Name Required";
-    } else if (goal.isEmpty) {
+    } else if (!StringValidator().isValidString(goal)) {
       formError = "Please list your causes's goals";
-    } else if (why.isEmpty) {
+    } else if (!StringValidator().isValidString(why)) {
       formError = "Please describe why your cause is important";
-    } else if (resources.isEmpty) {
+    } else if (!StringValidator().isValidString(who)) {
+      formError = "Please describe who you are in regards to this cause";
+    } else if (!StringValidator().isValidString(resources)) {
       formError = "Please provide additional resources for your cause";
-    } else if (action1.isEmpty || action2.isEmpty || action3.isEmpty) {
+    } else if (StringValidator().isValidString(charityURL) && !UrlHandler().isValidUrl(charityURL)) {
+      formError = "Please provide a valid URL your cause";
+    } else if (!StringValidator().isValidString(action1) || !StringValidator().isValidString(action2) || !StringValidator().isValidString(action3)) {
       formError = "Please provide 3 actions for your causes's followers to do";
     }
-    if (formError == null) {
+    if (formError != null) {
+      setBusy(false);
+      _dialogService.showDialog(
+        title: "Form Error",
+        description: formError,
+        barrierDismissible: true,
+      );
+      return false;
     } else {
       String creatorID = await _authService.getCurrentUserID();
-      _causeDataService.createCause(
+      var res = await _causeDataService.createCause(
         creatorID: creatorID,
         name: name,
         goal: goal,
@@ -88,10 +103,25 @@ class CreateCauseViewModel extends BaseViewModel {
         img2: img2,
         img3: img3,
       );
+      setBusy(false);
+      if (res != null) {
+        _dialogService.showDialog(
+          title: "Form Submission Error",
+          description: res,
+          barrierDismissible: true,
+        );
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 
   ///NAVIGATION
+  pushAndReplaceUntilHomeNavView() {
+    _navigationService.pushNamedAndRemoveUntil(Routes.HomeNavViewRoute);
+  }
+
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);
 // }

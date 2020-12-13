@@ -10,4 +10,12 @@ class StringValidator {
         .hasMatch(val);
     return passwordValid;
   }
+
+  bool isValidString(String val) {
+    bool isValid = true;
+    if (val == null || val.isEmpty) {
+      isValid = false;
+    }
+    return isValid;
+  }
 }

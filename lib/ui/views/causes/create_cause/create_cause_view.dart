@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/create_cause/create_cause_view_model.dart';
@@ -17,9 +18,9 @@ class CreateCauseView extends StatelessWidget {
   final whoController = TextEditingController();
   final resourcesController = TextEditingController();
   final charityWebsiteController = TextEditingController();
-  final task1Controller = TextEditingController();
-  final task2Controller = TextEditingController();
-  final task3Controller = TextEditingController();
+  final action1Controller = TextEditingController();
+  final action2Controller = TextEditingController();
+  final action3Controller = TextEditingController();
 
   Widget textFieldHeader(String header, String subHeader) {
     return Container(
@@ -219,29 +220,123 @@ class CreateCauseView extends StatelessWidget {
           ),
           verticalSpaceSmall,
           singleLineTextField(
-            controller: task1Controller,
+            controller: action1Controller,
             hintText: "Task 01",
           ),
           verticalSpaceSmall,
           singleLineTextField(
-            controller: task2Controller,
+            controller: action2Controller,
             hintText: "Task 02",
           ),
           verticalSpaceSmall,
           singleLineTextField(
-            controller: task3Controller,
+            controller: action3Controller,
             hintText: "Task 03",
           ),
           verticalSpaceLarge,
           CustomButton(
-            onPressed: null,
             height: 48,
             backgroundColor: CustomColors.goGreen,
             text: "Publish",
             textColor: Colors.white,
+            isBusy: model.isBusy,
+            onPressed: () async {
+              bool formSuccess = await model.validateAndSubmitForm(
+                name: nameController.text.trim(),
+                goal: goalsController.text.trim(),
+                why: whyController.text.trim(),
+                who: whoController.text.trim(),
+                resources: resourcesController.text.trim(),
+                charityURL: charityWebsiteController.text.trim(),
+                action1: action1Controller.text.trim(),
+                action2: action2Controller.text.trim(),
+                action3: action3Controller.text.trim(),
+              );
+              if (formSuccess) {
+                displayBottomActionSheet(context, model);
+              }
+            },
           ),
         ],
       ),
+    );
+  }
+
+  displayBottomActionSheet(BuildContext context, CreateCauseViewModel model) {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              height: 280,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Cause Published!',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => model.pushAndReplaceUntilHomeNavView(),
+                        icon: Icon(
+                          FontAwesomeIcons.times,
+                          color: Colors.black,
+                          size: 16,
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Share Your Cause!",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  GestureDetector(
+                    child: Text(
+                      'Copy Link (disabled)',
+                      style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w700),
+                    ),
+                    onTap: null,
+                  ),
+                  SizedBox(height: 16),
+                  GestureDetector(
+                    child: Text(
+                      'Share (disabled)',
+                      style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w700),
+                    ),
+                    onTap: null,
+                  ),
+                  SizedBox(height: 24),
+                  GestureDetector(
+                    child: Text(
+                      'Done',
+                      style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700),
+                    ),
+                    onTap: () => model.pushAndReplaceUntilHomeNavView(),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
