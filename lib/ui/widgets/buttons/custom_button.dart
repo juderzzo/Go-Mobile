@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -9,6 +10,7 @@ class CustomButton extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final double elevation;
+  final bool isBusy;
 
   CustomButton({
     this.text,
@@ -19,6 +21,7 @@ class CustomButton extends StatelessWidget {
     this.backgroundColor,
     this.textColor,
     this.elevation,
+    this.isBusy,
   });
 
   @override
@@ -29,7 +32,7 @@ class CustomButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(14.0),
       child: InkWell(
         borderRadius: BorderRadius.circular(14.0),
-        onTap: onPressed,
+        onTap: isBusy ? null : onPressed,
         child: Container(
           height: height,
           width: width,
@@ -42,17 +45,19 @@ class CustomButton extends StatelessWidget {
                   data: MediaQuery.of(context).copyWith(
                     textScaleFactor: 1.0,
                   ),
-                  child: FittedBox(
-                    child: Text(
-                      text,
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: textSize != null ? textSize : 16.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    fit: BoxFit.scaleDown,
-                  ),
+                  child: isBusy
+                      ? CustomCircleProgressIndicator(size: height / 2, color: textColor)
+                      : FittedBox(
+                          child: Text(
+                            text,
+                            style: TextStyle(
+                              color: textColor,
+                              fontSize: textSize != null ? textSize : 16.0,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          fit: BoxFit.scaleDown,
+                        ),
                 ),
               ),
             ],

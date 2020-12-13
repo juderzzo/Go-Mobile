@@ -5,14 +5,14 @@ class UserDataService {
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
 
   Future checkIfUserExists(String id) async {
-    bool userExists = false;
+    bool exists = false;
     DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
       return e.message;
     });
     if (snapshot.exists) {
-      userExists = true;
+      exists = true;
     }
-    return userExists;
+    return exists;
   }
 
   Future createGoUser(GoUser user) async {
