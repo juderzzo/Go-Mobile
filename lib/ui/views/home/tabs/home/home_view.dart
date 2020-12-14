@@ -7,6 +7,7 @@ import 'package:stacked/stacked.dart';
 class HomeView extends StatelessWidget {
   Widget head(HomeViewModel model) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -39,25 +40,27 @@ class HomeView extends StatelessWidget {
   }
 
   Widget listCauses(HomeViewModel model) {
-    return ListView.builder(
-      controller: null,
-      physics: AlwaysScrollableScrollPhysics(),
-      key: UniqueKey(),
-      shrinkWrap: true,
-      padding: EdgeInsets.only(
-        top: 4.0,
-        bottom: 4.0,
+    return Expanded(
+      child: ListView.builder(
+        controller: null,
+        physics: AlwaysScrollableScrollPhysics(),
+        key: UniqueKey(),
+        shrinkWrap: true,
+        padding: EdgeInsets.only(
+          top: 4.0,
+          bottom: 4.0,
+        ),
+        itemCount: model.causes.length,
+        itemBuilder: (context, index) {
+          return CauseBlockView(
+            currentUID: model.currentUID,
+            cause: model.causes[index],
+            viewCause: null,
+            viewCreator: null,
+            showOptions: null,
+          );
+        },
       ),
-      itemCount: model.causes.length,
-      itemBuilder: (context, index) {
-        return CauseBlockView(
-          currentUID: model.currentUID,
-          cause: model.causes[index],
-          viewCause: null,
-          viewCreator: null,
-          showOptions: null,
-        );
-      },
     );
   }
 
@@ -71,7 +74,6 @@ class HomeView extends StatelessWidget {
         color: Colors.white,
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
                 head(model),

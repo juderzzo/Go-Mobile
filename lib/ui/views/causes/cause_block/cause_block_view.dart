@@ -1,12 +1,9 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_cause_model.dart';
-import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause_block/cause_block_view_model.dart';
-import 'package:go/ui/widgets/user/user_profile_pic.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
 class CauseBlockView extends StatelessWidget {
@@ -16,11 +13,116 @@ class CauseBlockView extends StatelessWidget {
   final VoidCallback viewCreator;
   final VoidCallback showOptions;
 
-  CauseBlockView({this.currentUID, this.cause, this.viewCause, this.viewCreator, this.showOptions});
+  CauseBlockView({this.currentUID, this.cause, this.viewCause, this.viewCreator, this.showOptions, Key key}) : super(key: key);
+
+  Widget causeHead(CauseBlockViewModel model) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 0.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            cause.name,
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          IconButton(
+            icon: Icon(Icons.more_horiz, color: Colors.black),
+            onPressed: showOptions,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget causeImages(CauseBlockViewModel model) {
+    return model.isLoading
+        ? Container()
+        : SizedBox(
+            height: 300,
+            child: Carousel(
+              autoplay: false,
+              indicatorBgPadding: 6,
+              dotSpacing: 20,
+              dotBgColor: Colors.white,
+              dotColor: Colors.black12,
+              dotIncreaseSize: 1.01,
+              dotIncreasedColor: Colors.black45,
+              images: model.images,
+            ),
+          );
+  }
+
+  Widget causeDetails(CauseBlockViewModel model) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            "Why:",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            cause.why,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Goal(s):",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            cause.goal,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+  Widget causeOrganizer(CauseBlockViewModel model) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: RichText(
+        textAlign: TextAlign.left,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: 'Organized by ',
+              style: TextStyle(color: Colors.black),
+            ),
+            TextSpan(
+              text: model.creatorUsername,
+              style: TextStyle(color: Colors.blue),
+              recognizer: TapGestureRecognizer()..onTap = viewCreator,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CauseBlockViewModel>.reactive(
+      onModelReady: (model) => model.initialize(currentUID, cause.imageURLs),
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: viewCause,
@@ -30,121 +132,10 @@ class CauseBlockView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: viewCreator,
-                      child: Row(
-                        children: <Widget>[
-                          model.isLoading
-                              ? Shimmer.fromColors(
-                                  child: Container(
-                                    height: 35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  baseColor: CustomColors.iosOffWhite,
-                                  highlightColor: Colors.white,
-                                )
-                              : UserProfilePic(userPicUrl: model.createProfilePicURL, size: 35),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          model.isLoading
-                              ? Container()
-                              : Text(
-                                  "", // model.creatorUsername,
-                                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                                )
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.more_horiz),
-                      onPressed: showOptions,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                  height: screenWidthFraction(context, dividedBy: 2),
-                  width: screenWidth(context),
-                  child: Carousel(
-                    images: model.images,
-                  )),
-              Padding(
-                padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0, bottom: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Icon(
-                          FontAwesomeIcons.comment,
-                          size: 16,
-                          color: Colors.black,
-                        ),
-                        SizedBox(
-                          width: 8.0,
-                        ),
-                        Text(
-                          "", //cause.forumPostCount.toString(),
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: [
-                    Text(
-                      "Organized By:",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "", // model.creatorUsername,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "Goal(s):",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "", // cause.goal,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              causeHead(model),
+              causeImages(model),
+              causeDetails(model),
+              causeOrganizer(model),
               SizedBox(height: 16.0),
               Divider(
                 thickness: 8.0,

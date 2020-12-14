@@ -13,14 +13,14 @@ class CauseBlockViewModel extends BaseViewModel {
   UserDataService _userDataService = locator<UserDataService>();
 
   String creatorUsername;
-  String createProfilePicURL;
+  String creatorProfilePicURL;
   bool isLoading = true;
-  List<NetworkImage> images = [];
+  List images = [];
 
-  initialize(String id, List<String> imageURLs) async {
+  initialize(String id, List imageURLs) async {
     GoUser creator = await _userDataService.getGoUserByID(id);
     creatorUsername = "@" + creator.username;
-    createProfilePicURL = creator.profilePicURL;
+    creatorProfilePicURL = creator.profilePicURL;
     imageURLs.forEach((url) {
       images.add(
         NetworkImage(url),
