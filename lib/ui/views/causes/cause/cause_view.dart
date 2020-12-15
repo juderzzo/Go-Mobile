@@ -63,7 +63,9 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
               viewCreator: null,
               isFollowing: false,
             ),
-            CheckListView(),
+            CheckListView(
+              actions: model.cause.actions,
+            ),
             ForumView(),
           ],
         ),
