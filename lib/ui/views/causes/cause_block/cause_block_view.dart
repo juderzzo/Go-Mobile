@@ -9,11 +9,9 @@ import 'package:stacked/stacked.dart';
 class CauseBlockView extends StatelessWidget {
   final String currentUID;
   final GoCause cause;
-  final VoidCallback viewCause;
-  final VoidCallback viewCreator;
   final VoidCallback showOptions;
 
-  CauseBlockView({this.currentUID, this.cause, this.viewCause, this.viewCreator, this.showOptions, Key key}) : super(key: key);
+  CauseBlockView({this.currentUID, this.cause, this.showOptions, Key key}) : super(key: key);
 
   Widget causeHead(CauseBlockViewModel model) {
     return Container(
@@ -111,7 +109,7 @@ class CauseBlockView extends StatelessWidget {
             TextSpan(
               text: model.creatorUsername,
               style: TextStyle(color: Colors.blue),
-              recognizer: TapGestureRecognizer()..onTap = viewCreator,
+              recognizer: TapGestureRecognizer()..onTap = null,
             ),
           ],
         ),
@@ -125,7 +123,7 @@ class CauseBlockView extends StatelessWidget {
       onModelReady: (model) => model.initialize(currentUID, cause.imageURLs),
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
-        onTap: viewCause,
+        onTap: () => model.navigateToCauseView(cause.id),
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

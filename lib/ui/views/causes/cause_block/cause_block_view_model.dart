@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
+import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
@@ -35,7 +36,7 @@ class CauseBlockViewModel extends BaseViewModel {
 //   _navigationService.replaceWith(PageRouteName);
 // }
 //
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
+  navigateToCauseView(String id) {
+    _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'causeID': id});
+  }
 }

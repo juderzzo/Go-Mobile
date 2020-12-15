@@ -55,8 +55,6 @@ class HomeView extends StatelessWidget {
           return CauseBlockView(
             currentUID: model.currentUID,
             cause: model.causes[index],
-            viewCause: null,
-            viewCreator: null,
             showOptions: null,
           );
         },
