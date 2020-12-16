@@ -24,24 +24,24 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>This will enable you to take take photos to upload and use</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This will enable you to choose photos from your library to upload and use</string>
-	<key>NSContactsUsageDescription</key>
-	<string>This will enable you to find and share with your contacts on Go!</string>
+	<key>NSAppleMusicUsageDescription</key>
+    <string>This will enable you to access your music files to use in Go!</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>This will enable you to save events to your calendar</string>
-	<key>kTCCServiceMediaLibrary</key>
-	<string>This will allow you to access your music library to use in Go!</string>
-	<key>NSMotionUsageDescription</key>
-	<string>This will allow you to find the nearby events in Go!</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This will allow you to use send voice messages in Go!</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This will enable you to take take photos to upload and use</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This will enable you to find and share with your contacts on Go!</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This will allow you to find events and causes in Go!</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This will allow you to find events and causes in Go!</string>
+	<key>NSMotionUsageDescription</key>
+	<string>This will allow you to find the nearby events in Go!</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This will enable you to choose photos from your library to upload and use</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This will allow you to use send voice messages in Go!</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -61,5 +61,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>This will allow you to access your music library to use in Go!</string>
 </dict>
 </plist>
