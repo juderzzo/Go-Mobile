@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>865785917892-vdsvpm33prskccssrcdoupmv39tomur0.apps.googleusercontent.com</string>
+	<string>865785917892-7ntg5p40eouc2cs5r6djc3l0ahd0dbg4.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.865785917892-vdsvpm33prskccssrcdoupmv39tomur0</string>
+	<string>com.googleusercontent.apps.865785917892-7ntg5p40eouc2cs5r6djc3l0ahd0dbg4</string>
 	<key>API_KEY</key>
 	<string>AIzaSyABz5eogUGJiRJdprXGaf9SzBffDuYZatA</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.takeoff.appgo</string>
+	<string>com.takeoff.Goapp</string>
 	<key>PROJECT_ID</key>
 	<string>go-app-dc0b8</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:865785917892:ios:a484fd5e813d6b7cd0f491</string>
+	<string>1:865785917892:ios:adbabc3e1896fa49d0f491</string>
 	<key>DATABASE_URL</key>
 	<string>https://go-app-dc0b8.firebaseio.com</string>
 </dict>

@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Go</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,9 +25,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-    <string>This will enable you to take take photos to use</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This will enable you to choose photos from your library to use</string>
+	<string>This will enable you to take take photos to use</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This will enable you to choose photos from your library to use</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
