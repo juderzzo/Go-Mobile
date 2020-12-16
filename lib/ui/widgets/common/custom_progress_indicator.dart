@@ -13,7 +13,7 @@ class CustomCircleProgressIndicator extends StatelessWidget {
       width: size == null ? 20 : size,
       child: CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation<Color>(
-          color == null ? Color(0xffCC4113) : color,
+          color == null ? Colors.black38 : color,
         ),
       ),
     );
