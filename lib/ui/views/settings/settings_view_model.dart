@@ -5,11 +5,29 @@ import 'package:go/app/router.gr.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 class SettingsViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
+  ThemeService _themeService = locator<ThemeService>();
+
+  toggleDarkMode() {
+    if (_themeService.selectedThemeMode == ThemeManagerMode.light) {
+      _themeService.setThemeMode(ThemeManagerMode.dark);
+    } else {
+      _themeService.setThemeMode(ThemeManagerMode.light);
+    }
+  }
+
+  bool isDarkMode() {
+    if (_themeService.selectedThemeMode == ThemeManagerMode.light) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   signOut(BuildContext context) async {
     String action = await showModalActionSheet(

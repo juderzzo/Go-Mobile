@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:stacked/stacked.dart';
 
@@ -7,6 +9,8 @@ import 'root_view_model.dart';
 class RootView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode() ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
     return ViewModelBuilder<RootViewModel>.reactive(
       viewModelBuilder: () => RootViewModel(),
       onModelReady: (model) => model.checkAuthState(),

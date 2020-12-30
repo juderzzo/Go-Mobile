@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/views/causes/cause_block/cause_block_view.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
+  final GoUser user;
+  HomeView({this.user});
+
   Widget head(HomeViewModel model) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -25,11 +29,13 @@ class HomeView extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: null,
-                  icon: Icon(FontAwesomeIcons.slidersH, color: Colors.black, size: 20),
+                  icon: Icon(FontAwesomeIcons.slidersH,
+                      color: Colors.black, size: 20),
                 ),
                 IconButton(
                   onPressed: () => model.navigateToCreateCauseView(),
-                  icon: Icon(FontAwesomeIcons.plus, color: Colors.black, size: 20),
+                  icon: Icon(FontAwesomeIcons.plus,
+                      color: Colors.black, size: 20),
                 ),
               ],
             ),

@@ -3,14 +3,17 @@ import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+@singleton
 class HomeViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
-  CollectionReference causesRef = FirebaseFirestore.instance.collection("causes");
+  CollectionReference causesRef =
+      FirebaseFirestore.instance.collection("causes");
 
   List<DocumentSnapshot> causesResults = [];
   DocumentSnapshot lastCauseDocSnap;
@@ -30,7 +33,9 @@ class HomeViewModel extends BaseViewModel {
 
   getCauses() async {
     Query query;
-    query = causesRef.orderBy('dateCreatedInMilliseconds', descending: true).limit(10);
+    query = causesRef
+        .orderBy('dateCreatedInMilliseconds', descending: true)
+        .limit(10);
     QuerySnapshot querySnapshot = await query.get().catchError((e) {
       print(e);
     });

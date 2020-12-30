@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go/app/locator.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:stacked/stacked.dart';
 
 class ExploreView extends StatefulWidget {
+  final GoUser user;
+  ExploreView({this.user});
   @override
   _ExploreViewState createState() => _ExploreViewState();
 }
 
-class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStateMixin {
+class _ExploreViewState extends State<ExploreView>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
 
   Widget head(ExploreViewModel model) {
@@ -52,7 +57,7 @@ class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExploreViewModel>.reactive(
-      viewModelBuilder: () => ExploreViewModel(),
+      viewModelBuilder: () => locator<ExploreViewModel>(),
       builder: (context, model, child) => Container(
         height: MediaQuery.of(context).size.height,
         color: Colors.white,

@@ -1,34 +1,66 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+@singleton
 class ProfileViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   UserDataService _userDataService = locator<UserDataService>();
-  GoUser currentUser;
+  SnackbarService _snackbarService = locator<SnackbarService>();
+  CollectionReference causesRef =
+      FirebaseFirestore.instance.collection("causes");
 
-  initialize() async {
-    setBusy(true);
-    var uid = await _authService.getCurrentUserID();
-    if (uid != null) {
-      var getUserResult = await _userDataService.getGoUserByID(uid);
-      if (getUserResult is String) {
-        _dialogService.showDialog(title: "Error", description: getUserResult, barrierDismissible: true, buttonTitle: "Ok");
-      } else {
-        currentUser = getUserResult;
+  ScrollController scrollController = ScrollController();
+
+  List<DocumentSnapshot> causesResults = [];
+  DocumentSnapshot lastCauseDocSnap;
+
+  bool loadingAdditionalCauses = false;
+  bool moreCausesAvailable = true;
+
+  int resultsLimit = 20;
+
+  GoUser user;
+
+  initialize(TabController tabController, GoUser currentUser) async {
+    user = currentUser;
+    notifyListeners();
+    scrollController.addListener(() {
+      double triggerFetchMoreSize =
+          0.9 * scrollController.position.maxScrollExtent;
+      if (scrollController.position.pixels > triggerFetchMoreSize) {
+        if (tabController.index == 0) {
+          loadAdditionalCauses();
+        }
       }
-    } else {
-      _dialogService.showDialog(title: "Unknown Error", description: "Please Try Again Later", barrierDismissible: true, buttonTitle: "Ok");
-    }
+    });
+    notifyListeners();
+    await loadData();
     setBusy(false);
-    //notifyListeners();
   }
+
+  loadData() async {
+    await loadCauses();
+  }
+
+  Future<void> refreshPosts() async {
+    causesResults = [];
+    notifyListeners();
+    await loadCauses();
+  }
+
+  loadCauses() async {}
+
+  loadAdditionalCauses() async {}
 
   ///NAVIGATION
 // replaceWithPage() {
@@ -36,6 +68,7 @@ class ProfileViewModel extends BaseViewModel {
 // }
 //
   navigateToSettingsPage() {
-    _navigationService.navigateTo(Routes.SettingsViewRoute);
+    _navigationService
+        .navigateTo(Routes.SettingsViewRoute, arguments: {'data': 'example'});
   }
 }
