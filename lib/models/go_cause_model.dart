@@ -11,6 +11,7 @@ class GoCause {
   List imageURLs;
   List actions;
   List followers;
+  int followersCount;
   int forumPostCount;
 
   GoCause({
@@ -26,6 +27,7 @@ class GoCause {
     this.imageURLs,
     this.actions,
     this.followers,
+    this.followersCount,
     this.forumPostCount,
   });
 
@@ -43,6 +45,7 @@ class GoCause {
           imageURLs: data['imageURLs'],
           actions: data['actions'],
           followers: data['followers'],
+          followersCount: data['followersCount'],
           forumPostCount: data['forumPostCount'],
         );
 
@@ -59,6 +62,7 @@ class GoCause {
         'imageURLs': this.imageURLs,
         'actions': this.actions,
         'followers': this.followers,
+        'followersCount': this.followersCount,
         'forumPostCount': this.forumPostCount,
       };
 

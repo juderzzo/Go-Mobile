@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/app/locator.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
@@ -30,7 +31,7 @@ class _ProfileViewState extends State<ProfileView>
           Text(
             "Profile",
             style: TextStyle(
-              color: Colors.black, //appFontColor(),
+              color: appFontColor(),
               fontWeight: FontWeight.bold,
               fontSize: 30.0,
             ),
@@ -38,7 +39,8 @@ class _ProfileViewState extends State<ProfileView>
           IconButton(
             onPressed: () => model.navigateToSettingsPage(),
             icon: Icon(
-              FontAwesomeIcons.cog, color: Colors.black, //appIconColor(),
+              FontAwesomeIcons.cog,
+              color: appIconColor(),
               size: 20,
             ),
           ),
@@ -61,7 +63,7 @@ class _ProfileViewState extends State<ProfileView>
           Text(
             "@${widget.user.username}",
             style: TextStyle(
-              color: Colors.black, //appFontColor(),
+              color: appFontColor(),
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
             ),
@@ -92,7 +94,6 @@ class _ProfileViewState extends State<ProfileView>
         Container(), //ListPosts(refreshData: model.refreshPosts, postResults: model.postResults, pageStorageKey: PageStorageKey('profile-posts')),
         Container(),
         Container(),
-        Container(),
       ],
     );
   }
@@ -101,7 +102,7 @@ class _ProfileViewState extends State<ProfileView>
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 4,
+      length: 3,
       vsync: this,
     );
   }
@@ -122,7 +123,7 @@ class _ProfileViewState extends State<ProfileView>
       viewModelBuilder: () => locator<ProfileViewModel>(),
       builder: (context, model, child) => Container(
         height: MediaQuery.of(context).size.height,
-        color: Colors.white, //appBackgroundColor(),
+        color: appBackgroundColor(),
         child: SafeArea(
           child: Container(
             child: Column(
@@ -141,8 +142,7 @@ class _ProfileViewState extends State<ProfileView>
                             floating: true,
                             forceElevated: innerBoxIsScrolled,
                             expandedHeight: 200,
-                            backgroundColor:
-                                Colors.white, //appBackgroundColor(),
+                            backgroundColor: appBackgroundColor(),
                             flexibleSpace: FlexibleSpaceBar(
                               background: Container(
                                 child: Column(

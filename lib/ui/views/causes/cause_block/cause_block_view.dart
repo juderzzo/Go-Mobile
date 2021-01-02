@@ -1,17 +1,15 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:go/constants/custom_colors.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/views/causes/cause_block/cause_block_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class CauseBlockView extends StatelessWidget {
-  final String currentUID;
   final GoCause cause;
-  final VoidCallback showOptions;
 
-  CauseBlockView({this.currentUID, this.cause, this.showOptions, Key key}) : super(key: key);
+  CauseBlockView({this.cause});
 
   Widget causeHead(CauseBlockViewModel model) {
     return Container(
@@ -24,8 +22,11 @@ class CauseBlockView extends StatelessWidget {
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           IconButton(
-            icon: Icon(Icons.more_horiz, color: Colors.black),
-            onPressed: showOptions,
+            icon: Icon(
+              Icons.more_horiz,
+              color: appIconColor(),
+            ),
+            onPressed: null,
           ),
         ],
       ),
@@ -41,10 +42,10 @@ class CauseBlockView extends StatelessWidget {
               autoplay: false,
               indicatorBgPadding: 6,
               dotSpacing: 20,
-              dotBgColor: Colors.white,
-              dotColor: Colors.black12,
+              dotBgColor: appBackgroundColor(),
+              dotColor: appFontColorAlt(),
               dotIncreaseSize: 1.01,
-              dotIncreasedColor: Colors.black45,
+              dotIncreasedColor: appFontColor(),
               images: model.images,
             ),
           );
@@ -60,7 +61,7 @@ class CauseBlockView extends StatelessWidget {
             "Why:",
             style: TextStyle(
               fontSize: 16,
-              color: Colors.black,
+              color: appFontColor(),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -68,7 +69,7 @@ class CauseBlockView extends StatelessWidget {
             cause.why,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.black,
+              color: appFontColor(),
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -77,7 +78,7 @@ class CauseBlockView extends StatelessWidget {
             "Goal(s):",
             style: TextStyle(
               fontSize: 16,
-              color: Colors.black,
+              color: appFontColor(),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -85,7 +86,7 @@ class CauseBlockView extends StatelessWidget {
             cause.goal,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.black,
+              color: appFontColor(),
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -104,11 +105,11 @@ class CauseBlockView extends StatelessWidget {
           children: [
             TextSpan(
               text: 'Organized by ',
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: appFontColor()),
             ),
             TextSpan(
               text: model.creatorUsername,
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: appTextButtonColor()),
               recognizer: TapGestureRecognizer()..onTap = null,
             ),
           ],
@@ -120,7 +121,11 @@ class CauseBlockView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CauseBlockViewModel>.reactive(
-      onModelReady: (model) => model.initialize(currentUID, cause.imageURLs),
+      disposeViewModel: false,
+      initialiseSpecialViewModelsOnce: true,
+      fireOnModelReadyOnce: true,
+      onModelReady: (model) =>
+          model.initialize(cause.creatorID, cause.imageURLs),
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: () => model.navigateToCauseView(cause.id),
@@ -137,7 +142,7 @@ class CauseBlockView extends StatelessWidget {
               SizedBox(height: 16.0),
               Divider(
                 thickness: 8.0,
-                color: CustomColors.iosOffWhite,
+                color: appPostBorderColor(),
               ),
             ],
           ),

@@ -16,6 +16,7 @@ class NetworkErrorView extends StatelessWidget {
       disposeViewModel: true,
       viewModelBuilder: () => NetworkErrorViewModel(),
       builder: (context, model, child) => Container(
+        color: appBackgroundColor(),
         padding: EdgeInsets.symmetric(horizontal: 16),
         height: screenHeight(context),
         child: Column(

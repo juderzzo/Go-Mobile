@@ -8,6 +8,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class HomeNavViewModel extends StreamViewModel<GoUser> {
+  ///SERVICES
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -15,12 +16,13 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
   SnackbarService _snackbarService = locator<SnackbarService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
+  ///INITIAL DATA
   InitErrorStatus initErrorStatus = InitErrorStatus.network;
-  GoUser user;
-  String initialCityName;
-  String initialAreaCode;
 
-  //Tab Bar State
+  ///CURRENT USER
+  GoUser user;
+
+  ///TAB BAR STATE
   int _navBarIndex = 0;
   int get navBarIndex => _navBarIndex;
 
@@ -31,22 +33,20 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
 
   initialize() async {
     setBusy(true);
-    isConnectedToNetwork().then((connected) {
-      if (!connected) {
-        initErrorStatus = InitErrorStatus.network;
-        setBusy(false);
-        notifyListeners();
-        _snackbarService.showSnackbar(
-          title: 'Network Error',
-          message: "There Was an Issue Connecting to the Internet",
-          duration: Duration(seconds: 5),
-        );
-      } else {
-        initErrorStatus = InitErrorStatus.none;
-        setBusy(false);
-        notifyListeners();
-      }
-    });
+    bool connectedToNetwork = await isConnectedToNetwork();
+    if (!connectedToNetwork) {
+      initErrorStatus = InitErrorStatus.network;
+      notifyListeners();
+      setBusy(false);
+      _snackbarService.showSnackbar(
+        title: 'Network Error',
+        message: "There Was an Issue Connecting to the Internet",
+        duration: Duration(seconds: 5),
+      );
+    } else {
+      initErrorStatus = InitErrorStatus.none;
+      notifyListeners();
+    }
   }
 
   Future<bool> isConnectedToNetwork() async {
@@ -59,6 +59,7 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
     if (data != null) {
       user = data;
       notifyListeners();
+      setBusy(false);
     }
   }
 

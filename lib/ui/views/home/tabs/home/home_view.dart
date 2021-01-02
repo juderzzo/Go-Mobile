@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go/app/locator.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
-import 'package:go/ui/views/causes/cause_block/cause_block_view.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
+import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
@@ -18,7 +20,7 @@ class HomeView extends StatelessWidget {
           Text(
             "Home",
             style: TextStyle(
-              color: Colors.black,
+              color: appFontColor(),
               fontWeight: FontWeight.bold,
               fontSize: 30.0,
             ),
@@ -29,13 +31,19 @@ class HomeView extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: null,
-                  icon: Icon(FontAwesomeIcons.slidersH,
-                      color: Colors.black, size: 20),
+                  icon: Icon(
+                    FontAwesomeIcons.slidersH,
+                    color: appIconColor(),
+                    size: 20,
+                  ),
                 ),
                 IconButton(
                   onPressed: () => model.navigateToCreateCauseView(),
-                  icon: Icon(FontAwesomeIcons.plus,
-                      color: Colors.black, size: 20),
+                  icon: Icon(
+                    FontAwesomeIcons.plus,
+                    color: appIconColor(),
+                    size: 20,
+                  ),
                 ),
               ],
             ),
@@ -47,23 +55,11 @@ class HomeView extends StatelessWidget {
 
   Widget listCauses(HomeViewModel model) {
     return Expanded(
-      child: ListView.builder(
-        controller: null,
-        physics: AlwaysScrollableScrollPhysics(),
-        key: UniqueKey(),
-        shrinkWrap: true,
-        padding: EdgeInsets.only(
-          top: 4.0,
-          bottom: 4.0,
-        ),
-        itemCount: model.causes.length,
-        itemBuilder: (context, index) {
-          return CauseBlockView(
-            currentUID: model.currentUID,
-            cause: model.causes[index],
-            showOptions: null,
-          );
-        },
+      child: ListCauses(
+        refreshData: model.refreshCauses,
+        causesResults: model.causesResults,
+        pageStorageKey: PageStorageKey('home-causes'),
+        scrollController: model.scrollController,
       ),
     );
   }
@@ -71,11 +67,13 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
-      onModelReady: (model) => model.initialize(),
-      viewModelBuilder: () => HomeViewModel(),
+      disposeViewModel: false,
+      initialiseSpecialViewModelsOnce: true,
+      onModelReady: (model) => model.initialize(currentUser: user),
+      viewModelBuilder: () => locator<HomeViewModel>(),
       builder: (context, model, child) => Container(
         height: MediaQuery.of(context).size.height,
-        color: Colors.white,
+        color: appBackgroundColor(),
         child: SafeArea(
           child: Container(
             child: Column(

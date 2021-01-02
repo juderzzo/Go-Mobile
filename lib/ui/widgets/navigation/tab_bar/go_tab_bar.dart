@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go/constants/custom_colors.dart';
+import 'package:go/constants/app_colors.dart';
 
 class GoExplorePageTabBar extends StatelessWidget {
   final TabController tabController;
@@ -14,13 +14,14 @@ class GoExplorePageTabBar extends StatelessWidget {
         controller: tabController,
         isScrollable: true,
         labelPadding: EdgeInsets.symmetric(horizontal: 10),
-        indicatorColor: CustomColors.goGreen,
+        indicatorColor: appActiveColor(),
         labelColor: Colors.white,
-        unselectedLabelColor: Colors.black54,
+        unselectedLabelColor: appInActiveColorAlt(),
         indicatorSize: TabBarIndicatorSize.label,
         indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: CustomColors.goGreen),
+          borderRadius: BorderRadius.circular(10),
+          color: appActiveColor(),
+        ),
         tabs: [
           Tab(
             child: Container(
@@ -73,13 +74,14 @@ class GoCauseViewTabBar extends StatelessWidget {
         controller: tabController,
         isScrollable: true,
         labelPadding: EdgeInsets.symmetric(horizontal: 10),
-        indicatorColor: CustomColors.goGreen,
+        indicatorColor: appActiveColor(),
         labelColor: Colors.white,
-        unselectedLabelColor: Colors.black54,
+        unselectedLabelColor: appInActiveColorAlt(),
         indicatorSize: TabBarIndicatorSize.label,
         indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: CustomColors.goGreen),
+          borderRadius: BorderRadius.circular(10),
+          color: appActiveColor(),
+        ),
         tabs: [
           Tab(
             child: Container(
@@ -148,27 +150,27 @@ class GoProfileTabBar extends StatelessWidget {
       child: TabBar(
         controller: tabController,
         isScrollable: true,
-        labelPadding: EdgeInsets.symmetric(horizontal: 10),
-        indicatorColor: CustomColors.goGreen, //appActiveColor(),
+        labelPadding: EdgeInsets.symmetric(horizontal: 8),
+        indicatorColor: appActiveColor(),
         labelColor: Colors.white,
-        unselectedLabelColor: Colors.black54, //appInActiveColorAlt(),
+        unselectedLabelColor: appInActiveColorAlt(),
         indicatorSize: TabBarIndicatorSize.label,
         indicator: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: CustomColors.goGreen, //appActiveColor(),
+          color: appActiveColor(),
         ),
         tabs: [
           Tab(
             child: Container(
               height: 30,
-              width: 75,
+              width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Posts",
+                  "Bio",
                   style: TextStyle(fontWeight: fontWeight),
                 ),
               ),
@@ -177,14 +179,14 @@ class GoProfileTabBar extends StatelessWidget {
           Tab(
             child: Container(
               height: 30,
-              width: 75,
+              width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Streams",
+                  "Causes",
                   style: TextStyle(fontWeight: fontWeight),
                 ),
               ),
@@ -193,30 +195,14 @@ class GoProfileTabBar extends StatelessWidget {
           Tab(
             child: Container(
               height: 30,
-              width: 75,
+              width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Events",
-                  style: TextStyle(fontWeight: fontWeight),
-                ),
-              ),
-            ),
-          ),
-          Tab(
-            child: Container(
-              height: 30,
-              width: 75,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Check-Ins",
+                  "My Causes",
                   style: TextStyle(fontWeight: fontWeight),
                 ),
               ),

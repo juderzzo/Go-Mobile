@@ -34,6 +34,7 @@ class HomeNavView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeNavViewModel>.reactive(
+      onModelReady: (model) => model.initialize(),
       viewModelBuilder: () => HomeNavViewModel(),
       builder: (context, model, child) => Scaffold(
         body: model.isBusy
@@ -60,23 +61,13 @@ class HomeNavView extends StatelessWidget {
             ),
             CustomNavBarItem(
               onTap: () => model.setNavBarIndex(1),
-              iconData: FontAwesomeIcons.envelope,
+              iconData: FontAwesomeIcons.search,
               isActive: model.navBarIndex == 1 ? true : false,
             ),
             CustomNavBarItem(
               onTap: () => model.setNavBarIndex(2),
-              iconData: FontAwesomeIcons.mapMarkerAlt,
-              isActive: model.navBarIndex == 2 ? true : false,
-            ),
-            CustomNavBarItem(
-              onTap: () => model.setNavBarIndex(3),
-              iconData: FontAwesomeIcons.wallet,
-              isActive: model.navBarIndex == 3 ? true : false,
-            ),
-            CustomNavBarItem(
-              onTap: () => model.setNavBarIndex(4),
               iconData: FontAwesomeIcons.user,
-              isActive: model.navBarIndex == 4 ? true : false,
+              isActive: model.navBarIndex == 2 ? true : false,
             ),
           ],
         ),
