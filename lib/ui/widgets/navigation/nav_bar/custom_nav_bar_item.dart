@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:go/constants/custom_colors.dart';
+import 'package:go/constants/app_colors.dart';
 
-class GoNavBarItem extends StatelessWidget {
+class CustomNavBarItem extends StatelessWidget {
   final VoidCallback onTap;
   final bool isActive;
   final IconData iconData;
   final String label;
 
-  GoNavBarItem({this.onTap, this.isActive, this.iconData, this.label});
+  CustomNavBarItem({this.onTap, this.isActive, this.iconData, this.label});
   @override
   Widget build(BuildContext context) {
-    Color activeColor = CustomColors.goGreen;
-    Color inactiveColor = Colors.black;
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        height: 48,
+        padding: EdgeInsets.only(top: 4, left: 8, right: 8),
+        height: 50,
+        width: 50,
+        color: Colors.transparent,
         child: Column(
           children: [
             Icon(
               iconData,
-              color: isActive ? activeColor : inactiveColor,
-              size: 20,
+              color: isActive ? appIconColor() : appInActiveColorAlt(),
+              size: 24,
             ),
             SizedBox(height: 2),
             label == null
@@ -32,7 +31,7 @@ class GoNavBarItem extends StatelessWidget {
                     label,
                     style: TextStyle(
                       fontSize: 12.0,
-                      color: isActive ? activeColor : inactiveColor,
+                      color: isActive ? appIconColor() : appInActiveColorAlt(),
                     ),
                   ),
           ],

@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:go/constants/app_colors.dart';
 
-class GoNavBar extends StatelessWidget {
+class CustomNavBar extends StatelessWidget {
   final List<Widget> navBarItems;
 
-  GoNavBar({this.navBarItems});
+  CustomNavBar({this.navBarItems});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 75,
+      height: 80,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-        color: Colors.white,
+        // borderRadius: BorderRadius.only(
+        //   topLeft: Radius.circular(16),
+        //   topRight: Radius.circular(16),
+        // ),
+        color: appBackgroundColor(),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
+            color: appShadowColor(),
             spreadRadius: 0.5,
             blurRadius: 1.0,
             offset: Offset(0.0, 0.0),

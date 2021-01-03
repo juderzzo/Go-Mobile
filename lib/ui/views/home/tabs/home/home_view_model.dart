@@ -1,49 +1,97 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
-import 'package:go/models/go_cause_model.dart';
-import 'package:go/services/auth/auth_service.dart';
+import 'package:go/models/go_user_model.dart';
+import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+@singleton
 class HomeViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
+  ///SERVICES
   NavigationService _navigationService = locator<NavigationService>();
-  CollectionReference causesRef = FirebaseFirestore.instance.collection("causes");
+  SnackbarService _snackbarService = locator<SnackbarService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  CauseDataService _causeDataService = locator<CauseDataService>();
 
+  ///HELPERS
+  ScrollController scrollController = ScrollController();
+
+  ///CURRENT USER
+  GoUser user;
+
+  ///DATA RESULTS
   List<DocumentSnapshot> causesResults = [];
-  DocumentSnapshot lastCauseDocSnap;
   bool loadingAdditionalCauses = false;
   bool moreCausesAvailable = true;
 
-  String currentUID;
-  List causes = [];
+  int resultsLimit = 15;
 
-  initialize() async {
-    setBusy(true);
-    currentUID = await _authService.getCurrentUserID();
-    getCauses();
+  initialize({GoUser currentUser}) async {
+    user = currentUser;
+    notifyListeners();
+    scrollController.addListener(() {
+      double triggerFetchMoreSize =
+          0.9 * scrollController.position.maxScrollExtent;
+      if (scrollController.position.pixels > triggerFetchMoreSize) {
+        loadAdditionalCauses();
+      }
+    });
+    notifyListeners();
+    await loadData();
     setBusy(false);
+  }
+
+  loadData() async {
+    await loadCauses();
+  }
+
+  Future<void> refreshData() async {
+    setBusy(true);
+    causesResults = [];
+    await loadData();
+    notifyListeners();
+    setBusy(false);
+  }
+
+  Future<void> refreshCauses() async {
+    causesResults = [];
+    notifyListeners();
+    await loadCauses();
+  }
+
+  loadCauses() async {
+    causesResults = await _causeDataService.loadCausesFollowing(
+      resultsLimit: resultsLimit,
+      uid: user.id,
+    );
     notifyListeners();
   }
 
-  getCauses() async {
-    Query query;
-    query = causesRef.orderBy('dateCreatedInMilliseconds', descending: true).limit(10);
-    QuerySnapshot querySnapshot = await query.get().catchError((e) {
-      print(e);
-    });
-    if (querySnapshot.docs.isNotEmpty) {
-      lastCauseDocSnap = querySnapshot.docs[querySnapshot.docs.length - 1];
-      causesResults = querySnapshot.docs;
-      causesResults.forEach((doc) {
-        GoCause cause = GoCause.fromMap(doc.data());
-        causes.add(cause);
-      });
-      notifyListeners();
+  loadAdditionalCauses() async {
+    if (loadingAdditionalCauses || !moreCausesAvailable) {
+      return;
     }
+    loadingAdditionalCauses = true;
+    notifyListeners();
+    List<DocumentSnapshot> newResults =
+        await _causeDataService.loadAdditionalCauses(
+      lastDocSnap: causesResults[causesResults.length - 1],
+      resultsLimit: resultsLimit,
+      uid: user.id,
+    );
+    if (newResults.length == 0) {
+      moreCausesAvailable = false;
+    } else {
+      causesResults.addAll(newResults);
+    }
+    loadingAdditionalCauses = false;
+    notifyListeners();
   }
+
+  openSearch() {}
 
   ///NAVIGATION
 // replaceWithPage() {

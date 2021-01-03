@@ -1,0 +1,4 @@
+enum InitErrorStatus {
+  network,
+  none,
+}

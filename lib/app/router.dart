@@ -8,7 +8,7 @@ import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
 
-///RUN "flutter pub run build_runner build" in Project Terminal to Generate Routes
+///RUN "flutter pub run build_runner build --delete-conflicting-outputs" in Project Terminal to Generate Routes
 @MaterialAutoRouter(
   routes: <AutoRoute>[
     // initial route is named "/"

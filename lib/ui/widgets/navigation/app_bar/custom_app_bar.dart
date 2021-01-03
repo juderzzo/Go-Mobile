@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:go/constants/app_colors.dart';
 
-class GoAppBar {
+class CustomAppBar {
   Widget basicAppBar({@required String title, @required bool showBackButton}) {
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.white,
+      backgroundColor: appBackgroundColor(),
       title: Text(
         title,
         style: TextStyle(
-          color: Colors.black,
+          color: appFontColor(),
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
-      leading: showBackButton ? BackButton() : Container(),
+      brightness: appBrightness(),
+      leading: showBackButton ? BackButton(color: appIconColor()) : Container(),
       bottom: PreferredSize(
         child: Container(
-          color: Colors.black12,
+          color: appBorderColor(),
           height: 1.0,
         ),
         preferredSize: Size.fromHeight(4.0),

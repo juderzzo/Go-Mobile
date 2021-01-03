@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go/constants/app_colors.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 
 class CustomButton extends StatelessWidget {
@@ -46,7 +49,8 @@ class CustomButton extends StatelessWidget {
                     textScaleFactor: 1.0,
                   ),
                   child: isBusy
-                      ? CustomCircleProgressIndicator(size: height / 2, color: textColor)
+                      ? CustomCircleProgressIndicator(
+                          size: height / 2, color: textColor)
                       : FittedBox(
                           child: Text(
                             text,
@@ -130,6 +134,110 @@ class CustomIconButton extends StatelessWidget {
                   : Container()
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomFlatButton extends StatelessWidget {
+  final String text;
+  final Color fontColor;
+  final double fontSize;
+  final VoidCallback onTap;
+  final bool showBottomBorder;
+  CustomFlatButton({
+    @required this.onTap,
+    @required this.fontColor,
+    @required this.fontSize,
+    @required this.text,
+    @required this.showBottomBorder,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 48,
+        width: screenWidth(context),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border(
+            bottom: showBottomBorder
+                ? BorderSide(width: 0.5, color: appBorderColorAlt())
+                : BorderSide.none,
+          ),
+        ),
+        child: Row(
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: fontColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomSwitchButton extends StatelessWidget {
+  final String text;
+  final Color fontColor;
+  final double fontSize;
+  final VoidCallback onTap;
+  final bool showBottomBorder;
+  final bool isActive;
+
+  CustomSwitchButton({
+    @required this.onTap,
+    @required this.fontColor,
+    @required this.fontSize,
+    @required this.text,
+    @required this.isActive,
+    @required this.showBottomBorder,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 48,
+        width: screenWidth(context),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border(
+            bottom: showBottomBorder
+                ? BorderSide(width: 0.5, color: appBorderColorAlt())
+                : BorderSide.none,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: fontColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              isActive ? 'On' : 'Off',
+              style: TextStyle(
+                fontSize: fontSize,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
     );

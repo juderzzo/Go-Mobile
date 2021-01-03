@@ -1,92 +1,170 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go/app/locator.dart';
+import 'package:go/constants/app_colors.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
+import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_stats_row.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
+  final GoUser user;
+  ProfileView({this.user});
+
+  @override
+  _ProfileViewState createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
   Widget head(ProfileViewModel model) {
     return Container(
+      height: 50,
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             "Profile",
             style: TextStyle(
-              color: Colors.black,
+              color: appFontColor(),
               fontWeight: FontWeight.bold,
               fontSize: 30.0,
             ),
           ),
           IconButton(
             onPressed: () => model.navigateToSettingsPage(),
-            icon: Icon(FontAwesomeIcons.cog, color: Colors.black, size: 20),
+            icon: Icon(
+              FontAwesomeIcons.cog,
+              color: appIconColor(),
+              size: 20,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget userDetails(ProfileViewModel model) {
-    return model.isBusy
-        ? Container(
-            child: Column(
-              children: [
-                SizedBox(height: 16),
-                UserProfilePic(
-                  userPicUrl: "",
-                  size: 60,
-                  isBusy: true,
-                ),
-              ],
+  Widget userDetails() {
+    return Container(
+      child: Column(
+        children: [
+          SizedBox(height: 16),
+          UserProfilePic(
+            userPicUrl: widget.user.profilePicURL,
+            size: 60,
+            isBusy: false,
+          ),
+          SizedBox(height: 8),
+          Text(
+            "@${widget.user.username}",
+            style: TextStyle(
+              color: appFontColor(),
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0,
             ),
-          )
-        : Container(
-            child: Column(
-              children: [
-                SizedBox(height: 16),
-                UserProfilePic(
-                  userPicUrl: model.currentUser.profilePicURL,
-                  size: 60,
-                  isBusy: false,
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "@${model.currentUser.username}",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                  ),
-                ),
-                SizedBox(height: 8),
-                FollowStatsRow(
-                  followersLength: model.currentUser.followers.length,
-                  followingLength: model.currentUser.following.length,
-                  viewFollowersAction: null,
-                  viewFollowingAction: null,
-                ),
-              ],
-            ),
-          );
+          ),
+          SizedBox(height: 8),
+          FollowStatsRow(
+            followersLength: widget.user.followers.length,
+            followingLength: widget.user.following.length,
+            viewFollowersAction: null,
+            viewFollowingAction: null,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget tabBar() {
+    return GoProfileTabBar(
+      //key: PageStorageKey('profile-tab-bar'),
+      tabController: _tabController,
+    );
+  }
+
+  Widget body(ProfileViewModel model) {
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        Container(), //ListPosts(refreshData: model.refreshPosts, postResults: model.postResults, pageStorageKey: PageStorageKey('profile-posts')),
+        Container(),
+        Container(),
+      ],
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _tabController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProfileViewModel>.reactive(
-      onModelReady: (model) => model.initialize(),
-      viewModelBuilder: () => ProfileViewModel(),
+      disposeViewModel: false,
+      initialiseSpecialViewModelsOnce: true,
+      onModelReady: (model) => model.initialize(_tabController, widget.user),
+      viewModelBuilder: () => locator<ProfileViewModel>(),
       builder: (context, model, child) => Container(
         height: MediaQuery.of(context).size.height,
-        color: Colors.white,
+        color: appBackgroundColor(),
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
                 head(model),
-                userDetails(model),
+                Expanded(
+                  child: DefaultTabController(
+                    key: PageStorageKey('profile-tab-bar'),
+                    length: 4,
+                    child: NestedScrollView(
+                      controller: model.scrollController,
+                      headerSliverBuilder: (context, innerBoxIsScrolled) {
+                        return [
+                          SliverAppBar(
+                            pinned: true,
+                            floating: true,
+                            forceElevated: innerBoxIsScrolled,
+                            expandedHeight: 200,
+                            backgroundColor: appBackgroundColor(),
+                            flexibleSpace: FlexibleSpaceBar(
+                              background: Container(
+                                child: Column(
+                                  children: [
+                                    widget.user == null
+                                        ? Container()
+                                        : userDetails(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            bottom: PreferredSize(
+                              preferredSize: Size.fromHeight(40),
+                              child: tabBar(),
+                            ),
+                          ),
+                        ];
+                      },
+                      body: body(model),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

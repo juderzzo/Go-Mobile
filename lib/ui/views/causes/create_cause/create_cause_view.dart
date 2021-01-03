@@ -8,7 +8,7 @@ import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/causes/add_image_button.dart';
 import 'package:go/ui/widgets/causes/cause_img_preview.dart';
 import 'package:go/ui/widgets/common/text_field_container.dart';
-import 'package:go/ui/widgets/navigation/app_bar/go_app_bar.dart';
+import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 
 class CreateCauseView extends StatelessWidget {
@@ -345,7 +345,7 @@ class CreateCauseView extends StatelessWidget {
     return ViewModelBuilder<CreateCauseViewModel>.reactive(
       viewModelBuilder: () => CreateCauseViewModel(),
       builder: (context, model, child) => Scaffold(
-        appBar: GoAppBar().basicAppBar(title: "Create Cause", showBackButton: true),
+        appBar: CustomAppBar().basicAppBar(title: "Create Cause", showBackButton: true),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(

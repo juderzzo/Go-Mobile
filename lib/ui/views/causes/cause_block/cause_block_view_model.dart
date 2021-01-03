@@ -18,8 +18,8 @@ class CauseBlockViewModel extends BaseViewModel {
   bool isLoading = true;
   List images = [];
 
-  initialize(String id, List imageURLs) async {
-    GoUser creator = await _userDataService.getGoUserByID(id);
+  initialize(String creatorID, List imageURLs) async {
+    GoUser creator = await _userDataService.getGoUserByID(creatorID);
     creatorUsername = "@" + creator.username;
     creatorProfilePicURL = creator.profilePicURL;
     imageURLs.forEach((url) {
@@ -37,6 +37,7 @@ class CauseBlockViewModel extends BaseViewModel {
 // }
 //
   navigateToCauseView(String id) {
-    _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'causeID': id});
+    _navigationService
+        .navigateTo(Routes.CauseViewRoute, arguments: {'causeID': id});
   }
 }
