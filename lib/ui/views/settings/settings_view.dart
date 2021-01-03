@@ -16,7 +16,7 @@ class SettingsView extends StatelessWidget {
           showBackButton: true,
         ),
         body: Container(
-          color: Theme.of(context).backgroundColor,
+          color: appBackgroundColor(),
           padding: EdgeInsets.symmetric(vertical: 8.0),
           child: ListView(
             children: [

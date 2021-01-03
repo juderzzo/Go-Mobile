@@ -14,6 +14,7 @@ import '../ui/views/auth/sign_up/sign_up_view.dart';
 import '../ui/views/causes/cause/cause_view.dart';
 import '../ui/views/causes/create_cause/create_cause_view.dart';
 import '../ui/views/home/home_nav_view.dart';
+import '../ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
 import '../ui/views/settings/settings_view.dart';
@@ -27,6 +28,7 @@ class Routes {
   static const String CauseViewRoute = '/cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
   static const String SettingsViewRoute = '/settings-view';
+  static const String EditProfileViewRoute = '/edit-profile-view';
   static const all = <String>{
     RootViewRoute,
     SignUpViewRoute,
@@ -36,6 +38,7 @@ class Routes {
     CauseViewRoute,
     CreateCauseViewRoute,
     SettingsViewRoute,
+    EditProfileViewRoute,
   };
 }
 
@@ -51,6 +54,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.CauseViewRoute, page: CauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
     RouteDef(Routes.SettingsViewRoute, page: SettingsView),
+    RouteDef(Routes.EditProfileViewRoute, page: EditProfileView),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -100,6 +104,12 @@ class GoRouter extends RouterBase {
     SettingsView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => SettingsView(),
+        settings: data,
+      );
+    },
+    EditProfileView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => EditProfileView(),
         settings: data,
       );
     },

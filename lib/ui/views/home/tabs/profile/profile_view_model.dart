@@ -16,8 +16,7 @@ class ProfileViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   UserDataService _userDataService = locator<UserDataService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
-  CollectionReference causesRef =
-      FirebaseFirestore.instance.collection("causes");
+  CollectionReference causesRef = FirebaseFirestore.instance.collection("causes");
 
   ScrollController scrollController = ScrollController();
 
@@ -35,8 +34,7 @@ class ProfileViewModel extends BaseViewModel {
     user = currentUser;
     notifyListeners();
     scrollController.addListener(() {
-      double triggerFetchMoreSize =
-          0.9 * scrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
       if (scrollController.position.pixels > triggerFetchMoreSize) {
         if (tabController.index == 0) {
           loadAdditionalCauses();
@@ -67,8 +65,13 @@ class ProfileViewModel extends BaseViewModel {
 //   _navigationService.replaceWith(PageRouteName);
 // }
 //
+  navigateToEditProfilePage() {
+    _navigationService.navigateTo(Routes.EditProfileViewRoute, arguments: {
+      'id': user.id,
+    });
+  }
+
   navigateToSettingsPage() {
-    _navigationService
-        .navigateTo(Routes.SettingsViewRoute, arguments: {'data': 'example'});
+    _navigationService.navigateTo(Routes.SettingsViewRoute, arguments: {'data': 'example'});
   }
 }

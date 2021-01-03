@@ -1,4 +1,4 @@
 enum BottomSheetType {
   floating,
-  search,
+  imagePicker,
 }

@@ -4,6 +4,7 @@ import 'package:go/ui/views/auth/sign_up/sign_up_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view.dart';
 import 'package:go/ui/views/causes/create_cause/create_cause_view.dart';
 import 'package:go/ui/views/home/home_nav_view.dart';
+import 'package:go/ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
@@ -25,6 +26,7 @@ import 'package:go/ui/views/settings/settings_view.dart';
     MaterialRoute(page: CreateCauseView, name: "CreateCauseViewRoute"),
     //SETTINGS
     MaterialRoute(page: SettingsView, name: "SettingsViewRoute"),
+    MaterialRoute(page: EditProfileView, name: "EditProfileViewRoute"),
   ],
 )
 class $GoRouter {}

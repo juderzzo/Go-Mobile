@@ -7,7 +7,7 @@ import 'package:go/ui/views/causes/create_cause/create_cause_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/causes/add_image_button.dart';
 import 'package:go/ui/widgets/causes/cause_img_preview.dart';
-import 'package:go/ui/widgets/common/text_field_container.dart';
+import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 
@@ -49,7 +49,8 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget singleLineTextField({TextEditingController controller, String hintText, int textLimit}) {
+  Widget singleLineTextField(
+      {TextEditingController controller, String hintText, int textLimit}) {
     return TextFieldContainer(
       child: TextFormField(
         controller: controller,
@@ -66,7 +67,8 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget multiLineTextField({TextEditingController controller, String hintText}) {
+  Widget multiLineTextField(
+      {TextEditingController controller, String hintText}) {
     return TextFieldContainer(
       child: TextFormField(
         controller: controller,
@@ -87,20 +89,34 @@ class CreateCauseView extends StatelessWidget {
     double width = 110;
     return model.isEditing
         ? CauseImgPreview(
-            onTap: () => model.selectImg(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+            onTap: () => model.selectImg(
+                context: context,
+                imgNum: imgNum,
+                ratioX: width,
+                ratioY: height),
             height: height,
             width: width,
             imgURL: null,
           )
-        : (imgNum == 1 && model.img1 == null) || (imgNum == 2 && model.img2 == null) || (imgNum == 3 && model.img3 == null)
+        : (imgNum == 1 && model.img1 == null) ||
+                (imgNum == 2 && model.img2 == null) ||
+                (imgNum == 3 && model.img3 == null)
             ? AddImageButton(
-                onTap: () => model.selectImg(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                onTap: () => model.selectImg(
+                    context: context,
+                    imgNum: imgNum,
+                    ratioX: width,
+                    ratioY: height),
                 iconSize: iconSize,
                 height: height,
                 width: width,
               )
             : CauseImgPreview(
-                onTap: () => model.selectImg(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                onTap: () => model.selectImg(
+                    context: context,
+                    imgNum: imgNum,
+                    ratioX: width,
+                    ratioY: height),
                 height: height,
                 width: width,
                 file: imgNum == 1
@@ -311,7 +327,10 @@ class CreateCauseView extends StatelessWidget {
                   GestureDetector(
                     child: Text(
                       'Copy Link (disabled)',
-                      style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w700),
                     ),
                     onTap: null,
                   ),
@@ -319,7 +338,10 @@ class CreateCauseView extends StatelessWidget {
                   GestureDetector(
                     child: Text(
                       'Share (disabled)',
-                      style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w700),
                     ),
                     onTap: null,
                   ),
@@ -327,7 +349,10 @@ class CreateCauseView extends StatelessWidget {
                   GestureDetector(
                     child: Text(
                       'Done',
-                      style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700),
                     ),
                     onTap: () => model.pushAndReplaceUntilHomeNavView(),
                   ),
@@ -345,7 +370,8 @@ class CreateCauseView extends StatelessWidget {
     return ViewModelBuilder<CreateCauseViewModel>.reactive(
       viewModelBuilder: () => CreateCauseViewModel(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar().basicAppBar(title: "Create Cause", showBackButton: true),
+        appBar: CustomAppBar()
+            .basicAppBar(title: "Create Cause", showBackButton: true),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(

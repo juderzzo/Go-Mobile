@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go/models/go_user_model.dart';
+import 'package:go/utils/firestore_image_uploader.dart';
+import 'package:go/utils/random_string_generator.dart';
 
 class UserDataService {
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
@@ -35,6 +39,28 @@ class UserDataService {
 
   Future updateGoUser(GoUser user) async {
     await userRef.doc(user.id).update(user.toMap()).catchError((e) {
+      return e.message;
+    });
+  }
+
+  Future updateProfilePic(String id, File img) async {
+    String imgURL = await FirestoreImageUploader().uploadImage(
+      img: img,
+      storageBucket: 'users',
+      folderName: id,
+      fileName: getRandomString(10) + ".png",
+    );
+    await userRef.doc(id).update({
+      "profilePicURL": imgURL,
+    }).catchError((e) {
+      return e.message;
+    });
+  }
+
+  Future updateBio(String id, String bio) async {
+    await userRef.doc(id).update({
+      "bio": bio,
+    }).catchError((e) {
       return e.message;
     });
   }
