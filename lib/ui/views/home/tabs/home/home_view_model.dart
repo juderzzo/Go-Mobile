@@ -23,9 +23,9 @@ class HomeViewModel extends BaseViewModel {
   GoUser user;
 
   ///DATA RESULTS
-  List<DocumentSnapshot> causesResults = [];
-  bool loadingAdditionalCauses = false;
-  bool moreCausesAvailable = true;
+  List<DocumentSnapshot> causesFollowingResults = [];
+  bool loadingAdditionalCausesFollowing = false;
+  bool moreCausesFollowingAvailable = true;
 
   int resultsLimit = 15;
 
@@ -33,61 +33,47 @@ class HomeViewModel extends BaseViewModel {
     user = currentUser;
     notifyListeners();
     scrollController.addListener(() {
-      double triggerFetchMoreSize =
-          0.9 * scrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
       if (scrollController.position.pixels > triggerFetchMoreSize) {
-        loadAdditionalCauses();
+        loadAdditionalCausesFollowing();
       }
     });
     notifyListeners();
-    await loadData();
+    await loadCausesFollowing();
     setBusy(false);
   }
 
-  loadData() async {
-    await loadCauses();
-  }
-
-  Future<void> refreshData() async {
-    setBusy(true);
-    causesResults = [];
-    await loadData();
+  Future<void> refreshCausesFollowing() async {
+    causesFollowingResults = [];
     notifyListeners();
-    setBusy(false);
+    await loadCausesFollowing();
   }
 
-  Future<void> refreshCauses() async {
-    causesResults = [];
-    notifyListeners();
-    await loadCauses();
-  }
-
-  loadCauses() async {
-    causesResults = await _causeDataService.loadCausesFollowing(
+  loadCausesFollowing() async {
+    causesFollowingResults = await _causeDataService.loadCausesFollowing(
       resultsLimit: resultsLimit,
       uid: user.id,
     );
     notifyListeners();
   }
 
-  loadAdditionalCauses() async {
-    if (loadingAdditionalCauses || !moreCausesAvailable) {
+  loadAdditionalCausesFollowing() async {
+    if (loadingAdditionalCausesFollowing || !moreCausesFollowingAvailable) {
       return;
     }
-    loadingAdditionalCauses = true;
+    loadingAdditionalCausesFollowing = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults =
-        await _causeDataService.loadAdditionalCauses(
-      lastDocSnap: causesResults[causesResults.length - 1],
+    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesFollowing(
+      lastDocSnap: causesFollowingResults[causesFollowingResults.length - 1],
       resultsLimit: resultsLimit,
       uid: user.id,
     );
     if (newResults.length == 0) {
-      moreCausesAvailable = false;
+      moreCausesFollowingAvailable = false;
     } else {
-      causesResults.addAll(newResults);
+      causesFollowingResults.addAll(newResults);
     }
-    loadingAdditionalCauses = false;
+    loadingAdditionalCausesFollowing = false;
     notifyListeners();
   }
 

@@ -5,7 +5,7 @@ import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/about/about_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
-import 'package:go/ui/widgets/user/user_profile_pic.dart';
+import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:stacked/stacked.dart';
 
 class AboutView extends StatelessWidget {
@@ -142,66 +142,7 @@ class AboutView extends StatelessWidget {
   }
 
   Widget causeCreator(BuildContext context) {
-    return Container(
-      width: screenWidth(context),
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      decoration: BoxDecoration(
-        color: CustomColors.iosOffWhite,
-        border: Border.all(width: 1.0, color: Colors.black12),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            child: UserProfilePic(
-              userPicUrl: creatorProfilePicURL,
-              size: 40,
-              isBusy: false,
-            ),
-          ),
-          SizedBox(width: 8),
-          Container(
-            child: Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "ABOUT THE CREATOR",
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    creatorUsername,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    cause.who,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return CauseAuthorBio(username: creatorUsername, profilePicURL: creatorProfilePicURL, bio: cause.who);
   }
 
   @override

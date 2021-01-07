@@ -18,7 +18,7 @@ Color appButtonColor() {
 }
 
 Color appButtonColorAlt() {
-  return _themeService.isDarkMode ? Colors.white12 : Colors.black12;
+  return _themeService.isDarkMode ? CustomColors.blackPearl : Colors.white;
 }
 
 Color appIconColor() {
@@ -62,7 +62,7 @@ Color appShadowColor() {
 }
 
 Color appTextFieldContainerColor() {
-  return _themeService.isDarkMode ? Colors.white38 : CustomColors.iosOffWhite;
+  return _themeService.isDarkMode ? Colors.white12 : CustomColors.iosOffWhite;
 }
 
 Color appTextButtonColor() {
@@ -74,7 +74,7 @@ Color appShimmerBaseColor() {
 }
 
 Color appShimmerHighlightColor() {
-  return _themeService.isDarkMode ? Colors.white : Colors.white;
+  return _themeService.isDarkMode ? CustomColors.nightShimmer : Colors.white;
 }
 
 Brightness appBrightness() {

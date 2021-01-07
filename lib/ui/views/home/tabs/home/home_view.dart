@@ -56,8 +56,8 @@ class HomeView extends StatelessWidget {
   Widget listCauses(HomeViewModel model) {
     return Expanded(
       child: ListCauses(
-        refreshData: model.refreshCauses,
-        causesResults: model.causesResults,
+        refreshData: model.refreshCausesFollowing,
+        causesResults: model.causesFollowingResults,
         pageStorageKey: PageStorageKey('home-causes'),
         scrollController: model.scrollController,
       ),

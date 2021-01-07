@@ -3,43 +3,46 @@ import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_user_model.dart';
-import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 @singleton
 class ProfileViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
+  ///SERVICES
   NavigationService _navigationService = locator<NavigationService>();
-  UserDataService _userDataService = locator<UserDataService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
-  CollectionReference causesRef =
-      FirebaseFirestore.instance.collection("causes");
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  CauseDataService _causeDataService = locator<CauseDataService>();
 
+  ///HELPERS
   ScrollController scrollController = ScrollController();
 
-  List<DocumentSnapshot> causesResults = [];
-  DocumentSnapshot lastCauseDocSnap;
-
-  bool loadingAdditionalCauses = false;
-  bool moreCausesAvailable = true;
-
-  int resultsLimit = 20;
-
+  ///CURRENT USER
   GoUser user;
+
+  ///DATA RESULTS
+  List<DocumentSnapshot> causesFollowingResults = [];
+  bool loadingAdditionalCausesFollowing = false;
+  bool moreCausesFollowingAvailable = true;
+
+  List<DocumentSnapshot> causesCreatedResults = [];
+  bool loadingAdditionalCausesCreated = false;
+  bool moreCausesCreatedAvailable = true;
+
+  int resultsLimit = 15;
 
   initialize(TabController tabController, GoUser currentUser) async {
     user = currentUser;
     notifyListeners();
     scrollController.addListener(() {
-      double triggerFetchMoreSize =
-          0.9 * scrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
       if (scrollController.position.pixels > triggerFetchMoreSize) {
-        if (tabController.index == 0) {
-          loadAdditionalCauses();
+        if (tabController.index == 1) {
+          loadAdditionalCausesFollowing();
+        } else if (tabController.index == 2) {
+          loadAdditionalCausesCreated();
         }
       }
     });
@@ -48,27 +51,98 @@ class ProfileViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  ///LOAD ALL DATA
   loadData() async {
-    await loadCauses();
+    await loadCausesFollowing();
+    await loadCausesCreated();
   }
 
-  Future<void> refreshPosts() async {
-    causesResults = [];
+  ///REFRESH CAUSES FOLLOWING
+  Future<void> refreshCausesFollowing() async {
+    causesFollowingResults = [];
     notifyListeners();
-    await loadCauses();
+    await loadCausesFollowing();
   }
 
-  loadCauses() async {}
+  ///REFRESH CAUSES CREATED
+  Future<void> refreshCausesCreated() async {
+    causesCreatedResults = [];
+    notifyListeners();
+    await loadCausesFollowing();
+  }
 
-  loadAdditionalCauses() async {}
+  ///LOAD CAUSES FOLLOWING
+  loadCausesFollowing() async {
+    causesFollowingResults = await _causeDataService.loadCausesFollowing(
+      resultsLimit: resultsLimit,
+      uid: user.id,
+    );
+    notifyListeners();
+  }
+
+  ///LOAD CAUSES CREATED
+  loadCausesCreated() async {
+    causesCreatedResults = await _causeDataService.loadCausesCreated(
+      resultsLimit: resultsLimit,
+      uid: user.id,
+    );
+    notifyListeners();
+  }
+
+  ///LOAD ADDITIONAL CAUSES FOLLOWING
+  loadAdditionalCausesFollowing() async {
+    if (loadingAdditionalCausesFollowing || !moreCausesFollowingAvailable) {
+      return;
+    }
+    loadingAdditionalCausesFollowing = true;
+    notifyListeners();
+    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesFollowing(
+      lastDocSnap: causesFollowingResults[causesFollowingResults.length - 1],
+      resultsLimit: resultsLimit,
+      uid: user.id,
+    );
+    if (newResults.length == 0) {
+      moreCausesFollowingAvailable = false;
+    } else {
+      causesFollowingResults.addAll(newResults);
+    }
+    loadingAdditionalCausesFollowing = false;
+    notifyListeners();
+  }
+
+  ///LOAD ADDITIONAL CAUSES CREATED
+  loadAdditionalCausesCreated() async {
+    if (loadingAdditionalCausesCreated || !moreCausesCreatedAvailable) {
+      return;
+    }
+    loadingAdditionalCausesCreated = true;
+    notifyListeners();
+    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesCreated(
+      lastDocSnap: causesCreatedResults[causesCreatedResults.length - 1],
+      resultsLimit: resultsLimit,
+      uid: user.id,
+    );
+    if (newResults.length == 0) {
+      moreCausesCreatedAvailable = false;
+    } else {
+      causesCreatedResults.addAll(newResults);
+    }
+    loadingAdditionalCausesCreated = false;
+    notifyListeners();
+  }
 
   ///NAVIGATION
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);
 // }
 //
+  navigateToEditProfilePage() {
+    _navigationService.navigateTo(Routes.EditProfileViewRoute, arguments: {
+      'id': user.id,
+    });
+  }
+
   navigateToSettingsPage() {
-    _navigationService
-        .navigateTo(Routes.SettingsViewRoute, arguments: {'data': 'example'});
+    _navigationService.navigateTo(Routes.SettingsViewRoute, arguments: {'data': 'example'});
   }
 }

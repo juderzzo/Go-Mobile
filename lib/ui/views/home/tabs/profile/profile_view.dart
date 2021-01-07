@@ -3,9 +3,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
+import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_stats_row.dart';
+import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
 
@@ -17,8 +20,7 @@ class ProfileView extends StatefulWidget {
   _ProfileViewState createState() => _ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView>
-    with SingleTickerProviderStateMixin {
+class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
   Widget head(ProfileViewModel model) {
@@ -36,13 +38,25 @@ class _ProfileViewState extends State<ProfileView>
               fontSize: 30.0,
             ),
           ),
-          IconButton(
-            onPressed: () => model.navigateToSettingsPage(),
-            icon: Icon(
-              FontAwesomeIcons.cog,
-              color: appIconColor(),
-              size: 20,
-            ),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () => model.navigateToEditProfilePage(),
+                icon: Icon(
+                  FontAwesomeIcons.edit,
+                  color: appIconColor(),
+                  size: 20,
+                ),
+              ),
+              IconButton(
+                onPressed: () => model.navigateToSettingsPage(),
+                icon: Icon(
+                  FontAwesomeIcons.cog,
+                  color: appIconColor(),
+                  size: 20,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -91,9 +105,31 @@ class _ProfileViewState extends State<ProfileView>
     return TabBarView(
       controller: _tabController,
       children: [
-        Container(), //ListPosts(refreshData: model.refreshPosts, postResults: model.postResults, pageStorageKey: PageStorageKey('profile-posts')),
-        Container(),
-        Container(),
+        Container(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              verticalSpaceLarge,
+              UserBio(
+                username: model.user.username,
+                profilePicURL: model.user.profilePicURL,
+                bio: model.user.bio,
+              ),
+            ],
+          ),
+        ),
+        ListCauses(
+          refreshData: model.refreshCausesFollowing,
+          causesResults: model.causesFollowingResults,
+          pageStorageKey: PageStorageKey('profile-causes-following'),
+          scrollController: null,
+        ),
+        ListCauses(
+          refreshData: model.refreshCausesCreated,
+          causesResults: model.causesCreatedResults,
+          pageStorageKey: PageStorageKey('profile-causes-created'),
+          scrollController: null,
+        ),
       ],
     );
   }
@@ -147,9 +183,7 @@ class _ProfileViewState extends State<ProfileView>
                               background: Container(
                                 child: Column(
                                   children: [
-                                    widget.user == null
-                                        ? Container()
-                                        : userDetails(),
+                                    widget.user == null ? Container() : userDetails(),
                                   ],
                                 ),
                               ),
