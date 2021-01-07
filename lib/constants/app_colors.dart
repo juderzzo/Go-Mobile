@@ -18,7 +18,7 @@ Color appButtonColor() {
 }
 
 Color appButtonColorAlt() {
-  return _themeService.isDarkMode ? Colors.white12 : Colors.black12;
+  return _themeService.isDarkMode ? CustomColors.blackPearl : Colors.white;
 }
 
 Color appIconColor() {

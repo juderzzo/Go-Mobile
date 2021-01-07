@@ -5,6 +5,7 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
+import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_stats_row.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
@@ -117,8 +118,18 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
             ],
           ),
         ),
-        Container(), //ListPosts(refreshData: model.refreshPosts, postResults: model.postResults, pageStorageKey: PageStorageKey('profile-posts')),
-        Container(),
+        ListCauses(
+          refreshData: model.refreshCausesFollowing,
+          causesResults: model.causesFollowingResults,
+          pageStorageKey: PageStorageKey('profile-causes-following'),
+          scrollController: null,
+        ),
+        ListCauses(
+          refreshData: model.refreshCausesCreated,
+          causesResults: model.causesCreatedResults,
+          pageStorageKey: PageStorageKey('profile-causes-created'),
+          scrollController: null,
+        ),
       ],
     );
   }
