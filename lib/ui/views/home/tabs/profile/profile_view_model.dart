@@ -68,7 +68,7 @@ class ProfileViewModel extends BaseViewModel {
   Future<void> refreshCausesCreated() async {
     causesCreatedResults = [];
     notifyListeners();
-    await loadCausesFollowing();
+    await loadCausesCreated();
   }
 
   ///LOAD CAUSES FOLLOWING
