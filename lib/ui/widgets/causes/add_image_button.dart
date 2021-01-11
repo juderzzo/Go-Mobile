@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go/constants/custom_colors.dart';
+import 'package:go/constants/app_colors.dart';
 
 class AddImageButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -15,14 +15,14 @@ class AddImageButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        color: CustomColors.iosOffWhite,
+        color: appBorderColorAlt(),
         height: height,
         width: width,
         child: Center(
           child: Icon(
             FontAwesomeIcons.camera,
             size: iconSize,
-            color: Colors.black38,
+            color: appIconColorAlt(),
           ),
         ),
       ),
