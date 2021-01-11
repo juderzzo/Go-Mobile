@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/ui/views/home/search_field/search_field_view_model.dart';
+import 'package:go/ui/widgets/search_field/search_field_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class SearchFieldView extends StatelessWidget {
@@ -10,7 +10,8 @@ class SearchFieldView extends StatelessWidget {
   final VoidCallback onTap;
   final bool enabled;
   final TextEditingController textEditingController;
-  SearchFieldView({@required this.heroTag, @required this.onTap, @required this.enabled, @required this.textEditingController});
+  final Function(String) onChanged;
+  SearchFieldView({@required this.heroTag, @required this.onTap, @required this.enabled, @required this.textEditingController, @required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +53,7 @@ class SearchFieldView extends StatelessWidget {
                               hideOnLoading: true,
                               direction: AxisDirection.up,
                               textFieldConfiguration: TextFieldConfiguration(
+                                onChanged: (val) => onChanged(val),
                                 autofocus: true,
                                 enabled: enabled,
                                 controller: textEditingController,
@@ -81,7 +83,9 @@ class SearchFieldView extends StatelessWidget {
                                   ),
                                 );
                               },
-                              onSuggestionSelected: (val) {}, //(val) => model.getPlaceDetails(val),
+                              onSuggestionSelected: (val) {
+                                print(val);
+                              }, //(val) => model.getPlaceDetails(val),
                             ),
                           ),
                         ),

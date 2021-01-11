@@ -1,3 +1,4 @@
+import 'package:go/services/algolia/algolia_search_service.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:injectable/injectable.dart';
@@ -26,4 +27,6 @@ abstract class ServicesModule {
   UserDataService get userDataService;
   @lazySingleton
   CauseDataService get causeDataService;
+  @lazySingleton
+  AlgoliaSearchService get algoliaSearchService;
 }

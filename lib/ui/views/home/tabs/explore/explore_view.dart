@@ -4,9 +4,9 @@ import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/views/home/search_field/search_field_view.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
+import 'package:go/ui/widgets/search_field/search_field_view.dart';
 import 'package:stacked/stacked.dart';
 
 class ExploreView extends StatefulWidget {

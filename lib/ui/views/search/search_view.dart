@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/views/home/search_field/search_field_view.dart';
 import 'package:go/ui/views/search/search_view_model.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
+import 'package:go/ui/widgets/search_field/search_field_view.dart';
 import 'package:stacked/stacked.dart';
 
 class SearchView extends StatelessWidget {
