@@ -53,10 +53,12 @@ class SearchViewModel extends BaseViewModel {
 
   ///NAVIGATION
   viewAllResultsForSearchTerm({BuildContext context, String searchTerm}) async {
-    _algoliaSearchService.storeSearchTerm(uid: uid, searchTerm: searchTerm);
-    await _navigationService.navigateWithTransition(AllSearchResultsView(searchTerm: searchTerm), transition: 'fade', opaque: true);
-    searchTextController.selection = TextSelection(baseOffset: 0, extentOffset: searchTextController.text.length);
-    FocusScope.of(context).previousFocus();
+    if (searchTerm.trim().isNotEmpty) {
+      _algoliaSearchService.storeSearchTerm(uid: uid, searchTerm: searchTerm);
+      await _navigationService.navigateWithTransition(AllSearchResultsView(searchTerm: searchTerm), transition: 'fade', opaque: true);
+      searchTextController.selection = TextSelection(baseOffset: 0, extentOffset: searchTextController.text.length);
+      FocusScope.of(context).previousFocus();
+    }
   }
 
   navigateToPreviousPage() {

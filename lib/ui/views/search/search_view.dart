@@ -87,16 +87,16 @@ class SearchView extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          model.causeResults.isEmpty && model.userResults.isEmpty && model.searchTextController.text.trim().isEmpty ? listRecentResults(model) : Container(),
+          model.causeResults.isEmpty && model.userResults.isEmpty && model.searchTextController.text.trim().isEmpty
+              ? listRecentResults(context, model)
+              : Container(),
           model.causeResults.isNotEmpty ? listCausesResults(model) : Container(),
           model.causeResults.isNotEmpty && model.userResults.isNotEmpty ? causeUserSearchDivider(context) : Container(),
           model.userResults.isNotEmpty ? listUserResults(model) : Container(),
           model.searchTextController.text.trim().isNotEmpty && !model.isBusy
-              ? RecentSearchTermView(
+              ? ViewAllResultsSearchTermView(
                   onSearchTermSelected: () => model.viewAllResultsForSearchTerm(context: context, searchTerm: model.searchTextController.text.trim()),
                   searchTerm: "View all results for \"${model.searchTextController.text.trim()}\"",
-                  displayBottomBorder: false,
-                  displayIcon: false,
                 )
               : Container(),
         ],
@@ -104,12 +104,12 @@ class SearchView extends StatelessWidget {
     );
   }
 
-  Widget listRecentResults(SearchViewModel model) {
+  Widget listRecentResults(BuildContext context, SearchViewModel model) {
     return ListRecentSearchResults(
       searchTerms: model.recentSearchTerms,
       scrollController: null,
       isScrollable: false,
-      //onTap: (val),
+      onSearchTermSelected: (val) => model.viewAllResultsForSearchTerm(context: context, searchTerm: model.searchTextController.text.trim()),
     );
   }
 
@@ -160,7 +160,7 @@ class SearchView extends StatelessWidget {
                     verticalSpaceSmall,
                     model.isBusy ? CustomLinearProgressIndicator(color: appActiveColor()) : Container(),
                     SizedBox(height: 8),
-                    listResults(context, model),
+                    model.isBusy ? Container() : listResults(context, model),
                   ],
                 ),
               ),

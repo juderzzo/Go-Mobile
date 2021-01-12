@@ -143,3 +143,32 @@ class RecentSearchTermView extends StatelessWidget {
     );
   }
 }
+
+class ViewAllResultsSearchTermView extends StatelessWidget {
+  final VoidCallback onSearchTermSelected;
+  final String searchTerm;
+
+  ViewAllResultsSearchTermView({@required this.onSearchTermSelected, @required this.searchTerm});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onSearchTermSelected,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CustomText(
+              text: searchTerm,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: appTextButtonColor(),
+            ),
+            //Icon(FontAwesomeIcons.clock, color: appIconColorAlt(), size: 12)
+          ],
+        ),
+      ),
+    );
+  }
+}

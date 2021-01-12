@@ -10,6 +10,7 @@ class CustomAppBar {
       title: CustomOverflowText(
         text: title,
         fontSize: 20,
+        color: appFontColor(),
         fontWeight: FontWeight.bold,
         textOverflow: TextOverflow.ellipsis,
       ),

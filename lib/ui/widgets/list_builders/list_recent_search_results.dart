@@ -4,12 +4,12 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/search/search_result_view.dart';
 
 class ListRecentSearchResults extends StatelessWidget {
-  final Function(String) onTap;
+  final Function(String) onSearchTermSelected;
   final List searchTerms;
   final ScrollController scrollController;
   final bool isScrollable;
 
-  ListRecentSearchResults({@required this.onTap, @required this.searchTerms, @required this.isScrollable, @required this.scrollController});
+  ListRecentSearchResults({@required this.onSearchTermSelected, @required this.searchTerms, @required this.isScrollable, @required this.scrollController});
 
   Widget listResults() {
     return ListView.builder(
@@ -24,7 +24,7 @@ class ListRecentSearchResults extends StatelessWidget {
       itemCount: searchTerms.length,
       itemBuilder: (context, index) {
         return RecentSearchTermView(
-          onTap: () => onTap(searchTerms[index]),
+          onSearchTermSelected: () => onSearchTermSelected(searchTerms[index]),
           searchTerm: searchTerms[index],
           displayBottomBorder: index == searchTerms.length - 1 ? false : true,
           displayIcon: true,
