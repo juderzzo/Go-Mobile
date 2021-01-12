@@ -6,7 +6,7 @@ import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
-import 'package:go/ui/widgets/search_field/search_field_view.dart';
+import 'package:go/ui/widgets/search/search_field.dart';
 import 'package:stacked/stacked.dart';
 
 class ExploreView extends StatefulWidget {
@@ -24,7 +24,7 @@ class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStat
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SearchFieldView(
+          SearchField(
             heroTag: 'search',
             onTap: () => model.navigateToSearchView(),
             enabled: false,
