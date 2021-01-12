@@ -17,6 +17,7 @@ import '../ui/views/home/home_nav_view.dart';
 import '../ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
+import '../ui/views/search/all_search_results/all_search_results_view.dart';
 import '../ui/views/search/search_view.dart';
 import '../ui/views/settings/settings_view.dart';
 
@@ -29,6 +30,7 @@ class Routes {
   static const String CauseViewRoute = '/cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
   static const String SearchViewRoute = '/search-view';
+  static const String AllSearchResultsViewRoute = '/all-search-results-view';
   static const String SettingsViewRoute = '/settings-view';
   static const String EditProfileViewRoute = '/edit-profile-view';
   static const all = <String>{
@@ -40,6 +42,7 @@ class Routes {
     CauseViewRoute,
     CreateCauseViewRoute,
     SearchViewRoute,
+    AllSearchResultsViewRoute,
     SettingsViewRoute,
     EditProfileViewRoute,
   };
@@ -57,6 +60,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.CauseViewRoute, page: CauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
     RouteDef(Routes.SearchViewRoute, page: SearchView),
+    RouteDef(Routes.AllSearchResultsViewRoute, page: AllSearchResultsView),
     RouteDef(Routes.SettingsViewRoute, page: SettingsView),
     RouteDef(Routes.EditProfileViewRoute, page: EditProfileView),
   ];
@@ -108,6 +112,12 @@ class GoRouter extends RouterBase {
     SearchView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => SearchView(),
+        settings: data,
+      );
+    },
+    AllSearchResultsView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AllSearchResultsView(),
         settings: data,
       );
     },

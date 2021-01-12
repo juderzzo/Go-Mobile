@@ -7,6 +7,7 @@ import 'package:go/ui/views/home/home_nav_view.dart';
 import 'package:go/ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
+import 'package:go/ui/views/search/all_search_results/all_search_results_view.dart';
 import 'package:go/ui/views/search/search_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
 
@@ -32,6 +33,7 @@ import 'package:go/ui/views/settings/settings_view.dart';
 
     //SEARCH
     MaterialRoute(page: SearchView, name: "SearchViewRoute"),
+    MaterialRoute(page: AllSearchResultsView, name: "AllSearchResultsViewRoute"),
 
     //SETTINGS
     MaterialRoute(page: SettingsView, name: "SettingsViewRoute"),

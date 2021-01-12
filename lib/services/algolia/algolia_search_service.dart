@@ -5,6 +5,7 @@ import 'package:go/models/search_results_model.dart';
 
 class AlgoliaSearchService {
   final DocumentReference algoliaDocRef = FirebaseFirestore.instance.collection("app_info").doc("algolia");
+  final CollectionReference userDocRef = FirebaseFirestore.instance.collection("users");
 
   Future<Algolia> initializeAlgolia() async {
     Algolia algolia;
@@ -99,5 +100,33 @@ class AlgoliaSearchService {
       });
     }
     return results;
+  }
+
+  Future<List> getRecentSearchTerms({@required String uid}) async {
+    List recentSearchTerms = [];
+    DocumentSnapshot snapshot = await userDocRef.doc(uid).get();
+    if (snapshot.exists) {
+      if (snapshot.data()['recentSearchTerms'] != null) {
+        recentSearchTerms = snapshot.data()['recentSearchTerms'].toList(growable: true);
+      }
+    }
+    return recentSearchTerms;
+  }
+
+  storeSearchTerm({@required String uid, @required String searchTerm}) async {
+    List recentSearchTerms = [];
+    DocumentSnapshot snapshot = await userDocRef.doc(uid).get();
+    if (snapshot.exists) {
+      if (snapshot.data()['recentSearchTerms'] != null) {
+        recentSearchTerms = snapshot.data()['recentSearchTerms'].toList(growable: true);
+        recentSearchTerms.insert(0, searchTerm);
+        if (recentSearchTerms.length > 5) {
+          recentSearchTerms.removeLast();
+        }
+      } else {
+        recentSearchTerms.add(searchTerm);
+      }
+      userDocRef.doc(uid).update({'recentSearchTerms': recentSearchTerms});
+    }
   }
 }

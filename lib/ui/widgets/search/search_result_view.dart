@@ -109,16 +109,17 @@ class CauseSearchResultView extends StatelessWidget {
 }
 
 class RecentSearchTermView extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback onSearchTermSelected;
   final String searchTerm;
   final bool displayBottomBorder;
+  final bool displayIcon;
 
-  RecentSearchTermView({@required this.onTap, @required this.searchTerm, @required this.displayBottomBorder});
+  RecentSearchTermView({@required this.onSearchTermSelected, @required this.searchTerm, @required this.displayBottomBorder, @required this.displayIcon});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onSearchTermSelected,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
@@ -126,11 +127,17 @@ class RecentSearchTermView extends StatelessWidget {
             bottom: BorderSide(color: displayBottomBorder ? appBorderColor() : Colors.transparent, width: 0.5),
           ),
         ),
-        child: CustomText(
-          text: searchTerm,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: appFontColor(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CustomText(
+              text: searchTerm,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: appFontColor(),
+            ),
+            displayIcon ? Icon(FontAwesomeIcons.clock, color: appIconColorAlt(), size: 12) : Container(),
+          ],
         ),
       ),
     );

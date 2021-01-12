@@ -9,10 +9,11 @@ import 'package:go/ui/widgets/list_builders/list_causes_search_results.dart';
 import 'package:go/ui/widgets/list_builders/list_recent_search_results.dart';
 import 'package:go/ui/widgets/list_builders/list_user_search_results.dart';
 import 'package:go/ui/widgets/search/search_field.dart';
+import 'package:go/ui/widgets/search/search_result_view.dart';
 import 'package:stacked/stacked.dart';
 
 class SearchView extends StatelessWidget {
-  Widget head(SearchViewModel model) {
+  Widget head(BuildContext context, SearchViewModel model) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -24,7 +25,7 @@ class SearchView extends StatelessWidget {
             enabled: true,
             textEditingController: model.searchTextController,
             onChanged: (val) => model.querySearchResults(val),
-            onFieldSubmitted: (val) => print('submitted'),
+            onFieldSubmitted: (val) => model.viewAllResultsForSearchTerm(context: context, searchTerm: val),
           ),
           SizedBox(width: 8),
           GestureDetector(
@@ -86,9 +87,18 @@ class SearchView extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
+          model.causeResults.isEmpty && model.userResults.isEmpty && model.searchTextController.text.trim().isEmpty ? listRecentResults(model) : Container(),
           model.causeResults.isNotEmpty ? listCausesResults(model) : Container(),
           model.causeResults.isNotEmpty && model.userResults.isNotEmpty ? causeUserSearchDivider(context) : Container(),
           model.userResults.isNotEmpty ? listUserResults(model) : Container(),
+          model.searchTextController.text.trim().isNotEmpty && !model.isBusy
+              ? RecentSearchTermView(
+                  onSearchTermSelected: () => model.viewAllResultsForSearchTerm(context: context, searchTerm: model.searchTextController.text.trim()),
+                  searchTerm: "View all results for \"${model.searchTextController.text.trim()}\"",
+                  displayBottomBorder: false,
+                  displayIcon: false,
+                )
+              : Container(),
         ],
       ),
     );
@@ -99,6 +109,7 @@ class SearchView extends StatelessWidget {
       searchTerms: model.recentSearchTerms,
       scrollController: null,
       isScrollable: false,
+      //onTap: (val),
     );
   }
 
@@ -133,6 +144,7 @@ class SearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SearchViewModel>.reactive(
+      onModelReady: (model) => model.initialize(),
       viewModelBuilder: () => SearchViewModel(),
       builder: (context, model, child) => Scaffold(
         body: GestureDetector(
@@ -144,7 +156,7 @@ class SearchView extends StatelessWidget {
               child: Container(
                 child: Column(
                   children: [
-                    head(model),
+                    head(context, model),
                     verticalSpaceSmall,
                     model.isBusy ? CustomLinearProgressIndicator(color: appActiveColor()) : Container(),
                     SizedBox(height: 8),
