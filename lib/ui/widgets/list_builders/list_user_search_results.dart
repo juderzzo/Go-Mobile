@@ -27,6 +27,7 @@ class ListUsersSearchResults extends StatelessWidget {
           onTap: null,
           searchResult: results[index],
           isFollowing: false,
+          displayBottomBorder: index == results.length - 1 ? false : true,
         );
       },
     );

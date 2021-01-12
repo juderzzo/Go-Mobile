@@ -34,7 +34,7 @@ Color appFontColor() {
 }
 
 Color appFontColorAlt() {
-  return _themeService.isDarkMode ? Colors.white54 : Colors.black54;
+  return _themeService.isDarkMode ? Colors.white54 : Colors.black38;
 }
 
 Color appPostBorderColor() {

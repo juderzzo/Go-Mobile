@@ -23,15 +23,18 @@ class SearchViewModel extends BaseViewModel {
   initialize() {}
 
   querySearchResults(String searchTerm) async {
+    setBusy(true);
     int causesResultsLimit = 5;
     int userResultsLimit = 16;
-    if (searchTerm.trim().isEmpty) {
+    if (searchTerm == null || searchTerm.trim().isEmpty) {
+      await Future.delayed(Duration(seconds: 2));
       causeResults = [];
       userResults = [];
     } else {
       causeResults = await _algoliaSearchService.queryCauses(searchTerm: searchTerm, resultsLimit: causesResultsLimit);
       userResults = await _algoliaSearchService.queryUsers(searchTerm: searchTerm, resultsLimit: userResultsLimit);
     }
+    setBusy(false);
     notifyListeners();
   }
 

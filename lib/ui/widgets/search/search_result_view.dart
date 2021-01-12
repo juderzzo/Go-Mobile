@@ -10,24 +10,24 @@ class UserSearchResultView extends StatelessWidget {
   final VoidCallback onTap;
   final SearchResult searchResult;
   final bool isFollowing;
+  final bool displayBottomBorder;
 
-  UserSearchResultView({@required this.onTap, @required this.searchResult, @required this.isFollowing});
+  UserSearchResultView({@required this.onTap, @required this.searchResult, @required this.isFollowing, @required this.displayBottomBorder});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: appBorderColor(), width: 1),
-            bottom: BorderSide(color: appBorderColor(), width: 1),
+            bottom: BorderSide(color: displayBottomBorder ? appBorderColor() : Colors.transparent, width: 0.5),
           ),
         ),
         child: Row(
           children: <Widget>[
-            UserProfilePic(userPicUrl: searchResult.additionalData, size: 20, isBusy: false),
+            UserProfilePic(userPicUrl: searchResult.additionalData, size: 35, isBusy: false),
             SizedBox(
               width: 10.0,
             ),
@@ -54,7 +54,7 @@ class UserSearchResultView extends StatelessWidget {
                 CustomText(
                   text: "@${searchResult.name}",
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   color: appFontColor(),
                 ),
               ],
@@ -70,17 +70,18 @@ class CauseSearchResultView extends StatelessWidget {
   final VoidCallback onTap;
   final SearchResult searchResult;
   final bool isFollowing;
+  final bool displayBottomBorder;
 
-  CauseSearchResultView({@required this.onTap, @required this.searchResult, @required this.isFollowing});
+  CauseSearchResultView({@required this.onTap, @required this.searchResult, @required this.isFollowing, @required this.displayBottomBorder});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(color: appBorderColor(), width: 1),
+            bottom: BorderSide(color: displayBottomBorder ? appBorderColor() : Colors.transparent, width: 0.5),
           ),
         ),
         child: Column(
@@ -110,18 +111,19 @@ class CauseSearchResultView extends StatelessWidget {
 class RecentSearchTermView extends StatelessWidget {
   final VoidCallback onTap;
   final String searchTerm;
+  final bool displayBottomBorder;
 
-  RecentSearchTermView({@required this.onTap, @required this.searchTerm});
+  RecentSearchTermView({@required this.onTap, @required this.searchTerm, @required this.displayBottomBorder});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(color: appBorderColor(), width: 1),
+            bottom: BorderSide(color: displayBottomBorder ? appBorderColor() : Colors.transparent, width: 0.5),
           ),
         ),
         child: CustomText(

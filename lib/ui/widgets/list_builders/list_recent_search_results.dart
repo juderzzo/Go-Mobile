@@ -25,6 +25,7 @@ class ListRecentSearchResults extends StatelessWidget {
         return RecentSearchTermView(
           onTap: null,
           searchTerm: searchTerms[index],
+          displayBottomBorder: index == searchTerms.length - 1 ? false : true,
         );
       },
     );

@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/search/search_view_model.dart';
+import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/list_builders/list_causes_search_results.dart';
 import 'package:go/ui/widgets/list_builders/list_recent_search_results.dart';
@@ -12,6 +14,7 @@ import 'package:stacked/stacked.dart';
 class SearchView extends StatelessWidget {
   Widget head(SearchViewModel model) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -39,13 +42,53 @@ class SearchView extends StatelessWidget {
     );
   }
 
-  Widget listResults(SearchViewModel model) {
+  Widget causesHeader() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: CustomText(
+        text: "Causes",
+        fontWeight: FontWeight.bold,
+        textAlign: TextAlign.left,
+        fontSize: 24,
+        color: appFontColorAlt(),
+      ),
+    );
+  }
+
+  Widget usersHeader() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: CustomText(
+        text: "Changemakers",
+        fontWeight: FontWeight.bold,
+        textAlign: TextAlign.left,
+        fontSize: 24,
+        color: appFontColorAlt(),
+      ),
+    );
+  }
+
+  Widget causeUserSearchDivider(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          height: 16,
+          width: screenWidth(context),
+          color: appTextFieldContainerColor(),
+        ),
+        verticalSpaceSmall,
+      ],
+    );
+  }
+
+  Widget listResults(BuildContext context, SearchViewModel model) {
     return Expanded(
       child: ListView(
         shrinkWrap: true,
         children: [
-          listCausesResults(model),
-          listUserResults(model),
+          model.causeResults.isNotEmpty ? listCausesResults(model) : Container(),
+          model.causeResults.isNotEmpty && model.userResults.isNotEmpty ? causeUserSearchDivider(context) : Container(),
+          model.userResults.isNotEmpty ? listUserResults(model) : Container(),
         ],
       ),
     );
@@ -60,18 +103,30 @@ class SearchView extends StatelessWidget {
   }
 
   Widget listCausesResults(SearchViewModel model) {
-    return ListCausesSearchResults(
-      results: model.causeResults,
-      scrollController: null,
-      isScrollable: false,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        causesHeader(),
+        ListCausesSearchResults(
+          results: model.causeResults,
+          scrollController: null,
+          isScrollable: false,
+        ),
+      ],
     );
   }
 
   Widget listUserResults(SearchViewModel model) {
-    return ListUsersSearchResults(
-      results: model.userResults,
-      scrollController: null,
-      isScrollable: false,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        usersHeader(),
+        ListUsersSearchResults(
+          results: model.userResults,
+          scrollController: null,
+          isScrollable: false,
+        ),
+      ],
     );
   }
 
@@ -87,12 +142,13 @@ class SearchView extends StatelessWidget {
             color: appBackgroundColor(),
             child: SafeArea(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
                     head(model),
+                    verticalSpaceSmall,
+                    model.isBusy ? CustomLinearProgressIndicator(color: appActiveColor()) : Container(),
                     SizedBox(height: 8),
-                    listResults(model),
+                    listResults(context, model),
                   ],
                 ),
               ),
