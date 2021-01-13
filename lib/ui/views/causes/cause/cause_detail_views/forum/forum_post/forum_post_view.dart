@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go/constants/custom_colors.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view_model.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
@@ -56,7 +56,7 @@ class ForumPostView extends StatelessWidget {
                           ),
                           Text(
                             postAuthorProfilePicName,
-                            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                            style: TextStyle(color: appFontColor(), fontSize: 16.0, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -68,7 +68,7 @@ class ForumPostView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+                  style: TextStyle(color: appFontColor(), fontSize: 18.0, fontWeight: FontWeight.w400),
                 ),
               ),
               Padding(
@@ -82,7 +82,7 @@ class ForumPostView extends StatelessWidget {
                         Icon(
                           FontAwesomeIcons.comment,
                           size: 16,
-                          color: Colors.black,
+                          color: appFontColor(),
                         ),
                         SizedBox(
                           width: 8.0,
@@ -91,7 +91,7 @@ class ForumPostView extends StatelessWidget {
                           "0",
                           style: TextStyle(
                             fontSize: 18,
-                            color: Colors.black,
+                            color: appFontColor(),
                           ),
                         ),
                       ],
@@ -99,7 +99,7 @@ class ForumPostView extends StatelessWidget {
                     Text(
                       "3 hours ago", //TimeCalc().getPastTimeFromMilliseconds(widget.post.postDateTimeInMilliseconds),
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: appFontColorAlt(),
                       ),
                     ),
                   ],
@@ -108,7 +108,7 @@ class ForumPostView extends StatelessWidget {
               SizedBox(height: 8.0),
               Divider(
                 thickness: 8.0,
-                color: CustomColors.iosOffWhite,
+                color: appPostBorderColor(),
               ),
             ],
           ),

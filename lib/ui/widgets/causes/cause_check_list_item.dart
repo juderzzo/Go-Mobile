@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
 
 class CauseCheckListItem extends StatelessWidget {
@@ -13,14 +14,14 @@ class CauseCheckListItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(width: 1.0, color: Colors.black12),
+        color: appTextFieldContainerColor(),
+        border: Border.all(width: 1.0, color: appBorderColorAlt()),
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
+            color: appShadowColor(),
             spreadRadius: 0.3,
             blurRadius: 1.5,
             offset: Offset(0.0, 1.5),
@@ -40,7 +41,7 @@ class CauseCheckListItem extends StatelessWidget {
                 header,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black,
+                  color: appFontColor(),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -48,7 +49,7 @@ class CauseCheckListItem extends StatelessWidget {
                 subHeader,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black,
+                  color: appFontColor(),
                   fontWeight: FontWeight.w400,
                 ),
               ),

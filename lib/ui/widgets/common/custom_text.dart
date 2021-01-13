@@ -12,7 +12,7 @@ class CustomText extends StatelessWidget {
     @required this.fontWeight,
     @required this.color,
     this.textAlign,
-});
+  });
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -49,6 +49,41 @@ class CustomOverflowText extends StatelessWidget {
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
+      ),
+    );
+  }
+}
+
+class CustomFittedText extends StatelessWidget {
+  final String text;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final Color color;
+  final TextAlign textAlign;
+  final double width;
+  CustomFittedText({
+    @required this.text,
+    @required this.fontSize,
+    @required this.fontWeight,
+    @required this.color,
+    @required this.textAlign,
+    @required this.width,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Text(
+          text,
+          textAlign: textAlign == null ? TextAlign.left : textAlign,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            color: color,
+          ),
+        ),
       ),
     );
   }

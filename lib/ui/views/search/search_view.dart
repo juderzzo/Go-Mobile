@@ -122,6 +122,7 @@ class SearchView extends StatelessWidget {
           results: model.causeResults,
           scrollController: null,
           isScrollable: false,
+          onSearchTermSelected: (val) => model.navigateToCausePage(val),
         ),
       ],
     );
@@ -136,6 +137,7 @@ class SearchView extends StatelessWidget {
           results: model.userResults,
           scrollController: null,
           isScrollable: false,
+          onSearchTermSelected: (val) => model.navigateToUserPage(val),
         ),
       ],
     );

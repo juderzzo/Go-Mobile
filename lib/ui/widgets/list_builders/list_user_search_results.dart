@@ -5,11 +5,12 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/search/search_result_view.dart';
 
 class ListUsersSearchResults extends StatelessWidget {
+  final Function(String) onSearchTermSelected;
   final List<SearchResult> results;
   final ScrollController scrollController;
   final bool isScrollable;
 
-  ListUsersSearchResults({@required this.results, @required this.isScrollable, @required this.scrollController});
+  ListUsersSearchResults({@required this.onSearchTermSelected, @required this.results, @required this.isScrollable, @required this.scrollController});
 
   Widget listResults() {
     return ListView.builder(
@@ -24,7 +25,7 @@ class ListUsersSearchResults extends StatelessWidget {
       itemCount: results.length,
       itemBuilder: (context, index) {
         return UserSearchResultView(
-          onTap: null,
+          onTap: () => onSearchTermSelected(results[index].id),
           searchResult: results[index],
           isFollowing: false,
           displayBottomBorder: index == results.length - 1 ? false : true,

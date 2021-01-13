@@ -24,7 +24,7 @@ class CauseViewModel extends BaseViewModel {
   initialize(BuildContext context) async {
     setBusy(true);
     args = RouteData.of(context).arguments;
-    String causeID = args['causeID'];
+    String causeID = args['id'];
 
     ///GET CAUSE
     var res = await _causeDataService.getCauseByID(causeID);

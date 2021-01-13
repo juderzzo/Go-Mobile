@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/about/about_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_view.dart';
@@ -25,12 +26,12 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
             children: [
               IconButton(
                 onPressed: () => model.popPage(),
-                icon: Icon(FontAwesomeIcons.angleLeft, color: Colors.black, size: 24),
+                icon: Icon(FontAwesomeIcons.angleLeft, color: appFontColor(), size: 24),
               ),
               Text(
                 model.cause.name,
                 style: TextStyle(
-                  color: Colors.black,
+                  color: appFontColor(),
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
@@ -90,7 +91,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
       builder: (context, model, child) => Scaffold(
         //appBar: GoAppBar().basicAppBar(title: "Title", showBackButton: true),
         body: Container(
-          color: Colors.white,
+          color: appBackgroundColor(),
           child: SafeArea(
             child: Container(
               child: model.isBusy

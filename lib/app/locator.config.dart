@@ -17,6 +17,7 @@ import '../ui/views/home/tabs/home/home_view_model.dart';
 import '../ui/views/home/tabs/profile/profile_view_model.dart';
 import '../services/services_module.dart';
 import '../services/firestore/user_data_service.dart';
+import '../ui/views/user/user_view_model.dart';
 
 /// adds generated dependencies
 /// to the provided [GetIt] instance
@@ -43,6 +44,7 @@ GetIt $initGetIt(
   gh.singleton<ExploreViewModel>(ExploreViewModel());
   gh.singleton<HomeViewModel>(HomeViewModel());
   gh.singleton<ProfileViewModel>(ProfileViewModel());
+  gh.singleton<UserViewModel>(UserViewModel());
   return get;
 }
 

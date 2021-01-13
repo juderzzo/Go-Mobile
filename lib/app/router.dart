@@ -10,6 +10,7 @@ import 'package:go/ui/views/root/root_view.dart';
 import 'package:go/ui/views/search/all_search_results/all_search_results_view.dart';
 import 'package:go/ui/views/search/search_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
+import 'package:go/ui/views/user/user_view.dart';
 
 ///RUN "flutter pub run build_runner build --delete-conflicting-outputs" in Project Terminal to Generate Routes
 @MaterialAutoRouter(
@@ -30,6 +31,9 @@ import 'package:go/ui/views/settings/settings_view.dart';
     //CAUSES
     MaterialRoute(page: CauseView, name: "CauseViewRoute"),
     MaterialRoute(page: CreateCauseView, name: "CreateCauseViewRoute"),
+
+    //USERS
+    MaterialRoute(page: UserView, name: "UserViewRoute"),
 
     //SEARCH
     MaterialRoute(page: SearchView, name: "SearchViewRoute"),

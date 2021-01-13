@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
+import 'package:go/app/router.gr.dart';
 import 'package:go/models/search_results_model.dart';
 import 'package:go/services/algolia/algolia_search_service.dart';
 import 'package:go/services/auth/auth_service.dart';
@@ -59,6 +60,14 @@ class SearchViewModel extends BaseViewModel {
       searchTextController.selection = TextSelection(baseOffset: 0, extentOffset: searchTextController.text.length);
       FocusScope.of(context).previousFocus();
     }
+  }
+
+  navigateToCausePage(String id) {
+    _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
+  }
+
+  navigateToUserPage(String uid) {
+    _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 
   navigateToPreviousPage() {
