@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
@@ -9,13 +10,9 @@ class ListCauses extends StatelessWidget {
   final VoidCallback refreshData;
   final PageStorageKey pageStorageKey;
   final ScrollController scrollController;
-  ListCauses(
-      {@required this.refreshData,
-      @required this.causesResults,
-      @required this.pageStorageKey,
-      @required this.scrollController});
+  ListCauses({@required this.refreshData, @required this.causesResults, @required this.pageStorageKey, @required this.scrollController});
 
-  Widget listPosts() {
+  Widget listCauses() {
     return RefreshIndicator(
       onRefresh: refreshData,
       backgroundColor: appBackgroundColor(),
@@ -30,7 +27,12 @@ class ListCauses extends StatelessWidget {
         ),
         itemCount: causesResults.length,
         itemBuilder: (context, index) {
-          GoCause cause = GoCause.fromMap(causesResults[index].data());
+          GoCause cause;
+          if (causesResults[index] is DocumentSnapshot) {
+            cause = GoCause.fromMap(causesResults[index].data());
+          } else {
+            cause = causesResults[index];
+          }
           return CauseBlockView(cause: cause);
         },
       ),
@@ -42,7 +44,7 @@ class ListCauses extends StatelessWidget {
     return Container(
       height: screenHeight(context),
       color: appBackgroundColor(),
-      child: listPosts(),
+      child: listCauses(),
     );
   }
 }

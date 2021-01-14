@@ -45,8 +45,8 @@ class SearchViewModel extends BaseViewModel {
       causeResults = [];
       userResults = [];
     } else {
-      causeResults = await _algoliaSearchService.queryCauses(searchTerm: searchTerm, resultsLimit: causesResultsLimit);
-      userResults = await _algoliaSearchService.queryUsers(searchTerm: searchTerm, resultsLimit: userResultsLimit);
+      causeResults = await _algoliaSearchService.searchCauses(searchTerm: searchTerm, resultsLimit: causesResultsLimit);
+      userResults = await _algoliaSearchService.searchUsers(searchTerm: searchTerm, resultsLimit: userResultsLimit);
     }
     notifyListeners();
     setBusy(false);
@@ -55,6 +55,8 @@ class SearchViewModel extends BaseViewModel {
   ///NAVIGATION
   viewAllResultsForSearchTerm({BuildContext context, String searchTerm}) async {
     if (searchTerm.trim().isNotEmpty) {
+      searchTextController.text = searchTerm;
+      notifyListeners();
       _algoliaSearchService.storeSearchTerm(uid: uid, searchTerm: searchTerm);
       await _navigationService.navigateWithTransition(AllSearchResultsView(searchTerm: searchTerm), transition: 'fade', opaque: true);
       searchTextController.selection = TextSelection(baseOffset: 0, extentOffset: searchTextController.text.length);

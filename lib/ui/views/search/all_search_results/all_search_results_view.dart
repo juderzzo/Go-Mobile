@@ -4,6 +4,7 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/search/all_search_results/all_search_results_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
+import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/search/search_field.dart';
 import 'package:stacked/stacked.dart';
@@ -46,6 +47,32 @@ class _AllSearchResultsViewState extends State<AllSearchResultsView> with Single
     );
   }
 
+  Widget body(AllSearchResultsViewModel model) {
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        model.causesResults.isNotEmpty
+            ? ListCauses(
+                refreshData: model.refreshCausesFollowing,
+                causesResults: model.causesResults,
+                pageStorageKey: PageStorageKey('causes-results'),
+                scrollController: model.causeScrollController,
+              )
+            : Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: CustomText(
+                  text: "No Results for \"${widget.searchTerm}\"",
+                  textAlign: TextAlign.center,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: appFontColorAlt(),
+                ),
+              ),
+        Container(),
+      ],
+    );
+  }
+
   Widget tabBar() {
     return GoExplorePageTabBar(
       tabController: _tabController,
@@ -77,8 +104,13 @@ class _AllSearchResultsViewState extends State<AllSearchResultsView> with Single
                 children: [
                   head(model),
                   verticalSpaceSmall,
+                  tabBar(),
+                  verticalSpaceSmall,
                   model.isBusy ? CustomLinearProgressIndicator(color: appActiveColor()) : Container(),
                   SizedBox(height: 8),
+                  Expanded(
+                    child: body(model),
+                  ),
                 ],
               ),
             ),

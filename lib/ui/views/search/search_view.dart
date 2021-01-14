@@ -109,7 +109,7 @@ class SearchView extends StatelessWidget {
       searchTerms: model.recentSearchTerms,
       scrollController: null,
       isScrollable: false,
-      onSearchTermSelected: (val) => model.viewAllResultsForSearchTerm(context: context, searchTerm: model.searchTextController.text.trim()),
+      onSearchTermSelected: (val) => model.viewAllResultsForSearchTerm(context: context, searchTerm: val),
     );
   }
 
