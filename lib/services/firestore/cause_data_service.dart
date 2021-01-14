@@ -96,7 +96,27 @@ class CauseDataService {
     return cause;
   }
 
-  ///READS & QUERIES
+  ///QUERIES
+  //Load Cause by Follower Count
+  Future<List<DocumentSnapshot>> loadCauses({
+    @required int resultsLimit,
+  }) async {
+    List<DocumentSnapshot> docs = [];
+    Query query = causeRef.orderBy('followerCount', descending: true).limit(resultsLimit);
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+      return docs;
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
   //Load Causes Following
   Future<List<DocumentSnapshot>> loadCausesFollowing({
     @required String uid,
@@ -134,6 +154,28 @@ class CauseDataService {
         duration: Duration(seconds: 5),
       );
       return docs;
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  //Load Additional Causes by Follower Count
+  Future<List<DocumentSnapshot>> loadAdditionalCauses({
+    @required DocumentSnapshot lastDocSnap,
+    @required int resultsLimit,
+  }) async {
+    Query query;
+    List<DocumentSnapshot> docs = [];
+    query = causeRef.orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
     });
     if (snapshot.docs.isNotEmpty) {
       docs = snapshot.docs;

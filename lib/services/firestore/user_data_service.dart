@@ -1,12 +1,16 @@
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go/app/locator.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:go/utils/random_string_generator.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class UserDataService {
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
+  SnackbarService _snackbarService = locator<SnackbarService>();
 
   Future checkIfUserExists(String id) async {
     bool exists = false;
@@ -63,6 +67,49 @@ class UserDataService {
     }).catchError((e) {
       return e.message;
     });
+  }
+
+  ///QUERIES
+  //Load Users by Follower Count
+  Future<List<DocumentSnapshot>> loadUsers({
+    @required int resultsLimit,
+  }) async {
+    List<DocumentSnapshot> docs = [];
+    Query query = userRef.orderBy('followerCount', descending: true).limit(resultsLimit);
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+      return docs;
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  //Load Additional Users by Follower Count
+  Future<List<DocumentSnapshot>> loadAdditionalUsers({
+    @required DocumentSnapshot lastDocSnap,
+    @required int resultsLimit,
+  }) async {
+    Query query;
+    List<DocumentSnapshot> docs = [];
+    query = userRef.orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
   }
 
   ///TESTING

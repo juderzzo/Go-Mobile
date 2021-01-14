@@ -10,6 +10,8 @@ class GoUser {
   String personalSite;
   List interests;
   List inspirations;
+  int followerCount;
+  int followingCount;
   List following;
   List followers;
   List blockedUsers;
@@ -28,6 +30,8 @@ class GoUser {
     this.personalSite,
     this.interests,
     this.inspirations,
+    this.followerCount,
+    this.followingCount,
     this.following,
     this.followers,
     this.blockedUsers,
@@ -48,6 +52,8 @@ class GoUser {
           personalSite: data['personalSite'],
           interests: data['interests'],
           inspirations: data['inspirations'],
+          followerCount: data['followerCount'],
+          followingCount: data['followingCount'],
           following: data['following'],
           followers: data['followers'],
           blockedUsers: data['blockedUsers'],
@@ -67,6 +73,8 @@ class GoUser {
         'personalSite': this.personalSite,
         'interests': this.interests,
         'inspirations': this.inspirations,
+        'followerCount': this.followerCount,
+        'followingCount': this.followingCount,
         'following': this.following,
         'followers': this.followers,
         'blockedUsers': this.blockedUsers,
@@ -90,6 +98,8 @@ class GoUser {
       personalSite: "https://google.com",
       interests: ['tag1', 'tag2', 'tag3'],
       inspirations: [],
+      followerCount: 0,
+      followingCount: 0,
       followers: [],
       following: [],
       blockedUsers: [],

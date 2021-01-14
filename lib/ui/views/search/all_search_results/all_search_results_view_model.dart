@@ -3,13 +3,10 @@ import 'package:go/app/locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/algolia/algolia_search_service.dart';
-import 'package:go/services/auth/auth_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class AllSearchResultsViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   AlgoliaSearchService _algoliaSearchService = locator<AlgoliaSearchService>();
 
@@ -20,7 +17,7 @@ class AllSearchResultsViewModel extends BaseViewModel {
 
   ///DATA RESULTS
   String searchTerm;
-  List<GoCause> causesResults = [];
+  List<GoCause> causeResults = [];
   bool loadingAdditionalCauses = false;
   bool moreCausesAvailable = true;
   int causeResultsPageNum = 1;
@@ -55,14 +52,14 @@ class AllSearchResultsViewModel extends BaseViewModel {
   }
 
   ///CAUSES
-  Future<void> refreshCausesFollowing() async {
-    causesResults = [];
+  Future<void> refreshCauses() async {
+    causeResults = [];
     notifyListeners();
     await loadCauses();
   }
 
   loadCauses() async {
-    causesResults = await _algoliaSearchService.queryCauses(searchTerm: searchTerm, resultsLimit: resultsLimit);
+    causeResults = await _algoliaSearchService.queryCauses(searchTerm: searchTerm, resultsLimit: resultsLimit);
     causeResultsPageNum += 1;
     notifyListeners();
   }
@@ -81,7 +78,7 @@ class AllSearchResultsViewModel extends BaseViewModel {
     if (newResults.length == 0) {
       moreCausesAvailable = false;
     } else {
-      causesResults.addAll(newResults);
+      causeResults.addAll(newResults);
       causeResultsPageNum += 1;
     }
     loadingAdditionalCauses = false;
@@ -89,10 +86,10 @@ class AllSearchResultsViewModel extends BaseViewModel {
   }
 
   ///USERS
-  Future<void> refreshUsersFollowing() async {
+  Future<void> refreshUsers() async {
     userResults = [];
     notifyListeners();
-    await loadCauses();
+    await loadUsers();
   }
 
   loadUsers() async {

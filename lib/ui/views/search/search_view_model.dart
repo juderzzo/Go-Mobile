@@ -64,15 +64,15 @@ class SearchViewModel extends BaseViewModel {
     }
   }
 
-  navigateToCausePage(String id) {
+  navigateToCauseView(String id) {
     _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
   }
 
-  navigateToUserPage(String uid) {
+  navigateToUserView(String uid) {
     _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 
-  navigateToPreviousPage() {
+  navigateToPreviousView() {
     _navigationService.popRepeated(1);
   }
 // replaceWithPage() {

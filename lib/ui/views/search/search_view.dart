@@ -29,7 +29,7 @@ class SearchView extends StatelessWidget {
           ),
           SizedBox(width: 8),
           GestureDetector(
-            onTap: () => model.navigateToPreviousPage(),
+            onTap: () => model.navigateToPreviousView(),
             child: CustomText(
               text: "Cancel",
               textAlign: TextAlign.right,
@@ -122,7 +122,7 @@ class SearchView extends StatelessWidget {
           results: model.causeResults,
           scrollController: null,
           isScrollable: false,
-          onSearchTermSelected: (val) => model.navigateToCausePage(val),
+          onSearchTermSelected: (val) => model.navigateToCauseView(val),
         ),
       ],
     );
@@ -137,7 +137,7 @@ class SearchView extends StatelessWidget {
           results: model.userResults,
           scrollController: null,
           isScrollable: false,
-          onSearchTermSelected: (val) => model.navigateToUserPage(val),
+          onSearchTermSelected: (val) => model.navigateToUserView(val),
         ),
       ],
     );

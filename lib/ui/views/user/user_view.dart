@@ -37,12 +37,13 @@ class _UserViewState extends State<UserView> with SingleTickerProviderStateMixin
                 ),
               ),
               CustomFittedText(
-                text: "${model.user.username}",
+                text: model.user == null ? "" : "${model.user.username}",
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: appFontColor(),
                 textAlign: TextAlign.left,
                 width: MediaQuery.of(context).size.width * 0.4,
+                height: 50,
               ),
             ],
           ),
@@ -193,7 +194,7 @@ class _UserViewState extends State<UserView> with SingleTickerProviderStateMixin
                             ),
                           ];
                         },
-                        body: body(model),
+                        body: model.user == null ? Container() : body(model),
                       ),
                     ),
                   ),

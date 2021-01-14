@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/views/causes/cause_block/cause_block_view.dart';
+import 'package:go/ui/widgets/causes/cause_block/cause_block_view.dart';
 
 class ListCauses extends StatelessWidget {
   final List causesResults;
@@ -28,12 +28,23 @@ class ListCauses extends StatelessWidget {
         itemCount: causesResults.length,
         itemBuilder: (context, index) {
           GoCause cause;
+          bool displayBottomBorder = true;
+
+          ///GET CAUSE OBJECT
           if (causesResults[index] is DocumentSnapshot) {
             cause = GoCause.fromMap(causesResults[index].data());
           } else {
             cause = causesResults[index];
           }
-          return CauseBlockView(cause: cause);
+
+          ///DISPLAY BOTTOM BORDER
+          if (causesResults.last == causesResults[index]) {
+            displayBottomBorder = false;
+          }
+          return CauseBlockView(
+            cause: cause,
+            displayBottomBorder: displayBottomBorder,
+          );
         },
       ),
     );

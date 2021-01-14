@@ -60,6 +60,7 @@ class CustomFittedText extends StatelessWidget {
   final FontWeight fontWeight;
   final Color color;
   final TextAlign textAlign;
+  final double height;
   final double width;
   CustomFittedText({
     @required this.text,
@@ -67,11 +68,13 @@ class CustomFittedText extends StatelessWidget {
     @required this.fontWeight,
     @required this.color,
     @required this.textAlign,
+    @required this.height,
     @required this.width,
   });
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       width: width,
       child: FittedBox(
         fit: BoxFit.contain,
