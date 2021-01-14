@@ -1,10 +1,11 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:go/constants/custom_colors.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/about/about_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
+import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:stacked/stacked.dart';
 
@@ -24,10 +25,10 @@ class AboutView extends StatelessWidget {
         autoplay: false,
         indicatorBgPadding: 6,
         dotSpacing: 20,
-        dotBgColor: Colors.white,
-        dotColor: Colors.black12,
+        dotBgColor: appBackgroundColor(),
+        dotColor: appFontColorAlt(),
         dotIncreaseSize: 1.01,
-        dotIncreasedColor: Colors.black45,
+        dotIncreasedColor: appFontColor(),
         images: images,
       ),
     );
@@ -44,13 +45,17 @@ class AboutView extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "23.6K",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              CustomText(
+                text: cause.followerCount.toString(),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: appFontColor(),
               ),
-              Text(
-                "Followers",
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              CustomText(
+                text: "Followers",
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: appFontColor(),
               ),
             ],
           ),
@@ -58,8 +63,8 @@ class AboutView extends StatelessWidget {
               ? CustomButton(
                   isBusy: false,
                   text: "Follow",
-                  textColor: Colors.black,
-                  backgroundColor: Colors.white,
+                  textColor: appFontColor(),
+                  backgroundColor: appButtonColorAlt(),
                   height: 30.0,
                   width: 100,
                   onPressed: () {},
@@ -68,8 +73,8 @@ class AboutView extends StatelessWidget {
                   isBusy: false,
                   text: "Following",
                   elevation: 0.0,
-                  textColor: Colors.black,
-                  backgroundColor: CustomColors.iosOffWhite,
+                  textColor: appFontColor(),
+                  backgroundColor: appButtonColorAlt(),
                   height: 30.0,
                   width: 100,
                   onPressed: () {},
@@ -85,57 +90,45 @@ class AboutView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            "Why:",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
+          CustomText(
+            text: "Why:",
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: appFontColor(),
           ),
-          Text(
-            cause.why,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-            ),
+          CustomText(
+            text: cause.why,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: appFontColor(),
           ),
-          SizedBox(height: 8),
-          Text(
-            "Goal(s):",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
+          verticalSpaceMedium,
+          CustomText(
+            text: "Goal(s)",
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: appFontColor(),
           ),
-          Text(
-            cause.goal,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-            ),
+          CustomText(
+            text: cause.goal,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: appFontColor(),
           ),
-          SizedBox(height: 8),
-          Text(
-            "Resources:",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
+          verticalSpaceMedium,
+          CustomText(
+            text: "Resources",
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: appFontColor(),
           ),
-          Text(
-            cause.resources,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-            ),
+          CustomText(
+            text: cause.resources,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: appFontColor(),
           ),
-          SizedBox(height: 8),
+          verticalSpaceMedium,
         ],
       ),
     );

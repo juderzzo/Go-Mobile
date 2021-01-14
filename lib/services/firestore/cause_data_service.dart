@@ -49,7 +49,7 @@ class CauseDataService {
       actions: actions,
       imageURLs: [],
       followers: [creatorID],
-      followersCount: 1,
+      followerCount: 1,
       forumPostCount: 0,
     );
     if (img1 != null) {

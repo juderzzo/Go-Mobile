@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
+import 'package:go/ui/bottom_sheets/cause_publish_successful_bottom_sheet/cause_publish_successful_bottom_sheet.dart';
 import 'package:go/ui/bottom_sheets/image_picker_bottom_sheet/image_picker_bottom_sheet.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -11,6 +12,7 @@ void setupBottomSheetUI() {
   final builders = {
     BottomSheetType.floating: (context, sheetRequest, completer) => _FloatingBoxBottomSheet(request: sheetRequest, completer: completer),
     BottomSheetType.imagePicker: (context, sheetRequest, completer) => ImagePickerBottomSheet(request: sheetRequest, completer: completer),
+    BottomSheetType.causePublished: (context, sheetRequest, completer) => CausePublishSuccessfulBottomSheet(request: sheetRequest, completer: completer),
   };
   bottomSheetService.setCustomSheetBuilders(builders);
 }

@@ -17,7 +17,10 @@ import '../ui/views/home/home_nav_view.dart';
 import '../ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
+import '../ui/views/search/all_search_results/all_search_results_view.dart';
+import '../ui/views/search/search_view.dart';
 import '../ui/views/settings/settings_view.dart';
+import '../ui/views/user/user_view.dart';
 
 class Routes {
   static const String RootViewRoute = '/';
@@ -27,6 +30,9 @@ class Routes {
   static const String HomeNavViewRoute = '/home-nav-view';
   static const String CauseViewRoute = '/cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
+  static const String UserViewRoute = '/user-view';
+  static const String SearchViewRoute = '/search-view';
+  static const String AllSearchResultsViewRoute = '/all-search-results-view';
   static const String SettingsViewRoute = '/settings-view';
   static const String EditProfileViewRoute = '/edit-profile-view';
   static const all = <String>{
@@ -37,6 +43,9 @@ class Routes {
     HomeNavViewRoute,
     CauseViewRoute,
     CreateCauseViewRoute,
+    UserViewRoute,
+    SearchViewRoute,
+    AllSearchResultsViewRoute,
     SettingsViewRoute,
     EditProfileViewRoute,
   };
@@ -53,6 +62,9 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.HomeNavViewRoute, page: HomeNavView),
     RouteDef(Routes.CauseViewRoute, page: CauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
+    RouteDef(Routes.UserViewRoute, page: UserView),
+    RouteDef(Routes.SearchViewRoute, page: SearchView),
+    RouteDef(Routes.AllSearchResultsViewRoute, page: AllSearchResultsView),
     RouteDef(Routes.SettingsViewRoute, page: SettingsView),
     RouteDef(Routes.EditProfileViewRoute, page: EditProfileView),
   ];
@@ -101,6 +113,27 @@ class GoRouter extends RouterBase {
         settings: data,
       );
     },
+    UserView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => UserView(),
+        settings: data,
+      );
+    },
+    SearchView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SearchView(),
+        settings: data,
+      );
+    },
+    AllSearchResultsView: (data) {
+      final args = data.getArgs<AllSearchResultsViewArguments>(
+        orElse: () => AllSearchResultsViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AllSearchResultsView(searchTerm: args.searchTerm),
+        settings: data,
+      );
+    },
     SettingsView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => SettingsView(),
@@ -114,4 +147,14 @@ class GoRouter extends RouterBase {
       );
     },
   };
+}
+
+/// ************************************************************************
+/// Arguments holder classes
+/// *************************************************************************
+
+/// AllSearchResultsView arguments holder class
+class AllSearchResultsViewArguments {
+  final String searchTerm;
+  AllSearchResultsViewArguments({this.searchTerm});
 }

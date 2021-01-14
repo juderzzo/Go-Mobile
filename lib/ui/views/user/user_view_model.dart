@@ -1,20 +1,23 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/user_data_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 @singleton
-class ProfileViewModel extends BaseViewModel {
+class UserViewModel extends BaseViewModel {
   ///SERVICES
   NavigationService _navigationService = locator<NavigationService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
+  UserDataService _userDataService = locator<UserDataService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
@@ -33,8 +36,11 @@ class ProfileViewModel extends BaseViewModel {
 
   int resultsLimit = 15;
 
-  initialize(TabController tabController, GoUser currentUser) async {
-    user = currentUser;
+  initialize(TabController tabController, BuildContext context) async {
+    setBusy(true);
+    Map<String, dynamic> args = RouteData.of(context).arguments;
+    String uid = args['uid'];
+    user = await _userDataService.getGoUserByID(uid);
     notifyListeners();
     scrollController.addListener(() {
       double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
@@ -142,7 +148,7 @@ class ProfileViewModel extends BaseViewModel {
     });
   }
 
-  navigateToSettingsPage() {
-    _navigationService.navigateTo(Routes.SettingsViewRoute, arguments: {'data': 'example'});
+  navigateToPreviousPage() {
+    _navigationService.back();
   }
 }

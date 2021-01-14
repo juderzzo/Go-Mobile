@@ -7,23 +7,38 @@ import 'package:go/ui/views/home/home_nav_view.dart';
 import 'package:go/ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
+import 'package:go/ui/views/search/all_search_results/all_search_results_view.dart';
+import 'package:go/ui/views/search/search_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
+import 'package:go/ui/views/user/user_view.dart';
 
 ///RUN "flutter pub run build_runner build --delete-conflicting-outputs" in Project Terminal to Generate Routes
 @MaterialAutoRouter(
   routes: <AutoRoute>[
     // initial route is named "/"
     MaterialRoute(page: RootView, initial: true, name: "RootViewRoute"),
+
     //AUTHENTICATION
     MaterialRoute(page: SignUpView, name: "SignUpViewRoute"),
     MaterialRoute(page: SignInView, name: "SignInViewRoute"),
+
     //ONBOARDING
     MaterialRoute(page: OnboardingView, name: "OnboardingViewRoute"),
+
     //HOME
     MaterialRoute(page: HomeNavView, name: "HomeNavViewRoute"),
+
     //CAUSES
     MaterialRoute(page: CauseView, name: "CauseViewRoute"),
     MaterialRoute(page: CreateCauseView, name: "CreateCauseViewRoute"),
+
+    //USERS
+    MaterialRoute(page: UserView, name: "UserViewRoute"),
+
+    //SEARCH
+    MaterialRoute(page: SearchView, name: "SearchViewRoute"),
+    MaterialRoute(page: AllSearchResultsView, name: "AllSearchResultsViewRoute"),
+
     //SETTINGS
     MaterialRoute(page: SettingsView, name: "SettingsViewRoute"),
     MaterialRoute(page: EditProfileView, name: "EditProfileViewRoute"),

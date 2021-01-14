@@ -1,10 +1,9 @@
 import 'dart:io';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
+import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
@@ -19,6 +18,7 @@ class CreateCauseViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   bool isEditing = false;
   File img1;
@@ -26,31 +26,6 @@ class CreateCauseViewModel extends BaseViewModel {
   File img3;
 
   GoCause cause;
-
-  selectImg({BuildContext context, int imgNum, double ratioX, double ratioY}) async {
-    File img;
-    String res = await showModalActionSheet(
-      context: context,
-      message: "Add Image",
-      actions: [
-        SheetAction(label: "Camera", key: 'camera', icon: FontAwesomeIcons.camera),
-        SheetAction(label: "Gallery", key: 'gallery', icon: FontAwesomeIcons.image),
-      ],
-    );
-    if (res == "camera") {
-      img = await GoImagePicker().retrieveImageFromCamera(ratioX: ratioX, ratioY: ratioY);
-    } else if (res == "gallery") {
-      img = await GoImagePicker().retrieveImageFromLibrary(ratioX: ratioX, ratioY: ratioY);
-    }
-    if (imgNum == 1) {
-      img1 = img;
-    } else if (imgNum == 2) {
-      img2 = img;
-    } else {
-      img3 = img;
-    }
-    notifyListeners();
-  }
 
   Future<bool> validateAndSubmitForm({
     String name,
@@ -114,6 +89,44 @@ class CreateCauseViewModel extends BaseViewModel {
       } else {
         return true;
       }
+    }
+  }
+
+  ///BOTTOM SHEETS
+  selectImage({BuildContext context, int imgNum, double ratioX, double ratioY}) async {
+    File img;
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.imagePicker,
+    );
+    if (sheetResponse.responseData != null) {
+      String res = sheetResponse.responseData;
+      if (res == "camera") {
+        img = await GoImagePicker().retrieveImageFromCamera(ratioX: ratioX, ratioY: ratioY);
+      } else if (res == "gallery") {
+        img = await GoImagePicker().retrieveImageFromLibrary(ratioX: ratioX, ratioY: ratioY);
+      }
+      if (imgNum == 1) {
+        img1 = img;
+      } else if (imgNum == 2) {
+        img2 = img;
+      } else {
+        img3 = img;
+      }
+      notifyListeners();
+    }
+  }
+
+  displayCauseUploadSuccessBottomSheet() async {
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.causePublished,
+      takesInput: false,
+      barrierDismissible: true,
+      customData: {
+        'causeID': null,
+      },
+    );
+    if (sheetResponse == null || sheetResponse.responseData != "return") {
+      _navigationService.pushNamedAndRemoveUntil(Routes.HomeNavViewRoute);
     }
   }
 

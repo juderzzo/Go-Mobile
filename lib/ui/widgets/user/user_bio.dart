@@ -62,7 +62,7 @@ class CauseAuthorBio extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         color: appTextFieldContainerColor(),
-        border: Border.all(width: 1.0, color: appBorderColor()),
+        border: Border.all(width: 1.0, color: appBorderColorAlt()),
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
@@ -87,7 +87,7 @@ class CauseAuthorBio extends StatelessWidget {
                     "ABOUT THE CREATOR",
                     style: TextStyle(
                       fontSize: 10,
-                      color: Colors.black87,
+                      color: appFontColorAlt(),
                       fontWeight: FontWeight.w300,
                     ),
                   ),
@@ -96,7 +96,7 @@ class CauseAuthorBio extends StatelessWidget {
                     username,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black87,
+                      color: appFontColor(),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -105,7 +105,7 @@ class CauseAuthorBio extends StatelessWidget {
                     bio,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black,
+                      color: appFontColor(),
                       fontWeight: FontWeight.w400,
                     ),
                   ),

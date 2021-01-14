@@ -18,11 +18,15 @@ Color appButtonColor() {
 }
 
 Color appButtonColorAlt() {
-  return _themeService.isDarkMode ? CustomColors.blackPearl : Colors.white;
+  return _themeService.isDarkMode ? CustomColors.nightShimmer : CustomColors.iosOffWhite;
 }
 
 Color appIconColor() {
   return _themeService.isDarkMode ? Colors.white : Colors.black;
+}
+
+Color appIconColorAlt() {
+  return _themeService.isDarkMode ? Colors.white38 : Colors.black45;
 }
 
 Color appFontColor() {
@@ -30,7 +34,7 @@ Color appFontColor() {
 }
 
 Color appFontColorAlt() {
-  return _themeService.isDarkMode ? Colors.white54 : Colors.black54;
+  return _themeService.isDarkMode ? Colors.white54 : Colors.black38;
 }
 
 Color appPostBorderColor() {

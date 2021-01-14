@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/ui/widgets/common/custom_text.dart';
 
 class CustomAppBar {
   Widget basicAppBar({@required String title, @required bool showBackButton}) {
     return AppBar(
       elevation: 0,
       backgroundColor: appBackgroundColor(),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: appFontColor(),
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+      title: CustomOverflowText(
+        text: title,
+        fontSize: 20,
+        color: appFontColor(),
+        fontWeight: FontWeight.bold,
+        textOverflow: TextOverflow.ellipsis,
       ),
       brightness: appBrightness(),
       leading: showBackButton ? BackButton(color: appIconColor()) : Container(),

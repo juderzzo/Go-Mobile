@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/create_cause/create_cause_view_model.dart';
@@ -32,7 +32,7 @@ class CreateCauseView extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: appFontColor(),
             ),
           ),
           SizedBox(height: 4),
@@ -41,7 +41,7 @@ class CreateCauseView extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w300,
-              color: Colors.black,
+              color: appFontColorAlt(),
             ),
           ),
         ],
@@ -49,12 +49,11 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget singleLineTextField(
-      {TextEditingController controller, String hintText, int textLimit}) {
+  Widget singleLineTextField({TextEditingController controller, String hintText, int textLimit}) {
     return TextFieldContainer(
       child: TextFormField(
         controller: controller,
-        cursorColor: Colors.black,
+        cursorColor: appFontColorAlt(),
         //validator: (value) => value.isEmpty ? 'Field Cannot be Empty' : null,
         inputFormatters: [
           LengthLimitingTextInputFormatter(textLimit),
@@ -67,12 +66,11 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget multiLineTextField(
-      {TextEditingController controller, String hintText}) {
+  Widget multiLineTextField({TextEditingController controller, String hintText}) {
     return TextFieldContainer(
       child: TextFormField(
         controller: controller,
-        cursorColor: Colors.black,
+        cursorColor: appFontColorAlt(),
         //validator: (value) => value.isEmpty ? 'Field Cannot be Empty' : null,
         maxLines: null,
         decoration: InputDecoration(
@@ -89,34 +87,20 @@ class CreateCauseView extends StatelessWidget {
     double width = 110;
     return model.isEditing
         ? CauseImgPreview(
-            onTap: () => model.selectImg(
-                context: context,
-                imgNum: imgNum,
-                ratioX: width,
-                ratioY: height),
+            onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
             height: height,
             width: width,
             imgURL: null,
           )
-        : (imgNum == 1 && model.img1 == null) ||
-                (imgNum == 2 && model.img2 == null) ||
-                (imgNum == 3 && model.img3 == null)
+        : (imgNum == 1 && model.img1 == null) || (imgNum == 2 && model.img2 == null) || (imgNum == 3 && model.img3 == null)
             ? AddImageButton(
-                onTap: () => model.selectImg(
-                    context: context,
-                    imgNum: imgNum,
-                    ratioX: width,
-                    ratioY: height),
+                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
                 iconSize: iconSize,
                 height: height,
                 width: width,
               )
             : CauseImgPreview(
-                onTap: () => model.selectImg(
-                    context: context,
-                    imgNum: imgNum,
-                    ratioX: width,
-                    ratioY: height),
+                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
                 height: height,
                 width: width,
                 file: imgNum == 1
@@ -269,7 +253,7 @@ class CreateCauseView extends StatelessWidget {
                 action3: action3Controller.text.trim(),
               );
               if (formSuccess) {
-                displayBottomActionSheet(context, model);
+                model.displayCauseUploadSuccessBottomSheet();
               }
             },
           ),
@@ -278,107 +262,19 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  displayBottomActionSheet(BuildContext context, CreateCauseViewModel model) {
-    showModalBottomSheet(
-      context: context,
-      isDismissible: false,
-      backgroundColor: Colors.white,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              height: 280,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Cause Published!',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => model.pushAndReplaceUntilHomeNavView(),
-                        icon: Icon(
-                          FontAwesomeIcons.times,
-                          color: Colors.black,
-                          size: 16,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Share Your Cause!",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 24),
-                  GestureDetector(
-                    child: Text(
-                      'Copy Link (disabled)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    onTap: null,
-                  ),
-                  SizedBox(height: 16),
-                  GestureDetector(
-                    child: Text(
-                      'Share (disabled)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    onTap: null,
-                  ),
-                  SizedBox(height: 24),
-                  GestureDetector(
-                    child: Text(
-                      'Done',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    onTap: () => model.pushAndReplaceUntilHomeNavView(),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateCauseViewModel>.reactive(
       viewModelBuilder: () => CreateCauseViewModel(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar()
-            .basicAppBar(title: "Create Cause", showBackButton: true),
+        appBar: CustomAppBar().basicAppBar(title: "Create Cause", showBackButton: true),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
             height: screenHeight(context),
             width: screenWidth(context),
-            color: Colors.white,
+            color: appBackgroundColor(),
             child: form(context, model),
           ),
         ),

@@ -3,9 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
-import 'package:go/ui/views/home/search_field/search_field_view.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
+import 'package:go/ui/widgets/search/search_field.dart';
 import 'package:stacked/stacked.dart';
 
 class ExploreView extends StatefulWidget {
@@ -15,8 +16,7 @@ class ExploreView extends StatefulWidget {
   _ExploreViewState createState() => _ExploreViewState();
 }
 
-class _ExploreViewState extends State<ExploreView>
-    with SingleTickerProviderStateMixin {
+class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
   Widget head(ExploreViewModel model) {
@@ -24,7 +24,12 @@ class _ExploreViewState extends State<ExploreView>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SearchFieldView(),
+          SearchField(
+            heroTag: 'search',
+            onTap: () => model.navigateToSearchView(),
+            enabled: false,
+            textEditingController: null,
+          ),
           IconButton(
             onPressed: () => model.navigateToCreateCauseView(),
             icon: Icon(FontAwesomeIcons.plus, color: appIconColor(), size: 20),
@@ -56,7 +61,7 @@ class _ExploreViewState extends State<ExploreView>
       initialiseSpecialViewModelsOnce: true,
       viewModelBuilder: () => locator<ExploreViewModel>(),
       builder: (context, model, child) => Container(
-        height: MediaQuery.of(context).size.height,
+        height: screenHeight(context),
         color: appBackgroundColor(),
         child: SafeArea(
           child: Container(
