@@ -77,8 +77,6 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  openSearch() {}
-
   ///NAVIGATION
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);

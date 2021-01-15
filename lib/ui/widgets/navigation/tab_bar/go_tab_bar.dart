@@ -68,7 +68,7 @@ class GoCauseViewTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 30,
+      height: 35,
       padding: EdgeInsets.only(bottom: 8),
       child: TabBar(
         controller: tabController,
@@ -86,7 +86,7 @@ class GoCauseViewTabBar extends StatelessWidget {
           Tab(
             child: Container(
               height: 30,
-              width: 150,
+              width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
@@ -102,14 +102,14 @@ class GoCauseViewTabBar extends StatelessWidget {
           Tab(
             child: Container(
               height: 30,
-              width: 150,
+              width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Today's Check List",
+                  "Check List",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -118,7 +118,7 @@ class GoCauseViewTabBar extends StatelessWidget {
           Tab(
             child: Container(
               height: 30,
-              width: 150,
+              width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
