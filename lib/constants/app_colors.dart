@@ -61,6 +61,10 @@ Color appInActiveColorAlt() {
   return _themeService.isDarkMode ? Colors.white38 : Colors.black38;
 }
 
+Color appDestructiveColor() {
+  return Colors.redAccent;
+}
+
 Color appShadowColor() {
   return _themeService.isDarkMode ? Colors.white12 : Colors.black12;
 }

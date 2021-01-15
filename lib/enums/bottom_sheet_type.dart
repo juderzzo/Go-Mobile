@@ -1,5 +1,10 @@
 enum BottomSheetType {
-  floating,
   imagePicker,
   causePublished,
+  causeCreatorOptions,
+  causeOptions,
+  postAuthorOptions,
+  postOptions,
+  currentUserOptions,
+  userOptions,
 }

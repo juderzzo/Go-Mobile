@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/about/about_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
+import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:stacked/stacked.dart';
 
@@ -28,15 +30,20 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                 onPressed: () => model.popPage(),
                 icon: Icon(FontAwesomeIcons.angleLeft, color: appFontColor(), size: 24),
               ),
-              Text(
-                model.cause.name,
-                style: TextStyle(
-                  color: appFontColor(),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
+              CustomFittedText(
+                text: model.cause.name,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: appFontColor(),
+                textAlign: TextAlign.left,
+                height: 50,
+                width: screenWidthFraction(context, dividedBy: 2),
               ),
             ],
+          ),
+          IconButton(
+            onPressed: () => model.navigateToCreatePostView(),
+            icon: Icon(FontAwesomeIcons.edit, color: appFontColor(), size: 18),
           ),
         ],
       ),

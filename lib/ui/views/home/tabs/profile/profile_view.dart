@@ -41,9 +41,9 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
           Row(
             children: [
               IconButton(
-                onPressed: () => model.navigateToEditProfilePage(),
+                onPressed: () => model.showOptions(),
                 icon: Icon(
-                  FontAwesomeIcons.edit,
+                  FontAwesomeIcons.ellipsisH,
                   color: appIconColor(),
                   size: 20,
                 ),

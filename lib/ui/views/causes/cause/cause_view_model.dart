@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
+import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
@@ -61,6 +62,10 @@ class CauseViewModel extends BaseViewModel {
   }
 
   ///NAVIGATION
+  navigateToCreatePostView() {
+    _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {'causeID': cause.id});
+  }
+
   popPage() {
     _navigationService.popRepeated(1);
   }

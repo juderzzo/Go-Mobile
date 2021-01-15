@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
+import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:injectable/injectable.dart';
@@ -129,6 +130,26 @@ class ProfileViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesCreated = false;
     notifyListeners();
+  }
+
+  ///SHOW OPTIONS
+  showOptions() async {
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.currentUserOptions,
+    );
+    if (sheetResponse != null) {
+      String res = sheetResponse.responseData;
+      if (res == "edit") {
+        navigateToEditProfilePage();
+      } else if (res == "share") {
+        //share
+      } else if (res == "report") {
+        //report
+      } else if (res == "delete") {
+        //delete
+      }
+      notifyListeners();
+    }
   }
 
   ///NAVIGATION
