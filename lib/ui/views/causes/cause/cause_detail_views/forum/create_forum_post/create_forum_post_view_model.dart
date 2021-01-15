@@ -117,6 +117,7 @@ class CreateForumPostViewModel extends BaseViewModel {
   }
 
   ///NAVIGATION
+
   pushAndReplaceUntilHomeNavView() {
     _navigationService.pushNamedAndRemoveUntil(Routes.HomeNavViewRoute);
   }

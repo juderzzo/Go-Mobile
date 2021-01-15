@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import 'package:go/ui/views/x_reusable_template/view_model.dart';
+import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
 import 'package:stacked/stacked.dart';
 
 class ForumView extends StatelessWidget {
@@ -11,17 +10,15 @@ class ForumView extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          ForumPostView(
+          ForumPostBlockView(
             postAuthorProfilePicName: "john",
             postAuthorProfilePicURL: "https://source.unsplash.com/random/200x200?sig=1",
           ),
-          verticalSpaceMedium,
-          ForumPostView(
+          ForumPostBlockView(
             postAuthorProfilePicName: "sarah",
             postAuthorProfilePicURL: "https://source.unsplash.com/random/200x200?sig=2",
           ),
-          verticalSpaceMedium,
-          ForumPostView(
+          ForumPostBlockView(
             postAuthorProfilePicName: "michelle",
             postAuthorProfilePicURL: "https://source.unsplash.com/random/200x200?sig=3",
           ),

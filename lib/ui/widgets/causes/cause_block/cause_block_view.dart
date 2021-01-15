@@ -28,7 +28,7 @@ class CauseBlockView extends StatelessWidget {
               Icons.more_horiz,
               color: appIconColor(),
             ),
-            onPressed: null,
+            onPressed: () => model.showOptions(),
           ),
         ],
       ),
