@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../ui/views/auth/sign_in/sign_in_view.dart';
 import '../ui/views/auth/sign_up/sign_up_view.dart';
+import '../ui/views/causes/cause/cause_detail_views/forum/create_forum_post/create_forum_post_view.dart';
 import '../ui/views/causes/cause/cause_view.dart';
 import '../ui/views/causes/create_cause/create_cause_view.dart';
 import '../ui/views/home/home_nav_view.dart';
@@ -30,6 +31,7 @@ class Routes {
   static const String HomeNavViewRoute = '/home-nav-view';
   static const String CauseViewRoute = '/cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
+  static const String CreateForumPostViewRoute = '/create-forum-post-view';
   static const String UserViewRoute = '/user-view';
   static const String SearchViewRoute = '/search-view';
   static const String AllSearchResultsViewRoute = '/all-search-results-view';
@@ -43,6 +45,7 @@ class Routes {
     HomeNavViewRoute,
     CauseViewRoute,
     CreateCauseViewRoute,
+    CreateForumPostViewRoute,
     UserViewRoute,
     SearchViewRoute,
     AllSearchResultsViewRoute,
@@ -62,6 +65,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.HomeNavViewRoute, page: HomeNavView),
     RouteDef(Routes.CauseViewRoute, page: CauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
+    RouteDef(Routes.CreateForumPostViewRoute, page: CreateForumPostView),
     RouteDef(Routes.UserViewRoute, page: UserView),
     RouteDef(Routes.SearchViewRoute, page: SearchView),
     RouteDef(Routes.AllSearchResultsViewRoute, page: AllSearchResultsView),
@@ -110,6 +114,12 @@ class GoRouter extends RouterBase {
     CreateCauseView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => CreateCauseView(),
+        settings: data,
+      );
+    },
+    CreateForumPostView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => CreateForumPostView(),
         settings: data,
       );
     },
