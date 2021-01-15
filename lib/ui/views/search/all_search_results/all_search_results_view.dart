@@ -4,6 +4,8 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/search/all_search_results/all_search_results_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
+import 'package:go/ui/widgets/list_builders/list_causes.dart';
+import 'package:go/ui/widgets/list_builders/list_users.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/search/search_field.dart';
 import 'package:stacked/stacked.dart';
@@ -17,6 +19,19 @@ class AllSearchResultsView extends StatefulWidget {
 
 class _AllSearchResultsViewState extends State<AllSearchResultsView> with SingleTickerProviderStateMixin {
   TabController _tabController;
+
+  Widget noResultsFound() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: CustomText(
+        text: "No Results for \"${widget.searchTerm}\"",
+        textAlign: TextAlign.center,
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        color: appFontColorAlt(),
+      ),
+    );
+  }
 
   Widget head(AllSearchResultsViewModel model) {
     return Container(
@@ -43,6 +58,30 @@ class _AllSearchResultsViewState extends State<AllSearchResultsView> with Single
           ),
         ],
       ),
+    );
+  }
+
+  Widget body(AllSearchResultsViewModel model) {
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        model.causeResults.isNotEmpty
+            ? ListCauses(
+                refreshData: model.refreshCauses,
+                causesResults: model.causeResults,
+                pageStorageKey: PageStorageKey('cause-results'),
+                scrollController: model.causeScrollController,
+              )
+            : noResultsFound(),
+        model.userResults.isNotEmpty
+            ? ListUsers(
+                refreshData: model.refreshUsers,
+                userResults: model.userResults,
+                pageStorageKey: PageStorageKey('user-results'),
+                scrollController: model.userScrollController,
+              )
+            : noResultsFound(),
+      ],
     );
   }
 
@@ -77,8 +116,13 @@ class _AllSearchResultsViewState extends State<AllSearchResultsView> with Single
                 children: [
                   head(model),
                   verticalSpaceSmall,
+                  tabBar(),
+                  verticalSpaceSmall,
                   model.isBusy ? CustomLinearProgressIndicator(color: appActiveColor()) : Container(),
                   SizedBox(height: 8),
+                  Expanded(
+                    child: body(model),
+                  ),
                 ],
               ),
             ),

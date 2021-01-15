@@ -3,13 +3,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
-import 'package:go/ui/views/causes/cause_block/cause_block_view_model.dart';
 import 'package:stacked/stacked.dart';
+
+import 'cause_block_view_model.dart';
 
 class CauseBlockView extends StatelessWidget {
   final GoCause cause;
+  final bool displayBottomBorder;
 
-  CauseBlockView({this.cause});
+  CauseBlockView({this.cause, this.displayBottomBorder});
 
   Widget causeHead(CauseBlockViewModel model) {
     return Container(
@@ -139,10 +141,12 @@ class CauseBlockView extends StatelessWidget {
               causeDetails(model),
               causeOrganizer(model),
               SizedBox(height: 16.0),
-              Divider(
-                thickness: 8.0,
-                color: appPostBorderColor(),
-              ),
+              displayBottomBorder
+                  ? Divider(
+                      thickness: 8.0,
+                      color: appPostBorderColor(),
+                    )
+                  : Container(),
             ],
           ),
         ),

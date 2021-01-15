@@ -32,7 +32,7 @@ class HomeView extends StatelessWidget {
                 IconButton(
                   onPressed: null,
                   icon: Icon(
-                    FontAwesomeIcons.slidersH,
+                    FontAwesomeIcons.bell,
                     color: appIconColor(),
                     size: 20,
                   ),

@@ -1,6 +1,8 @@
 import 'package:algolia/algolia.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go/models/go_cause_model.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:go/models/search_results_model.dart';
 
 class AlgoliaSearchService {
@@ -18,7 +20,7 @@ class AlgoliaSearchService {
     return algolia;
   }
 
-  Future<List<SearchResult>> queryUsers({@required String searchTerm, @required resultsLimit}) async {
+  Future<List<SearchResult>> searchUsers({@required String searchTerm, @required resultsLimit}) async {
     Algolia algolia = await initializeAlgolia();
     List<SearchResult> results = [];
     if (searchTerm != null && searchTerm.isNotEmpty) {
@@ -39,20 +41,15 @@ class AlgoliaSearchService {
     return results;
   }
 
-  Future<List<SearchResult>> queryAdditionalUsers({@required String searchTerm, @required int resultsLimit, @required int pageNum}) async {
+  Future<List<GoUser>> queryUsers({@required String searchTerm, @required resultsLimit}) async {
     Algolia algolia = await initializeAlgolia();
-    List<SearchResult> results = [];
+    List<GoUser> results = [];
     if (searchTerm != null && searchTerm.isNotEmpty) {
-      AlgoliaQuery query = algolia.instance.index('users').setHitsPerPage(resultsLimit).setPage(pageNum).search(searchTerm);
+      AlgoliaQuery query = algolia.instance.index('users').setHitsPerPage(resultsLimit).search(searchTerm);
       AlgoliaQuerySnapshot eventsSnapshot = await query.getObjects();
       eventsSnapshot.hits.forEach((snapshot) {
         if (snapshot.data != null) {
-          SearchResult result = SearchResult(
-            id: snapshot.data['id'],
-            type: snapshot.data['user'],
-            name: snapshot.data['username'],
-            additionalData: snapshot.data['profilePicURL'],
-          );
+          GoUser result = GoUser.fromMap(snapshot.data);
           results.add(result);
         }
       });
@@ -60,7 +57,23 @@ class AlgoliaSearchService {
     return results;
   }
 
-  Future<List<SearchResult>> queryCauses({@required String searchTerm, @required resultsLimit}) async {
+  Future<List<GoUser>> queryAdditionalUsers({@required String searchTerm, @required int resultsLimit, @required int pageNum}) async {
+    Algolia algolia = await initializeAlgolia();
+    List<GoUser> results = [];
+    if (searchTerm != null && searchTerm.isNotEmpty) {
+      AlgoliaQuery query = algolia.instance.index('users').setHitsPerPage(resultsLimit).setPage(pageNum).search(searchTerm);
+      AlgoliaQuerySnapshot eventsSnapshot = await query.getObjects();
+      eventsSnapshot.hits.forEach((snapshot) {
+        if (snapshot.data != null) {
+          GoUser result = GoUser.fromMap(snapshot.data);
+          results.add(result);
+        }
+      });
+    }
+    return results;
+  }
+
+  Future<List<SearchResult>> searchCauses({@required String searchTerm, @required resultsLimit}) async {
     Algolia algolia = await initializeAlgolia();
     List<SearchResult> results = [];
     if (searchTerm != null && searchTerm.isNotEmpty) {
@@ -81,20 +94,31 @@ class AlgoliaSearchService {
     return results;
   }
 
-  Future<List<SearchResult>> queryAdditionalCauses({@required String searchTerm, @required int resultsLimit, @required int pageNum}) async {
+  Future<List<GoCause>> queryCauses({@required String searchTerm, @required resultsLimit}) async {
     Algolia algolia = await initializeAlgolia();
-    List<SearchResult> results = [];
+    List<GoCause> results = [];
+    if (searchTerm != null && searchTerm.isNotEmpty) {
+      AlgoliaQuery query = algolia.instance.index('causes').setHitsPerPage(resultsLimit).search(searchTerm);
+      AlgoliaQuerySnapshot eventsSnapshot = await query.getObjects();
+      eventsSnapshot.hits.forEach((snapshot) {
+        if (snapshot.data != null) {
+          GoCause result = GoCause.fromMap(snapshot.data);
+          results.add(result);
+        }
+      });
+    }
+    return results;
+  }
+
+  Future<List<GoCause>> queryAdditionalCauses({@required String searchTerm, @required int resultsLimit, @required int pageNum}) async {
+    Algolia algolia = await initializeAlgolia();
+    List<GoCause> results = [];
     if (searchTerm != null && searchTerm.isNotEmpty) {
       AlgoliaQuery query = algolia.instance.index('causes').setHitsPerPage(resultsLimit).setPage(pageNum).search(searchTerm);
       AlgoliaQuerySnapshot eventsSnapshot = await query.getObjects();
       eventsSnapshot.hits.forEach((snapshot) {
         if (snapshot.data != null) {
-          SearchResult result = SearchResult(
-            id: snapshot.data['id'],
-            type: snapshot.data['cause'],
-            name: snapshot.data['name'],
-            additionalData: null,
-          );
+          GoCause result = GoCause.fromMap(snapshot.data);
           results.add(result);
         }
       });

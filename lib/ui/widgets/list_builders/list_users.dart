@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/models/go_cause_model.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/widgets/causes/cause_block/cause_block_view.dart';
+import 'package:go/ui/widgets/user/user_block/user_block_view.dart';
 
-class ListCauses extends StatelessWidget {
-  final List causesResults;
+class ListUsers extends StatelessWidget {
+  final List userResults;
   final VoidCallback refreshData;
   final PageStorageKey pageStorageKey;
   final ScrollController scrollController;
-  ListCauses({@required this.refreshData, @required this.causesResults, @required this.pageStorageKey, @required this.scrollController});
+  ListUsers({@required this.refreshData, @required this.userResults, @required this.pageStorageKey, @required this.scrollController});
 
-  Widget listCauses() {
+  Widget listUsers() {
     return RefreshIndicator(
       onRefresh: refreshData,
       backgroundColor: appBackgroundColor(),
@@ -25,24 +25,26 @@ class ListCauses extends StatelessWidget {
           top: 4.0,
           bottom: 4.0,
         ),
-        itemCount: causesResults.length,
+        itemCount: userResults.length,
         itemBuilder: (context, index) {
-          GoCause cause;
+          GoUser user;
           bool displayBottomBorder = true;
 
-          ///GET CAUSE OBJECT
-          if (causesResults[index] is DocumentSnapshot) {
-            cause = GoCause.fromMap(causesResults[index].data());
+          ///GET USER OBJECT
+          if (userResults[index] is Map) {
+            user = GoUser.fromMap(userResults[index]);
+          } else if (userResults[index] is DocumentSnapshot) {
+            user = GoUser.fromMap(userResults[index].data());
           } else {
-            cause = causesResults[index];
+            user = userResults[index];
           }
 
           ///DISPLAY BOTTOM BORDER
-          if (causesResults.last == causesResults[index]) {
+          if (userResults.last == userResults[index]) {
             displayBottomBorder = false;
           }
-          return CauseBlockView(
-            cause: cause,
+          return UserBlockView(
+            user: user,
             displayBottomBorder: displayBottomBorder,
           );
         },
@@ -55,7 +57,7 @@ class ListCauses extends StatelessWidget {
     return Container(
       height: screenHeight(context),
       color: appBackgroundColor(),
-      child: listCauses(),
+      child: listUsers(),
     );
   }
 }
