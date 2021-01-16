@@ -14,10 +14,10 @@ class RootViewModel extends BaseViewModel {
   Future checkAuthState() async {
     bool isLoggedIn = await _authService.isLoggedIn();
     if (isLoggedIn) {
-      ///CHECK IF USER HAS CREATED PROFILE
+      ///CHECK IF USER HAS BEEN ONBOARDED
       String uid = await _authService.getCurrentUserID();
-      bool goUserExists = await _userDataService.checkIfUserExists(uid);
-      if (goUserExists) {
+      bool userOnboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+      if (userOnboarded) {
         _navigationService.replaceWith(Routes.HomeNavViewRoute);
       } else {
         _navigationService.replaceWith(Routes.OnboardingViewRoute);

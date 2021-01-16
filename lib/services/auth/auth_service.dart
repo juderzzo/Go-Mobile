@@ -2,8 +2,14 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:go/app/locator.dart';
+import 'package:go/services/firestore/user_data_service.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class AuthService {
+  UserDataService _userDataService = locator<UserDataService>();
+  SnackbarService _snackbarService = locator<SnackbarService>();
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   //AUTH STATE
@@ -24,6 +30,7 @@ class AuthService {
   }
 
   //SIGN IN & REGISTRATION
+
   Future signUpWithEmail({@required String email, @required String password}) async {
     try {
       UserCredential credential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
@@ -48,4 +55,123 @@ class AuthService {
       return e.message;
     }
   }
+
+  Future loginWithFacebook() async {
+    try {
+      //Acquire FB access token and data
+      final AccessToken accessToken = await FacebookAuth.instance.login(permissions: ['email']);
+      final Map<String, dynamic> fbUserData = await FacebookAuth.instance.getUserData();
+      final OAuthCredential oAuthCredential = FacebookAuthProvider.credential(accessToken.token);
+
+      //Authenticate token with Firebase
+      try {
+        UserCredential credential = await firebaseAuth.signInWithCredential(oAuthCredential);
+        if (credential.user != null) {
+          //Create New User or Find Existing One
+          bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
+
+          if (userExists) {
+            return true;
+          } else {
+            //Create New User
+            var res = await _userDataService.createGoUser(
+              id: credential.user.uid,
+              fbID: accessToken.userId,
+              googleID: null,
+              email: fbUserData['email'],
+              phoneNo: null,
+            );
+            if (res is String) {
+              _snackbarService.showSnackbar(
+                title: 'Login Error',
+                message: res,
+                duration: Duration(seconds: 5),
+              );
+              return false;
+            } else {
+              return true;
+            }
+          }
+        }
+      } catch (e) {
+        _snackbarService.showSnackbar(
+          title: 'Login Error',
+          message: e.message,
+          duration: Duration(seconds: 5),
+        );
+      }
+    } on FacebookAuthException catch (e) {
+      String errorMessage = "";
+      switch (e.errorCode) {
+        case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:
+          errorMessage = "Login operation already in progress...";
+          break;
+        case FacebookAuthErrorCode.CANCELLED:
+          errorMessage = "Facebook login cancelled";
+          break;
+        case FacebookAuthErrorCode.FAILED:
+          errorMessage = "Facebook login failed";
+          break;
+      }
+      _snackbarService.showSnackbar(
+        title: 'Facebook Login Error',
+        message: errorMessage,
+        duration: Duration(seconds: 5),
+      );
+    }
+  }
+
+  //ACCOUNT LINKING
+  // Future<String> linkFacebookAccount(LoginResult result) async {
+  //   String error;
+  //   bool hasFBAccountConnected = false;
+  //   User user = firebaseAuth.currentUser;
+  //   user.providerData.forEach((userInfo) async {
+  //     if (userInfo.providerId == "facebook.com") {
+  //       hasFBAccountConnected = true;
+  //       String fbID = await FacebookGraphAPI().getUserID(result.accessToken.token);
+  //       if (userInfo.uid == fbID) {
+  //         await WebblenUserData().setFBAccessToken(user.uid, result.accessToken.token);
+  //       } else {
+  //         error = "This Account is Already Associated with a FB Account";
+  //       }
+  //     }
+  //   });
+  //   if (!hasFBAccountConnected) {
+  //     final AuthCredential credential = FacebookAuthProvider.credential(result.accessToken.token);
+  //     await user.linkWithCredential(credential).then((res) {
+  //       WebblenUserData().setFBAccessToken(user.uid, result.accessToken.token);
+  //     }).catchError((e) {
+  //       error = e.code;
+  //     });
+  //   }
+  //   return error;
+  // }
+  //
+  // Future<String> linkYoutubeAccount(GoogleSignInAuthentication googleAuth) async {
+  //   String error;
+  //   bool hasGoogleAccountConnected = false;
+  //   User user = firebaseAuth.currentUser;
+  //   user.providerData.forEach((userInfo) async {
+  //     print(userInfo);
+  //     if (userInfo.providerId == "google.com") {
+  //       hasGoogleAccountConnected = true;
+  //       // String fbID = await FacebookGraphAPI().getUserID(result.accessToken.token);
+  //       // if (userInfo.uid == fbID) {
+  //       //   await WebblenUserData().setFBAccessToken(user.uid, result.accessToken.token);
+  //       // } else {
+  //       //   error = "This Account is Already Associated with a FB Account";
+  //       // }
+  //     }
+  //   });
+  //   if (!hasGoogleAccountConnected) {
+  //     final AuthCredential credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+  //     await user.linkWithCredential(credential).then((res) {
+  //       WebblenUserData().setGoogleAccessTokenAndID(user.uid, googleAuth.accessToken, googleAuth.idToken);
+  //     }).catchError((e) {
+  //       error = e.code;
+  //     });
+  //   }
+  //   return error;
+  // }
 }
