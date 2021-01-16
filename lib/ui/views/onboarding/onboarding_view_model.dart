@@ -23,6 +23,11 @@ class OnboardingViewModel extends BaseViewModel {
     if (image != null) {
       _userDataService.updateProfilePic(uid, image);
     }
+
+    user.bio = bio;
+    user.interests = interests;
+    user.inspirations = inspirations;
+    user.personalSite = site;
     _userDataService.updateGoUser(user);
     // GoUser user = new GoUser(
     //   id: uid,
