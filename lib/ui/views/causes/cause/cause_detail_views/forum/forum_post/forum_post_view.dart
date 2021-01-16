@@ -3,11 +3,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view_model.dart';
+import 'package:go/ui/widgets/comments/comment_text_field_view.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
 
 class ForumPostView extends StatelessWidget {
+  final FocusNode focusNode = FocusNode();
+
   Widget postBody(ForumPostViewModel model) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -126,9 +129,32 @@ class ForumPostView extends StatelessWidget {
           color: appBackgroundColor(),
           child: model.isBusy
               ? Container()
-              : ListView(
+              : Stack(
                   children: [
-                    postBody(model),
+                    GestureDetector(
+                      onTap: null, //() => dismissKeyboard(),
+                      child: RefreshIndicator(
+                        backgroundColor: appBackgroundColor(),
+                        onRefresh: () async {},
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: [
+                            postBody(model),
+                            //postComments(),
+                            SizedBox(height: 50),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      child: CommentTextFieldView(
+                        focusNode: focusNode,
+                        commentTextController: model.commentTextController,
+                        isReplying: false,
+                        replyReceiverUsername: null,
+                      ),
+                    ),
                   ],
                 ),
         ),

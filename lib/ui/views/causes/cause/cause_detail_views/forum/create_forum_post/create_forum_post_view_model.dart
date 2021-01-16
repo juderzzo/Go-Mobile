@@ -66,7 +66,7 @@ class CreateForumPostViewModel extends BaseViewModel {
           authorID: authorID,
           body: body,
           dateCreatedInMilliseconds: originalPost.dateCreatedInMilliseconds,
-          replyCount: originalPost.replyCount,
+          commentCount: originalPost.commentCount,
         );
       } else {
         res = await _postDataService.createPost(
@@ -75,7 +75,7 @@ class CreateForumPostViewModel extends BaseViewModel {
           authorID: authorID,
           body: body,
           dateCreatedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-          replyCount: 0,
+          commentCount: 0,
         );
       }
       setBusy(false);

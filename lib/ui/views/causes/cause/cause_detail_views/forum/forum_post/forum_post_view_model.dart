@@ -18,6 +18,9 @@ class ForumPostViewModel extends BaseViewModel {
   UserDataService _userDataService = locator<UserDataService>();
   PostDataService _postDataService = locator<PostDataService>();
 
+  ///HELPERS
+  TextEditingController commentTextController = TextEditingController();
+
   ///DATA
   String authorUsername;
   String authorProfilePicURL;

@@ -102,7 +102,7 @@ class ForumPostBlockView extends StatelessWidget {
                     ),
                     horizontalSpaceSmall,
                     CustomText(
-                      text: post.replyCount.toString(),
+                      text: post.commentCount.toString(),
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
                       color: appFontColor(),

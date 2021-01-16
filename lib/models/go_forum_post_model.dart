@@ -4,7 +4,7 @@ class GoForumPost {
   String authorID;
   int dateCreatedInMilliseconds;
   String body;
-  int replyCount;
+  int commentCount;
 
   GoForumPost({
     this.id,
@@ -12,7 +12,7 @@ class GoForumPost {
     this.authorID,
     this.dateCreatedInMilliseconds,
     this.body,
-    this.replyCount,
+    this.commentCount,
   });
 
   GoForumPost.fromMap(Map<String, dynamic> data)
@@ -22,7 +22,7 @@ class GoForumPost {
           authorID: data['authorID'],
           dateCreatedInMilliseconds: data['dateCreatedInMilliseconds'],
           body: data['body'],
-          replyCount: data['replyCount'],
+          commentCount: data['commentCount'],
         );
 
   Map<String, dynamic> toMap() => {
@@ -31,6 +31,6 @@ class GoForumPost {
         'authorID': this.authorID,
         'dateCreatedInMilliseconds': this.dateCreatedInMilliseconds,
         'body': this.body,
-        'replyCount': this.replyCount,
+        'commentCount': this.commentCount,
       };
 }

@@ -25,7 +25,7 @@ class PostDataService {
     String authorID,
     String body,
     int dateCreatedInMilliseconds,
-    int replyCount,
+    int commentCount,
   }) async {
     GoForumPost post = GoForumPost(
       id: id,
@@ -33,7 +33,7 @@ class PostDataService {
       authorID: authorID,
       body: body,
       dateCreatedInMilliseconds: dateCreatedInMilliseconds,
-      replyCount: replyCount,
+      commentCount: commentCount,
     );
     await postRef.doc(post.id).set(post.toMap()).catchError((e) {
       return e.message;
