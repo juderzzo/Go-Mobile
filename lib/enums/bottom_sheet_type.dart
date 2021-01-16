@@ -3,6 +3,7 @@ enum BottomSheetType {
   causePublished,
   causeCreatorOptions,
   causeOptions,
+  postPublished,
   postAuthorOptions,
   postOptions,
   currentUserOptions,

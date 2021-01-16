@@ -4,10 +4,10 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/about/about_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view.dart';
-import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
+import 'package:go/ui/widgets/list_builders/list_posts.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:stacked/stacked.dart';
 
@@ -74,7 +74,12 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
             CheckListView(
               actions: model.cause.actions,
             ),
-            ForumView(),
+            ListPosts(
+              refreshData: () => model.refreshPosts(),
+              postResults: model.postResults,
+              pageStorageKey: PageStorageKey("cause-posts"),
+              scrollController: model.postsScrollController,
+            ),
           ],
         ),
       ),
@@ -102,7 +107,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
           child: SafeArea(
             child: Container(
               child: model.isBusy
-                  ? Center(child: CustomCircleProgressIndicator(color: Colors.black38, size: 48))
+                  ? Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48))
                   : Column(
                       children: [
                         head(model),

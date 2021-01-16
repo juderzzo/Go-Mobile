@@ -14,6 +14,7 @@ import '../services/auth/auth_service.dart';
 import '../services/firestore/cause_data_service.dart';
 import '../ui/views/home/tabs/explore/explore_view_model.dart';
 import '../ui/views/home/tabs/home/home_view_model.dart';
+import '../services/firestore/post_data_service.dart';
 import '../ui/views/home/tabs/profile/profile_view_model.dart';
 import '../services/services_module.dart';
 import '../services/firestore/user_data_service.dart';
@@ -36,6 +37,7 @@ GetIt $initGetIt(
   gh.lazySingleton<CauseDataService>(() => servicesModule.causeDataService);
   gh.lazySingleton<DialogService>(() => servicesModule.dialogService);
   gh.lazySingleton<NavigationService>(() => servicesModule.navigationService);
+  gh.lazySingleton<PostDataService>(() => servicesModule.postDataService);
   gh.lazySingleton<SnackbarService>(() => servicesModule.snackBarService);
   gh.lazySingleton<ThemeService>(() => servicesModule.themeService);
   gh.lazySingleton<UserDataService>(() => servicesModule.userDataService);
@@ -61,6 +63,8 @@ class _$ServicesModule extends ServicesModule {
   DialogService get dialogService => DialogService();
   @override
   NavigationService get navigationService => NavigationService();
+  @override
+  PostDataService get postDataService => PostDataService();
   @override
   SnackbarService get snackBarService => SnackbarService();
   @override

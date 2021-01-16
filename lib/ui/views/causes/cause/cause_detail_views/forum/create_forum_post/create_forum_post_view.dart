@@ -9,8 +9,6 @@ import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 
 class CreateForumPostView extends StatelessWidget {
-  final postTextController = TextEditingController();
-
   Widget textFieldHeader(String header, String subHeader) {
     return Container(
       child: Column(
@@ -45,7 +43,7 @@ class CreateForumPostView extends StatelessWidget {
         children: [
           verticalSpaceSmall,
           MultiLineTextField(
-            controller: postTextController,
+            controller: model.postTextController,
             hintText: "What's on your mind?",
             maxLines: 10,
           ),
@@ -53,15 +51,13 @@ class CreateForumPostView extends StatelessWidget {
           CustomButton(
             height: 48,
             backgroundColor: CustomColors.goGreen,
-            text: "Publish",
+            text: model.isEditing ? "Update" : "Publish",
             textColor: Colors.white,
             isBusy: model.isBusy,
             onPressed: () async {
-              bool formSuccess = await model.validateAndSubmitForm(
-                post: postTextController.text.trim(),
-              );
+              bool formSuccess = await model.validateAndSubmitForm();
               if (formSuccess) {
-                model.displayCauseUploadSuccessBottomSheet();
+                model.displayPostUploadSuccessBottomSheet();
               }
             },
           ),

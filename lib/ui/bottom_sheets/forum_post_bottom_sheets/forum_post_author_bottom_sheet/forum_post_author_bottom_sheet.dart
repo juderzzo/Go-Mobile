@@ -30,7 +30,7 @@ class ForumPostAuthorBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "share")),
+              onPressed: () => completer(SheetResponse(responseData: "edit")),
               text: "Edit",
               textSize: 16,
               textColor: appFontColor(),
@@ -40,6 +40,7 @@ class ForumPostAuthorBottomSheet extends StatelessWidget {
               elevation: 1.0,
               isBusy: false,
             ),
+            verticalSpaceSmall,
             CustomButton(
               onPressed: () => completer(SheetResponse(responseData: "share")),
               text: "Share (disabled)",

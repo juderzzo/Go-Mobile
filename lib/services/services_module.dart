@@ -1,6 +1,7 @@
 import 'package:go/services/algolia/algolia_search_service.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/post_data_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
@@ -27,6 +28,8 @@ abstract class ServicesModule {
   UserDataService get userDataService;
   @lazySingleton
   CauseDataService get causeDataService;
+  @lazySingleton
+  PostDataService get postDataService;
   @lazySingleton
   AlgoliaSearchService get algoliaSearchService;
 }

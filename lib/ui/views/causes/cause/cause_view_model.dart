@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
@@ -6,6 +7,7 @@ import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -15,17 +17,37 @@ class CauseViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
+  PostDataService _postDataService = locator<PostDataService>();
   UserDataService _userDataService = locator<UserDataService>();
 
+  ///HELPERS
+  ScrollController postsScrollController = ScrollController();
+
+  ///CURRENT USER
+  GoUser user;
   GoCause cause;
   GoUser causeCreator;
   List images = [];
-  Map<String, dynamic> args;
+
+  ///DATA RESULTS
+  List<DocumentSnapshot> postResults = [];
+  bool loadingAdditionalPosts = false;
+  bool morePostsAvailable = true;
+
+  int resultsLimit = 15;
 
   initialize(BuildContext context) async {
     setBusy(true);
-    args = RouteData.of(context).arguments;
+    Map<String, dynamic> args = RouteData.of(context).arguments;
     String causeID = args['id'];
+
+    ///SET SCROLL CONTROLLER
+    postsScrollController.addListener(() {
+      double triggerFetchMoreSize = 0.9 * postsScrollController.position.maxScrollExtent;
+      if (postsScrollController.position.pixels > triggerFetchMoreSize) {
+        loadAdditionalPosts();
+      }
+    });
 
     ///GET CAUSE
     var res = await _causeDataService.getCauseByID(causeID);
@@ -45,6 +67,12 @@ class CauseViewModel extends BaseViewModel {
       await getCauseCreator(cause.creatorID);
     }
     notifyListeners();
+
+    ///LOAD POSTS
+    if (cause != null) {
+      await loadPosts();
+      notifyListeners();
+    }
     setBusy(false);
   }
 
@@ -61,9 +89,46 @@ class CauseViewModel extends BaseViewModel {
     }
   }
 
+  Future<void> refreshPosts() async {
+    postResults = [];
+    notifyListeners();
+    await loadPosts();
+  }
+
+  loadPosts() async {
+    postResults = await _postDataService.loadPosts(
+      resultsLimit: resultsLimit,
+      causeID: cause.id,
+    );
+    notifyListeners();
+  }
+
+  loadAdditionalPosts() async {
+    if (loadingAdditionalPosts || !morePostsAvailable) {
+      return;
+    }
+    loadingAdditionalPosts = true;
+    notifyListeners();
+    List<DocumentSnapshot> newResults = await _postDataService.loadAdditionalPosts(
+      lastDocSnap: postResults[postResults.length - 1],
+      resultsLimit: resultsLimit,
+      causeID: cause.id,
+    );
+    if (newResults.length == 0) {
+      morePostsAvailable = false;
+    } else {
+      postResults.addAll(newResults);
+    }
+    loadingAdditionalPosts = false;
+    notifyListeners();
+  }
+
   ///NAVIGATION
-  navigateToCreatePostView() {
-    _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {'causeID': cause.id});
+  navigateToCreatePostView() async {
+    Map<String, dynamic> data = await _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {'causeID': cause.id});
+    if (data['result'] == 'newPostCreated') {
+      refreshPosts();
+    }
   }
 
   popPage() {
