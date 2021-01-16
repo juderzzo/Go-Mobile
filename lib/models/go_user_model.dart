@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class GoUser {
   String id;
   String fbID;
@@ -82,6 +84,37 @@ class GoUser {
         'notifToken': this.notifToken,
       };
 
+  GoUser generateNewUser({
+    @required String id,
+    @required String fbID,
+    @required String googleID,
+    @required String email,
+    @required String phoneNo,
+  }) {
+    GoUser user = GoUser(
+      id: id,
+      fbID: fbID,
+      googleID: googleID,
+      email: email,
+      phoneNo: phoneNo,
+      username: id.substring(0, 10),
+      profilePicURL: "https://picsum.photos/200",
+      bio: "",
+      personalSite: "",
+      interests: [],
+      inspirations: [],
+      followerCount: 0,
+      followingCount: 0,
+      followers: [],
+      following: [],
+      blockedUsers: [],
+      appOpenTimeInMilliseconds: null,
+      notifToken: null,
+    );
+    return user;
+  }
+
+  ///TESTING
   GoUser generateDummyUserFromID(String id) {
     GoUser user = GoUser(
       id: id,

@@ -108,7 +108,7 @@ class SignInView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             FacebookAuthButton(
-                              action: null,
+                              action: () => model.loginWithFacebook(),
                             ),
                             Platform.isIOS
                                 ? AppleAuthButton(

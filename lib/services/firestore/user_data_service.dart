@@ -23,8 +23,32 @@ class UserDataService {
     return exists;
   }
 
-  Future createGoUser(GoUser user) async {
-    await userRef.doc(user.id).set(user.toMap()).catchError((e) {
+  Future checkIfUserHasBeenOnboarded(String id) async {
+    bool onboarded = false;
+    DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
+      return e.message;
+    });
+    if (snapshot.exists) {
+      onboarded = snapshot.data()['onboarded'] == null ? false : snapshot.data()['onboarded'];
+    }
+    return onboarded;
+  }
+
+  Future createGoUser({
+    @required String id,
+    @required String fbID,
+    @required String googleID,
+    @required String email,
+    @required String phoneNo,
+  }) async {
+    GoUser newUser = GoUser().generateNewUser(
+      id: id,
+      fbID: fbID,
+      googleID: googleID,
+      email: email,
+      phoneNo: phoneNo,
+    );
+    await userRef.doc(newUser.id).set(newUser.toMap()).catchError((e) {
       return e.message;
     });
   }
@@ -115,7 +139,7 @@ class UserDataService {
   ///TESTING
   Future generateDummyUserFromID(String id) async {
     GoUser user = GoUser().generateDummyUserFromID(id);
-    var res = await createGoUser(user);
-    return res;
+    //var res = await createGoUser(user);
+    //return res;
   }
 }
