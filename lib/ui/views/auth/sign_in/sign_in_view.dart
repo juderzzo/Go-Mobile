@@ -112,7 +112,7 @@ class SignInView extends StatelessWidget {
                             ),
                             Platform.isIOS
                                 ? AppleAuthButton(
-                                    action: null,
+                                    action: () => model.loginWithApple(),
                                   )
                                 : Container(),
                             GoogleAuthButton(

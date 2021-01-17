@@ -146,15 +146,15 @@ class SignUpView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             FacebookAuthButton(
-                              action: null,
+                              action: () => model.loginWithFacebook(),
                             ),
                             Platform.isIOS
                                 ? AppleAuthButton(
-                                    action: null,
+                                    action: () => model.loginWithApple(),
                                   )
                                 : Container(),
                             GoogleAuthButton(
-                              action: null,
+                              action: () => model.loginWithGoogle(),
                             ),
                           ],
                         ),
