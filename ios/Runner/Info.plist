@@ -26,12 +26,15 @@
 	<true/>
 	<key>CFBundleURLTypes</key>
     <array>
-      <dict>
-      <key>CFBundleURLSchemes</key>
-      <array>
-        <string>fb222465742607799</string>
-      </array>
-      </dict>
+        <dict>
+    		<key>CFBundleTypeRole</key>
+    			<string>Editor</string>
+    			<key>CFBundleURLSchemes</key>
+    			<array>
+    				<string>fb222465742607799</string>
+    				<string>com.googleusercontent.apps.865785917892-7ntg5p40eouc2cs5r6djc3l0ahd0dbg4</string>
+    			</array>g
+    		</dict>
     </array>
     <key>FacebookAppID</key>
     <string>222465742607799</string>

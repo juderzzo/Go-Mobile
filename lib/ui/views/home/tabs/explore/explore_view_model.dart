@@ -34,6 +34,9 @@ class ExploreViewModel extends BaseViewModel {
 
   int resultsLimit = 15;
 
+  bool refreshingCauses = false;
+  bool refreshingUsers = false;
+
   initialize() async {
     notifyListeners();
     causeScrollController.addListener(() {
@@ -56,6 +59,7 @@ class ExploreViewModel extends BaseViewModel {
 
   ///CAUSES
   Future<void> refreshCauses() async {
+    refreshingCauses = true;
     causeResults = [];
     notifyListeners();
     await loadCauses();
@@ -63,6 +67,7 @@ class ExploreViewModel extends BaseViewModel {
 
   loadCauses() async {
     causeResults = await _causeDataService.loadCauses(resultsLimit: resultsLimit);
+    refreshingCauses = false;
     notifyListeners();
   }
 
@@ -87,6 +92,7 @@ class ExploreViewModel extends BaseViewModel {
 
   ///USERS
   Future<void> refreshUsers() async {
+    refreshingUsers = true;
     userResults = [];
     notifyListeners();
     await loadUsers();
@@ -94,6 +100,7 @@ class ExploreViewModel extends BaseViewModel {
 
   loadUsers() async {
     userResults = await _userDataService.loadUsers(resultsLimit: resultsLimit);
+    refreshingUsers = false;
     notifyListeners();
   }
 

@@ -75,7 +75,6 @@ class CustomFittedText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: height,
-      width: width,
       child: FittedBox(
         fit: BoxFit.contain,
         child: Text(

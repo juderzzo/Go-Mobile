@@ -56,7 +56,12 @@ class CauseBlockViewModel extends BaseViewModel {
     }
   }
 
+  ///NAVIGATION
   navigateToCauseView(String id) {
     _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
+  }
+
+  navigateToUserView(String uid) {
+    _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 }

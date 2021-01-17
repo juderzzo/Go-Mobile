@@ -116,7 +116,7 @@ class SignInView extends StatelessWidget {
                                   )
                                 : Container(),
                             GoogleAuthButton(
-                              action: null,
+                              action: () => model.loginWithGoogle(),
                             ),
                           ],
                         ),

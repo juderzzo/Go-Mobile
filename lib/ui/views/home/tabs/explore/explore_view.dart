@@ -60,22 +60,22 @@ class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStat
     return TabBarView(
       controller: _tabController,
       children: [
-        model.causeResults.isNotEmpty
-            ? ListCauses(
+        model.causeResults.isEmpty && !model.refreshingCauses
+            ? noDataFound("Causes")
+            : ListCauses(
                 refreshData: model.refreshCauses,
                 causesResults: model.causeResults,
                 pageStorageKey: PageStorageKey('cause-results'),
                 scrollController: model.causeScrollController,
-              )
-            : noDataFound("Causes"),
-        model.userResults.isNotEmpty
-            ? ListUsers(
+              ),
+        model.userResults.isEmpty && !model.refreshingUsers
+            ? noDataFound("Users")
+            : ListUsers(
                 refreshData: model.refreshUsers,
                 userResults: model.userResults,
                 pageStorageKey: PageStorageKey('user-results'),
                 scrollController: model.userScrollController,
-              )
-            : noDataFound("Users"),
+              ),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
 
 import 'cause_block_view_model.dart';
@@ -48,6 +49,7 @@ class CauseBlockView extends StatelessWidget {
               dotColor: appFontColorAlt(),
               dotIncreaseSize: 1.01,
               dotIncreasedColor: appFontColor(),
+              showIndicator: model.images.length > 1 ? true : false,
               images: model.images,
             ),
           );
@@ -59,6 +61,7 @@ class CauseBlockView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          model.images.length > 1 ? Container() : verticalSpaceMedium,
           Text(
             "Why:",
             style: TextStyle(
@@ -112,7 +115,7 @@ class CauseBlockView extends StatelessWidget {
             TextSpan(
               text: model.creatorUsername,
               style: TextStyle(color: appTextButtonColor()),
-              recognizer: TapGestureRecognizer()..onTap = null,
+              recognizer: TapGestureRecognizer()..onTap = () => model.navigateToUserView(cause.creatorID),
             ),
           ],
         ),

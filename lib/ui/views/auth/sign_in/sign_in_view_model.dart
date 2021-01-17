@@ -60,6 +60,46 @@ class SignInViewModel extends BaseViewModel {
     }
   }
 
+  Future loginWithApple() async {
+    setBusy(true);
+
+    var result = await _authService.loginWithApple();
+
+    setBusy(false);
+
+    if (result is bool) {
+      if (result) {
+        String uid = await _authService.getCurrentUserID();
+        bool onboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+        if (onboarded) {
+          _navigationService.replaceWith(Routes.HomeNavViewRoute);
+        } else {
+          _navigationService.replaceWith(Routes.OnboardingViewRoute);
+        }
+      }
+    }
+  }
+
+  Future loginWithGoogle() async {
+    setBusy(true);
+
+    var result = await _authService.loginWithGoogle();
+
+    setBusy(false);
+
+    if (result is bool) {
+      if (result) {
+        String uid = await _authService.getCurrentUserID();
+        bool onboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+        if (onboarded) {
+          _navigationService.replaceWith(Routes.HomeNavViewRoute);
+        } else {
+          _navigationService.replaceWith(Routes.OnboardingViewRoute);
+        }
+      }
+    }
+  }
+
   ///NAVIGATION
   replaceWithSignUpPage() {
     _navigationService.replaceWith(Routes.SignUpViewRoute);
