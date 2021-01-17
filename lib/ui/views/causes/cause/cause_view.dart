@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/about/about_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view_model.dart';
@@ -37,7 +36,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                 color: appFontColor(),
                 textAlign: TextAlign.left,
                 height: 50,
-                width: screenWidthFraction(context, dividedBy: 2),
+                width: 150,
               ),
             ],
           ),
@@ -63,18 +62,22 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
         child: TabBarView(
           controller: _tabController,
           children: [
-            AboutView(
-              cause: model.cause,
-              images: model.images,
-              creatorUsername: "@${model.causeCreator.username}",
-              creatorProfilePicURL: model.causeCreator.profilePicURL,
-              viewCreator: null,
-              isFollowing: false,
-            ),
+            model.causeCreator == null
+                ? Container()
+                : AboutView(
+                    cause: model.cause,
+                    images: model.images,
+                    creatorUsername: "@${model.causeCreator.username}",
+                    creatorProfilePicURL: model.causeCreator.profilePicURL,
+                    viewCreator: null,
+                    isFollowing: model.isFollowingCause,
+                    followUnfollowCause: () => model.followUnfollowCause(),
+                  ),
             CheckListView(
               actions: model.cause.actions,
             ),
             ListPosts(
+              refreshingData: model.refreshingPosts,
               refreshData: () => model.refreshPosts(),
               postResults: model.postResults,
               pageStorageKey: PageStorageKey("cause-posts"),

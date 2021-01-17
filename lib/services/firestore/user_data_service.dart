@@ -95,6 +95,7 @@ class UserDataService {
   Future updateGoUserBio(String id, String bio) async {
     await userRef.doc(id).update({
       "bio": bio,
+      "onboarded": true,
     }).catchError((e) {
       return e.message;
     });

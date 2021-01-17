@@ -57,7 +57,7 @@ class HomeView extends StatelessWidget {
 
   Widget listCauses(HomeViewModel model) {
     return Expanded(
-      child: model.causesFollowingResults.isEmpty
+      child: model.causesFollowingResults.isEmpty && !model.isReloading
           ? Center(
               child: ZeroStateView(
                 imageAssetName: 'coding',

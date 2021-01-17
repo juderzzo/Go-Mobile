@@ -26,6 +26,7 @@ class HomeViewModel extends BaseViewModel {
   List<DocumentSnapshot> causesFollowingResults = [];
   bool loadingAdditionalCausesFollowing = false;
   bool moreCausesFollowingAvailable = true;
+  bool isReloading = false;
 
   int resultsLimit = 15;
 
@@ -44,6 +45,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> refreshCausesFollowing() async {
+    isReloading = true;
     causesFollowingResults = [];
     notifyListeners();
     await loadCausesFollowing();
@@ -54,6 +56,7 @@ class HomeViewModel extends BaseViewModel {
       resultsLimit: resultsLimit,
       uid: user.id,
     );
+    isReloading = false;
     notifyListeners();
   }
 

@@ -96,6 +96,30 @@ class CauseDataService {
     return cause;
   }
 
+  Future followUnfollowCause(String causeID, String uid) async {
+    GoCause cause;
+    DocumentSnapshot snapshot = await causeRef.doc(causeID).get().catchError((e) {
+      return e.message;
+    });
+    if (snapshot.exists) {
+      Map<String, dynamic> snapshotData = snapshot.data();
+      cause = GoCause.fromMap(snapshotData);
+      List causeFollowers = cause.followers.toList(growable: true);
+      if (causeFollowers.contains(uid)) {
+        causeFollowers.remove(uid);
+      } else {
+        causeFollowers.add(uid);
+      }
+      await causeRef.doc(cause.id).update({
+        "followers": causeFollowers,
+        "followerCount": causeFollowers.length,
+      }).catchError((e) {
+        return e.message;
+      });
+    }
+    return cause;
+  }
+
   ///QUERIES
   //Load Cause by Follower Count
   Future<List<DocumentSnapshot>> loadCauses({

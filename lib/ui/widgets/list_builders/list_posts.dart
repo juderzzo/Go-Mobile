@@ -11,7 +11,9 @@ class ListPosts extends StatelessWidget {
   final VoidCallback refreshData;
   final PageStorageKey pageStorageKey;
   final ScrollController scrollController;
-  ListPosts({@required this.refreshData, @required this.postResults, @required this.pageStorageKey, @required this.scrollController});
+  final bool refreshingData;
+  ListPosts(
+      {@required this.refreshData, @required this.postResults, @required this.pageStorageKey, @required this.scrollController, @required this.refreshingData});
 
   Widget noResults() {
     return ListView(
@@ -33,9 +35,10 @@ class ListPosts extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: refreshData,
       backgroundColor: appBackgroundColor(),
-      child: postResults.isEmpty
+      child: postResults.isEmpty && !refreshingData
           ? noResults()
           : ListView.builder(
+              physics: AlwaysScrollableScrollPhysics(),
               controller: scrollController,
               key: pageStorageKey,
               addAutomaticKeepAlives: true,

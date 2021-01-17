@@ -15,8 +15,9 @@ class AboutView extends StatelessWidget {
   final String creatorUsername;
   final String creatorProfilePicURL;
   final VoidCallback viewCreator;
+  final VoidCallback followUnfollowCause;
   final bool isFollowing;
-  AboutView({this.cause, this.images, this.creatorUsername, this.creatorProfilePicURL, this.viewCreator, this.isFollowing});
+  AboutView({this.cause, this.images, this.creatorUsername, this.creatorProfilePicURL, this.viewCreator, this.followUnfollowCause, this.isFollowing});
 
   Widget causeImages(AboutViewModel model) {
     return SizedBox(
@@ -67,7 +68,7 @@ class AboutView extends StatelessWidget {
                   backgroundColor: appButtonColorAlt(),
                   height: 30.0,
                   width: 100,
-                  onPressed: () {},
+                  onPressed: followUnfollowCause,
                 )
               : CustomButton(
                   isBusy: false,
@@ -77,7 +78,7 @@ class AboutView extends StatelessWidget {
                   backgroundColor: appButtonColorAlt(),
                   height: 30.0,
                   width: 100,
-                  onPressed: () {},
+                  onPressed: followUnfollowCause,
                 ),
         ],
       ),

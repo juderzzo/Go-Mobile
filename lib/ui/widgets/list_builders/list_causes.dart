@@ -17,6 +17,7 @@ class ListCauses extends StatelessWidget {
       onRefresh: refreshData,
       backgroundColor: appBackgroundColor(),
       child: ListView.builder(
+        physics: AlwaysScrollableScrollPhysics(),
         controller: scrollController,
         key: pageStorageKey,
         addAutomaticKeepAlives: true,

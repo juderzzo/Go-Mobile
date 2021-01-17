@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class AuthService {
@@ -118,6 +120,126 @@ class AuthService {
         message: errorMessage,
         duration: Duration(seconds: 5),
       );
+    }
+  }
+
+  Future loginWithApple() async {
+    final AuthorizationResult result = await AppleSignIn.performRequests([
+      AppleIdRequest(requestedScopes: [Scope.email])
+    ]);
+    if (result.status == AuthorizationStatus.authorized) {
+      final AppleIdCredential appleIdCredential = result.credential;
+      OAuthProvider oAuthProvider = OAuthProvider("apple.com");
+      final AuthCredential appleIDCredential = oAuthProvider.credential(
+        idToken: String.fromCharCodes(appleIdCredential.identityToken),
+        accessToken: String.fromCharCodes(appleIdCredential.authorizationCode),
+      );
+      try {
+        UserCredential credential = await firebaseAuth.signInWithCredential(appleIDCredential);
+        if (credential.user != null) {
+          //Create New User or Find Existing One
+          bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
+
+          if (userExists) {
+            return true;
+          } else {
+            //Create New User
+            var res = await _userDataService.createGoUser(
+              id: credential.user.uid,
+              fbID: null,
+              googleID: null,
+              email: null,
+              phoneNo: null,
+            );
+            if (res is String) {
+              _snackbarService.showSnackbar(
+                title: 'Login Error',
+                message: res,
+                duration: Duration(seconds: 5),
+              );
+              return false;
+            } else {
+              return true;
+            }
+          }
+        }
+      } catch (e) {
+        _snackbarService.showSnackbar(
+          title: 'Login Error',
+          message: e.message,
+          duration: Duration(seconds: 5),
+        );
+        return false;
+      }
+    } else if (result.status == AuthorizationStatus.cancelled) {
+      _snackbarService.showSnackbar(
+        title: 'Login Error',
+        message: "Apple Sign In Cancelled",
+        duration: Duration(seconds: 5),
+      );
+      return false;
+    } else {
+      _snackbarService.showSnackbar(
+        title: 'Login Error',
+        message: "There was an issue signing in. Please try again.",
+        duration: Duration(seconds: 5),
+      );
+      return false;
+    }
+  }
+
+  Future loginWithGoogle() async {
+    GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: <String>[
+        'email',
+      ],
+    );
+    GoogleSignInAccount googleAccount = await googleSignIn.signIn();
+    if (googleAccount == null) {
+      _snackbarService.showSnackbar(
+        title: 'Login Error',
+        message: 'Cancelled Google Sign In',
+        duration: Duration(seconds: 5),
+      );
+      return;
+    }
+    GoogleSignInAuthentication googleAuth = await googleAccount.authentication;
+    AuthCredential authCredential = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+    try {
+      UserCredential credential = await firebaseAuth.signInWithCredential(authCredential);
+      if (credential.user != null) {
+        //Create New User or Find Existing One
+        bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
+        if (userExists) {
+          return true;
+        } else {
+          //Create New User
+          var res = await _userDataService.createGoUser(
+            id: credential.user.uid,
+            fbID: null,
+            googleID: googleAuth.idToken,
+            email: null,
+            phoneNo: null,
+          );
+          if (res is String) {
+            _snackbarService.showSnackbar(
+              title: 'Login Error',
+              message: res,
+              duration: Duration(seconds: 5),
+            );
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
+    } catch (e) {
+      _snackbarService.showSnackbar(
+        title: 'Login Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+      return false;
     }
   }
 

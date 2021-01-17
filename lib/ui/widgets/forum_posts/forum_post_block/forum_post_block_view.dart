@@ -53,7 +53,6 @@ class ForumPostBlockView extends StatelessWidget {
                   color: appFontColor(),
                   textAlign: TextAlign.left,
                   height: 20,
-                  width: 135,
                 ),
               ],
             ),

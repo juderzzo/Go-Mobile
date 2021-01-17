@@ -12,7 +12,7 @@ import 'package:go/services/firestore/user_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class CauseViewModel extends BaseViewModel {
+class CauseViewModel extends StreamViewModel<GoCause> {
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -23,11 +23,16 @@ class CauseViewModel extends BaseViewModel {
   ///HELPERS
   ScrollController postsScrollController = ScrollController();
 
-  ///CURRENT USER
+  ///DATA
+  String currentUID;
   GoUser user;
+  String causeID;
   GoCause cause;
   GoUser causeCreator;
   List images = [];
+  bool isFollowingCause;
+  bool loadedImages = false;
+  bool refreshingPosts = false;
 
   ///DATA RESULTS
   List<DocumentSnapshot> postResults = [];
@@ -38,8 +43,10 @@ class CauseViewModel extends BaseViewModel {
 
   initialize(BuildContext context) async {
     setBusy(true);
+    currentUID = await _authService.getCurrentUserID();
+    notifyListeners();
     Map<String, dynamic> args = RouteData.of(context).arguments;
-    String causeID = args['id'];
+    causeID = args['id'];
 
     ///SET SCROLL CONTROLLER
     postsScrollController.addListener(() {
@@ -48,32 +55,7 @@ class CauseViewModel extends BaseViewModel {
         loadAdditionalPosts();
       }
     });
-
-    ///GET CAUSE
-    var res = await _causeDataService.getCauseByID(causeID);
-    if (res is String) {
-      _dialogService.showDialog(
-        title: "Cause Error",
-        description: res,
-        barrierDismissible: true,
-      );
-    } else {
-      cause = res;
-      cause.imageURLs.forEach((url) {
-        images.add(
-          NetworkImage(url),
-        );
-      });
-      await getCauseCreator(cause.creatorID);
-    }
     notifyListeners();
-
-    ///LOAD POSTS
-    if (cause != null) {
-      await loadPosts();
-      notifyListeners();
-    }
-    setBusy(false);
   }
 
   getCauseCreator(String id) async {
@@ -87,9 +69,16 @@ class CauseViewModel extends BaseViewModel {
     } else {
       causeCreator = res;
     }
+    notifyListeners();
   }
 
+  followUnfollowCause() {
+    _causeDataService.followUnfollowCause(causeID, currentUID);
+  }
+
+  ///LOAD POSTS
   Future<void> refreshPosts() async {
+    refreshingPosts = true;
     postResults = [];
     notifyListeners();
     await loadPosts();
@@ -100,6 +89,7 @@ class CauseViewModel extends BaseViewModel {
       resultsLimit: resultsLimit,
       causeID: cause.id,
     );
+    refreshingPosts = false;
     notifyListeners();
   }
 
@@ -121,6 +111,46 @@ class CauseViewModel extends BaseViewModel {
     }
     loadingAdditionalPosts = false;
     notifyListeners();
+  }
+
+  ///STREAM CAUSE DATA
+  @override
+  void onData(GoCause data) {
+    if (data != null) {
+      cause = data;
+      if (cause.followers.contains(currentUID)) {
+        isFollowingCause = true;
+      } else {
+        isFollowingCause = false;
+      }
+      if (!loadedImages) {
+        cause.imageURLs.forEach((url) {
+          images.add(
+            NetworkImage(url),
+          );
+        });
+        loadedImages = true;
+      }
+      getCauseCreator(cause.creatorID);
+      loadPosts();
+      notifyListeners();
+      setBusy(false);
+    }
+  }
+
+  @override
+  Stream<GoCause> get stream => streamCause();
+
+  Stream<GoCause> streamCause() async* {
+    while (true) {
+      await Future.delayed(Duration(seconds: 1));
+      var res = await _causeDataService.getCauseByID(causeID);
+      if (res is String) {
+        yield null;
+      } else {
+        yield res;
+      }
+    }
   }
 
   ///NAVIGATION
