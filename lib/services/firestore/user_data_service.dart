@@ -34,6 +34,19 @@ class UserDataService {
     return onboarded;
   }
 
+  Future checkIfUsernameExists(String uid, String username) async {
+    bool exists = false;
+    QuerySnapshot snapshot = await userRef.where('username', isEqualTo: username).get();
+    if (snapshot.docs.isNotEmpty) {
+      snapshot.docs.forEach((doc) {
+        if (doc.id != uid) {
+          exists = true;
+        }
+      });
+    }
+    return exists;
+  }
+
   Future createGoUser({
     @required String id,
     @required String fbID,
@@ -67,6 +80,22 @@ class UserDataService {
 
   Future updateGoUser(GoUser user) async {
     await userRef.doc(user.id).update(user.toMap()).catchError((e) {
+      return e.message;
+    });
+  }
+
+  Future updateGoUserName(String id, String username) async {
+    await userRef.doc(id).update({
+      "username": username,
+    }).catchError((e) {
+      return e.message;
+    });
+  }
+
+  Future updateGoUserBio(String id, String bio) async {
+    await userRef.doc(id).update({
+      "bio": bio,
+    }).catchError((e) {
       return e.message;
     });
   }

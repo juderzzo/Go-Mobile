@@ -4,12 +4,14 @@ import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
+import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
   final GoUser user;
-  HomeView({this.user});
+  final VoidCallback navigateToExplorePage;
+  HomeView({this.user, this.navigateToExplorePage});
 
   Widget head(HomeViewModel model) {
     return Container(
@@ -55,12 +57,24 @@ class HomeView extends StatelessWidget {
 
   Widget listCauses(HomeViewModel model) {
     return Expanded(
-      child: ListCauses(
-        refreshData: model.refreshCausesFollowing,
-        causesResults: model.causesFollowingResults,
-        pageStorageKey: PageStorageKey('home-causes'),
-        scrollController: model.scrollController,
-      ),
+      child: model.causesFollowingResults.isEmpty
+          ? Center(
+              child: ZeroStateView(
+                imageAssetName: 'coding',
+                header: "You're Not Following Any Causes",
+                subHeader: "Find Causes You're Interested In!",
+                mainActionButtonTitle: "Explore Causes",
+                mainAction: navigateToExplorePage,
+                secondaryActionButtonTitle: 'refresh page',
+                secondaryAction: () => model.refreshCausesFollowing(),
+              ),
+            )
+          : ListCauses(
+              refreshData: model.refreshCausesFollowing,
+              causesResults: model.causesFollowingResults,
+              pageStorageKey: PageStorageKey('home-causes'),
+              scrollController: model.scrollController,
+            ),
     );
   }
 

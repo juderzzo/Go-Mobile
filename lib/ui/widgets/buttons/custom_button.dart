@@ -49,8 +49,7 @@ class CustomButton extends StatelessWidget {
                     textScaleFactor: 1.0,
                   ),
                   child: isBusy
-                      ? CustomCircleProgressIndicator(
-                          size: height / 2, color: textColor)
+                      ? CustomCircleProgressIndicator(size: height / 2, color: textColor)
                       : FittedBox(
                           child: Text(
                             text,
@@ -142,6 +141,7 @@ class CustomIconButton extends StatelessWidget {
 
 class CustomFlatButton extends StatelessWidget {
   final String text;
+  final TextAlign textAlign;
   final Color fontColor;
   final double fontSize;
   final VoidCallback onTap;
@@ -151,6 +151,7 @@ class CustomFlatButton extends StatelessWidget {
     @required this.fontColor,
     @required this.fontSize,
     @required this.text,
+    @required this.textAlign,
     @required this.showBottomBorder,
   });
   @override
@@ -164,22 +165,17 @@ class CustomFlatButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.transparent,
           border: Border(
-            bottom: showBottomBorder
-                ? BorderSide(width: 0.5, color: appBorderColorAlt())
-                : BorderSide.none,
+            bottom: showBottomBorder ? BorderSide(width: 0.5, color: appBorderColorAlt()) : BorderSide.none,
           ),
         ),
-        child: Row(
-          children: [
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: fontSize,
-                color: fontColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        child: Text(
+          text,
+          textAlign: textAlign == null ? TextAlign.left : textAlign,
+          style: TextStyle(
+            fontSize: fontSize,
+            color: fontColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -213,9 +209,7 @@ class CustomSwitchButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.transparent,
           border: Border(
-            bottom: showBottomBorder
-                ? BorderSide(width: 0.5, color: appBorderColorAlt())
-                : BorderSide.none,
+            bottom: showBottomBorder ? BorderSide(width: 0.5, color: appBorderColorAlt()) : BorderSide.none,
           ),
         ),
         child: Row(

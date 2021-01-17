@@ -19,6 +19,7 @@ class HomeNavView extends StatelessWidget {
       case 0:
         return HomeView(
           user: model.user,
+          navigateToExplorePage: () => model.setNavBarIndex(1),
         );
       case 1:
         return ExploreView(user: model.user);
