@@ -32,7 +32,9 @@ class CauseCheckListItem extends StatelessWidget {
         children: [
           Checkbox(
             activeColor: CustomColors.goGreen,
+            tristate: true,
             value: isChecked,
+            
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

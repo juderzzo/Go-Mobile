@@ -75,6 +75,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                   ),
             CheckListView(
               actions: model.cause.actions,
+              descriptors: model.cause.actionDescriptions,
             ),
             ListPosts(
               refreshingData: model.refreshingPosts,

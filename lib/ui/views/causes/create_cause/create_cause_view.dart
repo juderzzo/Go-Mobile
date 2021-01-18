@@ -21,6 +21,9 @@ class CreateCauseView extends StatelessWidget {
   final action1Controller = TextEditingController();
   final action2Controller = TextEditingController();
   final action3Controller = TextEditingController();
+  final description1Controller = TextEditingController();
+  final description2Controller = TextEditingController();
+  final description3Controller = TextEditingController();
 
   Widget textFieldHeader(String header, String subHeader) {
     return Container(
@@ -225,12 +228,27 @@ class CreateCauseView extends StatelessWidget {
           ),
           verticalSpaceSmall,
           singleLineTextField(
+            controller: description1Controller,
+            hintText: "Description",
+          ),
+          verticalSpaceSmall,
+          singleLineTextField(
             controller: action2Controller,
             hintText: "Task 02",
           ),
           verticalSpaceSmall,
           singleLineTextField(
+            controller: description2Controller,
+            hintText: "Description",
+          ),
+          verticalSpaceSmall,
+          singleLineTextField(
             controller: action3Controller,
+            hintText: "Task 03",
+          ),
+          verticalSpaceSmall,
+          singleLineTextField(
+            controller: description3Controller,
             hintText: "Task 03",
           ),
           verticalSpaceLarge,
@@ -251,6 +269,9 @@ class CreateCauseView extends StatelessWidget {
                 action1: action1Controller.text.trim(),
                 action2: action2Controller.text.trim(),
                 action3: action3Controller.text.trim(),
+                description1: description1Controller.text,
+                description2: description2Controller.text,
+                description3: description3Controller.text,
               );
               if (formSuccess) {
                 model.displayCauseUploadSuccessBottomSheet();

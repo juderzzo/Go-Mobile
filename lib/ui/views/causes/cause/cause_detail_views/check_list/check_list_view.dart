@@ -6,8 +6,9 @@ import 'package:stacked/stacked.dart';
 
 class CheckListView extends StatelessWidget {
   final List actions;
+  final List descriptors;
 
-  CheckListView({this.actions});
+  CheckListView({this.actions, this.descriptors});
 
   Widget checkListItems() {
     return Container(
@@ -16,11 +17,20 @@ class CheckListView extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          CauseCheckListItem(isChecked: true, header: actions[0], subHeader: "example of action"),
+          CauseCheckListItem(
+              //isChecked: true,
+              header: actions[0],
+              subHeader: descriptors[0]),
           verticalSpaceMedium,
-          CauseCheckListItem(isChecked: true, header: actions[1], subHeader: "example of action"),
+          CauseCheckListItem(
+              //isChecked: true,
+              header: actions[1],
+              subHeader: descriptors[1]),
           verticalSpaceMedium,
-          CauseCheckListItem(isChecked: false, header: actions[2], subHeader: "example of action"),
+          CauseCheckListItem(
+              //isChecked: false,
+              header: actions[2],
+              subHeader: descriptors[2]),
         ],
       ),
     );
