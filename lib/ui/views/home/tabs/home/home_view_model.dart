@@ -26,7 +26,7 @@ class HomeViewModel extends BaseViewModel {
   List<DocumentSnapshot> causesFollowingResults = [];
   bool loadingAdditionalCausesFollowing = false;
   bool moreCausesFollowingAvailable = true;
-  bool isReloading = false;
+  bool isReloading = true;
 
   int resultsLimit = 15;
 

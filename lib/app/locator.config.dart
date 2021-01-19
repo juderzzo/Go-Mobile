@@ -12,6 +12,7 @@ import 'package:stacked_themes/stacked_themes.dart';
 import '../services/algolia/algolia_search_service.dart';
 import '../services/auth/auth_service.dart';
 import '../services/firestore/cause_data_service.dart';
+import '../services/firestore/comment_data_service.dart';
 import '../ui/views/home/tabs/explore/explore_view_model.dart';
 import '../ui/views/home/tabs/home/home_view_model.dart';
 import '../services/firestore/post_data_service.dart';
@@ -35,6 +36,7 @@ GetIt $initGetIt(
   gh.lazySingleton<AuthService>(() => servicesModule.authService);
   gh.lazySingleton<BottomSheetService>(() => servicesModule.bottomSheetService);
   gh.lazySingleton<CauseDataService>(() => servicesModule.causeDataService);
+  gh.lazySingleton<CommentDataService>(() => servicesModule.commentDataService);
   gh.lazySingleton<DialogService>(() => servicesModule.dialogService);
   gh.lazySingleton<NavigationService>(() => servicesModule.navigationService);
   gh.lazySingleton<PostDataService>(() => servicesModule.postDataService);
@@ -59,6 +61,8 @@ class _$ServicesModule extends ServicesModule {
   BottomSheetService get bottomSheetService => BottomSheetService();
   @override
   CauseDataService get causeDataService => CauseDataService();
+  @override
+  CommentDataService get commentDataService => CommentDataService();
   @override
   DialogService get dialogService => DialogService();
   @override

@@ -4,6 +4,8 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view_model.dart';
 import 'package:go/ui/widgets/comments/comment_text_field_view.dart';
+import 'package:go/ui/widgets/common/custom_text.dart';
+import 'package:go/ui/widgets/list_builders/list_comments.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
@@ -25,30 +27,17 @@ class ForumPostView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 GestureDetector(
-                  onTap: null,
+                  onTap: () => model.navigateToUserView(model.author.id),
                   child: Row(
                     children: <Widget>[
-                      // isLoading
-                      //     ? Shimmer.fromColors(
-                      //   child: Container(
-                      //     height: 35,
-                      //     width: 35,
-                      //     decoration: BoxDecoration(
-                      //       shape: BoxShape.circle,
-                      //     ),
-                      //   ),
-                      //   baseColor: CustomColors.iosOffWhite,
-                      //   highlightColor: Colors.white,
-                      // )
-                      //     :
                       UserProfilePic(
                         isBusy: false,
-                        userPicUrl: model.authorProfilePicURL,
+                        userPicUrl: model.author.profilePicURL,
                         size: 35,
                       ),
                       horizontalSpaceSmall,
                       Text(
-                        model.authorUsername,
+                        "@${model.author.username}",
                         style: TextStyle(color: appFontColor(), fontSize: 16.0, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -59,9 +48,12 @@ class ForumPostView extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-              style: TextStyle(color: appFontColor(), fontSize: 18.0, fontWeight: FontWeight.w400),
+            child: CustomText(
+              text: model.post.body,
+              textAlign: TextAlign.left,
+              color: appFontColor(),
+              fontWeight: FontWeight.w400,
+              fontSize: 18,
             ),
           ),
           Padding(
@@ -106,6 +98,17 @@ class ForumPostView extends StatelessWidget {
     );
   }
 
+  postComments(ForumPostViewModel model) {
+    return ListComments(
+      refreshData: () async {},
+      scrollController: null,
+      showingReplies: false,
+      pageStorageKey: PageStorageKey('post-comments'),
+      refreshingData: false,
+      results: model.commentResults,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ForumPostViewModel>.reactive(
@@ -124,39 +127,40 @@ class ForumPostView extends StatelessWidget {
             ),
           ),
         ),
-        body: Container(
-          height: screenHeight(context),
-          color: appBackgroundColor(),
-          child: model.isBusy
-              ? Container()
-              : Stack(
-                  children: [
-                    GestureDetector(
-                      onTap: null, //() => dismissKeyboard(),
-                      child: RefreshIndicator(
+        body: GestureDetector(
+          onTap: () => model.clearState(context),
+          child: Container(
+            height: screenHeight(context),
+            color: appBackgroundColor(),
+            child: model.isBusy
+                ? Container()
+                : Stack(
+                    children: [
+                      RefreshIndicator(
                         backgroundColor: appBackgroundColor(),
                         onRefresh: () async {},
                         child: ListView(
                           shrinkWrap: true,
                           children: [
                             postBody(model),
-                            //postComments(),
+                            postComments(model),
                             SizedBox(height: 50),
                           ],
                         ),
                       ),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      child: CommentTextFieldView(
-                        focusNode: focusNode,
-                        commentTextController: model.commentTextController,
-                        isReplying: false,
-                        replyReceiverUsername: null,
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        child: CommentTextFieldView(
+                          onSubmitted: (val) => model.submitComment(context: context, commentVal: val),
+                          focusNode: focusNode,
+                          commentTextController: model.commentTextController,
+                          isReplying: false,
+                          replyReceiverUsername: null,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+          ),
         ),
       ),
     );

@@ -12,12 +12,14 @@ class CommentTextFieldView extends StatelessWidget {
   final bool isReplying;
   final String replyReceiverUsername;
   final TextEditingController commentTextController;
+  final Function(String) onSubmitted;
 
   CommentTextFieldView({
     @required this.focusNode,
     @required this.commentTextController,
     @required this.isReplying,
     @required this.replyReceiverUsername,
+    @required this.onSubmitted,
   });
 
   Widget replyContainer() {
@@ -92,41 +94,7 @@ class CommentTextFieldView extends StatelessWidget {
                     maxLengthEnforced: true,
                     cursorColor: Colors.white,
                     textInputAction: TextInputAction.send,
-                    onSubmitted: (val) {
-                      // String text = val.trim();
-                      // if (text.isNotEmpty) {
-                      //   if (isReplying) {
-                      //     GoForumPostComment comment = GoForumPostComment(
-                      //       postID: postID,
-                      //       senderUID: currentUID,
-                      //       username: currentUsername,
-                      //       message: text,
-                      //       isReply: true,
-                      //       replies: [],
-                      //       replyCount: 0,
-                      //       replyReceiverUsername: replyReceiverUsername,
-                      //       originalReplyCommentID: originalReplyCommentID,
-                      //       timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-                      //     );
-                      //     CommentDataService().replyToComment(post.id, replyReceiverUID, replyingToCommentID, comment);
-                      //   } else {
-                      //     WebblenComment comment = WebblenComment(
-                      //       postID: post.id,
-                      //       senderUID: currentUser.uid,
-                      //       username: currentUser.username,
-                      //       message: text,
-                      //       isReply: false,
-                      //       replies: [],
-                      //       replyCount: 0,
-                      //       timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-                      //     );
-                      //     CommentDataService().sendComment(post.id, post.authorID, comment);
-                      //   }
-                      //   clearState();
-                      // }
-                      // commentMessageController.clear();
-                      // setState(() {});
-                    },
+                    onSubmitted: (val) => onSubmitted(val),
                     style: TextStyle(color: Colors.white),
                     controller: commentTextController, //messageFieldController,
                     textCapitalization: TextCapitalization.sentences,
