@@ -18,7 +18,7 @@ class GoUser {
   List followers;
   List blockedUsers;
   int appOpenTimeInMilliseconds;
-  int notifToken;
+  String messageToken;
 
   GoUser({
     this.id,
@@ -38,7 +38,7 @@ class GoUser {
     this.followers,
     this.blockedUsers,
     this.appOpenTimeInMilliseconds,
-    this.notifToken,
+    this.messageToken,
   });
 
   GoUser.fromMap(Map<String, dynamic> data)
@@ -60,7 +60,7 @@ class GoUser {
           followers: data['followers'],
           blockedUsers: data['blockedUsers'],
           appOpenTimeInMilliseconds: data['appOpenTimeInMilliseconds'],
-          notifToken: data['notifToken'],
+          messageToken: data['messageToken'],
         );
 
   Map<String, dynamic> toMap() => {
@@ -81,7 +81,7 @@ class GoUser {
         'followers': this.followers,
         'blockedUsers': this.blockedUsers,
         'appOpenTimeInMilliseconds': this.appOpenTimeInMilliseconds,
-        'notifToken': this.notifToken,
+        'messageToken': this.messageToken,
       };
 
   GoUser generateNewUser({
@@ -109,7 +109,7 @@ class GoUser {
       following: [],
       blockedUsers: [],
       appOpenTimeInMilliseconds: null,
-      notifToken: null,
+      messageToken: null,
     );
     return user;
   }
@@ -137,7 +137,7 @@ class GoUser {
       following: [],
       blockedUsers: [],
       appOpenTimeInMilliseconds: null,
-      notifToken: null,
+      messageToken: null,
     );
     return user;
   }

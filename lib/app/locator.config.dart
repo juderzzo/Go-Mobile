@@ -14,6 +14,7 @@ import '../services/auth/auth_service.dart';
 import '../services/firestore/cause_data_service.dart';
 import '../services/firestore/comment_data_service.dart';
 import '../ui/views/home/tabs/explore/explore_view_model.dart';
+import '../services/firebase_messaging/firebase_messaging_service.dart';
 import '../ui/views/home/tabs/home/home_view_model.dart';
 import '../services/firestore/notification_data_service.dart';
 import '../services/firestore/post_data_service.dart';
@@ -39,6 +40,8 @@ GetIt $initGetIt(
   gh.lazySingleton<CauseDataService>(() => servicesModule.causeDataService);
   gh.lazySingleton<CommentDataService>(() => servicesModule.commentDataService);
   gh.lazySingleton<DialogService>(() => servicesModule.dialogService);
+  gh.lazySingleton<FirebaseMessagingService>(
+      () => servicesModule.firebaseMessagingService);
   gh.lazySingleton<NavigationService>(() => servicesModule.navigationService);
   gh.lazySingleton<NotificationDataService>(
       () => servicesModule.notificationDataService);
@@ -68,6 +71,9 @@ class _$ServicesModule extends ServicesModule {
   CommentDataService get commentDataService => CommentDataService();
   @override
   DialogService get dialogService => DialogService();
+  @override
+  FirebaseMessagingService get firebaseMessagingService =>
+      FirebaseMessagingService();
   @override
   NavigationService get navigationService => NavigationService();
   @override
