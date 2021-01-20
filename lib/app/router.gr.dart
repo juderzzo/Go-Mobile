@@ -17,6 +17,7 @@ import '../ui/views/causes/cause/cause_view.dart';
 import '../ui/views/causes/create_cause/create_cause_view.dart';
 import '../ui/views/home/home_nav_view.dart';
 import '../ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
+import '../ui/views/notifications/notifications_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
 import '../ui/views/search/all_search_results/all_search_results_view.dart';
@@ -35,6 +36,7 @@ class Routes {
   static const String ForumPostViewRoute = '/forum-post-view';
   static const String CreateForumPostViewRoute = '/create-forum-post-view';
   static const String UserViewRoute = '/user-view';
+  static const String NotificationsViewRoute = '/notifications-view';
   static const String SearchViewRoute = '/search-view';
   static const String AllSearchResultsViewRoute = '/all-search-results-view';
   static const String SettingsViewRoute = '/settings-view';
@@ -50,6 +52,7 @@ class Routes {
     ForumPostViewRoute,
     CreateForumPostViewRoute,
     UserViewRoute,
+    NotificationsViewRoute,
     SearchViewRoute,
     AllSearchResultsViewRoute,
     SettingsViewRoute,
@@ -71,6 +74,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.ForumPostViewRoute, page: ForumPostView),
     RouteDef(Routes.CreateForumPostViewRoute, page: CreateForumPostView),
     RouteDef(Routes.UserViewRoute, page: UserView),
+    RouteDef(Routes.NotificationsViewRoute, page: NotificationsView),
     RouteDef(Routes.SearchViewRoute, page: SearchView),
     RouteDef(Routes.AllSearchResultsViewRoute, page: AllSearchResultsView),
     RouteDef(Routes.SettingsViewRoute, page: SettingsView),
@@ -136,6 +140,12 @@ class GoRouter extends RouterBase {
     UserView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => UserView(),
+        settings: data,
+      );
+    },
+    NotificationsView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => NotificationsView(),
         settings: data,
       );
     },

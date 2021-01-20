@@ -81,10 +81,6 @@ class HomeViewModel extends BaseViewModel {
   }
 
   ///NAVIGATION
-// replaceWithPage() {
-//   _navigationService.replaceWith(PageRouteName);
-// }
-//
   navigateToCreateCauseView() {
     _navigationService.navigateTo(Routes.CreateCauseViewRoute);
   }
