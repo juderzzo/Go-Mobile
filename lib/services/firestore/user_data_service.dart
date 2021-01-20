@@ -123,6 +123,14 @@ class UserDataService {
     });
   }
 
+  Future updateUserMessageToken(String id, String messageToken) async {
+    await userRef.doc(id).update({
+      "messageToken": messageToken,
+    }).catchError((e) {
+      return e.message;
+    });
+  }
+
   ///QUERIES
   //Load Users by Follower Count
   Future<List<DocumentSnapshot>> loadUsers({

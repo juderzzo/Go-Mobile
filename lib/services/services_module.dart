@@ -1,7 +1,9 @@
 import 'package:go/services/algolia/algolia_search_service.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/comment_data_service.dart';
+import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -25,6 +27,10 @@ abstract class ServicesModule {
   SnackbarService get snackBarService;
   @lazySingleton
   AuthService get authService;
+  @lazySingleton
+  FirebaseMessagingService get firebaseMessagingService;
+  @lazySingleton
+  NotificationDataService get notificationDataService;
   @lazySingleton
   UserDataService get userDataService;
   @lazySingleton

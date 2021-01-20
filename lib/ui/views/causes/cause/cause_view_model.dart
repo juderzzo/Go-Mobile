@@ -161,11 +161,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     }
   }
 
-  popPage() {
-    _navigationService.popRepeated(1);
+  navigateBack() {
+    _navigationService.back();
   }
-//
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
 }

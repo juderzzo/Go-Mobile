@@ -7,6 +7,7 @@ import 'package:go/ui/views/causes/cause/cause_view.dart';
 import 'package:go/ui/views/causes/create_cause/create_cause_view.dart';
 import 'package:go/ui/views/home/home_nav_view.dart';
 import 'package:go/ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
+import 'package:go/ui/views/notifications/notifications_view.dart';
 import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
 import 'package:go/ui/views/search/all_search_results/all_search_results_view.dart';
@@ -40,6 +41,9 @@ import 'package:go/ui/views/user/user_view.dart';
 
     //USERS
     MaterialRoute(page: UserView, name: "UserViewRoute"),
+
+    //NOTIFICATIONS
+    MaterialRoute(page: NotificationsView, name: "NotificationsViewRoute"),
 
     //SEARCH
     MaterialRoute(page: SearchView, name: "SearchViewRoute"),

@@ -26,7 +26,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
           Row(
             children: [
               IconButton(
-                onPressed: () => model.popPage(),
+                onPressed: () => model.navigateBack(),
                 icon: Icon(FontAwesomeIcons.angleLeft, color: appFontColor(), size: 24),
               ),
               Container(

@@ -3,9 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/list_builders/list_causes.dart';
+import 'package:go/ui/widgets/notifications/notification_bell/notification_bell_view.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
@@ -31,14 +33,7 @@ class HomeView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  onPressed: null,
-                  icon: Icon(
-                    FontAwesomeIcons.bell,
-                    color: appIconColor(),
-                    size: 20,
-                  ),
-                ),
+                NotificationBellView(uid: user.id),
                 IconButton(
                   onPressed: () => model.navigateToCreateCauseView(),
                   icon: Icon(
@@ -86,7 +81,7 @@ class HomeView extends StatelessWidget {
       onModelReady: (model) => model.initialize(currentUser: user),
       viewModelBuilder: () => locator<HomeViewModel>(),
       builder: (context, model, child) => Container(
-        height: MediaQuery.of(context).size.height,
+        height: screenHeight(context),
         color: appBackgroundColor(),
         child: SafeArea(
           child: Container(
