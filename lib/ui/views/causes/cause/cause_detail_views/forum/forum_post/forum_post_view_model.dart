@@ -40,8 +40,7 @@ class ForumPostViewModel extends BaseViewModel {
   bool isAuthor = false;
   bool isReplying = false;
   bool refreshingComments = true;
-  String replyReceiverUsername;
-  String replyingToUserID;
+  GoForumPostComment commentToReplyTo;
 
   ///
 
@@ -129,7 +128,14 @@ class ForumPostViewModel extends BaseViewModel {
     }
   }
 
+  toggleReply(FocusNode focusNode, GoForumPostComment comment) {
+    isReplying = true;
+    commentToReplyTo = comment;
+    focusNode.requestFocus();
+  }
+
   submitComment({BuildContext context, String commentVal}) {
+    isReplying = false;
     String text = commentVal.trim();
     if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
@@ -145,13 +151,19 @@ class ForumPostViewModel extends BaseViewModel {
       CommentDataService().sendComment(post.id, post.authorID, comment);
       clearState(context);
     }
-    commentTextController.clear();
     refreshComments();
   }
 
-  replyToComment({BuildContext context, String commentVal, String originalReplyCommentID}) async {
+  deleteComment({BuildContext context, String commentID}) async {
+    isReplying = false;
+    await CommentDataService().deleteComment(post.id, commentID);
+    clearState(context);
+    refreshComments();
+  }
+
+  replyToComment({BuildContext context, String commentVal}) async {
     String text = commentVal.trim();
-    if (text.isEmpty) {
+    if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
         postID: post.id,
         senderUID: currentUser.id,
@@ -160,18 +172,27 @@ class ForumPostViewModel extends BaseViewModel {
         isReply: true,
         replies: [],
         replyCount: 0,
-        replyReceiverUsername: replyReceiverUsername,
-        originalReplyCommentID: originalReplyCommentID,
+        replyReceiverUsername: commentToReplyTo.username,
+        originalReplyCommentID: commentToReplyTo.timePostedInMilliseconds.toString(),
         timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       );
-      await _commentDataService.sendComment(post.id, currentUser.id, comment);
+      await _commentDataService.replyToComment(
+        post.id,
+        commentToReplyTo.senderUID,
+        commentToReplyTo.timePostedInMilliseconds.toString(),
+        comment,
+      );
     }
     clearState(context);
     refreshComments();
   }
 
   clearState(BuildContext context) {
+    isReplying = false;
+    commentToReplyTo = null;
+    commentTextController.clear();
     FocusScope.of(context).unfocus();
+    notifyListeners();
   }
 
   ///NAVIGATION

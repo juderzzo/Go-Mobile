@@ -9,11 +9,9 @@ import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view
 class ListPosts extends StatelessWidget {
   final List postResults;
   final VoidCallback refreshData;
-  final PageStorageKey pageStorageKey;
   final ScrollController scrollController;
   final bool refreshingData;
-  ListPosts(
-      {@required this.refreshData, @required this.postResults, @required this.pageStorageKey, @required this.scrollController, @required this.refreshingData});
+  ListPosts({@required this.refreshData, @required this.postResults, @required this.scrollController, @required this.refreshingData});
 
   Widget noResults() {
     return ListView(
@@ -40,7 +38,7 @@ class ListPosts extends StatelessWidget {
           : ListView.builder(
               physics: AlwaysScrollableScrollPhysics(),
               controller: scrollController,
-              key: pageStorageKey,
+              // key: UniqueKey(),
               addAutomaticKeepAlives: true,
               shrinkWrap: true,
               padding: EdgeInsets.only(

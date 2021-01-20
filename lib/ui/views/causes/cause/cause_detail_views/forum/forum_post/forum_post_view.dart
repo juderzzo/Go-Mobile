@@ -8,6 +8,7 @@ import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/list_builders/list_comments.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
+import 'package:go/utils/time_calc.dart';
 import 'package:stacked/stacked.dart';
 
 class ForumPostView extends StatelessWidget {
@@ -71,7 +72,7 @@ class ForumPostView extends StatelessWidget {
                     ),
                     horizontalSpaceSmall,
                     Text(
-                      "0",
+                      model.post.commentCount.toString(),
                       style: TextStyle(
                         fontSize: 18,
                         color: appFontColor(),
@@ -80,7 +81,7 @@ class ForumPostView extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "3 hours ago", //TimeCalc().getPastTimeFromMilliseconds(widget.post.postDateTimeInMilliseconds),
+                  TimeCalc().getPastTimeFromMilliseconds(model.post.dateCreatedInMilliseconds),
                   style: TextStyle(
                     color: appFontColorAlt(),
                   ),
@@ -106,6 +107,7 @@ class ForumPostView extends StatelessWidget {
       pageStorageKey: PageStorageKey('post-comments'),
       refreshingData: false,
       results: model.commentResults,
+      replyToComment: (val) => model.toggleReply(focusNode, val),
     );
   }
 
@@ -151,11 +153,16 @@ class ForumPostView extends StatelessWidget {
                       Container(
                         alignment: Alignment.bottomCenter,
                         child: CommentTextFieldView(
-                          onSubmitted: (val) => model.submitComment(context: context, commentVal: val),
+                          onSubmitted: model.isReplying
+                              ? (val) => model.replyToComment(
+                                    context: context,
+                                    commentVal: val,
+                                  )
+                              : (val) => model.submitComment(context: context, commentVal: val),
                           focusNode: focusNode,
                           commentTextController: model.commentTextController,
-                          isReplying: false,
-                          replyReceiverUsername: null,
+                          isReplying: model.isReplying,
+                          replyReceiverUsername: model.isReplying ? model.commentToReplyTo.username : null,
                         ),
                       ),
                     ],

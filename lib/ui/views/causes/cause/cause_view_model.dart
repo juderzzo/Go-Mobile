@@ -155,8 +155,8 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
   ///NAVIGATION
   navigateToCreatePostView() async {
-    Map<String, dynamic> data = await _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {'causeID': cause.id});
-    if (data['result'] == 'newPostCreated') {
+    String data = await _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {'causeID': cause.id});
+    if (data == 'newPostCreated') {
       refreshPosts();
     }
   }

@@ -80,7 +80,6 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
               refreshingData: model.refreshingPosts,
               refreshData: () => model.refreshPosts(),
               postResults: model.postResults,
-              pageStorageKey: PageStorageKey("cause-posts"),
               scrollController: model.postsScrollController,
             ),
           ],

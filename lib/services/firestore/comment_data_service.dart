@@ -30,7 +30,9 @@ class CommentDataService {
   Future<String> replyToComment(String parentID, String originaCommenterUID, String originalCommentID, GoForumPostComment comment) async {
     String error;
     DocumentSnapshot snapshot = await commentsRef.doc(parentID).collection("comments").doc(originalCommentID).get();
+    print(snapshot.data());
     GoForumPostComment originalComment = GoForumPostComment.fromMap(snapshot.data());
+
     List replies = originalComment.replies.toList(growable: true);
     replies.add(comment.toMap());
     originalComment.replies = replies;
@@ -44,9 +46,9 @@ class CommentDataService {
     return error;
   }
 
-  Future<String> deleteComment(String parentID, GoForumPostComment comment) async {
+  Future<String> deleteComment(String parentID, String commentID) async {
     String error;
-    await commentsRef.doc(parentID).collection("comments").doc(comment.timePostedInMilliseconds.toString()).delete().catchError((e) {
+    await commentsRef.doc(parentID).collection("comments").doc(commentID).delete().catchError((e) {
       error = e.toString();
     });
     DocumentSnapshot snapshot = await postsRef.doc(parentID).get();
