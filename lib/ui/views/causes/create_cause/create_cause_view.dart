@@ -21,6 +21,9 @@ class CreateCauseView extends StatelessWidget {
   final action1Controller = TextEditingController();
   final action2Controller = TextEditingController();
   final action3Controller = TextEditingController();
+  final description1Controller = TextEditingController();
+  final description2Controller = TextEditingController();
+  final description3Controller = TextEditingController();
 
   Widget textFieldHeader(String header, String subHeader) {
     return Container(
@@ -49,7 +52,8 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget singleLineTextField({TextEditingController controller, String hintText, int textLimit}) {
+  Widget singleLineTextField(
+      {TextEditingController controller, String hintText, int textLimit}) {
     return TextFieldContainer(
       child: TextFormField(
         controller: controller,
@@ -66,7 +70,8 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget multiLineTextField({TextEditingController controller, String hintText}) {
+  Widget multiLineTextField(
+      {TextEditingController controller, String hintText}) {
     return TextFieldContainer(
       child: TextFormField(
         controller: controller,
@@ -87,20 +92,34 @@ class CreateCauseView extends StatelessWidget {
     double width = 110;
     return model.isEditing
         ? CauseImgPreview(
-            onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+            onTap: () => model.selectImage(
+                context: context,
+                imgNum: imgNum,
+                ratioX: width,
+                ratioY: height),
             height: height,
             width: width,
             imgURL: null,
           )
-        : (imgNum == 1 && model.img1 == null) || (imgNum == 2 && model.img2 == null) || (imgNum == 3 && model.img3 == null)
+        : (imgNum == 1 && model.img1 == null) ||
+                (imgNum == 2 && model.img2 == null) ||
+                (imgNum == 3 && model.img3 == null)
             ? AddImageButton(
-                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                onTap: () => model.selectImage(
+                    context: context,
+                    imgNum: imgNum,
+                    ratioX: width,
+                    ratioY: height),
                 iconSize: iconSize,
                 height: height,
                 width: width,
               )
             : CauseImgPreview(
-                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                onTap: () => model.selectImage(
+                    context: context,
+                    imgNum: imgNum,
+                    ratioX: width,
+                    ratioY: height),
                 height: height,
                 width: width,
                 file: imgNum == 1
@@ -225,13 +244,28 @@ class CreateCauseView extends StatelessWidget {
           ),
           verticalSpaceSmall,
           singleLineTextField(
+            controller: description1Controller,
+            hintText: "Description",
+          ),
+          verticalSpaceSmall,
+          singleLineTextField(
             controller: action2Controller,
             hintText: "Task 02",
           ),
           verticalSpaceSmall,
           singleLineTextField(
+            controller: description2Controller,
+            hintText: "Description",
+          ),
+          verticalSpaceSmall,
+          singleLineTextField(
             controller: action3Controller,
             hintText: "Task 03",
+          ),
+          verticalSpaceSmall,
+          singleLineTextField(
+            controller: description3Controller,
+            hintText: "Description",
           ),
           verticalSpaceLarge,
           CustomButton(
@@ -251,6 +285,9 @@ class CreateCauseView extends StatelessWidget {
                 action1: action1Controller.text.trim(),
                 action2: action2Controller.text.trim(),
                 action3: action3Controller.text.trim(),
+                description1: description1Controller.text,
+                description2: description2Controller.text,
+                description3: description3Controller.text,
               );
               if (formSuccess) {
                 model.displayCauseUploadSuccessBottomSheet();
@@ -267,7 +304,8 @@ class CreateCauseView extends StatelessWidget {
     return ViewModelBuilder<CreateCauseViewModel>.reactive(
       viewModelBuilder: () => CreateCauseViewModel(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar().basicAppBar(title: "Create Cause", showBackButton: true),
+        appBar: CustomAppBar()
+            .basicAppBar(title: "Create Cause", showBackButton: true),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(
