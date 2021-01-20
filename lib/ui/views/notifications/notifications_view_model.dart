@@ -30,6 +30,7 @@ class NotificationsViewModel extends BaseViewModel {
 
   initialize() async {
     setBusy(true);
+    uid = await _authService.getCurrentUserID();
     notificationsScrollController.addListener(() {
       double triggerFetchMoreSize = 0.9 * notificationsScrollController.position.maxScrollExtent;
       if (notificationsScrollController.position.pixels > triggerFetchMoreSize) {
@@ -37,6 +38,7 @@ class NotificationsViewModel extends BaseViewModel {
       }
     });
     notifyListeners();
+    _notificationDataService.changeUnreadNotificationStatus(uid);
     await loadNotifications();
     setBusy(false);
   }

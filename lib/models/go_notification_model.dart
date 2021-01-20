@@ -10,6 +10,7 @@ class GoNotification {
   Map<dynamic, dynamic> additionalData;
   int timePostedInMilliseconds;
   int expDateInMilliseconds;
+  bool read;
 
   GoNotification({
     this.receiverUID,
@@ -20,6 +21,7 @@ class GoNotification {
     this.additionalData,
     this.timePostedInMilliseconds,
     this.expDateInMilliseconds,
+    this.read,
   });
 
   GoNotification.fromMap(Map<String, dynamic> data)
@@ -32,6 +34,7 @@ class GoNotification {
           additionalData: data['additionalData'],
           timePostedInMilliseconds: data['timePostedInMilliseconds'],
           expDateInMilliseconds: data['expDateInMilliseconds'],
+          read: data['read'],
         );
 
   Map<String, dynamic> toMap() => {
@@ -43,6 +46,7 @@ class GoNotification {
         'additionalData': this.additionalData,
         'timePostedInMilliseconds': this.timePostedInMilliseconds,
         'expDateInMilliseconds': this.expDateInMilliseconds,
+        'read': this.read,
       };
 
   GoNotification generateGoCommentNotification({
@@ -61,6 +65,28 @@ class GoNotification {
       additionalData: {'postID': postID},
       timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       expDateInMilliseconds: DateTime.now().millisecondsSinceEpoch + 7884000000, //Expiration Date Set 3 Months from Now
+      read: false,
+    );
+    return notif;
+  }
+
+  GoNotification generateCommmentReplyNotification({
+    @required String postID,
+    @required String receiverUID,
+    @required String senderUID,
+    @required String commenterUsername,
+    @required String comment,
+  }) {
+    GoNotification notif = GoNotification(
+      receiverUID: receiverUID,
+      senderUID: senderUID,
+      type: NotificationType.postComment.toString(),
+      header: '$commenterUsername replied to your comment',
+      subHeader: comment,
+      additionalData: {'postID': postID},
+      timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+      expDateInMilliseconds: DateTime.now().millisecondsSinceEpoch + 7884000000, //Expiration Date Set 3 Months from Now
+      read: false,
     );
     return notif;
   }
@@ -79,6 +105,7 @@ class GoNotification {
       additionalData: null,
       timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       expDateInMilliseconds: DateTime.now().millisecondsSinceEpoch + 7884000000, //Expiration Date Set 3 Months from Now
+      read: false,
     );
     return notif;
   }
@@ -99,6 +126,7 @@ class GoNotification {
       additionalData: {'causeID': causeID},
       timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       expDateInMilliseconds: DateTime.now().millisecondsSinceEpoch + 7884000000, //Expiration Date Set 3 Months from Now
+      read: false,
     );
     return notif;
   }

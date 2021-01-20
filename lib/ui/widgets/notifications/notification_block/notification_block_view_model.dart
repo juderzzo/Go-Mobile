@@ -1,4 +1,6 @@
 import 'package:go/app/locator.dart';
+import 'package:go/app/router.gr.dart';
+import 'package:go/enums/notifcation_type.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:stacked/stacked.dart';
@@ -31,13 +33,21 @@ class NotificationBlockViewModel extends BaseViewModel {
     // }
   }
 
+  onTap({String notifType, Map<dynamic, dynamic> data}) {
+    if (notifType == NotificationType.newPost.toString() ||
+        notifType == NotificationType.postComment.toString() ||
+        notifType == NotificationType.postCommentReply.toString()) {
+      navigateToPostView(data['postID']);
+    }
+  }
+
   ///NAVIGATION
   navigateToCauseView(String id) {
     //_navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
   }
 
   navigateToPostView(String id) {
-    //_navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
+    _navigationService.navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': id});
   }
 
   navigateToUserView(String uid) {

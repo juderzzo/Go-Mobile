@@ -7,6 +7,7 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/list_builders/list_causes.dart';
+import 'package:go/ui/widgets/notifications/notification_bell/notification_bell_view.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
@@ -32,14 +33,7 @@ class HomeView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  onPressed: () => model.navigateToNotificationsView(),
-                  icon: Icon(
-                    FontAwesomeIcons.bell,
-                    color: appIconColor(),
-                    size: 20,
-                  ),
-                ),
+                NotificationBellView(uid: user.id),
                 IconButton(
                   onPressed: () => model.navigateToCreateCauseView(),
                   icon: Icon(

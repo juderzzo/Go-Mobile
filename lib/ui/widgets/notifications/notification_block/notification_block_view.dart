@@ -9,9 +9,7 @@ import 'package:stacked/stacked.dart';
 
 class NotificationBlockView extends StatelessWidget {
   final GoNotification notification;
-  final VoidCallback onTap;
   NotificationBlockView({
-    @required this.onTap,
     @required this.notification,
   });
 
@@ -36,7 +34,7 @@ class NotificationBlockView extends StatelessWidget {
       onModelReady: (model) => model.initialize(),
       viewModelBuilder: () => NotificationBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
-        onTap: onTap,
+        onTap: () => model.onTap(notifType: notification.type, data: notification.additionalData),
         child: Container(
           width: screenWidth(context),
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -61,7 +59,7 @@ class NotificationBlockView extends StatelessWidget {
                       child: Text(
                         notification.header,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           color: appFontColor(),
                           fontWeight: FontWeight.bold,
                         ),

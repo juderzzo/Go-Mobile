@@ -131,13 +131,15 @@ class ForumPostViewModel extends BaseViewModel {
     }
   }
 
+  ///COMMENTING
+
   toggleReply(FocusNode focusNode, GoForumPostComment comment) {
     isReplying = true;
     commentToReplyTo = comment;
     focusNode.requestFocus();
   }
 
-  submitComment({BuildContext context, String commentVal}) {
+  submitComment({BuildContext context, String commentVal}) async {
     isReplying = false;
     String text = commentVal.trim();
     if (text.isNotEmpty) {
@@ -151,17 +153,10 @@ class ForumPostViewModel extends BaseViewModel {
         replyCount: 0,
         timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       );
-      CommentDataService().sendComment(post.id, post.authorID, comment);
+      await _commentDataService.sendComment(post.id, post.authorID, comment);
+      sendCommentNotification(text);
       clearState(context);
     }
-    GoNotification notification = GoNotification().generateGoCommentNotification(
-      postID: post.id,
-      receiverUID: post.authorID,
-      senderUID: currentUser.id,
-      commenterUsername: "@${currentUser.username}",
-      comment: text,
-    );
-    _notificationDataService.sendNotification(notif: notification);
     refreshComments();
   }
 
@@ -194,6 +189,7 @@ class ForumPostViewModel extends BaseViewModel {
         comment,
       );
     }
+    sendCommentReplyNotification(commentToReplyTo.senderUID, text);
     clearState(context);
     refreshComments();
   }
@@ -204,6 +200,29 @@ class ForumPostViewModel extends BaseViewModel {
     commentTextController.clear();
     FocusScope.of(context).unfocus();
     notifyListeners();
+  }
+
+  ///NOTIFICATIONS
+  sendCommentNotification(String comment) {
+    GoNotification notification = GoNotification().generateGoCommentNotification(
+      postID: post.id,
+      receiverUID: post.authorID,
+      senderUID: currentUser.id,
+      commenterUsername: "@${currentUser.username}",
+      comment: comment,
+    );
+    _notificationDataService.sendNotification(notif: notification);
+  }
+
+  sendCommentReplyNotification(String receiverUID, String comment) {
+    GoNotification notification = GoNotification().generateCommmentReplyNotification(
+      postID: post.id,
+      receiverUID: receiverUID,
+      senderUID: currentUser.id,
+      commenterUsername: "@${currentUser.username}",
+      comment: comment,
+    );
+    _notificationDataService.sendNotification(notif: notification);
   }
 
   ///NAVIGATION

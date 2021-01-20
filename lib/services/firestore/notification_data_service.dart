@@ -8,6 +8,26 @@ class NotificationDataService {
   SnackbarService _snackbarService = locator<SnackbarService>();
   CollectionReference notifsRef = FirebaseFirestore.instance.collection("notifications");
 
+  Future<int> getNumberOfUnreadNotifications(String uid) async {
+    int num = 0;
+    QuerySnapshot snapshot = await notifsRef.where('receiverUID', isEqualTo: uid).where('read', isEqualTo: false).get();
+    if (snapshot.docs.isNotEmpty) {
+      num = snapshot.docs.length;
+    }
+    return num;
+  }
+
+  changeUnreadNotificationStatus(String uid) async {
+    QuerySnapshot snapshot = await notifsRef.where('receiverUID', isEqualTo: uid).where('read', isEqualTo: false).get();
+    if (snapshot.docs.isNotEmpty) {
+      snapshot.docs.forEach((doc) async {
+        await notifsRef.doc(doc.id).update({'read': true}).catchError((e) {
+          return e.message;
+        });
+      });
+    }
+  }
+
   Future sendNotification({
     @required GoNotification notif,
   }) async {
