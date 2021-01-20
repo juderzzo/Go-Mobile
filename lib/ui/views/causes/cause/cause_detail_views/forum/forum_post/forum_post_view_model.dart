@@ -6,9 +6,11 @@ import 'package:go/app/router.gr.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_forum_post_comment_model.dart';
 import 'package:go/models/go_forum_post_model.dart';
+import 'package:go/models/go_notification_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/comment_data_service.dart';
+import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:stacked/stacked.dart';
@@ -22,6 +24,7 @@ class ForumPostViewModel extends BaseViewModel {
   UserDataService _userDataService = locator<UserDataService>();
   PostDataService _postDataService = locator<PostDataService>();
   CommentDataService _commentDataService = locator<CommentDataService>();
+  NotificationDataService _notificationDataService = locator<NotificationDataService>();
 
   ///HELPERS
   ScrollController commentScrollController = ScrollController();
@@ -151,6 +154,14 @@ class ForumPostViewModel extends BaseViewModel {
       CommentDataService().sendComment(post.id, post.authorID, comment);
       clearState(context);
     }
+    GoNotification notification = GoNotification().generateGoCommentNotification(
+      postID: post.id,
+      receiverUID: post.authorID,
+      senderUID: currentUser.id,
+      commenterUsername: "@${currentUser.username}",
+      comment: text,
+    );
+    _notificationDataService.sendNotification(notif: notification);
     refreshComments();
   }
 
