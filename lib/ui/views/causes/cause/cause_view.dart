@@ -29,15 +29,26 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                 onPressed: () => model.popPage(),
                 icon: Icon(FontAwesomeIcons.angleLeft, color: appFontColor(), size: 24),
               ),
-              CustomFittedText(
-                text: model.cause.name,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: appFontColor(),
-                textAlign: TextAlign.left,
+              Container(
                 height: 50,
-                width: 150,
+                width: MediaQuery.of(context).size.width * .7,
+                child: ListView(
+                  
+                  scrollDirection: Axis.horizontal,
+                    children: 
+                    [
+                      CustomFittedText(
+                      text: model.cause.name,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: appFontColor(),
+                      textAlign: TextAlign.left,
+                      ),
+                    ]
+                   
+                  ),
               ),
+              
             ],
           ),
           IconButton(
@@ -75,6 +86,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                   ),
             CheckListView(
               actions: model.cause.actions,
+              descriptors: model.cause.actionDescriptions,
             ),
             ListPosts(
               refreshingData: model.refreshingPosts,

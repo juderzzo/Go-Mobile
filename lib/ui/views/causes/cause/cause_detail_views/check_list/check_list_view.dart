@@ -6,21 +6,37 @@ import 'package:stacked/stacked.dart';
 
 class CheckListView extends StatelessWidget {
   final List actions;
+  final List descriptors;
 
-  CheckListView({this.actions});
+  CheckListView({this.actions, this.descriptors});
 
-  Widget checkListItems() {
+  Widget checkListItems(model) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       margin: EdgeInsets.symmetric(horizontal: 16),
       child: ListView(
         shrinkWrap: true,
         children: [
-          CauseCheckListItem(isChecked: true, header: actions[0], subHeader: "example of action"),
+          CauseCheckListItem(
+              isChecked: model.checks[0],
+              header: actions[0],
+              subHeader: descriptors[0],
+              model: model,
+              index: 0,),
           verticalSpaceMedium,
-          CauseCheckListItem(isChecked: true, header: actions[1], subHeader: "example of action"),
+          CauseCheckListItem(
+              isChecked: model.checks[1],
+              header: actions[1],
+              subHeader: descriptors[1],
+              model: model,
+              index: 1,),
           verticalSpaceMedium,
-          CauseCheckListItem(isChecked: false, header: actions[2], subHeader: "example of action"),
+          CauseCheckListItem(
+              isChecked: model.checks[2],
+              header: actions[2],
+              subHeader: descriptors[2],
+              model: model,
+              index: 1),
         ],
       ),
     );
@@ -31,7 +47,7 @@ class CheckListView extends StatelessWidget {
     return ViewModelBuilder<CheckListViewModel>.reactive(
       viewModelBuilder: () => CheckListViewModel(),
       builder: (context, model, child) => Container(
-        child: checkListItems(),
+        child: checkListItems(model),
       ),
     );
   }

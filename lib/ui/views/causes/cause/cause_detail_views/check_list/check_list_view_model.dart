@@ -8,6 +8,23 @@ class CheckListViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
 
+  
+
+  List<bool> checks = 
+  [false, false, false];
+
+  
+  void indexChanger(int index){
+      checks[index] = true;
+  }
+
+  
+
+    
+
+    
+  
+
   ///NAVIGATION
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);

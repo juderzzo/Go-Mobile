@@ -37,6 +37,9 @@ class CreateCauseViewModel extends BaseViewModel {
     String action1,
     String action2,
     String action3,
+    String description1,
+    String description2,
+    String description3
   }) async {
     String formError;
     setBusy(true);
@@ -74,6 +77,7 @@ class CreateCauseViewModel extends BaseViewModel {
         resources: resources,
         charityURL: charityURL,
         actions: [action1, action2, action3],
+        actionDescriptions: [description1, description2, description3],
         img1: img1,
         img2: img2,
         img3: img3,
