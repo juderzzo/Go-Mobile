@@ -1,14 +1,16 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class NotificationsViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
-  // DialogService _dialogService = locator<DialogService>();
+  DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
   NotificationDataService _notificationDataService = locator<NotificationDataService>();
@@ -41,6 +43,8 @@ class NotificationsViewModel extends BaseViewModel {
     _notificationDataService.changeUnreadNotificationStatus(uid);
     await loadNotifications();
     setBusy(false);
+    await Future.delayed(Duration(seconds: 2));
+    askForNotificationsPermission();
   }
 
   Future<void> refreshData() async {
@@ -77,6 +81,24 @@ class NotificationsViewModel extends BaseViewModel {
     }
     loadingAdditionalNotifications = false;
     notifyListeners();
+  }
+
+  askForNotificationsPermission() async {
+    PermissionStatus permissionStatus = await Permission.notification.status;
+    if (permissionStatus.isUndetermined) {
+      permissionStatus = await Permission.notification.request();
+    } else if (permissionStatus.isDenied) {
+      DialogResponse response = await _dialogService.showConfirmationDialog(
+        title: "Notifications are Disabled",
+        description: "Open app settings to enable notifications",
+        cancelTitle: "Cancel",
+        confirmationTitle: "Open App Settings",
+        barrierDismissible: true,
+      );
+      if (response.confirmed) {
+        AppSettings.openNotificationSettings();
+      }
+    }
   }
 
   ///NAVIGATION

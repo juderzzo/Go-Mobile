@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
@@ -7,6 +8,7 @@ import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/utils/go_image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -29,6 +31,7 @@ class OnboardingViewModel extends BaseViewModel {
   ///DATA
   String uid;
   File imgFile;
+  bool notificationsEnabled = false;
 
   initialize() async {
     setBusy(true);
@@ -102,10 +105,58 @@ class OnboardingViewModel extends BaseViewModel {
     return complete;
   }
 
+  Future<bool> completeBio() async {
+    String bio = bioTextController.text.trim();
+    if (bio.isEmpty) {
+      _snackbarService.showSnackbar(
+        title: 'Bio Error',
+        message: 'Bio cannot be empty',
+        duration: Duration(seconds: 5),
+      );
+      return false;
+    }
+    setBusy(true);
+    var res = await _userDataService.updateBio(uid, bio);
+    setBusy(false);
+    if (res is String) {
+      _snackbarService.showSnackbar(
+        title: 'Uh-Oh...',
+        message: res,
+        duration: Duration(seconds: 5),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  enableNotifications() async {
+    PermissionStatus permissionStatus = await Permission.notification.status;
+    if (permissionStatus.isUndetermined) {
+      permissionStatus = await Permission.notification.request();
+      if (permissionStatus.isGranted) {
+        notificationsEnabled = true;
+        notifyListeners();
+      }
+    } else if (permissionStatus.isGranted) {
+      notificationsEnabled = true;
+      notifyListeners();
+    } else if (permissionStatus.isDenied) {
+      DialogResponse response = await _dialogService.showConfirmationDialog(
+        title: "Enable Notifications?",
+        description: "Open app settings to enable notifications",
+        cancelTitle: "Cancel",
+        confirmationTitle: "Open App Settings",
+        barrierDismissible: true,
+      );
+      if (response.confirmed) {
+        AppSettings.openNotificationSettings();
+      }
+    }
+  }
+
   completeOnboarding() async {
     setBusy(true);
-    String bio = bioTextController.text.trim();
-    var res = await _userDataService.updateBio(uid, bio);
+    var res = await _userDataService.updateUserOnboardStatus(uid);
     setBusy(false);
     if (res is String) {
       _snackbarService.showSnackbar(
@@ -116,17 +167,6 @@ class OnboardingViewModel extends BaseViewModel {
     } else {
       replaceWithHomeNavView();
     }
-    // String uid = await _authService.getCurrentUserID();
-    // GoUser user = await _userDataService.getGoUserByID(uid);
-    // if (image != null) {
-    //   _userDataService.updateProfilePic(uid, image);
-    // }
-    //
-    // user.bio = bio;
-    // user.interests = interests;
-    // user.inspirations = inspirations;
-    // user.personalSite = site;
-    // _userDataService.updateGoUser(user);
   }
 
   ///NAVIGATION

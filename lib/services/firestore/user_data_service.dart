@@ -84,6 +84,14 @@ class UserDataService {
     });
   }
 
+  Future updateUserOnboardStatus(String id) async {
+    await userRef.doc(id).update({
+      "onboarded": true,
+    }).catchError((e) {
+      return e.message;
+    });
+  }
+
   Future updateGoUserName(String id, String username) async {
     await userRef.doc(id).update({
       "username": username,
@@ -95,7 +103,6 @@ class UserDataService {
   Future updateGoUserBio(String id, String bio) async {
     await userRef.doc(id).update({
       "bio": bio,
-      "onboarded": true,
     }).catchError((e) {
       return e.message;
     });
