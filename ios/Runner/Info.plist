@@ -20,46 +20,46 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb222465742607799</string>
+				<string>com.googleusercontent.apps.865785917892-7ntg5p40eouc2cs5r6djc3l0ahd0dbg4</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FacebookAppID</key>
+	<string>222465742607799</string>
+	<key>FacebookDisplayName</key>
+	<string>Go!</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fbapi20130214</string>
+		<string>fbapi20130410</string>
+		<string>fbapi20130702</string>
+		<string>fbapi20131010</string>
+		<string>fbapi20131219</string>
+		<string>fbapi20140410</string>
+		<string>fbapi20140116</string>
+		<string>fbapi20150313</string>
+		<string>fbapi20150629</string>
+		<string>fbapi20160328</string>
+		<string>fbauth</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-    		<key>CFBundleTypeRole</key>
-    			<string>Editor</string>
-    			<key>CFBundleURLSchemes</key>
-    			<array>
-    				<string>fb222465742607799</string>
-    				<string>com.googleusercontent.apps.865785917892-7ntg5p40eouc2cs5r6djc3l0ahd0dbg4</string>
-    			</array>
-    		</dict>
-    </array>
-    <key>FacebookAppID</key>
-    <string>222465742607799</string>
-    <key>FacebookDisplayName</key>
-    <string>Go!</string>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>fbapi</string>
-      <string>fbapi20130214</string>
-      <string>fbapi20130410</string>
-      <string>fbapi20130702</string>
-      <string>fbapi20131010</string>
-      <string>fbapi20131219</string>
-      <string>fbapi20140410</string>
-      <string>fbapi20140116</string>
-      <string>fbapi20150313</string>
-      <string>fbapi20150629</string>
-      <string>fbapi20160328</string>
-      <string>fbauth</string>
-      <string>fb-messenger-share-api</string>
-      <string>fbauth2</string>
-      <string>fbshareextension</string>
-    </array>
 	<key>NSAppleMusicUsageDescription</key>
-    <string>This will enable you to access your music files to use in Go!</string>
+	<string>This will enable you to access your music files to use in Go!</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>This will enable you to save events to your calendar</string>
 	<key>NSCameraUsageDescription</key>
