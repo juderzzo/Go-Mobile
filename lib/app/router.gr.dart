@@ -9,6 +9,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../ui/views/auth/forgot_password/forgot.dart';
 import '../ui/views/auth/sign_in/sign_in_view.dart';
 import '../ui/views/auth/sign_up/sign_up_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
@@ -30,6 +31,7 @@ class Routes {
   static const String RootViewRoute = '/';
   static const String SignUpViewRoute = '/sign-up-view';
   static const String SignInViewRoute = '/sign-in-view';
+  static const String ForgotViewRoute = '/forgot-view';
   static const String OnboardingViewRoute = '/onboarding-view';
   static const String HomeNavViewRoute = '/home-nav-view';
   static const String CauseViewRoute = '/cause-view';
@@ -47,6 +49,7 @@ class Routes {
     RootViewRoute,
     SignUpViewRoute,
     SignInViewRoute,
+    ForgotViewRoute,
     OnboardingViewRoute,
     HomeNavViewRoute,
     CauseViewRoute,
@@ -70,6 +73,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.RootViewRoute, page: RootView),
     RouteDef(Routes.SignUpViewRoute, page: SignUpView),
     RouteDef(Routes.SignInViewRoute, page: SignInView),
+    RouteDef(Routes.ForgotViewRoute, page: ForgotView),
     RouteDef(Routes.OnboardingViewRoute, page: OnboardingView),
     RouteDef(Routes.HomeNavViewRoute, page: HomeNavView),
     RouteDef(Routes.CauseViewRoute, page: CauseView),
@@ -102,6 +106,12 @@ class GoRouter extends RouterBase {
     SignInView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => SignInView(),
+        settings: data,
+      );
+    },
+    ForgotView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ForgotView(),
         settings: data,
       );
     },

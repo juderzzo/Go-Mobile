@@ -76,6 +76,9 @@ class SignInView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(
+                          height: 75,
+                        ),
+                        SizedBox(
                           height: 120,
                           child: Image.asset('assets/images/go_logo_transparent.png'),
                         ),
@@ -128,6 +131,15 @@ class SignInView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: signUpForAccountText(context, model),
                   ),
+
+                  verticalSpaceLarge,
+                  FlatButton(
+                            onPressed:(){
+                              model.replaceWithForgotPage();
+                            }, 
+                            child: Text(
+                              'Forgot Password',
+                            )),
                 ],
               ),
             ),

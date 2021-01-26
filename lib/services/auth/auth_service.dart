@@ -58,6 +58,21 @@ class AuthService {
     }
   }
 
+  Future<bool> sendPasswordResetEmail(email) async {
+      try {
+        //print(email);
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      } catch (e) {
+        print('Please enter an email associated with an account');
+        return false;
+      }
+      return true;
+    }
+  
+
+
+  
+
   Future loginWithFacebook() async {
     try {
       //Acquire FB access token and data

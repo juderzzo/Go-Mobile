@@ -50,7 +50,8 @@ class SignInViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String uid = await _authService.getCurrentUserID();
-        bool onboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+        bool onboarded =
+            await _userDataService.checkIfUserHasBeenOnboarded(uid);
         if (onboarded) {
           _navigationService.replaceWith(Routes.HomeNavViewRoute);
         } else {
@@ -70,7 +71,8 @@ class SignInViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String uid = await _authService.getCurrentUserID();
-        bool onboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+        bool onboarded =
+            await _userDataService.checkIfUserHasBeenOnboarded(uid);
         if (onboarded) {
           _navigationService.replaceWith(Routes.HomeNavViewRoute);
         } else {
@@ -90,7 +92,8 @@ class SignInViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String uid = await _authService.getCurrentUserID();
-        bool onboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+        bool onboarded =
+            await _userDataService.checkIfUserHasBeenOnboarded(uid);
         if (onboarded) {
           _navigationService.replaceWith(Routes.HomeNavViewRoute);
         } else {
@@ -103,6 +106,10 @@ class SignInViewModel extends BaseViewModel {
   ///NAVIGATION
   replaceWithSignUpPage() {
     _navigationService.replaceWith(Routes.SignUpViewRoute);
+  }
+
+  replaceWithForgotPage() {
+    _navigationService.replaceWith(Routes.ForgotViewRoute);
   }
 
   navigateToHomePage() {
