@@ -91,7 +91,7 @@ class OnboardingView extends StatelessWidget {
   PageViewModel profilePicUsernamePage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
       contentPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      titlePadding: EdgeInsets.only(top: 0.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 1,
       bodyFlex: 3,
@@ -125,7 +125,13 @@ class OnboardingView extends StatelessWidget {
       bodyWidget: Column(
         children: [
           verticalSpaceMedium,
-          SingleLineTextField(controller: model.usernameTextController, hintText: "username", textLimit: 50, isPassword: false),
+          SingleLineTextField(
+              controller: model.usernameTextController,
+              hintText: "Username",
+              textLimit: 50,
+              isPassword: false),
+          verticalSpaceMedium,
+          verticalSpaceMedium,
           verticalSpaceMedium,
           CustomButton(
             onPressed: () async {
@@ -151,7 +157,8 @@ class OnboardingView extends StatelessWidget {
   PageViewModel bioPage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
       contentPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 2,
       bodyFlex: 3,
@@ -177,7 +184,10 @@ class OnboardingView extends StatelessWidget {
             color: appFontColor(),
           ),
           verticalSpaceMedium,
-          MultiLineTextField(controller: model.bioTextController, hintText: "What Inspires You?", maxLines: 10),
+          MultiLineTextField(
+              controller: model.bioTextController,
+              hintText: "What Inspires You?",
+              maxLines: 10),
           verticalSpaceMedium,
           CustomButton(
             onPressed: () async {
@@ -203,7 +213,8 @@ class OnboardingView extends StatelessWidget {
   PageViewModel interestsPage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
       contentPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 1,
       bodyFlex: 3,
@@ -237,7 +248,11 @@ class OnboardingView extends StatelessWidget {
       bodyWidget: Column(
         children: [
           verticalSpaceMedium,
-          SingleLineTextField(controller: model.usernameTextController, hintText: "username", textLimit: 50, isPassword: false),
+          SingleLineTextField(
+              controller: model.usernameTextController,
+              hintText: "username",
+              textLimit: 50,
+              isPassword: false),
           verticalSpaceMedium,
           CustomButton(
             onPressed: () async {
@@ -263,7 +278,8 @@ class OnboardingView extends StatelessWidget {
   PageViewModel notificationPermissionPage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
       contentPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 2,
       bodyFlex: 3,
@@ -286,7 +302,8 @@ class OnboardingView extends StatelessWidget {
       bodyWidget: Column(
         children: [
           CustomText(
-            text: "Enable Notifications to be Alerted About the Latest News & Causes",
+            text:
+                "Enable Notifications to be Alerted About the Latest News & Causes",
             textAlign: TextAlign.center,
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -294,8 +311,12 @@ class OnboardingView extends StatelessWidget {
           ),
           verticalSpaceMedium,
           CustomButton(
-            onPressed: model.notificationsEnabled ? () => introKey.currentState.next() : () => model.enableNotifications(),
-            text: model.notificationsEnabled ? "Continue" : "Enable Notifications",
+            onPressed: model.notificationsEnabled
+                ? () => introKey.currentState.next()
+                : () => model.enableNotifications(),
+            text: model.notificationsEnabled
+                ? "Continue"
+                : "Enable Notifications",
             textSize: 16,
             textColor: appFontColor(),
             height: 40,
@@ -323,7 +344,8 @@ class OnboardingView extends StatelessWidget {
   PageViewModel finalPage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
       contentPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 3,
       bodyFlex: 3,
@@ -331,7 +353,7 @@ class OnboardingView extends StatelessWidget {
     );
     return PageViewModel(
       decoration: pageDecoration,
-      image: onboardingImage('coding'),
+      image: onboardingImage('logo'),
       titleWidget: Column(
         children: [
           CustomText(
@@ -346,7 +368,7 @@ class OnboardingView extends StatelessWidget {
       bodyWidget: Column(
         children: [
           CustomText(
-            text: "(Your slogan here..?)",
+            text: "Go! Be the change",
             textAlign: TextAlign.center,
             fontSize: 14,
             fontWeight: FontWeight.w500,

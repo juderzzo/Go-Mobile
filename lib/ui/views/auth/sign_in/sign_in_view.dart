@@ -77,7 +77,7 @@ class SignInView extends StatelessWidget {
                       children: <Widget>[
                         SizedBox(
                           height: 120,
-                          child: Image.asset('assets/images/go_logo.png'),
+                          child: Image.asset('assets/images/go_logo_transparent.png'),
                         ),
                         verticalSpaceLarge,
                         InputField(

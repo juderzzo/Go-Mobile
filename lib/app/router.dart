@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route_annotations.dart';
 import 'package:go/ui/views/auth/sign_in/sign_in_view.dart';
 import 'package:go/ui/views/auth/sign_up/sign_up_view.dart';
+import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/create_forum_post/create_forum_post_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view.dart';
@@ -34,6 +35,7 @@ import 'package:go/ui/views/user/user_view.dart';
     //CAUSES
     MaterialRoute(page: CauseView, name: "CauseViewRoute"),
     MaterialRoute(page: CreateCauseView, name: "CreateCauseViewRoute"),
+    MaterialRoute(page: EditChecklistView, name: "EditChecklistView"),
 
     //FORUM POSTS
     MaterialRoute(page: ForumPostView, name: "ForumPostViewRoute"),

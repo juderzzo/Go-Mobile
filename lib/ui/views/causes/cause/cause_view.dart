@@ -37,12 +37,15 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                   scrollDirection: Axis.horizontal,
                     children: 
                     [
-                      CustomFittedText(
-                      text: model.cause.name,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: appFontColor(),
-                      textAlign: TextAlign.left,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
+                        child: CustomFittedText(
+                        text: model.cause.name,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: appFontColor(),
+                        textAlign: TextAlign.left,
+                        ),
                       ),
                     ]
                    
@@ -87,6 +90,10 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
             CheckListView(
               actions: model.cause.actions,
               descriptors: model.cause.actionDescriptions,
+              creatorId: model.cause.creatorID,
+              currentUID: model.currentUID,
+              name: model.cause.name,
+              causeID: model.cause.id,
             ),
             ListPosts(
               refreshingData: model.refreshingPosts,

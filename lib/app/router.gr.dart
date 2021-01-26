@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../ui/views/auth/sign_in/sign_in_view.dart';
 import '../ui/views/auth/sign_up/sign_up_view.dart';
+import '../ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/forum/create_forum_post/create_forum_post_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import '../ui/views/causes/cause/cause_view.dart';
@@ -33,6 +34,7 @@ class Routes {
   static const String HomeNavViewRoute = '/home-nav-view';
   static const String CauseViewRoute = '/cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
+  static const String EditChecklistView = '/edit-checklist-view';
   static const String ForumPostViewRoute = '/forum-post-view';
   static const String CreateForumPostViewRoute = '/create-forum-post-view';
   static const String UserViewRoute = '/user-view';
@@ -49,6 +51,7 @@ class Routes {
     HomeNavViewRoute,
     CauseViewRoute,
     CreateCauseViewRoute,
+    EditChecklistView,
     ForumPostViewRoute,
     CreateForumPostViewRoute,
     UserViewRoute,
@@ -71,6 +74,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.HomeNavViewRoute, page: HomeNavView),
     RouteDef(Routes.CauseViewRoute, page: CauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
+    RouteDef(Routes.EditChecklistView, page: EditChecklistView),
     RouteDef(Routes.ForumPostViewRoute, page: ForumPostView),
     RouteDef(Routes.CreateForumPostViewRoute, page: CreateForumPostView),
     RouteDef(Routes.UserViewRoute, page: UserView),
@@ -122,6 +126,12 @@ class GoRouter extends RouterBase {
     CreateCauseView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => CreateCauseView(),
+        settings: data,
+      );
+    },
+    EditChecklistView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => EditChecklistView(),
         settings: data,
       );
     },

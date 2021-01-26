@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "865785917892",
+    "firebase_url": "https://go-app-dc0b8.firebaseio.com",
+    "project_id": "go-app-dc0b8",
+    "storage_bucket": "go-app-dc0b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865785917892:android:b0e10fc9ab44948ad0f491",
+        "android_client_info": {
+          "package_name": "com.takeoff.Goapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865785917892-bmcv977vhg0t3hos46s134oauo80kolq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm7xFQUXXxUN3CNuFi73LX8jW00vPJn_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865785917892-bmcv977vhg0t3hos46s134oauo80kolq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "865785917892-7dlgaf0kvnksb6s1tqv3843b3suhi2s3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tracery.go"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
