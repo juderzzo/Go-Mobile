@@ -10,7 +10,7 @@ class GoUser {
   String profilePicURL;
   String bio;
   String personalSite;
-  List interests;
+  List checks;
   List inspirations;
   int followerCount;
   int followingCount;
@@ -30,7 +30,7 @@ class GoUser {
     this.profilePicURL,
     this.bio,
     this.personalSite,
-    this.interests,
+    this.checks,
     this.inspirations,
     this.followerCount,
     this.followingCount,
@@ -52,7 +52,7 @@ class GoUser {
           profilePicURL: data['profilePicURL'],
           bio: data['bio'],
           personalSite: data['personalSite'],
-          interests: data['interests'],
+          checks: data['checks'],
           inspirations: data['inspirations'],
           followerCount: data['followerCount'],
           followingCount: data['followingCount'],
@@ -73,7 +73,7 @@ class GoUser {
         'profilePicURL': this.profilePicURL,
         'bio': this.bio,
         'personalSite': this.personalSite,
-        'interests': this.interests,
+        'checks': this.checks,
         'inspirations': this.inspirations,
         'followerCount': this.followerCount,
         'followingCount': this.followingCount,
@@ -101,7 +101,7 @@ class GoUser {
       profilePicURL: "https://picsum.photos/200",
       bio: "",
       personalSite: "",
-      interests: [],
+      checks: [],
       inspirations: [],
       followerCount: 0,
       followingCount: 0,
@@ -129,7 +129,7 @@ class GoUser {
           "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
           "nisi ut aliquip ex ea commodo consequat.",
       personalSite: "https://google.com",
-      interests: ['tag1', 'tag2', 'tag3'],
+      checks: ['tag1', 'tag2', 'tag3'],
       inspirations: [],
       followerCount: 0,
       followingCount: 0,

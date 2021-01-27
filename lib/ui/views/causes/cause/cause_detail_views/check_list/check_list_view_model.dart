@@ -1,13 +1,19 @@
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
+import 'package:go/ui/widgets/causes/cause_check_list_item.dart';
+import 'package:go/ui/widgets/search/search_result_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CheckListViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   NavigationService _navigationService = locator<NavigationService>();
+  CauseDataService _causeDataService = locator<CauseDataService>();
+  UserDataService _userService = locator<UserDataService>();
 
   List<bool> checks = [false, false, false];
 
@@ -19,30 +25,24 @@ class CheckListViewModel extends BaseViewModel {
     return await _authService.getCurrentUserID();
   }
 
-  ///NAVIGATION
-// replaceWithPage() {
-//   _navigationService.replaceWith(PageRouteName);
-// }
-//
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
+  Future<bool> addCheck(id) async {
+    return await _userService.updateCheckedItems(id);
+  }
 
-  navigateToEdit(actions, descriptors, creatorID, currentUID, name, causeID ) {
+  static Future<List> generateItem(id) async {
+    CauseDataService _causeDataService = locator<CauseDataService>();
+    List strings = await _causeDataService.getItem(id);
+    return strings;
+  }
+
+  navigateToEdit(actions, descriptors, creatorID, currentUID, name, causeID) {
     _navigationService.navigateTo(Routes.EditChecklistView, arguments: {
       'actions': actions,
       'descriptors': descriptors,
       'creatorID': creatorID,
       'currentUID': currentUID,
       'name': name,
-      'causeID': causeID});
-    // String data = await _navigationService
-    //     .navigateTo(Routes.EditChecklistView, arguments: {
-    //   'actions': actions,
-    //   'descriptors': descriptors,
-    //   'creatorID': creatorID,
-    //   'currentUID': currentUID
-    // });
-    // print(data);
+      'causeID': causeID
+    });
   }
 }

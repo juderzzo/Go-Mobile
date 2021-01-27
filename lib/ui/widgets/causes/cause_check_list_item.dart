@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view_model.dart';
+import 'package:go/utils/random_string_generator.dart';
 
 class CauseCheckListItem extends StatelessWidget {
   bool isChecked;
-  CheckListViewModel model;
+
   final String header;
   final String subHeader;
-  int index;
+  final id;
 
-  CauseCheckListItem(
-      {@required this.isChecked,
-      @required this.header,
-      @required this.subHeader,
-      @required this.model,
-      @required this.index});
+  CauseCheckListItem({
+    @required this.id,
+    @required this.isChecked,
+    @required this.header,
+    @required this.subHeader,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +44,8 @@ class CauseCheckListItem extends StatelessWidget {
             //tristate: true,
             value: isChecked,
             onChanged: (value) {
-              model.indexChanger(index);
               value = true;
-              model.notifyListeners();
+              print(value);
             },
           ),
           Column(

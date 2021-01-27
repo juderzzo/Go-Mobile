@@ -5,9 +5,12 @@ import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_cause_model.dart';
+import 'package:go/models/go_checklist_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/ui/widgets/causes/cause_check_list_item.dart';
 import 'package:go/utils/go_image_picker.dart';
+import 'package:go/utils/random_string_generator.dart';
 import 'package:go/utils/string_validator.dart';
 import 'package:go/utils/url_handler.dart';
 import 'package:stacked/stacked.dart';
@@ -27,20 +30,19 @@ class CreateCauseViewModel extends BaseViewModel {
 
   GoCause cause;
 
-  Future<bool> validateAndSubmitForm({
-    String name,
-    String goal,
-    String why,
-    String who,
-    String resources,
-    String charityURL,
-    String action1,
-    String action2,
-    String action3,
-    String description1,
-    String description2,
-    String description3
-  }) async {
+  Future<bool> validateAndSubmitForm(
+      {String name,
+      String goal,
+      String why,
+      String who,
+      String resources,
+      String charityURL,
+      String action1,
+      String action2,
+      String action3,
+      String description1,
+      String description2,
+      String description3}) async {
     String formError;
     setBusy(true);
     if (!StringValidator().isValidString(name)) {
@@ -53,9 +55,12 @@ class CreateCauseViewModel extends BaseViewModel {
       formError = "Please describe who you are in regards to this cause";
     } else if (!StringValidator().isValidString(resources)) {
       formError = "Please provide additional resources for your cause";
-    } else if (StringValidator().isValidString(charityURL) && !UrlHandler().isValidUrl(charityURL)) {
+    } else if (StringValidator().isValidString(charityURL) &&
+        !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
-    } else if (!StringValidator().isValidString(action1) || !StringValidator().isValidString(action2) || !StringValidator().isValidString(action3)) {
+    } else if (!StringValidator().isValidString(action1) ||
+        !StringValidator().isValidString(action2) ||
+        !StringValidator().isValidString(action3)) {
       formError = "Please provide 3 actions for your causes's followers to do";
     }
     if (formError != null) {
@@ -68,6 +73,36 @@ class CreateCauseViewModel extends BaseViewModel {
       return false;
     } else {
       String creatorID = await _authService.getCurrentUserID();
+
+      //create the initial 3 actions
+
+      GoChecklistItem check1 = GoChecklistItem(
+          id: getRandomString(35),
+          item: CauseCheckListItem(
+            isChecked: false,
+            header: action1,
+            subHeader: description1,
+            
+          ));
+
+      GoChecklistItem check2 = GoChecklistItem(
+          id: getRandomString(35),
+          item: CauseCheckListItem(
+            isChecked: false,
+            header: action2,
+            subHeader: description2,
+            
+          ));
+
+      GoChecklistItem check3 = GoChecklistItem(
+          id: getRandomString(35),
+          item: CauseCheckListItem(
+            isChecked: false,
+            header: action3,
+            subHeader: description3,
+            
+          ));
+
       var res = await _causeDataService.createCause(
         creatorID: creatorID,
         name: name,
@@ -76,12 +111,21 @@ class CreateCauseViewModel extends BaseViewModel {
         who: who,
         resources: resources,
         charityURL: charityURL,
-        actions: [action1, action2, action3],
+        //link each checklist item to their id in the cause functionality
+        actions: [check1.id, check2.id, check3.id],
         actionDescriptions: [description1, description2, description3],
         img1: img1,
         img2: img2,
         img3: img3,
       );
+
+      //now push each of the checklistItems referecne
+
+      _causeDataService.pushItem(check1);
+      _causeDataService.pushItem(check2);
+      _causeDataService.pushItem(check3);
+
+
       setBusy(false);
       if (res != null) {
         _dialogService.showDialog(
@@ -97,7 +141,8 @@ class CreateCauseViewModel extends BaseViewModel {
   }
 
   ///BOTTOM SHEETS
-  selectImage({BuildContext context, int imgNum, double ratioX, double ratioY}) async {
+  selectImage(
+      {BuildContext context, int imgNum, double ratioX, double ratioY}) async {
     File img;
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.imagePicker,
@@ -105,9 +150,11 @@ class CreateCauseViewModel extends BaseViewModel {
     if (sheetResponse.responseData != null) {
       String res = sheetResponse.responseData;
       if (res == "camera") {
-        img = await GoImagePicker().retrieveImageFromCamera(ratioX: ratioX, ratioY: ratioY);
+        img = await GoImagePicker()
+            .retrieveImageFromCamera(ratioX: ratioX, ratioY: ratioY);
       } else if (res == "gallery") {
-        img = await GoImagePicker().retrieveImageFromLibrary(ratioX: ratioX, ratioY: ratioY);
+        img = await GoImagePicker()
+            .retrieveImageFromLibrary(ratioX: ratioX, ratioY: ratioY);
       }
       if (imgNum == 1) {
         img1 = img;

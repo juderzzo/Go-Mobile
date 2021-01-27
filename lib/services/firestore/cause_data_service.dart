@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_cause_model.dart';
+import 'package:go/models/go_checklist_model.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:go/utils/random_string_generator.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -11,6 +12,10 @@ import 'package:stacked_services/stacked_services.dart';
 class CauseDataService {
   CollectionReference causeRef =
       FirebaseFirestore.instance.collection('causes');
+
+  CollectionReference checkRef =
+      FirebaseFirestore.instance.collection('checks');
+
   SnackbarService _snackbarService = locator<SnackbarService>();
 
   Future checkIfCauseExists(String id) async {
@@ -55,6 +60,7 @@ class CauseDataService {
       followerCount: 1,
       forumPostCount: 0,
     );
+
     if (img1 != null) {
       String imgURL = await FirestoreImageUploader().uploadImage(
         img: img1,
@@ -124,20 +130,30 @@ class CauseDataService {
     return cause;
   }
 
-  Future updateList(String causeID, actions, descriptors) async {
-    GoCause cause;
-    DocumentSnapshot snapshot =
-        await causeRef.doc(causeID).get().catchError((e) {
-      return e.message;
-    });
-    Map<String, dynamic> snapshotData = snapshot.data();
-    cause = GoCause.fromMap(snapshotData);
-    cause.actions = actions;
-    cause.actionDescriptions = descriptors;
+  //Checklist
 
+  Future<void> pushItem(GoChecklistItem item) async {
+    await checkRef.doc(item.id).set({
+      'id': item.id,
+      'header': item.item.header,
+      'subheader': item.item.subHeader,
+    });
+  }
+
+  Future<List> getItem(id) async {
+    DocumentSnapshot snapshot = await checkRef.doc(id).get();
+    Map<String, dynamic> snapshotData = snapshot.data();
+    return [
+      snapshotData['id'],
+      snapshotData['header'],
+      snapshotData['subheader']
+    ];
+  }
+
+  Future updateList(String causeID, items) async {
     await causeRef.doc(causeID).update({
-      "actions": cause.actions,
-      "actionDescriptions": descriptors,
+      //link up the actions to the list of causeIDs
+      "actions": items,
     });
   }
 

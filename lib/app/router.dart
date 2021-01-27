@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route_annotations.dart';
-import 'package:go/ui/views/auth/forgot_password/forgot.dart';
 import 'package:go/ui/views/auth/sign_in/sign_in_view.dart';
 import 'package:go/ui/views/auth/sign_up/sign_up_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
@@ -26,7 +25,6 @@ import 'package:go/ui/views/user/user_view.dart';
     //AUTHENTICATION
     MaterialRoute(page: SignUpView, name: "SignUpViewRoute"),
     MaterialRoute(page: SignInView, name: "SignInViewRoute"),
-    MaterialRoute(page: ForgotView, name: "ForgotViewRoute"),
 
     //ONBOARDING
     MaterialRoute(page: OnboardingView, name: "OnboardingViewRoute"),

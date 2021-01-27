@@ -89,7 +89,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                   ),
             CheckListView(
               actions: model.cause.actions,
-              descriptors: model.cause.actionDescriptions,
+              //descriptors: model.cause.actionDescriptions,
               creatorId: model.cause.creatorID,
               currentUID: model.currentUID,
               name: model.cause.name,

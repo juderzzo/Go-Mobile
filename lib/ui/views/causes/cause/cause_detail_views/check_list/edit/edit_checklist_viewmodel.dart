@@ -23,7 +23,7 @@ class EditChecklistViewModel extends BaseViewModel {
   }
 
   updateChecklist(id, actions, descriptors) async {
-    _causeDataService.updateList(id, actions, descriptors);
+    //_causeDataService.updateList(id, actions, descriptors);
     navigateBack();
   }
 

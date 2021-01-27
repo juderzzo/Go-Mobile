@@ -29,14 +29,17 @@ class UserDataService {
       return e.message;
     });
     if (snapshot.exists) {
-      onboarded = snapshot.data()['onboarded'] == null ? false : snapshot.data()['onboarded'];
+      onboarded = snapshot.data()['onboarded'] == null
+          ? false
+          : snapshot.data()['onboarded'];
     }
     return onboarded;
   }
 
   Future checkIfUsernameExists(String uid, String username) async {
     bool exists = false;
-    QuerySnapshot snapshot = await userRef.where('username', isEqualTo: username).get();
+    QuerySnapshot snapshot =
+        await userRef.where('username', isEqualTo: username).get();
     if (snapshot.docs.isNotEmpty) {
       snapshot.docs.forEach((doc) {
         if (doc.id != uid) {
@@ -92,6 +95,27 @@ class UserDataService {
     });
   }
 
+  Future<bool> updateCheckedItems(String id) async {
+    GoUser user;
+    DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
+      return e.message;
+    });
+    if (snapshot.exists) {
+      Map<String, dynamic> snapshotData = snapshot.data();
+      user = GoUser.fromMap(snapshotData);
+    }
+    if (user.checks.length == null || user.checks.length < 1) {
+      user.checks = [];
+    }
+
+    if (!user.checks.contains(id)) {
+      user.checks.add(id);
+      updateGoUser(user);
+    }
+
+    return true;
+  }
+
   Future updateGoUserName(String id, String username) async {
     await userRef.doc(id).update({
       "username": username,
@@ -144,7 +168,8 @@ class UserDataService {
     @required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = userRef.orderBy('followerCount', descending: true).limit(resultsLimit);
+    Query query =
+        userRef.orderBy('followerCount', descending: true).limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
         title: 'Error',
@@ -166,7 +191,10 @@ class UserDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = userRef.orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    query = userRef
+        .orderBy('followerCount', descending: true)
+        .startAfterDocument(lastDocSnap)
+        .limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
