@@ -73,7 +73,7 @@ class _CheckListViewState extends State<CheckListView> {
                 //print(snapshot.data);
                 return GestureDetector(
                   onTap: () {
-                    if (parseBool(snapshot.data[3])) {
+                    if (!parseBool(snapshot.data[3])) {
                       showDialog(
                         context: context,
                         barrierDismissible: true,
@@ -91,10 +91,12 @@ class _CheckListViewState extends State<CheckListView> {
                                 )),
                             FlatButton(
                                 onPressed: () {
-                                  Navigator.pop(context, true);
                                   model.addCheck(snapshot.data[0], currentUID);
                                   print("tapped");
+                                  Navigator.pop(context, true);
+                                  snapshot.data[3] = "true";
                                   setState(() {});
+                                  model.notifyListeners();
                                 },
                                 child: Text(
                                   "Yes",

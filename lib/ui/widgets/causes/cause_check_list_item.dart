@@ -44,8 +44,7 @@ class CauseCheckListItem extends StatelessWidget {
             //tristate: true,
             value: isChecked,
             onChanged: (value) {
-              value = true;
-              print(value);
+              //value = true;
             },
           ),
           Column(
