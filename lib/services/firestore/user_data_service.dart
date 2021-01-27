@@ -95,25 +95,41 @@ class UserDataService {
     });
   }
 
-  Future<bool> updateCheckedItems(String id) async {
+  Future<bool> updateCheckedItems(String id, String uid) async {
     GoUser user;
-    DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
+    DocumentSnapshot snapshot = await userRef.doc(uid).get().catchError((e) {
       return e.message;
     });
     if (snapshot.exists) {
       Map<String, dynamic> snapshotData = snapshot.data();
       user = GoUser.fromMap(snapshotData);
     }
-    if (user.checks.length == null || user.checks.length < 1) {
+    if (user.checks.length == null) {
       user.checks = [];
     }
 
     if (!user.checks.contains(id)) {
       user.checks.add(id);
+      print(user.checks);
       updateGoUser(user);
     }
 
     return true;
+  }
+
+  Future<bool> isChecked(String id, String uid) async {
+    GoUser user;
+    DocumentSnapshot snapshot = await userRef.doc(uid).get().catchError((e) {
+      return e.message;
+    });
+    if (snapshot.exists) {
+      Map<String, dynamic> snapshotData = snapshot.data();
+      user = GoUser.fromMap(snapshotData);
+    }
+    if (user.checks.length == null) {
+      return false;
+    }
+    return user.checks.contains(id);
   }
 
   Future updateGoUserName(String id, String username) async {

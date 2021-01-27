@@ -25,13 +25,24 @@ class CheckListViewModel extends BaseViewModel {
     return await _authService.getCurrentUserID();
   }
 
-  Future<bool> addCheck(id) async {
-    return await _userService.updateCheckedItems(id);
+  Future<bool> addCheck(id, uid) async {
+    print(id);
+    return await _userService.updateCheckedItems(id, uid);
   }
 
-  static Future<List> generateItem(id) async {
+  static Future<bool> isChecked(id, uid) async {
+    UserDataService _userService = locator<UserDataService>();
+    return await _userService.isChecked(id, uid);
+  }
+
+  static Future<List> generateItem(id, uid) async {
     CauseDataService _causeDataService = locator<CauseDataService>();
     List strings = await _causeDataService.getItem(id);
+    if (await isChecked(id, uid)) {
+      strings.add('true');
+    } else {
+      strings.add('false');
+    }
     return strings;
   }
 

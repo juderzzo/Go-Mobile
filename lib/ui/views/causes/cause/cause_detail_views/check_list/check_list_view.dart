@@ -44,6 +44,7 @@ class _CheckListViewState extends State<CheckListView> {
   final String name;
   final String causeID;
   final List actionFutures = [];
+  final List checks = [];
 
   //for futurebuilders
 
@@ -56,30 +57,67 @@ class _CheckListViewState extends State<CheckListView> {
     this.causeID,
   });
 
+  bool parseBool(string) {
+    return string.toLowerCase() == 'true';
+  }
+
   List<Widget> generateChecklist(model, fut) {
     List<Widget> ans = [];
     for (var i = 0; i < fut.length; i++) {
-      ans.add(GestureDetector(
-        onTap: () async {
-          model.addCheck(await fut[i]);
-        },
-        child: FutureBuilder(
+      ans.add(
+        FutureBuilder(
             future: fut[i],
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 //print(fut);
-                return CauseCheckListItem(
-                  id: snapshot.data[0],
-                  isChecked: false,
-                  header: snapshot.data[1],
-                  subHeader: snapshot.data[2],
+                //print(snapshot.data);
+                return GestureDetector(
+                  onTap: () {
+                    if (parseBool(snapshot.data[3])) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (_) => AlertDialog(
+                          title: Text("Confrimation"),
+                          content: Text(
+                              "Once you check off an item, it cannot be unchecked. Are you sure you completed this item?"),
+                          actions: [
+                            FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                },
+                                child: Text(
+                                  "No",
+                                )),
+                            FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                  model.addCheck(snapshot.data[0], currentUID);
+                                  print("tapped");
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  "Yes",
+                                )),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                  child: CauseCheckListItem(
+                    id: snapshot.data[0],
+                    isChecked: parseBool(snapshot.data[3]),
+                    header: snapshot.data[1],
+                    subHeader: snapshot.data[2],
+                  ),
                 );
               } else {
                 return Container(
-                    width: 100, child: CircularProgressIndicator());
+                  width: 100,
+                );
               }
             }),
-      ));
+      );
 
       ans.add(verticalSpaceMedium);
     }
@@ -127,9 +165,13 @@ class _CheckListViewState extends State<CheckListView> {
   @override
   void initState() {
     super.initState();
+
     for (var i = 0; i < actions.length; i++) {
-      actionFutures.add(CheckListViewModel.generateItem(actions[i]));
+      actionFutures.add(
+        CheckListViewModel.generateItem(actions[i], currentUID),
+      );
     }
+
     //print(actionFutures);
   }
 
