@@ -11,190 +11,217 @@ import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
 import 'package:stacked/stacked.dart';
 import 'edit_checklist_viewmodel.dart';
 
-class EditChecklistView extends StatelessWidget {
+class EditChecklistView extends StatefulWidget {
   List actions;
-  List descriptors;
   String creatorId;
   String currentUID;
   String name;
   String causeID;
-  TextEditingController action0 = TextEditingController();
-  TextEditingController action1 = TextEditingController();
-  TextEditingController action2 = TextEditingController();
-  TextEditingController descriptor0 = TextEditingController();
-  TextEditingController descriptor1 = TextEditingController();
-  TextEditingController descriptor2 = TextEditingController();
+
+  EditChecklistView({this.actions, this.creatorId, this.name, this.causeID});
+
+  @override
+  _EditChecklistViewState createState() => _EditChecklistViewState();
+}
+
+class _EditChecklistViewState extends State<EditChecklistView> {
+  List actions;
+  String creatorId;
+  String currentUID;
+  String name;
+  String causeID;
+
+  List<DynamicField> dynamicList = [];
+  List<String> headers = [];
+  List<String> subHeaders = [];
+  
+
+  initDynamic() {
+    int initLen = actions.length;
+    for (int i = 0; i < initLen; i++) {
+      dynamicList.add(DynamicField());
+    }
+  }
+
+  addDynamic(model) {
+    if (dynamicList.length < 1) {
+      dynamicList = [];
+    } else {
+      //print(headers.toString());
+    }
+    setState(() {});
+    dynamicList.add(DynamicField());
+    
+
+    //print(dynamicList);
+    
+  }
+
+  _EditChecklistViewState(
+      {this.actions, this.creatorId, this.name, this.causeID});
 
   initialize(BuildContext context) {
     Map<String, dynamic> args = RouteData.of(context).arguments;
     actions = args['actions'];
-    descriptors = args['descriptors'];
     creatorId = args['creatorID'];
     currentUID = args['currentUID'];
     name = args['name'];
     causeID = args['causeID'];
-
-    print(causeID);
-
-    //print(actions);
-    //print(descriptors);
-    action0.text = actions[0];
-    action1.text = actions[1];
-    action2.text = actions[2];
-
-    descriptor0.text = descriptors[0];
-    descriptor1.text = descriptors[1];
-    descriptor2.text = descriptors[2];
-
-    //print('actions' + actions.toString());
-  }
-
-  Widget textFieldHeader(String header, String subHeader) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            header,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: appFontColor(),
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            subHeader,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w300,
-              color: appFontColorAlt(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget singleLineTextField(
-      {TextEditingController controller, String hintText, int textLimit}) {
-    return TextFieldContainer(
-      child: TextFormField(
-        controller: controller,
-        cursorColor: appFontColorAlt(),
-        //validator: (value) => value.isEmpty ? 'Field Cannot be Empty' : null,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(textLimit),
-        ],
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: InputBorder.none,
-        ),
-      ),
-    );
   }
 
   Widget checkListItems(model) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        toolbarHeight: 40,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+        appBar: AppBar(
+          elevation: 0.0,
+          toolbarHeight: 40,
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              model.navigateBack();
+            },
           ),
-          onPressed: () {
-            model.navigateBack();
-          },
-        ),
-        title: Container(
-          height: 40,
-          width: 300,
-          child: ListView(scrollDirection: Axis.horizontal, children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-              child: CustomFittedText(
-                text: name,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: appFontColor(),
-                textAlign: TextAlign.left,
+          title: Container(
+            height: 40,
+            width: 300,
+            child: ListView(scrollDirection: Axis.horizontal, children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                child: CustomFittedText(
+                  text: name,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: appFontColor(),
+                  textAlign: TextAlign.left,
+                ),
               ),
-            ),
-          ]),
+            ]),
+          ),
         ),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(28.0, 0.0, 28.0, 0.0),
-          child: ListView(children: [
-            verticalSpaceLarge,
-            textFieldHeader(
-              "Edit Your Action List!",
-              "List three things (titles and descriptions) you'd like your cause's followers to do each day to further the cause - besides donating."
-                  "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
-            ),
-            verticalSpaceSmall,
-            singleLineTextField(
-              controller: action0,
-              hintText: "Task 01",
-            ),
-            verticalSpaceSmall,
-            singleLineTextField(
-              controller: descriptor0,
-              hintText: "Description",
-            ),
-            verticalSpaceMedium,
-            singleLineTextField(
-              controller: action1,
-              hintText: "Task 02",
-            ),
-            verticalSpaceSmall,
-            singleLineTextField(
-              controller: descriptor1,
-              hintText: "Description",
-            ),
-            verticalSpaceMedium,
-            singleLineTextField(
-              controller: action2,
-              hintText: "Task 03",
-            ),
-            verticalSpaceSmall,
-            singleLineTextField(
-              controller: descriptor2,
-              hintText: "Description",
-            ),
-            verticalSpaceLarge,
-            CustomButton(
-              text: "Submit",
-              textSize: 16,
-              textColor: appFontColor(),
-              height: 40,
-              width: 300,
-              backgroundColor: appButtonColor(),
-              elevation: 2,
-              isBusy: false,
-              onPressed: () {
-                model.updateChecklist(causeID, [action0.text, action1.text, action2.text], [descriptor0.text, descriptor1.text, descriptor2.text]);
-              },
-            )
-          ]),
+        floatingActionButton: new FloatingActionButton(
+          onPressed: () {
+            addDynamic(model);
+            setState(() {});
+          },
+          child: new Icon(Icons.add),
         ),
-      ),
-    );
+        body: Column(children: [
+          Flexible(
+            flex: 2,
+            child: new ListView(
+              
+              children: dynamicList,
+            ),
+          ),
+          
+        ]));
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<EditChecklistViewModel>.reactive(
       viewModelBuilder: () => EditChecklistViewModel(),
-      onModelReady: initialize(context),
+      onModelReady: (_) {
+        initialize(context);
+        initDynamic();
+      },
       builder: (context, model, child) => Container(
         child: checkListItems(model),
       ),
     );
   }
 }
+
+class DynamicField extends StatelessWidget {
+  TextEditingController header = new TextEditingController();
+  TextEditingController subHeader = new TextEditingController();
+
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(children: [
+        SizedBox(
+          height: 30,
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 48.0, 0.0),
+          child: singleLineTextField(
+              controller: header,
+              hintText: "Header",
+              textLimit: 20,
+              onChanged: null),
+        ),
+        Container(
+          height: 10,
+          child: Row(
+            children: [
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.remove),
+                onPressed: null,
+                color: Colors.red,
+              )
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 48.0, 0.0),
+          child: singleLineTextField(
+              controller: subHeader, hintText: "Subheader", textLimit: 20),
+        ),
+      ]),
+    );
+  }
+}
+
+Widget singleLineTextField(
+    {TextEditingController controller,
+    String hintText,
+    int textLimit,
+    Function onChanged}) {
+  return TextFieldContainer(
+    child: TextFormField(
+      onChanged: onChanged,
+      controller: controller,
+      cursorColor: appFontColorAlt(),
+      //validator: (value) => value.isEmpty ? 'Field Cannot be Empty' : null,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(textLimit),
+      ],
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: InputBorder.none,
+      ),
+    ),
+  );
+}
+
+// Widget textFieldHeader(String header, String subHeader) {
+//   return Container(
+//     child: Column(
+//       crossAxisAlignment: CrossAxisAlignment.stretch,
+//       children: [
+//         Text(
+//           header,
+//           style: TextStyle(
+//             fontSize: 18,
+//             fontWeight: FontWeight.bold,
+//             color: appFontColor(),
+//           ),
+//         ),
+//         SizedBox(height: 4),
+//         Text(
+//           subHeader,
+//           style: TextStyle(
+//             fontSize: 14,
+//             fontWeight: FontWeight.w300,
+//             color: appFontColorAlt(),
+//           ),
+//         ),
+//       ],
+//     ),
+//   );
+// }

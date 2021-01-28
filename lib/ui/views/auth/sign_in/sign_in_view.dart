@@ -128,6 +128,12 @@ class SignInView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: signUpForAccountText(context, model),
                   ),
+
+                  verticalSpaceLarge,
+
+                  FlatButton(
+                    onPressed: model.navigateToForgot, 
+                    child: Text("Forgot Passowrd"))
                 ],
               ),
             ),

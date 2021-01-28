@@ -9,6 +9,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../ui/views/auth/forgot_password/forgot.dart';
 import '../ui/views/auth/sign_in/sign_in_view.dart';
 import '../ui/views/auth/sign_up/sign_up_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
@@ -30,6 +31,7 @@ class Routes {
   static const String RootViewRoute = '/';
   static const String SignUpViewRoute = '/sign-up-view';
   static const String SignInViewRoute = '/sign-in-view';
+  static const String ForgotViewRoute = '/forgot-view';
   static const String OnboardingViewRoute = '/onboarding-view';
   static const String HomeNavViewRoute = '/home-nav-view';
   static const String CauseViewRoute = '/cause-view';
@@ -47,6 +49,7 @@ class Routes {
     RootViewRoute,
     SignUpViewRoute,
     SignInViewRoute,
+    ForgotViewRoute,
     OnboardingViewRoute,
     HomeNavViewRoute,
     CauseViewRoute,
@@ -70,6 +73,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.RootViewRoute, page: RootView),
     RouteDef(Routes.SignUpViewRoute, page: SignUpView),
     RouteDef(Routes.SignInViewRoute, page: SignInView),
+    RouteDef(Routes.ForgotViewRoute, page: ForgotView),
     RouteDef(Routes.OnboardingViewRoute, page: OnboardingView),
     RouteDef(Routes.HomeNavViewRoute, page: HomeNavView),
     RouteDef(Routes.CauseViewRoute, page: CauseView),
@@ -105,6 +109,12 @@ class GoRouter extends RouterBase {
         settings: data,
       );
     },
+    ForgotView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ForgotView(),
+        settings: data,
+      );
+    },
     OnboardingView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => OnboardingView(),
@@ -130,8 +140,16 @@ class GoRouter extends RouterBase {
       );
     },
     EditChecklistView: (data) {
+      final args = data.getArgs<EditChecklistViewArguments>(
+        orElse: () => EditChecklistViewArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => EditChecklistView(),
+        builder: (context) => EditChecklistView(
+          actions: args.actions,
+          creatorId: args.creatorId,
+          name: args.name,
+          causeID: args.causeID,
+        ),
         settings: data,
       );
     },
@@ -192,6 +210,16 @@ class GoRouter extends RouterBase {
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
+
+/// EditChecklistView arguments holder class
+class EditChecklistViewArguments {
+  final List<dynamic> actions;
+  final String creatorId;
+  final String name;
+  final String causeID;
+  EditChecklistViewArguments(
+      {this.actions, this.creatorId, this.name, this.causeID});
+}
 
 /// AllSearchResultsView arguments holder class
 class AllSearchResultsViewArguments {

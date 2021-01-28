@@ -139,8 +139,8 @@ class _CheckListViewState extends State<CheckListView> {
             isBusy: false,
             onPressed: () {
               print(causeID);
-              // model.navigateToEdit(actions, descriptors, creatorId,
-              //     currentUID, name, causeID);
+              model.navigateToEdit(actions, creatorId,
+              currentUID, name, causeID);
             },
           ))
         : ans.add(SizedBox(
