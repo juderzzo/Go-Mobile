@@ -36,10 +36,6 @@ class _EditChecklistViewState extends State<EditChecklistView> {
   List<String> subHeaders = [];
 
   addAction() {
-    if (dynamicList.length < 1) {
-      dynamicList = [];
-    }
-
     setState(() {
       dynamicList.add(CheckField());
     });
@@ -84,8 +80,11 @@ class _EditChecklistViewState extends State<EditChecklistView> {
           ]),
         ),
       ),
-      body: ListView(
-        children: dynamicList,
+      body: ListView.builder(
+        itemCount: dynamicList.length,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemBuilder: (context, index) => dynamicList[index],
       ),
     );
   }
@@ -112,6 +111,8 @@ class CheckField extends StatelessWidget {
   String header;
   String subheader;
   int index;
+
+  CheckField({this.id, this.header, this.subheader, this.index});
   TextEditingController headerController = new TextEditingController();
   TextEditingController subHeaderController = new TextEditingController();
 
