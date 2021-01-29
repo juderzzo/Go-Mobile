@@ -27,6 +27,18 @@ class EditChecklistViewModel extends BaseViewModel {
     navigateBack();
   }
 
+  static getHeadersSubheaders(List<String> actions) async {
+   CauseDataService _causeDataService = locator<CauseDataService>();
+   List<List<String>> hs = [[], []];
+    for (int i = 0; i < actions.length; i++) {
+      List item = await _causeDataService.getItem(actions[i]);
+      hs[0].add(item[1]);
+      hs[1].add(item[2]);
+    }
+
+    return hs;
+  }
+
   // String actions1() {
   //   return actions[1];
   // }

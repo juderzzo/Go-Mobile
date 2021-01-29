@@ -43,9 +43,9 @@ class CheckListViewModel extends BaseViewModel {
     return strings;
   }
 
-  navigateToEdit(actions, creatorID, currentUID, name, causeID) {
+  navigateToEdit(actions, creatorID, currentUID, name, causeID, headers, subheaders) {
     _navigationService.navigateTo(Routes.EditChecklistView, arguments: EditChecklistViewArguments(arguments: 
-    [actions, creatorID, currentUID, name, causeID])
+    [actions, creatorID, currentUID, name, causeID, headers, subheaders])
     );
   }
 }

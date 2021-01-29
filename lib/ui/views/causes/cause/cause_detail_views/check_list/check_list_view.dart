@@ -45,6 +45,8 @@ class _CheckListViewState extends State<CheckListView> {
   final String causeID;
   final List actionFutures = [];
   final List checks = [];
+  List<String> headers = [];
+  List<String> subHeaders = [];
 
   //for futurebuilders
 
@@ -71,6 +73,15 @@ class _CheckListViewState extends State<CheckListView> {
               if (snapshot.connectionState == ConnectionState.done) {
                 //print(fut);
                 //print(snapshot.data);
+                if (headers.length < fut.length) {
+                  //print(snapshot.data[1]);
+                  //print(headers);
+                  headers.insert(0, snapshot.data[1]);
+                  subHeaders.insert(0, snapshot.data[2]);
+
+                  //these get sent in in correct order
+                }
+
                 return GestureDetector(
                   onTap: () {
                     if (!parseBool(snapshot.data[3])) {
@@ -139,8 +150,8 @@ class _CheckListViewState extends State<CheckListView> {
             isBusy: false,
             onPressed: () {
               print(causeID);
-              model.navigateToEdit(actions, creatorId,
-              currentUID, name, causeID);
+              model.navigateToEdit(actions, creatorId, currentUID, name,
+                  causeID, headers, subHeaders);
             },
           ))
         : ans.add(SizedBox(

@@ -28,19 +28,20 @@ class _EditChecklistViewState extends State<EditChecklistView> {
   String currentUID;
   String name;
   String causeID;
+  List<String> headers;
+  List<String> subHeaders;
+  bool initialized = false;
 
   _EditChecklistViewState({this.arguments});
 
   List<CheckField> dynamicList = [];
-  List<String> headers = [];
-  List<String> subHeaders = [];
 
   addAction() {
     setState(() {
       dynamicList.add(CheckField());
     });
 
-    build(context);
+    //build(context);
   }
 
   Widget wrapper(model) {
@@ -89,18 +90,31 @@ class _EditChecklistViewState extends State<EditChecklistView> {
     );
   }
 
-  initialize() {
-    actions = arguments[0];
-    creatorId = arguments[1];
-    currentUID = arguments[2];
-    name = arguments[3];
-    causeID = arguments[4];
+  initialize(EditChecklistViewModel model) {
+    if (!initialized) {
+      actions = arguments[0];
+      creatorId = arguments[1];
+      currentUID = arguments[2];
+      name = arguments[3];
+      causeID = arguments[4];
+      headers = arguments[5];
+      subHeaders = arguments[6];
+      for (int i = 0; i < actions.length; i++) {
+        dynamicList.add(CheckField(
+          id: actions[i],
+          header: headers[i],
+          subheader: subHeaders[i],
+          index: i,
+        ));
+      }
+      initialized = true;
+    }
   }
 
   Widget build(BuildContext context) {
     return ViewModelBuilder<EditChecklistViewModel>.nonReactive(
         viewModelBuilder: () => EditChecklistViewModel(),
-        onModelReady: initialize(),
+        onModelReady: initialize(EditChecklistViewModel()),
         createNewModelOnInsert: true,
         builder: (context, model, child) => Container(child: wrapper(model)));
   }
@@ -119,6 +133,8 @@ class CheckField extends StatelessWidget {
   //we need an index and and id to have the cause
   //CheckField({this.id, this.header, this.subheader, this.index});
   Widget build(BuildContext context) {
+    headerController.text = header;
+    subHeaderController.text = subheader;
     return Container(
       padding: EdgeInsets.fromLTRB(16.0, 10.0, 0.0, 0.0),
       height: 200,
