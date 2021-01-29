@@ -42,8 +42,8 @@ class _EditChecklistViewState extends State<EditChecklistView> {
     setState(() {
       dynamicList.add(CheckField(
         id: getRandomString(35),
-        header: null,
-        subheader: null,
+        header: "",
+        subheader: "",
         index: currentLength,
         view: this,
       ));

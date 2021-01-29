@@ -52,7 +52,7 @@ class EditChecklistViewModel extends BaseViewModel {
         await _causeDataService.pushItem(items[i]);
       }
     }
-    navigateBack();
+    navigateToCause(causeID);
   }
 
   // String actions1() {
@@ -61,5 +61,9 @@ class EditChecklistViewModel extends BaseViewModel {
 
   navigateBack() {
     _navigationService.back();
+  }
+
+  navigateToCause(id) {
+    _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
   }
 }
