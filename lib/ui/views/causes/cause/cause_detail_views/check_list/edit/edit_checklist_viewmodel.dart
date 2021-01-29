@@ -52,7 +52,8 @@ class EditChecklistViewModel extends BaseViewModel {
         await _causeDataService.pushItem(items[i]);
       }
     }
-    navigateToCause(causeID);
+    navigateBack();
+    navigateBack();
   }
 
   // String actions1() {

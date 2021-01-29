@@ -61,7 +61,7 @@ class _EditChecklistViewState extends State<EditChecklistView> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
-        toolbarHeight: 40,
+        toolbarHeight: 70,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(
@@ -73,7 +73,7 @@ class _EditChecklistViewState extends State<EditChecklistView> {
           },
         ),
         title: Container(
-          height: 40,
+          height: 39,
           width: 300,
           child: ListView(scrollDirection: Axis.horizontal, children: [
             Padding(
@@ -90,9 +90,10 @@ class _EditChecklistViewState extends State<EditChecklistView> {
         ),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 5 / 6,
+            height: MediaQuery.of(context).size.height * 3 / 4,
             child: ListView.builder(
               itemCount: dynamicList.length,
               scrollDirection: Axis.vertical,
@@ -180,7 +181,8 @@ class CheckField extends StatelessWidget {
     headerController.text = header;
     subHeaderController.text = subheader;
     return Container(
-      padding: EdgeInsets.fromLTRB(16.0, 10.0, 0.0, 0.0),
+      padding: EdgeInsets.fromLTRB(32.0, 10.0, 0.0, 0.0),
+      
       height: 200,
       width: MediaQuery.of(context).size.width,
       child: Row(
@@ -188,22 +190,29 @@ class CheckField extends StatelessWidget {
           Column(children: [
             Container(
               width: MediaQuery.of(context).size.width * 3 / 4,
+              height: 50,
               decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(10),
+                color: appTextFieldContainerColor(),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: TextFormField(
-                maxLength: 20,
+                
+                inputFormatters:[
+                  LengthLimitingTextInputFormatter(20),
+                ],
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   controller: headerController,
                   onChanged: (leon) {
                     header = headerController.text;
                   },
+                  
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8.0),
+                      contentPadding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0,8.0),
+                      
                       hintText: "Action",
                       border: InputBorder.none)),
             ),
-            verticalSpaceMedium,
+            verticalSpaceSmall,
             Container(
               decoration: BoxDecoration(
                 color: Colors.grey[100],
@@ -226,21 +235,25 @@ class CheckField extends StatelessWidget {
             ),
           ]),
           Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 60.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 75.0),
             child: Container(
               height: 40,
               decoration:
                   BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-              child: IconButton(
-                icon: Icon(
-                  Icons.remove,
-                  color: Colors.white,
+              
+                child: GestureDetector(
+                  onTap: () {
+                    print(this.index);
+                    view.remove(this.index);
+                  },
+                      child: Icon(
+                      Icons.remove,
+                      size: 15,
+                      color: Colors.white,
+                    ),
                 ),
-                onPressed: () {
-                  print(this.index);
-                  view.remove(this.index);
-                },
-              ),
+                  
+                
             ),
           ),
         ],
