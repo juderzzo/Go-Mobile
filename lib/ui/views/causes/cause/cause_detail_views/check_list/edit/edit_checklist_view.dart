@@ -89,11 +89,32 @@ class _EditChecklistViewState extends State<EditChecklistView> {
           ]),
         ),
       ),
-      body: ListView.builder(
-        itemCount: dynamicList.length,
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemBuilder: (context, index) => dynamicList[index],
+      body: Column(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 5 / 6,
+            child: ListView.builder(
+              itemCount: dynamicList.length,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: (context, index) => dynamicList[index],
+            ),
+          ),
+          CustomButton(
+            text: "Submit",
+            textSize: 16,
+            textColor: appFontColor(),
+            height: 40,
+            width: 300,
+            backgroundColor: appButtonColor(),
+            elevation: 2,
+            isBusy: false,
+            onPressed: () {
+              print(causeID);
+              model.updateChecklist(dynamicList, causeID);
+            },
+          )
+        ],
       ),
     );
   }
@@ -173,6 +194,9 @@ class CheckField extends StatelessWidget {
               ),
               child: TextFormField(
                   controller: headerController,
+                  onChanged: (leon) {
+                    header = headerController.text;
+                  },
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(8.0),
                       hintText: "Action",
@@ -186,6 +210,9 @@ class CheckField extends StatelessWidget {
               ),
               width: MediaQuery.of(context).size.width * 3 / 4,
               child: TextFormField(
+                onChanged: (leon) {
+                    subheader = subHeaderController.text;
+                  },
                   controller: subHeaderController,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(8.0),

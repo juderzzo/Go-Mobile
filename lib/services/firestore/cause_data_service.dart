@@ -150,6 +150,13 @@ class CauseDataService {
     ];
   }
 
+  Future<bool> checkExists(id) async {
+    await checkRef.doc(id).get().catchError((onError) {
+      return true;
+    });
+    return false;
+  }
+
   Future updateList(String causeID, items) async {
     await causeRef.doc(causeID).update({
       //link up the actions to the list of causeIDs
