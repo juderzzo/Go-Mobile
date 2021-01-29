@@ -193,6 +193,7 @@ class CheckField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextFormField(
+                maxLength: 20,
                   controller: headerController,
                   onChanged: (leon) {
                     header = headerController.text;
@@ -213,7 +214,11 @@ class CheckField extends StatelessWidget {
                 onChanged: (leon) {
                     subheader = subHeaderController.text;
                   },
+                  keyboardType: TextInputType.multiline,
                   controller: subHeaderController,
+                  maxLines: 2,
+                  maxLength: 100,
+                  
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(8.0),
                       hintText: "Description",

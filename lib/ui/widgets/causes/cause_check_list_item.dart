@@ -58,12 +58,16 @@ class CauseCheckListItem extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
-                subHeader,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: appFontColor(),
-                  fontWeight: FontWeight.w400,
+              Container(
+                width: 300,
+                child: Text(
+                  subHeader,
+                  
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: appFontColor(),
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ],
