@@ -8,6 +8,7 @@ import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/causes/cause_check_list_item.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
+import 'package:go/utils/random_string_generator.dart';
 import 'package:stacked/stacked.dart';
 import 'edit_checklist_viewmodel.dart';
 
@@ -37,8 +38,15 @@ class _EditChecklistViewState extends State<EditChecklistView> {
   List<CheckField> dynamicList = [];
 
   addAction() {
+    int currentLength = dynamicList.length;
     setState(() {
-      dynamicList.add(CheckField());
+      dynamicList.add(CheckField(
+        id: getRandomString(35),
+        header: null,
+        subheader: null,
+        index: currentLength,
+        view: this,
+      ));
     });
 
     //build(context);
@@ -100,15 +108,29 @@ class _EditChecklistViewState extends State<EditChecklistView> {
       headers = arguments[5];
       subHeaders = arguments[6];
       for (int i = 0; i < actions.length; i++) {
+        print(i);
         dynamicList.add(CheckField(
           id: actions[i],
           header: headers[i],
           subheader: subHeaders[i],
           index: i,
+          view: this,
         ));
       }
       initialized = true;
     }
+  }
+
+  void remove(int index) {
+    for (int i = 0; i < dynamicList.length; i++) {
+      //first go through all the previous ones and change their indecies
+      if (i > index) {
+        dynamicList[i].index = dynamicList[i].index - 1;
+      }
+    }
+
+    dynamicList.removeAt(index);
+    setState(() {});
   }
 
   Widget build(BuildContext context) {
@@ -125,8 +147,9 @@ class CheckField extends StatelessWidget {
   String header;
   String subheader;
   int index;
+  _EditChecklistViewState view;
 
-  CheckField({this.id, this.header, this.subheader, this.index});
+  CheckField({this.id, this.header, this.subheader, this.index, this.view});
   TextEditingController headerController = new TextEditingController();
   TextEditingController subHeaderController = new TextEditingController();
 
@@ -177,13 +200,17 @@ class CheckField extends StatelessWidget {
               decoration:
                   BoxDecoration(shape: BoxShape.circle, color: Colors.red),
               child: IconButton(
-                  icon: Icon(
-                    Icons.remove,
-                    color: Colors.white,
-                  ),
-                  onPressed: null),
+                icon: Icon(
+                  Icons.remove,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  print(this.index);
+                  view.remove(this.index);
+                },
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
