@@ -15,11 +15,8 @@ class CheckListViewModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
   UserDataService _userService = locator<UserDataService>();
 
-  List<bool> checks = [false, false, false];
+  
 
-  void indexChanger(int index) {
-    checks[index] = true;
-  }
 
   Future<String> userID() async {
     return await _authService.getCurrentUserID();
@@ -47,12 +44,8 @@ class CheckListViewModel extends BaseViewModel {
   }
 
   navigateToEdit(actions, creatorID, currentUID, name, causeID) {
-    _navigationService.navigateTo(Routes.EditChecklistView, arguments: {
-      'actions': actions,
-      'creatorID': creatorID,
-      'currentUID': currentUID,
-      'name': name,
-      'causeID': causeID
-    });
+    _navigationService.navigateTo(Routes.EditChecklistView, arguments: EditChecklistViewArguments(arguments: 
+    [actions, creatorID, currentUID, name, causeID])
+    );
   }
 }

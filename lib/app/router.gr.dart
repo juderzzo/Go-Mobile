@@ -144,12 +144,7 @@ class GoRouter extends RouterBase {
         orElse: () => EditChecklistViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => EditChecklistView(
-          actions: args.actions,
-          creatorId: args.creatorId,
-          name: args.name,
-          causeID: args.causeID,
-        ),
+        builder: (context) => EditChecklistView(arguments: args.arguments),
         settings: data,
       );
     },
@@ -213,12 +208,8 @@ class GoRouter extends RouterBase {
 
 /// EditChecklistView arguments holder class
 class EditChecklistViewArguments {
-  final List<dynamic> actions;
-  final String creatorId;
-  final String name;
-  final String causeID;
-  EditChecklistViewArguments(
-      {this.actions, this.creatorId, this.name, this.causeID});
+  final List<dynamic> arguments;
+  EditChecklistViewArguments({this.arguments});
 }
 
 /// AllSearchResultsView arguments holder class

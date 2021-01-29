@@ -12,216 +12,163 @@ import 'package:stacked/stacked.dart';
 import 'edit_checklist_viewmodel.dart';
 
 class EditChecklistView extends StatefulWidget {
-  List actions;
-  String creatorId;
-  String currentUID;
-  String name;
-  String causeID;
+  final List arguments;
 
-  EditChecklistView({this.actions, this.creatorId, this.name, this.causeID});
+  EditChecklistView({this.arguments});
 
   @override
-  _EditChecklistViewState createState() => _EditChecklistViewState();
+  _EditChecklistViewState createState() =>
+      _EditChecklistViewState(arguments: arguments);
 }
 
 class _EditChecklistViewState extends State<EditChecklistView> {
+  final List arguments;
   List actions;
   String creatorId;
   String currentUID;
   String name;
   String causeID;
 
-  List<DynamicField> dynamicList = [];
+  _EditChecklistViewState({this.arguments});
+
+  List<CheckField> dynamicList = [];
   List<String> headers = [];
   List<String> subHeaders = [];
-  
 
-  initDynamic() {
-    int initLen = actions.length;
-    for (int i = 0; i < initLen; i++) {
-      dynamicList.add(DynamicField());
-    }
-  }
-
-  addDynamic(model) {
+  addAction() {
     if (dynamicList.length < 1) {
       dynamicList = [];
-    } else {
-      //print(headers.toString());
     }
-    setState(() {});
-    dynamicList.add(DynamicField());
-    
 
-    //print(dynamicList);
-    
+    setState(() {
+      dynamicList.add(CheckField());
+    });
+
+    build(context);
   }
 
-  _EditChecklistViewState(
-      {this.actions, this.creatorId, this.name, this.causeID});
-
-  initialize(BuildContext context) {
-    Map<String, dynamic> args = RouteData.of(context).arguments;
-    actions = args['actions'];
-    creatorId = args['creatorID'];
-    currentUID = args['currentUID'];
-    name = args['name'];
-    causeID = args['causeID'];
-  }
-
-  Widget checkListItems(model) {
+  Widget wrapper(model) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          toolbarHeight: 40,
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              model.navigateBack();
-            },
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: addAction,
+      ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0.0,
+        toolbarHeight: 40,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
           ),
-          title: Container(
-            height: 40,
-            width: 300,
-            child: ListView(scrollDirection: Axis.horizontal, children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                child: CustomFittedText(
-                  text: name,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: appFontColor(),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ]),
-          ),
-        ),
-        floatingActionButton: new FloatingActionButton(
           onPressed: () {
-            addDynamic(model);
-            setState(() {});
+            model.navigateBack();
           },
-          child: new Icon(Icons.add),
         ),
-        body: Column(children: [
-          Flexible(
-            flex: 2,
-            child: new ListView(
-              
-              children: dynamicList,
+        title: Container(
+          height: 40,
+          width: 300,
+          child: ListView(scrollDirection: Axis.horizontal, children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+              child: CustomFittedText(
+                text: name,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: appFontColor(),
+                textAlign: TextAlign.left,
+              ),
             ),
-          ),
-          
-        ]));
+          ]),
+        ),
+      ),
+      body: ListView(
+        children: dynamicList,
+      ),
+    );
   }
 
-  @override
+  initialize() {
+    actions = arguments[0];
+    creatorId = arguments[1];
+    currentUID = arguments[2];
+    name = arguments[3];
+    causeID = arguments[4];
+  }
+
   Widget build(BuildContext context) {
-    return ViewModelBuilder<EditChecklistViewModel>.reactive(
-      viewModelBuilder: () => EditChecklistViewModel(),
-      onModelReady: (_) {
-        initialize(context);
-        initDynamic();
-      },
-      builder: (context, model, child) => Container(
-        child: checkListItems(model),
+    return ViewModelBuilder<EditChecklistViewModel>.nonReactive(
+        viewModelBuilder: () => EditChecklistViewModel(),
+        onModelReady: initialize(),
+        createNewModelOnInsert: true,
+        builder: (context, model, child) => Container(child: wrapper(model)));
+  }
+}
+
+class CheckField extends StatelessWidget {
+  String id;
+  String header;
+  String subheader;
+  int index;
+  TextEditingController headerController = new TextEditingController();
+  TextEditingController subHeaderController = new TextEditingController();
+
+  //we need an index and and id to have the cause
+  //CheckField({this.id, this.header, this.subheader, this.index});
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.0, 10.0, 0.0, 0.0),
+      height: 200,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        children: [
+          Column(children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 3 / 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextFormField(
+                  controller: headerController,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(8.0),
+                      hintText: "Action",
+                      border: InputBorder.none)),
+            ),
+            verticalSpaceMedium,
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: MediaQuery.of(context).size.width * 3 / 4,
+              child: TextFormField(
+                  controller: subHeaderController,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(8.0),
+                      hintText: "Description",
+                      border: InputBorder.none)),
+            ),
+          ]),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 60.0),
+            child: Container(
+              height: 40,
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.remove,
+                    color: Colors.white,
+                  ),
+                  onPressed: null),
+            ),
+          )
+        ],
       ),
     );
   }
 }
-
-class DynamicField extends StatelessWidget {
-  TextEditingController header = new TextEditingController();
-  TextEditingController subHeader = new TextEditingController();
-
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(children: [
-        SizedBox(
-          height: 30,
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 48.0, 0.0),
-          child: singleLineTextField(
-              controller: header,
-              hintText: "Header",
-              textLimit: 20,
-              onChanged: null),
-        ),
-        Container(
-          height: 10,
-          child: Row(
-            children: [
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.remove),
-                onPressed: null,
-                color: Colors.red,
-              )
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 48.0, 0.0),
-          child: singleLineTextField(
-              controller: subHeader, hintText: "Subheader", textLimit: 20),
-        ),
-      ]),
-    );
-  }
-}
-
-Widget singleLineTextField(
-    {TextEditingController controller,
-    String hintText,
-    int textLimit,
-    Function onChanged}) {
-  return TextFieldContainer(
-    child: TextFormField(
-      onChanged: onChanged,
-      controller: controller,
-      cursorColor: appFontColorAlt(),
-      //validator: (value) => value.isEmpty ? 'Field Cannot be Empty' : null,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(textLimit),
-      ],
-      decoration: InputDecoration(
-        hintText: hintText,
-        border: InputBorder.none,
-      ),
-    ),
-  );
-}
-
-// Widget textFieldHeader(String header, String subHeader) {
-//   return Container(
-//     child: Column(
-//       crossAxisAlignment: CrossAxisAlignment.stretch,
-//       children: [
-//         Text(
-//           header,
-//           style: TextStyle(
-//             fontSize: 18,
-//             fontWeight: FontWeight.bold,
-//             color: appFontColor(),
-//           ),
-//         ),
-//         SizedBox(height: 4),
-//         Text(
-//           subHeader,
-//           style: TextStyle(
-//             fontSize: 14,
-//             fontWeight: FontWeight.w300,
-//             color: appFontColorAlt(),
-//           ),
-//         ),
-//       ],
-//     ),
-//   );
-// }
