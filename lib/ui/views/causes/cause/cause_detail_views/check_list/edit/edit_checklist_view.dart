@@ -233,6 +233,8 @@ class CheckField extends StatelessWidget {
                       hintText: "Description",
                       border: InputBorder.none)),
             ),
+
+            
           ]),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 75.0),

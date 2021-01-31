@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
@@ -83,6 +85,10 @@ class OnboardingView extends StatelessWidget {
             elevation: 2,
             isBusy: false,
           ),
+
+        FlatButton(
+              onPressed: OnboardingViewModel.signOut, 
+              child: Text("Logout", style: TextStyle(color: Colors.red),))
         ],
       ),
     );
@@ -181,12 +187,14 @@ class OnboardingView extends StatelessWidget {
             textAlign: TextAlign.center,
             fontSize: 14,
             fontWeight: FontWeight.w400,
+          
             color: appFontColor(),
           ),
           verticalSpaceMedium,
           MultiLineTextField(
               controller: model.bioTextController,
               hintText: "What Inspires You?",
+              
               maxLines: 10),
           verticalSpaceMedium,
           CustomButton(

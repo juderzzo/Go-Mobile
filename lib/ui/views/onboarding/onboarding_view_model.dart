@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
@@ -11,6 +12,7 @@ import 'package:go/utils/go_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 class OnboardingViewModel extends BaseViewModel {
   ///SERVICES
@@ -20,6 +22,7 @@ class OnboardingViewModel extends BaseViewModel {
   UserDataService _userDataService = locator<UserDataService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  ThemeService _themeService = locator<ThemeService>();
 
   ///HELPERS
   TextEditingController usernameTextController = TextEditingController();
@@ -47,12 +50,15 @@ class OnboardingViewModel extends BaseViewModel {
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
       if (res == "camera") {
-        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+        imgFile =
+            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
       } else if (res == "gallery") {
-        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker()
+            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
       notifyListeners();
-      var uploadImgStatus = await _userDataService.updateProfilePic(uid, imgFile);
+      var uploadImgStatus =
+          await _userDataService.updateProfilePic(uid, imgFile);
       if (uploadImgStatus is String) {
         _snackbarService.showSnackbar(
           title: 'Photo Upload Error',
@@ -81,7 +87,8 @@ class OnboardingViewModel extends BaseViewModel {
           duration: Duration(seconds: 5),
         );
       } else {
-        bool usernameExists = await _userDataService.checkIfUsernameExists(uid, username);
+        bool usernameExists =
+            await _userDataService.checkIfUsernameExists(uid, username);
         if (usernameExists) {
           _snackbarService.showSnackbar(
             title: 'Username Taken',
@@ -173,4 +180,19 @@ class OnboardingViewModel extends BaseViewModel {
   replaceWithHomeNavView() {
     _navigationService.replaceWith(Routes.HomeNavViewRoute);
   }
+
+  static  signOut() async {
+    AuthService _authService = locator<AuthService>();
+    ThemeService _themeService = locator<ThemeService>();
+    NavigationService _navigationService = locator<NavigationService>();
+  
+      
+
+        await _authService.signOut();
+        if (_themeService.selectedThemeMode != ThemeManagerMode.light) {
+          _themeService.setThemeMode(ThemeManagerMode.light);
+        }
+        _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
+      }
+    
 }
