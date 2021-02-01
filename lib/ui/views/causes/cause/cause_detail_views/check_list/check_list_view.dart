@@ -89,7 +89,7 @@ class _CheckListViewState extends State<CheckListView> {
                         context: context,
                         barrierDismissible: true,
                         builder: (_) => AlertDialog(
-                          title: Text("Confrimation"),
+                          title: Text("Confirmation"),
                           content: Text(
                               "Once you check off an item, it cannot be unchecked. Are you sure you completed this item?"),
                           actions: [

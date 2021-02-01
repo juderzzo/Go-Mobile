@@ -60,7 +60,7 @@ class HomeView extends StatelessWidget {
                 subHeader: "Find Causes You're Interested In!",
                 mainActionButtonTitle: "Explore Causes",
                 mainAction: navigateToExplorePage,
-                secondaryActionButtonTitle: 'refresh page',
+                secondaryActionButtonTitle: 'Refresh Page',
                 secondaryAction: () => model.refreshCausesFollowing(),
               ),
             )

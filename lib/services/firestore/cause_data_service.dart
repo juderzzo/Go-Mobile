@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_cause_model.dart';
@@ -313,5 +314,20 @@ class CauseDataService {
       docs = snapshot.docs;
     }
     return docs;
+  }
+
+  Future<bool> deleteCause(String id) async {
+    //delete the cause and the images associated with it
+    await FirebaseFirestore.instance
+        .runTransaction((Transaction deleteTransaction) async {
+      GoCause cause = await getCauseByID(id);
+      List imageURLs = cause.imageURLs;
+      imageURLs.forEach((url) {
+        FirebaseStorage.instance.refFromURL(url).delete();
+      });
+      //delete the images first
+
+      await deleteTransaction.delete(causeRef.doc(id));
+    });
   }
 }

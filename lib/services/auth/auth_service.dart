@@ -33,17 +33,17 @@ class AuthService {
 
   //Forgot Password
 
-    void sendPasswordResetEmail(email) async {
-        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      
-    }
-  
+  void sendPasswordResetEmail(email) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
 
   //SIGN IN & REGISTRATION
 
-  Future signUpWithEmail({@required String email, @required String password}) async {
+  Future signUpWithEmail(
+      {@required String email, @required String password}) async {
     try {
-      UserCredential credential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential credential = await firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
       credential.user.sendEmailVerification();
       return credential.user != null;
     } catch (e) {
@@ -51,11 +51,24 @@ class AuthService {
     }
   }
 
-  Future signInWithEmail({@required String email, @required String password}) async {
+  Future signInWithEmail(
+      {@required String email, @required String password}) async {
     try {
-      UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
       if (credential.user != null) {
         if (credential.user.emailVerified) {
+          String uid = await getCurrentUserID();
+          bool exists = await _userDataService.checkIfUserExists(uid);
+          if (!exists) {
+            print("user doesnt exist");
+            _userDataService.createGoUser(
+                id: uid,
+                fbID: null,
+                googleID: null,
+                email: email,
+                phoneNo: null);
+          }
           return true;
         } else {
           return "Email Confirmation Required";
@@ -69,16 +82,21 @@ class AuthService {
   Future loginWithFacebook() async {
     try {
       //Acquire FB access token and data
-      final AccessToken accessToken = await FacebookAuth.instance.login(permissions: ['email']);
-      final Map<String, dynamic> fbUserData = await FacebookAuth.instance.getUserData();
-      final OAuthCredential oAuthCredential = FacebookAuthProvider.credential(accessToken.token);
+      final AccessToken accessToken =
+          await FacebookAuth.instance.login(permissions: ['email']);
+      final Map<String, dynamic> fbUserData =
+          await FacebookAuth.instance.getUserData();
+      final OAuthCredential oAuthCredential =
+          FacebookAuthProvider.credential(accessToken.token);
 
       //Authenticate token with Firebase
       try {
-        UserCredential credential = await firebaseAuth.signInWithCredential(oAuthCredential);
+        UserCredential credential =
+            await firebaseAuth.signInWithCredential(oAuthCredential);
         if (credential.user != null) {
           //Create New User or Find Existing One
-          bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
+          bool userExists =
+              await _userDataService.checkIfUserExists(credential.user.uid);
 
           if (userExists) {
             return true;
@@ -90,7 +108,6 @@ class AuthService {
               googleID: null,
               email: fbUserData['email'],
               phoneNo: null,
-              
             );
             if (res is String) {
               _snackbarService.showSnackbar(
@@ -144,10 +161,12 @@ class AuthService {
         accessToken: String.fromCharCodes(appleIdCredential.authorizationCode),
       );
       try {
-        UserCredential credential = await firebaseAuth.signInWithCredential(appleIDCredential);
+        UserCredential credential =
+            await firebaseAuth.signInWithCredential(appleIDCredential);
         if (credential.user != null) {
           //Create New User or Find Existing One
-          bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
+          bool userExists =
+              await _userDataService.checkIfUserExists(credential.user.uid);
 
           if (userExists) {
             return true;
@@ -213,12 +232,15 @@ class AuthService {
       return;
     }
     GoogleSignInAuthentication googleAuth = await googleAccount.authentication;
-    AuthCredential authCredential = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+    AuthCredential authCredential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
     try {
-      UserCredential credential = await firebaseAuth.signInWithCredential(authCredential);
+      UserCredential credential =
+          await firebaseAuth.signInWithCredential(authCredential);
       if (credential.user != null) {
         //Create New User or Find Existing One
-        bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
+        bool userExists =
+            await _userDataService.checkIfUserExists(credential.user.uid);
         if (userExists) {
           return true;
         } else {
@@ -229,6 +251,7 @@ class AuthService {
             googleID: googleAuth.idToken,
             email: null,
             phoneNo: null,
+            
           );
           if (res is String) {
             _snackbarService.showSnackbar(

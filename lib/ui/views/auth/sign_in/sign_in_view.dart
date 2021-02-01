@@ -45,7 +45,8 @@ class SignInView extends StatelessWidget {
                 color: Colors.blue,
                 fontWeight: FontWeight.w500,
               ),
-              recognizer: TapGestureRecognizer()..onTap = () => model.replaceWithSignUpPage(),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => model.replaceWithSignUpPage(),
             ),
           ],
         ),
@@ -77,7 +78,8 @@ class SignInView extends StatelessWidget {
                       children: <Widget>[
                         SizedBox(
                           height: 120,
-                          child: Image.asset('assets/images/go_logo_transparent.png'),
+                          child: Image.asset(
+                              'assets/images/go_logo_transparent.png'),
                         ),
                         verticalSpaceLarge,
                         InputField(
@@ -128,12 +130,10 @@ class SignInView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: signUpForAccountText(context, model),
                   ),
-
                   verticalSpaceLarge,
-
                   FlatButton(
-                    onPressed: model.navigateToForgot, 
-                    child: Text("Forgot Passowrd"))
+                      onPressed: model.navigateToForgot,
+                      child: Text("Forgot Password"))
                 ],
               ),
             ),

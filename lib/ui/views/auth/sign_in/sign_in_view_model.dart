@@ -25,7 +25,14 @@ class SignInViewModel extends BaseViewModel {
 
     if (result is bool) {
       if (result) {
-        _navigationService.replaceWith(Routes.HomeNavViewRoute);
+        bool onboarded = await _userDataService
+            .checkIfUserHasBeenOnboarded(await _authService.getCurrentUserID());
+        
+        if (!onboarded) {
+          _navigationService.replaceWith(Routes.OnboardingViewRoute);
+        } else {
+          _navigationService.replaceWith(Routes.HomeNavViewRoute);
+        }
       } else {
         await _dialogService.showDialog(
           title: "Login Error",

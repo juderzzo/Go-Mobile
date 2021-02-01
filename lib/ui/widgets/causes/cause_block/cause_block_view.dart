@@ -14,8 +14,9 @@ class CauseBlockView extends StatelessWidget {
 
   CauseBlockView({this.cause, this.displayBottomBorder});
 
-  Widget causeHead(CauseBlockViewModel model) {
+  Widget causeHead(CauseBlockViewModel model, BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width * 23/24,
       padding: EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 0.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,18 +30,19 @@ class CauseBlockView extends StatelessWidget {
               Icons.more_horiz,
               color: appIconColor(),
             ),
-            onPressed: () => model.showOptions(),
+            onPressed: () => model.showOptions(context, cause.id),
           ),
         ],
       ),
     );
   }
 
-  Widget causeImages(CauseBlockViewModel model) {
+  Widget causeImages(CauseBlockViewModel model, context) {
     return model.isLoading
         ? Container()
         : SizedBox(
-            height: 300,
+            width: MediaQuery.of(context).size.width * 23/24,
+            height: 250,
             child: Carousel(
               autoplay: false,
               indicatorBgPadding: 6,
@@ -55,9 +57,14 @@ class CauseBlockView extends StatelessWidget {
           );
   }
 
-  Widget causeDetails(CauseBlockViewModel model) {
+  Widget causeDetails(CauseBlockViewModel model, context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      width: MediaQuery.of(context).size.width * 23/24,
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -71,7 +78,7 @@ class CauseBlockView extends StatelessWidget {
             ),
           ),
           Text(
-            cause.why,
+            (cause.why.length < 95) ? cause.why : cause.why.substring(0,85) + "... See More",
             style: TextStyle(
               fontSize: 14,
               color: appFontColor(),
@@ -88,7 +95,7 @@ class CauseBlockView extends StatelessWidget {
             ),
           ),
           Text(
-            cause.goal,
+            (cause.goal.length < 95) ? cause.goal : cause.goal.substring(0,85) + "... See More",
             style: TextStyle(
               fontSize: 14,
               color: appFontColor(),
@@ -101,8 +108,9 @@ class CauseBlockView extends StatelessWidget {
     );
   }
 
-  Widget causeOrganizer(CauseBlockViewModel model) {
+  Widget causeOrganizer(CauseBlockViewModel model, context) {
     return Container(
+      width: MediaQuery.of(context).size.width * 23/24,
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: RichText(
         textAlign: TextAlign.left,
@@ -133,25 +141,48 @@ class CauseBlockView extends StatelessWidget {
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: () => model.navigateToCauseView(cause.id),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              causeHead(model),
-              causeImages(model),
-              causeDetails(model),
-              causeOrganizer(model),
-              SizedBox(height: 16.0),
-              displayBottomBorder
-                  ? Divider(
-                      thickness: 8.0,
-                      color: appPostBorderColor(),
-                    )
-                  : Container(),
-            ],
-          ),
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 23/24,
+              
+              
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 2.0,
+                      spreadRadius: 2.0,
+                      // shadow direction: bottom right
+                  )
+              ],
+            ),
+              
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  causeHead(model, context),
+                  causeImages(model, context),
+                  causeDetails(model, context),
+                  causeOrganizer(model, context),
+                  SizedBox(height: 16.0),
+                  displayBottomBorder
+                      ? Divider(
+                          thickness: 8.0,
+                          color: appPostBorderColor(),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 30,)
+          ],
         ),
       ),
     );

@@ -67,6 +67,8 @@ class UserDataService {
     await userRef.doc(newUser.id).set(newUser.toMap()).catchError((e) {
       return e.message;
     });
+
+    await userRef.doc(id).update({"onboarded": false});
   }
 
   Future getGoUserByID(String id) async {
@@ -133,11 +135,16 @@ class UserDataService {
   }
 
   Future updateGoUserName(String id, String username) async {
-    await userRef.doc(id).update({
-      "username": username,
-    }).catchError((e) {
-      return e.message;
-    });
+    bool exists = await checkIfUserExists(id);
+    if (exists) {
+      await userRef.doc(id).update({
+        "username": username,
+      }).catchError((e) {
+        return e.message;
+      });
+    } else {
+      print("does not exist");
+    }
   }
 
   Future updateGoUserBio(String id, String bio) async {

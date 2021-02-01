@@ -57,7 +57,7 @@ class OnboardingView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              "Welcome to Go!",
+              "Welcome to Go",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700),
             )
