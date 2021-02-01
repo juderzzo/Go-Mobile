@@ -65,6 +65,28 @@ class _CheckListViewState extends State<CheckListView> {
 
   List<Widget> generateChecklist(model, fut) {
     List<Widget> ans = [];
+    //print(fut);
+    //print(fut.length);
+    if (fut.length == 0) {
+      return [
+        verticalSpaceLarge,
+        CustomButton(
+            text: "Add Checklist",
+            textSize: 16,
+            textColor: appFontColor(),
+            height: 40,
+            width: 320,
+            backgroundColor: appButtonColor(),
+            elevation: 2,
+            isBusy: false,
+            onPressed: () {
+              print(causeID);
+              model.navigateToEdit(actions, creatorId, currentUID, name,
+                  causeID, headers, subHeaders);
+            },
+          )
+      ];
+    }
     for (var i = 0; i < fut.length; i++) {
       ans.add(
         FutureBuilder(
@@ -72,6 +94,7 @@ class _CheckListViewState extends State<CheckListView> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 //print(fut);
+
                 //print(snapshot.data);
                 if (headers.length < fut.length) {
                   //print(snapshot.data[1]);
@@ -144,7 +167,7 @@ class _CheckListViewState extends State<CheckListView> {
             textSize: 16,
             textColor: appFontColor(),
             height: 40,
-            width: 300,
+            width: 320,
             backgroundColor: appButtonColor(),
             elevation: 2,
             isBusy: false,

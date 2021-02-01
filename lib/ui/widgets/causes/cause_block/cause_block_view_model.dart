@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
+import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
@@ -40,7 +41,7 @@ class CauseBlockViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  showOptions(BuildContext context, id) async {
+  showOptions(BuildContext context, id, GoCause cause) async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: isCreator
           ? BottomSheetType.causeCreatorOptions
@@ -50,8 +51,34 @@ class CauseBlockViewModel extends BaseViewModel {
       String res = sheetResponse.responseData;
       print(res);
       if (res == "edit") {
+        if (isCreator) {
+          _navigationService.navigateTo(Routes.EditCauseViewRoute, arguments: {
+            "causeID": id,
+            "name": cause.name,
+            "why": cause.why,
+            "who": cause.who,
+            "resources": cause.resources,
+            "charity": cause.charityURL,
+            "imgURLs": cause.imageURLs,
+          });
+        }
         //edit
       } else if (res == "share") {
+        if (isCreator) {
+          _navigationService.navigateTo(
+              Routes.EditCauseViewRoute, arguments: EditCauseViewArguments(
+                causeID: id,
+                name: cause.name,
+                goals: cause.goal,
+                who: cause.who,
+                why: cause.why,
+                charity: cause.charityURL,
+                resources: cause.resources,
+                img1: cause.imageURLs[0],
+                img2: cause.imageURLs.length > 1 ? cause.imageURLs[1] : null,
+                img3: cause.imageURLs.length > 2 ? cause.imageURLs[2] : null,
+                ));
+        }
         //share
       } else if (res == "report") {
         //report

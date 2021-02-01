@@ -16,6 +16,7 @@ import '../ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checkli
 import '../ui/views/causes/cause/cause_detail_views/forum/create_forum_post/create_forum_post_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import '../ui/views/causes/cause/cause_view.dart';
+import '../ui/views/causes/cause/edit_cause/edit_cause_view.dart';
 import '../ui/views/causes/create_cause/create_cause_view.dart';
 import '../ui/views/home/home_nav_view.dart';
 import '../ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
@@ -35,6 +36,7 @@ class Routes {
   static const String OnboardingViewRoute = '/onboarding-view';
   static const String HomeNavViewRoute = '/home-nav-view';
   static const String CauseViewRoute = '/cause-view';
+  static const String EditCauseViewRoute = '/edit-cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
   static const String EditChecklistView = '/edit-checklist-view';
   static const String ForumPostViewRoute = '/forum-post-view';
@@ -53,6 +55,7 @@ class Routes {
     OnboardingViewRoute,
     HomeNavViewRoute,
     CauseViewRoute,
+    EditCauseViewRoute,
     CreateCauseViewRoute,
     EditChecklistView,
     ForumPostViewRoute,
@@ -77,6 +80,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.OnboardingViewRoute, page: OnboardingView),
     RouteDef(Routes.HomeNavViewRoute, page: HomeNavView),
     RouteDef(Routes.CauseViewRoute, page: CauseView),
+    RouteDef(Routes.EditCauseViewRoute, page: EditCauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
     RouteDef(Routes.EditChecklistView, page: EditChecklistView),
     RouteDef(Routes.ForumPostViewRoute, page: ForumPostView),
@@ -130,6 +134,26 @@ class GoRouter extends RouterBase {
     CauseView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => CauseView(),
+        settings: data,
+      );
+    },
+    EditCauseView: (data) {
+      final args = data.getArgs<EditCauseViewArguments>(
+        orElse: () => EditCauseViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => EditCauseView(
+          causeID: args.causeID,
+          name: args.name,
+          goals: args.goals,
+          why: args.why,
+          who: args.who,
+          resources: args.resources,
+          charity: args.charity,
+          img1: args.img1,
+          img2: args.img2,
+          img3: args.img3,
+        ),
         settings: data,
       );
     },
@@ -205,6 +229,31 @@ class GoRouter extends RouterBase {
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
+
+/// EditCauseView arguments holder class
+class EditCauseViewArguments {
+  final String causeID;
+  final String name;
+  final String goals;
+  final String why;
+  final String who;
+  final String resources;
+  final String charity;
+  final String img1;
+  final String img2;
+  final String img3;
+  EditCauseViewArguments(
+      {this.causeID,
+      this.name,
+      this.goals,
+      this.why,
+      this.who,
+      this.resources,
+      this.charity,
+      this.img1,
+      this.img2,
+      this.img3});
+}
 
 /// EditChecklistView arguments holder class
 class EditChecklistViewArguments {

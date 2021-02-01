@@ -94,6 +94,59 @@ class CauseDataService {
     });
   }
 
+  Future EditCause(String causeID, String name, String goal, String why,
+      String who, String resources, String charityURL, img1, img2, img3) async {
+    DocumentReference cause = causeRef.doc(causeID);
+
+    //delete all the previous images to save space
+    GoCause causeR = await getCauseByID(causeID);
+    List imageURLs = causeR.imageURLs;
+    imageURLs.forEach((url) {
+      FirebaseStorage.instance.refFromURL(url).delete();
+    });
+
+    List<String> newImageURLs = [];
+
+    //now upload the new images
+
+    if (img1 != null) {
+      String imgURL = await FirestoreImageUploader().uploadImage(
+        img: img1,
+        storageBucket: 'causes',
+        folderName: cause.id,
+        fileName: getRandomString(10) + ".png",
+      );
+      newImageURLs.add(imgURL);
+    }
+    if (img2 != null) {
+      String imgURL = await FirestoreImageUploader().uploadImage(
+        img: img2,
+        storageBucket: 'causes',
+        folderName: cause.id,
+        fileName: getRandomString(10) + ".png",
+      );
+      newImageURLs.add(imgURL);
+    }
+    if (img3 != null) {
+      String imgURL = await FirestoreImageUploader().uploadImage(
+        img: img3,
+        storageBucket: 'causes',
+        folderName: cause.id,
+        fileName: getRandomString(10) + ".png",
+      );
+      newImageURLs.add(imgURL);
+    }
+
+    cause.update({
+      "name": name,
+      "goal": goal,
+      "why": why,
+      "resources": resources,
+      "charityURL": charityURL,
+      "imageURLs": newImageURLs
+    });
+  }
+
   Future getCauseByID(String id) async {
     GoCause cause;
     DocumentSnapshot snapshot = await causeRef.doc(id).get().catchError((e) {

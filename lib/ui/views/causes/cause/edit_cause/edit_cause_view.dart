@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go/constants/app_colors.dart';
@@ -11,14 +14,46 @@ import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 
-class CreateCauseView extends StatelessWidget {
+import 'edit_cause_viewmodel.dart';
+
+class EditCauseView extends StatelessWidget {
+  final String causeID;
+  String name;
+  String goals;
+  String why;
+  String who;
+  String resources;
+  String charity;
+  String img1;
+  String img2;
+  String img3;
+
   final nameController = TextEditingController();
   final goalsController = TextEditingController();
   final whyController = TextEditingController();
   final whoController = TextEditingController();
   final resourcesController = TextEditingController();
   final charityWebsiteController = TextEditingController();
-  
+
+  EditCauseView(
+      {this.causeID,
+      this.name,
+      this.goals,
+      this.why,
+      this.who,
+      this.resources,
+      this.charity,
+      this.img1,
+      this.img2,
+      this.img3});
+
+  Void initialize() {
+    nameController.text = name;
+    goalsController.text = goals;
+    whyController.text = why;
+    resourcesController.text = resources;
+    charityWebsiteController.text = charity;
+  }
 
   Widget textFieldHeader(String header, String subHeader) {
     return Container(
@@ -81,7 +116,7 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget imgBtn(BuildContext context, CreateCauseViewModel model, int imgNum) {
+  Widget imgBtn(BuildContext context, EditCauseViewModel model, int imgNum) {
     double iconSize = 20;
     double height = 75;
     double width = 110;
@@ -125,7 +160,7 @@ class CreateCauseView extends StatelessWidget {
               );
   }
 
-  Widget addImagesRow(BuildContext context, CreateCauseViewModel model) {
+  Widget addImagesRow(BuildContext context, EditCauseViewModel model) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -136,7 +171,7 @@ class CreateCauseView extends StatelessWidget {
     );
   }
 
-  Widget form(BuildContext context, CreateCauseViewModel model) {
+  Widget form(BuildContext context, EditCauseViewModel model) {
     return Container(
       child: ListView(
         shrinkWrap: true,
@@ -233,7 +268,7 @@ class CreateCauseView extends StatelessWidget {
                 "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
           ),
           verticalSpaceSmall,
-         
+
           verticalSpaceLarge,
           CustomButton(
             height: 48,
@@ -249,7 +284,7 @@ class CreateCauseView extends StatelessWidget {
                 who: whoController.text.trim(),
                 resources: resourcesController.text.trim(),
                 charityURL: charityWebsiteController.text.trim(),
-                
+
               );
               if (formSuccess) {
                 model.displayCauseUploadSuccessBottomSheet();
@@ -263,8 +298,9 @@ class CreateCauseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<CreateCauseViewModel>.reactive(
-      viewModelBuilder: () => CreateCauseViewModel(),
+    return ViewModelBuilder<EditCauseViewModel>.reactive(
+      viewModelBuilder: () => EditCauseViewModel(),
+      onModelReady: (f) => initialize(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar()
             .basicAppBar(title: "Create Cause", showBackButton: true),

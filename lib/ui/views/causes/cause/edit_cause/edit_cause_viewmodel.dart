@@ -16,7 +16,7 @@ import 'package:go/utils/url_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class CreateCauseViewModel extends BaseViewModel {
+class EditCauseViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -28,16 +28,17 @@ class CreateCauseViewModel extends BaseViewModel {
   File img2;
   File img3;
 
-  GoCause cause;
+  EditCauseViewModel({this.img1, this.img2, this.img3});
 
-  Future<bool> validateAndSubmitForm(
-      {String name,
-      String goal,
-      String why,
-      String who,
-      String resources,
-      String charityURL,
-      }) async {
+  Future<bool> validateAndSubmitForm({
+    String causeID,
+    String name,
+    String goal,
+    String why,
+    String who,
+    String resources,
+    String charityURL,
+  }) async {
     String formError;
     setBusy(true);
     if (!StringValidator().isValidString(name)) {
@@ -53,7 +54,7 @@ class CreateCauseViewModel extends BaseViewModel {
     } else if (StringValidator().isValidString(charityURL) &&
         !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
-    } 
+    }
     if (formError != null) {
       setBusy(false);
       _dialogService.showDialog(
@@ -67,27 +68,22 @@ class CreateCauseViewModel extends BaseViewModel {
 
       //create the initial 3 actions
 
-      
-      var res = await _causeDataService.createCause(
-        creatorID: creatorID,
-        name: name,
-        goal: goal,
-        why: why,
-        who: who,
-        resources: resources,
-        charityURL: charityURL,
+      var res = await _causeDataService.EditCause(
+        causeID,
+        name,
+        goal,
+        why,
+        who,
+        resources,
+        charityURL,
         //link each checklist item to their id in the cause functionality
-        actions: [],
-       
-        img1: img1,
-        img2: img2,
-        img3: img3,
+
+        img1,
+        img2,
+        img3,
       );
 
       //now push each of the checklistItems referecne
-
-      
-
 
       setBusy(false);
       if (res != null) {
