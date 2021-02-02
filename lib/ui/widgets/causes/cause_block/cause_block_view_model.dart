@@ -53,7 +53,7 @@ class CauseBlockViewModel extends BaseViewModel {
       if (res == "edit") {
         if (isCreator) {
           _navigationService.navigateTo(Routes.EditCauseViewRoute, arguments: {
-            "causeID": id,
+            "causeID": cause.id,
             "name": cause.name,
             "why": cause.why,
             "who": cause.who,
@@ -65,9 +65,10 @@ class CauseBlockViewModel extends BaseViewModel {
         //edit
       } else if (res == "share") {
         if (isCreator) {
-          _navigationService.navigateTo(
-              Routes.EditCauseViewRoute, arguments: EditCauseViewArguments(
-                causeID: id,
+          //print(cause.id);
+          _navigationService.navigateTo(Routes.EditCauseViewRoute,
+              arguments: EditCauseViewArguments(
+                causeID: cause.id,
                 name: cause.name,
                 goals: cause.goal,
                 who: cause.who,
@@ -77,7 +78,7 @@ class CauseBlockViewModel extends BaseViewModel {
                 img1: images[0],
                 img2: images.length > 1 ? images[1] : null,
                 img3: images.length > 2 ? images[2] : null,
-                ));
+              ));
         }
         //share
       } else if (res == "report") {

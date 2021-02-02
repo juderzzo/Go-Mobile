@@ -27,6 +27,7 @@ class EditCauseView extends StatelessWidget {
   dynamic img1;
   dynamic img2;
   dynamic img3;
+  
 
   final nameController = TextEditingController();
   final goalsController = TextEditingController();
@@ -48,13 +49,13 @@ class EditCauseView extends StatelessWidget {
       this.img3});
 
   Void initialize() {
+    //print(this.causeID);
     nameController.text = name;
     goalsController.text = goals;
     whoController.text = why;
     whyController.text = who;
     resourcesController.text = resources;
     charityWebsiteController.text = charity;
-
   }
 
   Widget textFieldHeader(String header, String subHeader) {
@@ -156,20 +157,16 @@ class EditCauseView extends StatelessWidget {
                 width: width,
                 file: imgNum == 1 && model.img1.runtimeType == File
                     ? model.img1
-
-
-                    : imgNum == 2  && model.img2.runtimeType == File
+                    : imgNum == 2 && model.img2.runtimeType == File
                         ? model.img2
-
-
-                        : imgNum == 3  && model.img3.runtimeType == File
-                          ? model.img3 : null,
-                imgURL: imgNum == 1 ? 
-                  img1.url 
-                  : imgNum == 2 ?
-                    img2.url
-                    : 
-                    img3.url,
+                        : imgNum == 3 && model.img3.runtimeType == File
+                            ? model.img3
+                            : null,
+                imgURL: imgNum == 1
+                    ? img1.url
+                    : imgNum == 2
+                        ? img2.url
+                        : img3.url,
               );
   }
 
@@ -291,13 +288,13 @@ class EditCauseView extends StatelessWidget {
             isBusy: model.isBusy,
             onPressed: () async {
               bool formSuccess = await model.validateAndSubmitForm(
+                causeID: causeID,
                 name: nameController.text.trim(),
                 goal: goalsController.text.trim(),
                 why: whyController.text.trim(),
                 who: whoController.text.trim(),
                 resources: resourcesController.text.trim(),
                 charityURL: charityWebsiteController.text.trim(),
-
               );
               if (formSuccess) {
                 model.displayCauseUploadSuccessBottomSheet();
@@ -312,11 +309,12 @@ class EditCauseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<EditCauseViewModel>.reactive(
-      viewModelBuilder: () => EditCauseViewModel(img1: img1, img2: img2, img3: img3),
+      viewModelBuilder: () =>
+          EditCauseViewModel(img1: img1, img2: img2, img3: img3),
       onModelReady: (f) => initialize(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar()
-            .basicAppBar(title: "Create Cause", showBackButton: true),
+            .basicAppBar(title: "Edit Cause", showBackButton: true),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(

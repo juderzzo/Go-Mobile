@@ -94,22 +94,55 @@ class CauseDataService {
     });
   }
 
-  Future EditCause(String causeID, String name, String goal, String why,
-      String who, String resources, String charityURL, img1, img2, img3) async {
+  Future editCause(
+      String causeID,
+      String name,
+      String goal,
+      String why,
+      String who,
+      String resources,
+      String charityURL,
+      img1,
+      img2,
+      img3,
+      bool img1Changed,
+      bool img2Changed,
+      bool img3Changed) async {
     DocumentReference cause = causeRef.doc(causeID);
+    //print(cause);
 
     //delete all the previous images to save space
     GoCause causeR = await getCauseByID(causeID);
-    List imageURLs = causeR.imageURLs;
-    imageURLs.forEach((url) {
-      FirebaseStorage.instance.refFromURL(url).delete();
-    });
+    //print(causeR);
+    List imageURLs = (causeR.imageURLs != null) ? causeR.imageURLs : [];
+    List newImageURLs = [];
 
-    List<String> newImageURLs = [];
+    //deleting all of the image urls of changed images
+    if (img1Changed) {
+      FirebaseStorage.instance.refFromURL(imageURLs[0]).delete();
+    } else {
+      if (img1 != null) {
+        newImageURLs.add(imageURLs[0]);
+      }
+    }
+    if (img2Changed) {
+      FirebaseStorage.instance.refFromURL(imageURLs[1]).delete();
+    } else {
+      if (img2 != null) {
+        newImageURLs.add(imageURLs[1]);
+      }
+    }
+    if (img3Changed) {
+      FirebaseStorage.instance.refFromURL(imageURLs[2]).delete();
+    } else {
+      if (img3 != null) {
+        newImageURLs.add(imageURLs[2]);
+      }
+    }
 
     //now upload the new images
 
-    if (img1 != null) {
+    if (img1.runtimeType == File) {
       String imgURL = await FirestoreImageUploader().uploadImage(
         img: img1,
         storageBucket: 'causes',
@@ -118,7 +151,7 @@ class CauseDataService {
       );
       newImageURLs.add(imgURL);
     }
-    if (img2 != null) {
+    if (img2.runtimeType == File) {
       String imgURL = await FirestoreImageUploader().uploadImage(
         img: img2,
         storageBucket: 'causes',
@@ -127,7 +160,7 @@ class CauseDataService {
       );
       newImageURLs.add(imgURL);
     }
-    if (img3 != null) {
+    if (img3.runtimeType == File) {
       String imgURL = await FirestoreImageUploader().uploadImage(
         img: img3,
         storageBucket: 'causes',
@@ -137,14 +170,25 @@ class CauseDataService {
       newImageURLs.add(imgURL);
     }
 
-    cause.update({
-      "name": name,
-      "goal": goal,
-      "why": why,
-      "resources": resources,
-      "charityURL": charityURL,
-      "imageURLs": newImageURLs
-    });
+    if (img1 == null && img2 == null && img3 == null) {
+      print(newImageURLs);
+      cause.update({
+        "name": name,
+        "goal": goal,
+        "why": why,
+        "resources": resources,
+        "charityURL": charityURL,
+      });
+    } else {
+      cause.update({
+        "name": name,
+        "goal": goal,
+        "why": why,
+        "resources": resources,
+        "charityURL": charityURL,
+        "imageURLs": newImageURLs
+      });
+    }
   }
 
   Future getCauseByID(String id) async {

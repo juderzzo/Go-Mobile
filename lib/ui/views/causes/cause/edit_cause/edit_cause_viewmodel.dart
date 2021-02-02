@@ -27,6 +27,9 @@ class EditCauseViewModel extends BaseViewModel {
   dynamic img1;
   dynamic img2;
   dynamic img3;
+  bool img1Changed = false;
+  bool img2Changed = false;
+  bool img3Changed = false;
 
   EditCauseViewModel({this.img1, this.img2, this.img3});
 
@@ -64,11 +67,11 @@ class EditCauseViewModel extends BaseViewModel {
       );
       return false;
     } else {
-      String creatorID = await _authService.getCurrentUserID();
+      
 
       //create the initial 3 actions
 
-      var res = await _causeDataService.EditCause(
+      var res = await _causeDataService.editCause(
         causeID,
         name,
         goal,
@@ -81,6 +84,9 @@ class EditCauseViewModel extends BaseViewModel {
         img1,
         img2,
         img3,
+        img1Changed,
+        img2Changed,
+        img3Changed
       );
 
       //now push each of the checklistItems referecne
@@ -117,10 +123,13 @@ class EditCauseViewModel extends BaseViewModel {
       }
       if (imgNum == 1) {
         img1 = img;
+        img1Changed = true;
       } else if (imgNum == 2) {
         img2 = img;
+        img2Changed = true;
       } else {
         img3 = img;
+        img3Changed = true;
       }
       notifyListeners();
     }
