@@ -67,27 +67,24 @@ class EditCauseViewModel extends BaseViewModel {
       );
       return false;
     } else {
-      
-
       //create the initial 3 actions
 
       var res = await _causeDataService.editCause(
-        causeID,
-        name,
-        goal,
-        why,
-        who,
-        resources,
-        charityURL,
-        //link each checklist item to their id in the cause functionality
+          causeID,
+          name,
+          goal,
+          why,
+          who,
+          resources,
+          charityURL,
+          //link each checklist item to their id in the cause functionality
 
-        img1,
-        img2,
-        img3,
-        img1Changed,
-        img2Changed,
-        img3Changed
-      );
+          img1,
+          img2,
+          img3,
+          img1Changed,
+          img2Changed,
+          img3Changed);
 
       //now push each of the checklistItems referecne
 
@@ -121,6 +118,8 @@ class EditCauseViewModel extends BaseViewModel {
         img = await GoImagePicker()
             .retrieveImageFromLibrary(ratioX: ratioX, ratioY: ratioY);
       }
+      //print(img2.runtimeType);
+
       if (imgNum == 1) {
         img1 = img;
         img1Changed = true;
@@ -131,7 +130,9 @@ class EditCauseViewModel extends BaseViewModel {
         img3 = img;
         img3Changed = true;
       }
+      //print(img.runtimeType);
       notifyListeners();
+      return img;
     }
   }
 

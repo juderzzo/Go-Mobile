@@ -27,7 +27,6 @@ class EditCauseView extends StatelessWidget {
   dynamic img1;
   dynamic img2;
   dynamic img3;
-  
 
   final nameController = TextEditingController();
   final goalsController = TextEditingController();
@@ -123,6 +122,8 @@ class EditCauseView extends StatelessWidget {
     double iconSize = 20;
     double height = 75;
     double width = 110;
+    
+
     return model.isEditing
         ? CauseImgPreview(
             onTap: () => model.selectImage(
@@ -138,35 +139,44 @@ class EditCauseView extends StatelessWidget {
                 (imgNum == 2 && model.img2 == null) ||
                 (imgNum == 3 && model.img3 == null)
             ? AddImageButton(
-                onTap: () => model.selectImage(
-                    context: context,
-                    imgNum: imgNum,
-                    ratioX: width,
-                    ratioY: height),
+                onTap: () async {
+                  await model.selectImage(
+                      context: context,
+                      imgNum: imgNum,
+                      ratioX: width,
+                      ratioY: height);
+                  
+                },
                 iconSize: iconSize,
                 height: height,
                 width: width,
               )
             : CauseImgPreview(
-                onTap: () => model.selectImage(
-                    context: context,
-                    imgNum: imgNum,
-                    ratioX: width,
-                    ratioY: height),
+                onTap: () {
+                  print(1);
+                  model.selectImage(
+                      context: context,
+                      imgNum: imgNum,
+                      ratioX: width,
+                      ratioY: height);
+                  print(model.img2.runtimeType);
+                },
                 height: height,
                 width: width,
-                file: imgNum == 1 && model.img1.runtimeType == File
+                file: imgNum == 1 && model.img1Changed && model.img1 != null
                     ? model.img1
-                    : imgNum == 2 && model.img2.runtimeType == File
+                    : imgNum == 2 && model.img2Changed && model.img2 != null
                         ? model.img2
-                        : imgNum == 3 && model.img3.runtimeType == File
+                        : imgNum == 3 && model.img3Changed && model.img3 != null
                             ? model.img3
                             : null,
-                imgURL: imgNum == 1
+                imgURL: imgNum == 1 && img1 != null
                     ? img1.url
-                    : imgNum == 2
+                    : imgNum == 2 && img2 != null
                         ? img2.url
-                        : img3.url,
+                        : imgNum == 3 && img3 != null
+                            ? img3.url
+                            : null,
               );
   }
 

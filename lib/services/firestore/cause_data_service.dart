@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_checklist_model.dart';
@@ -108,6 +109,7 @@ class CauseDataService {
       bool img1Changed,
       bool img2Changed,
       bool img3Changed) async {
+        print("1");
     DocumentReference cause = causeRef.doc(causeID);
     //print(cause);
 
@@ -125,24 +127,27 @@ class CauseDataService {
         newImageURLs.add(imageURLs[0]);
       }
     }
-    if (img2Changed) {
+    if (img2Changed && imageURLs.length > 1) {
       FirebaseStorage.instance.refFromURL(imageURLs[1]).delete();
     } else {
-      if (img2 != null) {
+      if (img2 != null && imageURLs.length > 1) {
         newImageURLs.add(imageURLs[1]);
       }
     }
-    if (img3Changed) {
+    if (img3Changed && imageURLs.length > 2) {
       FirebaseStorage.instance.refFromURL(imageURLs[2]).delete();
     } else {
-      if (img3 != null) {
+      if (img3 != null && imageURLs.length > 2) {
         newImageURLs.add(imageURLs[2]);
       }
     }
 
+    
+
+
     //now upload the new images
 
-    if (img1.runtimeType == File) {
+    if (img1Changed && img1 != null) {
       String imgURL = await FirestoreImageUploader().uploadImage(
         img: img1,
         storageBucket: 'causes',
@@ -151,16 +156,17 @@ class CauseDataService {
       );
       newImageURLs.add(imgURL);
     }
-    if (img2.runtimeType == File) {
+    if (img2Changed && img2 != null) {
       String imgURL = await FirestoreImageUploader().uploadImage(
         img: img2,
         storageBucket: 'causes',
         folderName: cause.id,
         fileName: getRandomString(10) + ".png",
       );
+      print(imgURL);
       newImageURLs.add(imgURL);
     }
-    if (img3.runtimeType == File) {
+    if (img3Changed && img3 != null) {
       String imgURL = await FirestoreImageUploader().uploadImage(
         img: img3,
         storageBucket: 'causes',
