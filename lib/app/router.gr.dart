@@ -239,9 +239,9 @@ class EditCauseViewArguments {
   final String who;
   final String resources;
   final String charity;
-  final String img1;
-  final String img2;
-  final String img3;
+  final dynamic img1;
+  final dynamic img2;
+  final dynamic img3;
   EditCauseViewArguments(
       {this.causeID,
       this.name,

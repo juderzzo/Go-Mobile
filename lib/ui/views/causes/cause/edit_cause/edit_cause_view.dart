@@ -24,9 +24,9 @@ class EditCauseView extends StatelessWidget {
   String who;
   String resources;
   String charity;
-  String img1;
-  String img2;
-  String img3;
+  dynamic img1;
+  dynamic img2;
+  dynamic img3;
 
   final nameController = TextEditingController();
   final goalsController = TextEditingController();
@@ -50,9 +50,11 @@ class EditCauseView extends StatelessWidget {
   Void initialize() {
     nameController.text = name;
     goalsController.text = goals;
-    whyController.text = why;
+    whoController.text = why;
+    whyController.text = who;
     resourcesController.text = resources;
     charityWebsiteController.text = charity;
+
   }
 
   Widget textFieldHeader(String header, String subHeader) {
@@ -152,11 +154,22 @@ class EditCauseView extends StatelessWidget {
                     ratioY: height),
                 height: height,
                 width: width,
-                file: imgNum == 1
+                file: imgNum == 1 && model.img1.runtimeType == File
                     ? model.img1
-                    : imgNum == 2
+
+
+                    : imgNum == 2  && model.img2.runtimeType == File
                         ? model.img2
-                        : model.img3,
+
+
+                        : imgNum == 3  && model.img3.runtimeType == File
+                          ? model.img3 : null,
+                imgURL: imgNum == 1 ? 
+                  img1.url 
+                  : imgNum == 2 ?
+                    img2.url
+                    : 
+                    img3.url,
               );
   }
 
@@ -299,7 +312,7 @@ class EditCauseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<EditCauseViewModel>.reactive(
-      viewModelBuilder: () => EditCauseViewModel(),
+      viewModelBuilder: () => EditCauseViewModel(img1: img1, img2: img2, img3: img3),
       onModelReady: (f) => initialize(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar()

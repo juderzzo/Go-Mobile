@@ -74,9 +74,9 @@ class CauseBlockViewModel extends BaseViewModel {
                 why: cause.why,
                 charity: cause.charityURL,
                 resources: cause.resources,
-                img1: cause.imageURLs[0],
-                img2: cause.imageURLs.length > 1 ? cause.imageURLs[1] : null,
-                img3: cause.imageURLs.length > 2 ? cause.imageURLs[2] : null,
+                img1: images[0],
+                img2: images.length > 1 ? images[1] : null,
+                img3: images.length > 2 ? images[2] : null,
                 ));
         }
         //share

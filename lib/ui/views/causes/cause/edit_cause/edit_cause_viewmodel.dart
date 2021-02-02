@@ -24,9 +24,9 @@ class EditCauseViewModel extends BaseViewModel {
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   bool isEditing = false;
-  File img1;
-  File img2;
-  File img3;
+  dynamic img1;
+  dynamic img2;
+  dynamic img3;
 
   EditCauseViewModel({this.img1, this.img2, this.img3});
 
