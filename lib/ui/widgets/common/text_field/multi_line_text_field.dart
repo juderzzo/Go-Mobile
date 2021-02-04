@@ -20,9 +20,11 @@ class MultiLineTextField extends StatelessWidget {
         controller: controller,
         cursorColor: appFontColorAlt(),
         maxLines: maxLines,
+        textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
+          
         ),
       ),
     );

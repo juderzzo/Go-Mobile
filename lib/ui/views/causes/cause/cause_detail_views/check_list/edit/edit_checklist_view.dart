@@ -196,6 +196,7 @@ class CheckField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
               ),
               child: TextFormField(
+                textInputAction: TextInputAction.done,
                 
                 inputFormatters:[
                   LengthLimitingTextInputFormatter(20),
@@ -220,6 +221,7 @@ class CheckField extends StatelessWidget {
               ),
               width: MediaQuery.of(context).size.width * 3 / 4,
               child: TextFormField(
+                textInputAction: TextInputAction.done,
                 onChanged: (leon) {
                     subheader = subHeaderController.text;
                   },

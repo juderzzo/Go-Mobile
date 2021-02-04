@@ -27,6 +27,7 @@ class SingleLineTextField extends StatelessWidget {
             : [
                 LengthLimitingTextInputFormatter(textLimit),
               ],
+        textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,

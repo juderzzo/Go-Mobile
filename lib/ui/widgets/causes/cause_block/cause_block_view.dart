@@ -62,7 +62,7 @@ class CauseBlockView extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 23/24,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
-                color: Colors.white,
+                color: appBackgroundColor(),
                 borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
@@ -148,7 +148,7 @@ class CauseBlockView extends StatelessWidget {
               
               
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: appBackgroundColor(),
                 borderRadius: BorderRadius.circular(10.0),
                 boxShadow: [
                   
@@ -171,12 +171,7 @@ class CauseBlockView extends StatelessWidget {
                   causeDetails(model, context),
                   causeOrganizer(model, context),
                   SizedBox(height: 16.0),
-                  displayBottomBorder
-                      ? Divider(
-                          thickness: 8.0,
-                          color: appPostBorderColor(),
-                        )
-                      : Container(),
+                  Container(),
                 ],
               ),
             ),

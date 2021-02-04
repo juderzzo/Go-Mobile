@@ -94,6 +94,7 @@ class EditCauseView extends StatelessWidget {
         inputFormatters: [
           LengthLimitingTextInputFormatter(textLimit),
         ],
+        textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
@@ -110,6 +111,7 @@ class EditCauseView extends StatelessWidget {
         cursorColor: appFontColorAlt(),
         //validator: (value) => value.isEmpty ? 'Field Cannot be Empty' : null,
         maxLines: null,
+        textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,

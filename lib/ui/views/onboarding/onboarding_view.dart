@@ -183,7 +183,7 @@ class OnboardingView extends StatelessWidget {
       bodyWidget: Column(
         children: [
           CustomText(
-            text: "Tell Us a Little Bit More About Yourself",
+            text: "Tell us a little bit more about yourself",
             textAlign: TextAlign.center,
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -193,7 +193,7 @@ class OnboardingView extends StatelessWidget {
           verticalSpaceMedium,
           MultiLineTextField(
               controller: model.bioTextController,
-              hintText: "What Inspires You?",
+              hintText: "What inspires you?",
               
               maxLines: 10),
           verticalSpaceMedium,
@@ -234,7 +234,7 @@ class OnboardingView extends StatelessWidget {
       titleWidget: Column(
         children: [
           CustomText(
-            text: "What Are You Interested In?",
+            text: "What are you interested in?",
             textAlign: TextAlign.center,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -299,7 +299,7 @@ class OnboardingView extends StatelessWidget {
       titleWidget: Column(
         children: [
           CustomText(
-            text: "The Power to Change is in Your Hands!",
+            text: "The Power for Change is in Your Hands!",
             textAlign: TextAlign.center,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -311,7 +311,7 @@ class OnboardingView extends StatelessWidget {
         children: [
           CustomText(
             text:
-                "Enable Notifications to be Alerted About the Latest News & Causes",
+                "Enable notifications to be alerted about the latest news & causes",
             textAlign: TextAlign.center,
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -365,7 +365,7 @@ class OnboardingView extends StatelessWidget {
       titleWidget: Column(
         children: [
           CustomText(
-            text: "You're All Set to Go",
+            text: "You're all set to go",
             textAlign: TextAlign.center,
             fontSize: 18,
             fontWeight: FontWeight.bold,

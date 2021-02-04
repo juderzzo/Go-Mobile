@@ -68,9 +68,10 @@ class _CheckListViewState extends State<CheckListView> {
     //print(fut);
     //print(fut.length);
     if (fut.length == 0) {
-      return [
-        verticalSpaceLarge,
-        CustomButton(
+      if (creatorId == currentUID) {
+        return [
+          verticalSpaceLarge,
+          CustomButton(
             text: "Add Checklist",
             textSize: 16,
             textColor: appFontColor(),
@@ -85,7 +86,13 @@ class _CheckListViewState extends State<CheckListView> {
                   causeID, headers, subHeaders);
             },
           )
-      ];
+        ];
+      } else {
+        return [
+          Center(
+            child: Text("There are no actions to check off for this cause", style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),))
+        ];
+      }
     }
     for (var i = 0; i < fut.length; i++) {
       ans.add(

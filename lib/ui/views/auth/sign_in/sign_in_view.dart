@@ -76,10 +76,11 @@ class SignInView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        SizedBox(height: 120,),
                         SizedBox(
                           height: 120,
                           child: Image.asset(
-                              'assets/images/go_logo_transparent.png'),
+                              'assets/images/go_logo_slogan.png'),
                         ),
                         verticalSpaceLarge,
                         InputField(
