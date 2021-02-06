@@ -118,7 +118,7 @@ class AboutView extends StatelessWidget {
           ),
           verticalSpaceMedium,
           CustomText(
-            text: "Resources",
+            text: cause.resources.length > 1 ? "Resources" : " ",
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: appFontColor(),

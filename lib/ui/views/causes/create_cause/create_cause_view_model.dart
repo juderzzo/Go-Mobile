@@ -48,8 +48,6 @@ class CreateCauseViewModel extends BaseViewModel {
       formError = "Please describe why your cause is important";
     } else if (!StringValidator().isValidString(who)) {
       formError = "Please describe who you are in regards to this cause";
-    } else if (!StringValidator().isValidString(resources)) {
-      formError = "Please provide additional resources for your cause";
     } else if (StringValidator().isValidString(charityURL) &&
         !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";

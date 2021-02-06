@@ -145,7 +145,7 @@ class CreateCauseView extends StatelessWidget {
 
           ///NAME OF CAUSE
           textFieldHeader(
-            "Name",
+            "*Name",
             "What is the name of your cause?",
           ),
           verticalSpaceSmall,
@@ -158,8 +158,8 @@ class CreateCauseView extends StatelessWidget {
 
           ///CAUSE IMAGES
           textFieldHeader(
-            "Images",
-            "Select up to three images for your cause",
+            "*Images",
+            "Select up to three images for your cause. The leftmost image is required, and will be your title image",
           ),
           verticalSpaceSmall,
           addImagesRow(context, model),
@@ -167,7 +167,7 @@ class CreateCauseView extends StatelessWidget {
 
           ///GOALS FOR CAUSE
           textFieldHeader(
-            "Goals",
+            "*Goals",
             "What are the goals of your cause? What are you fighting for?",
           ),
           verticalSpaceSmall,
@@ -179,7 +179,7 @@ class CreateCauseView extends StatelessWidget {
 
           ///REASONS FOR CAUSE
           textFieldHeader(
-            "Why?",
+            "*Why?",
             "Why is your cause important? Why is it worth it?",
           ),
           verticalSpaceSmall,
@@ -191,7 +191,7 @@ class CreateCauseView extends StatelessWidget {
 
           ///WHO CREATED THIS CAUSE
           textFieldHeader(
-            "Who Are You?",
+            "*Who Are You?",
             "Who are you as a changemaker? What is your experience in the fight for this cause?",
           ),
           verticalSpaceSmall,
