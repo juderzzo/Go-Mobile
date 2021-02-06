@@ -31,34 +31,15 @@ class UserSearchResultView extends StatelessWidget {
             SizedBox(
               width: 10.0,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                isFollowing
-                    ? Row(
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.user,
-                            size: 12,
-                            color: appIconColorAlt(),
-                          ),
-                          CustomText(
-                            text: "following",
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                            color: appFontColorAlt(),
-                          ),
-                        ],
-                      )
-                    : Container(),
+            
+                
                 CustomText(
                   text: "@${searchResult.name}",
                   fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w900,
                   color: appFontColor(),
                 ),
-              ],
-            ),
+              
           ],
         ),
       ),

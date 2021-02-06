@@ -26,12 +26,7 @@ class UserBlockView extends StatelessWidget {
             color: appIconColorAlt(),
           ),
           horizontalSpaceTiny,
-          CustomText(
-            text: "following",
-            fontSize: 12,
-            fontWeight: FontWeight.w300,
-            color: appFontColorAlt(),
-          ),
+          
         ],
       ),
     );

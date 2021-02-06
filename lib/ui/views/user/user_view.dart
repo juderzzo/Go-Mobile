@@ -47,6 +47,7 @@ class _UserViewState extends State<UserView>
                 color: appFontColor(),
                 textAlign: TextAlign.left,
                 height: 30,
+                width: 200,
               ),
             ],
           ),

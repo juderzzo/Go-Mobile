@@ -12,7 +12,7 @@ import 'package:stacked_services/stacked_services.dart';
 class UserDataService {
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
   SnackbarService _snackbarService = locator<SnackbarService>();
-  AuthService _authService = locator<AuthService>();
+  //AuthService _authService = locator<AuthService>();
 
   Future checkIfUserExists(String id) async {
     bool exists = false;
@@ -189,12 +189,14 @@ class UserDataService {
 
   //is Follwing
   Future<bool> isFollowing(String uid) async {
+    AuthService _authService = locator<AuthService>();
     String id = await _authService.getCurrentUserID();
     DocumentSnapshot user = await userRef.doc(id).get();
     return user.data()['following'].contains(uid);
   }
 
   Future followUnfollowUser(String uid) async {
+    AuthService _authService = locator<AuthService>();
     String id = await _authService.getCurrentUserID();
     if (await isFollowing(uid)) {
       DocumentSnapshot user = await userRef.doc(id).get();
