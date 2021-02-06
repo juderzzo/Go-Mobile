@@ -17,8 +17,8 @@ class GoogleAuthButton extends StatelessWidget {
           child: Container(
             child: Image.asset(
               'assets/images/google_logo.png',
-              height: 55,
-              width: 55,
+              height: 54,
+              width: 54,
             ),
           ),
         ),

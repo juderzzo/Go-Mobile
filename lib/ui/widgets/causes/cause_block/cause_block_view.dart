@@ -111,7 +111,7 @@ class CauseBlockView extends StatelessWidget {
   Widget causeOrganizer(CauseBlockViewModel model, context) {
     return Container(
       width: MediaQuery.of(context).size.width * 23/24,
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 8),
       child: RichText(
         textAlign: TextAlign.left,
         text: TextSpan(
