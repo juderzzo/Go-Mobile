@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/user/user_view_model.dart';
+import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
@@ -12,11 +13,14 @@ import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
 
 class UserView extends StatefulWidget {
+  
+
   @override
   _UserViewState createState() => _UserViewState();
 }
 
-class _UserViewState extends State<UserView> with SingleTickerProviderStateMixin {
+class _UserViewState extends State<UserView>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
 
   Widget head(BuildContext context, UserViewModel model) {
@@ -85,6 +89,27 @@ class _UserViewState extends State<UserView> with SingleTickerProviderStateMixin
             viewFollowersAction: null,
             viewFollowingAction: null,
           ),
+          SizedBox(height: 28),
+          model.isFollowing == null || model.isFollowing == false
+              ? CustomButton(
+                  isBusy: false,
+                  text: "Follow",
+                  textColor: appFontColor(),
+                  backgroundColor: appButtonColorAlt(),
+                  height: 30.0,
+                  width: 100,
+                  onPressed: model.followUnfollowUser,
+                )
+              : CustomButton(
+                  isBusy: false,
+                  text: "Following",
+                  elevation: 0.0,
+                  textColor: appFontColor(),
+                  backgroundColor: appButtonColorAlt(),
+                  height: 30.0,
+                  width: 100,
+                  onPressed: model.followUnfollowUser,
+                ),
         ],
       ),
     );
@@ -175,13 +200,15 @@ class _UserViewState extends State<UserView> with SingleTickerProviderStateMixin
                               pinned: true,
                               floating: true,
                               forceElevated: innerBoxIsScrolled,
-                              expandedHeight: 200,
+                              expandedHeight: 260,
                               backgroundColor: appBackgroundColor(),
                               flexibleSpace: FlexibleSpaceBar(
                                 background: Container(
                                   child: Column(
                                     children: [
-                                      model.user == null ? Container() : userDetails(model),
+                                      model.user == null
+                                          ? Container()
+                                          : userDetails(model),
                                     ],
                                   ),
                                 ),

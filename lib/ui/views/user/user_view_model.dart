@@ -29,6 +29,7 @@ class UserViewModel extends BaseViewModel {
   List<DocumentSnapshot> causesFollowingResults = [];
   bool loadingAdditionalCausesFollowing = false;
   bool moreCausesFollowingAvailable = true;
+  bool isFollowing = false;
 
   List<DocumentSnapshot> causesCreatedResults = [];
   bool loadingAdditionalCausesCreated = false;
@@ -41,9 +42,11 @@ class UserViewModel extends BaseViewModel {
     Map<String, dynamic> args = RouteData.of(context).arguments;
     String uid = args['uid'];
     user = await _userDataService.getGoUserByID(uid);
+    isFollowing = await _userDataService.isFollowing(uid);
     notifyListeners();
     scrollController.addListener(() {
-      double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize =
+          0.9 * scrollController.position.maxScrollExtent;
       if (scrollController.position.pixels > triggerFetchMoreSize) {
         if (tabController.index == 1) {
           loadAdditionalCausesFollowing();
@@ -54,7 +57,12 @@ class UserViewModel extends BaseViewModel {
     });
     notifyListeners();
     await loadData();
+
     setBusy(false);
+  }
+
+  followUnfollowUser() {
+    _userDataService.followUnfollowUser(user.id);
   }
 
   ///LOAD ALL DATA
@@ -102,7 +110,8 @@ class UserViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesFollowing = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesFollowing(
+    List<DocumentSnapshot> newResults =
+        await _causeDataService.loadAdditionalCausesFollowing(
       lastDocSnap: causesFollowingResults[causesFollowingResults.length - 1],
       resultsLimit: resultsLimit,
       uid: user.id,
@@ -123,7 +132,8 @@ class UserViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesCreated = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesCreated(
+    List<DocumentSnapshot> newResults =
+        await _causeDataService.loadAdditionalCausesCreated(
       lastDocSnap: causesCreatedResults[causesCreatedResults.length - 1],
       resultsLimit: resultsLimit,
       uid: user.id,

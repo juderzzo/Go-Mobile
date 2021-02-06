@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_user_model.dart';
+import 'package:go/services/auth/auth_service.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:go/utils/random_string_generator.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -11,6 +12,7 @@ import 'package:stacked_services/stacked_services.dart';
 class UserDataService {
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
   SnackbarService _snackbarService = locator<SnackbarService>();
+  AuthService _authService = locator<AuthService>();
 
   Future checkIfUserExists(String id) async {
     bool exists = false;
@@ -183,6 +185,53 @@ class UserDataService {
     }).catchError((e) {
       return e.message;
     });
+  }
+
+  //is Follwing
+  Future<bool> isFollowing(String uid) async {
+    String id = await _authService.getCurrentUserID();
+    DocumentSnapshot user = await userRef.doc(id).get();
+    return user.data()['following'].contains(uid);
+  }
+
+  Future followUnfollowUser(String uid) async {
+    String id = await _authService.getCurrentUserID();
+    if (await isFollowing(uid)) {
+      DocumentSnapshot user = await userRef.doc(id).get();
+      List following = user.data()['following'];
+      following.remove(uid);
+      userRef.doc(id).update({
+        'following': following,
+        'followingCount': following.length
+      });
+
+      DocumentSnapshot other = await userRef.doc(uid).get();
+      List followers = other.data()['followers'];
+      followers.remove(id);
+      userRef.doc(uid).update({
+        'followers': followers,
+        'followersCount': followers.length,
+      });
+
+
+    } else {
+      DocumentSnapshot user = await userRef.doc(id).get();
+      List following = user.data()['following'];
+      following.add(uid);
+      userRef.doc(id).update({
+        'following': following,
+        'followingCount': following.length
+      });
+
+      DocumentSnapshot other = await userRef.doc(uid).get();
+      List followers = other.data()['followers'];
+      followers.add(id);
+      userRef.doc(uid).update({
+        'followers': followers,
+        'followersCount': followers.length,
+      });
+
+    }
   }
 
   ///QUERIES
