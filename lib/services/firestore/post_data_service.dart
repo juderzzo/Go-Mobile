@@ -6,6 +6,8 @@ import 'package:stacked_services/stacked_services.dart';
 
 class PostDataService {
   CollectionReference postRef = FirebaseFirestore.instance.collection('posts');
+  CollectionReference commentsRef =
+      FirebaseFirestore.instance.collection("comments");
   SnackbarService _snackbarService = locator<SnackbarService>();
 
   Future checkIfPostExists(String id) async {
@@ -52,6 +54,11 @@ class PostDataService {
     return post;
   }
 
+  Future deletePost(id) async {
+    await commentsRef.doc(id).delete();
+    await postRef.doc(id).delete();
+  }
+
   ///QUERIES
   //Load Cause by Follower Count
   Future<List<DocumentSnapshot>> loadPosts({
@@ -59,7 +66,10 @@ class PostDataService {
     @required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = postRef.where('causeID', isEqualTo: causeID).orderBy('dateCreatedInMilliseconds', descending: true).limit(resultsLimit);
+    Query query = postRef
+        .where('causeID', isEqualTo: causeID)
+        .orderBy('dateCreatedInMilliseconds', descending: true)
+        .limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
         title: 'Error',
@@ -82,8 +92,11 @@ class PostDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query =
-        postRef.where('causeID', isEqualTo: causeID).orderBy('dateCreatedInMilliseconds', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    query = postRef
+        .where('causeID', isEqualTo: causeID)
+        .orderBy('dateCreatedInMilliseconds', descending: true)
+        .startAfterDocument(lastDocSnap)
+        .limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
         title: 'Error',

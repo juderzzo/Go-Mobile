@@ -24,7 +24,8 @@ class ForumPostViewModel extends BaseViewModel {
   UserDataService _userDataService = locator<UserDataService>();
   PostDataService _postDataService = locator<PostDataService>();
   CommentDataService _commentDataService = locator<CommentDataService>();
-  NotificationDataService _notificationDataService = locator<NotificationDataService>();
+  NotificationDataService _notificationDataService =
+      locator<NotificationDataService>();
 
   ///HELPERS
   ScrollController commentScrollController = ScrollController();
@@ -67,7 +68,8 @@ class ForumPostViewModel extends BaseViewModel {
 
     ///SET SCROLL CONTROLLER
     commentScrollController.addListener(() {
-      double triggerFetchMoreSize = 0.9 * commentScrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize =
+          0.9 * commentScrollController.position.maxScrollExtent;
       if (commentScrollController.position.pixels > triggerFetchMoreSize) {
         loadAdditionalComments();
       }
@@ -86,10 +88,16 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   loadComments() async {
-    commentResults = await _commentDataService.loadComments(postID: post.id, resultsLimit: resultsLimit);
+    commentResults = await _commentDataService.loadComments(
+        postID: post.id, resultsLimit: resultsLimit);
     refreshingComments = false;
     notifyListeners();
     print(commentResults.length);
+  }
+
+  delete() async {
+    _postDataService.deletePost(post.id);
+    notifyListeners();
   }
 
   loadAdditionalComments() async {
@@ -98,7 +106,8 @@ class ForumPostViewModel extends BaseViewModel {
     }
     loadingAdditionalComments = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _commentDataService.loadAdditionalComments(
+    List<DocumentSnapshot> newResults =
+        await _commentDataService.loadAdditionalComments(
       lastDocSnap: commentResults[commentResults.length - 1],
       resultsLimit: resultsLimit,
       postID: post.id,
@@ -113,19 +122,25 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   showOptions() async {
+    print("res");
     var sheetResponse = await _bottomSheetService.showCustomSheet(
-      variant: isAuthor ? BottomSheetType.postAuthorOptions : BottomSheetType.postOptions,
+      variant: isAuthor
+          ? BottomSheetType.postAuthorOptions
+          : BottomSheetType.postOptions,
     );
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
+      
       if (res == "edit") {
         //edit
+        print("edit");
       } else if (res == "share") {
         //share
       } else if (res == "report") {
         //report
+
       } else if (res == "delete") {
-        //delete
+        delete();
       }
       notifyListeners();
     }
@@ -179,7 +194,8 @@ class ForumPostViewModel extends BaseViewModel {
         replies: [],
         replyCount: 0,
         replyReceiverUsername: commentToReplyTo.username,
-        originalReplyCommentID: commentToReplyTo.timePostedInMilliseconds.toString(),
+        originalReplyCommentID:
+            commentToReplyTo.timePostedInMilliseconds.toString(),
         timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       );
       await _commentDataService.replyToComment(
@@ -204,7 +220,8 @@ class ForumPostViewModel extends BaseViewModel {
 
   ///NOTIFICATIONS
   sendCommentNotification(String comment) {
-    GoNotification notification = GoNotification().generateGoCommentNotification(
+    GoNotification notification =
+        GoNotification().generateGoCommentNotification(
       postID: post.id,
       receiverUID: post.authorID,
       senderUID: currentUser.id,
@@ -215,7 +232,8 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   sendCommentReplyNotification(String receiverUID, String comment) {
-    GoNotification notification = GoNotification().generateCommmentReplyNotification(
+    GoNotification notification =
+        GoNotification().generateCommmentReplyNotification(
       postID: post.id,
       receiverUID: receiverUID,
       senderUID: currentUser.id,
@@ -227,7 +245,8 @@ class ForumPostViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToUserView(String uid) {
-    _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
+    _navigationService
+        .navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);

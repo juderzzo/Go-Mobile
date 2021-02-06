@@ -39,7 +39,10 @@ class ForumPostView extends StatelessWidget {
                       horizontalSpaceSmall,
                       Text(
                         "@${model.author.username}",
-                        style: TextStyle(color: appFontColor(), fontSize: 16.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: appFontColor(),
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -81,7 +84,8 @@ class ForumPostView extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  TimeCalc().getPastTimeFromMilliseconds(model.post.dateCreatedInMilliseconds),
+                  TimeCalc().getPastTimeFromMilliseconds(
+                      model.post.dateCreatedInMilliseconds),
                   style: TextStyle(
                     color: appFontColorAlt(),
                   ),
@@ -121,7 +125,10 @@ class ForumPostView extends StatelessWidget {
           title: "Forum Post",
           showBackButton: true,
           actionWidget: IconButton(
-            onPressed: () => model.showOptions(),
+            onPressed: () {
+              
+              model.showOptions();
+            },
             icon: Icon(
               FontAwesomeIcons.ellipsisH,
               size: 16,
@@ -158,11 +165,14 @@ class ForumPostView extends StatelessWidget {
                                     context: context,
                                     commentVal: val,
                                   )
-                              : (val) => model.submitComment(context: context, commentVal: val),
+                              : (val) => model.submitComment(
+                                  context: context, commentVal: val),
                           focusNode: focusNode,
                           commentTextController: model.commentTextController,
                           isReplying: model.isReplying,
-                          replyReceiverUsername: model.isReplying ? model.commentToReplyTo.username : null,
+                          replyReceiverUsername: model.isReplying
+                              ? model.commentToReplyTo.username
+                              : null,
                         ),
                       ),
                     ],
