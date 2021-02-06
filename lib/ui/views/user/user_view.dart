@@ -112,8 +112,7 @@ class _UserViewState extends State<UserView>
                   onPressed: () {
                     model.isFollowing = !model.isFollowing;
                     model.followUnfollowUser();
-                  }
-                ),
+                  }),
         ],
       ),
     );
@@ -180,7 +179,10 @@ class _UserViewState extends State<UserView>
     return ViewModelBuilder<UserViewModel>.reactive(
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
-      onModelReady: (model) => model.initialize(_tabController, context),
+      onModelReady: (model) {
+        
+        model.initialize(_tabController, context);
+      },
       viewModelBuilder: () => UserViewModel(),
       builder: (context, model, child) => Scaffold(
         body: Container(
