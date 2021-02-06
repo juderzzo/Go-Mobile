@@ -13,8 +13,6 @@ import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
 
 class UserView extends StatefulWidget {
-  
-
   @override
   _UserViewState createState() => _UserViewState();
 }
@@ -99,8 +97,10 @@ class _UserViewState extends State<UserView>
                   backgroundColor: appButtonColorAlt(),
                   height: 30.0,
                   width: 100,
-                  onPressed: model.followUnfollowUser,
-                )
+                  onPressed: () {
+                    model.isFollowing = !model.isFollowing;
+                    model.followUnfollowUser();
+                  })
               : CustomButton(
                   isBusy: false,
                   text: "Following",
@@ -109,7 +109,10 @@ class _UserViewState extends State<UserView>
                   backgroundColor: appButtonColorAlt(),
                   height: 30.0,
                   width: 100,
-                  onPressed: model.followUnfollowUser,
+                  onPressed: () {
+                    model.isFollowing = !model.isFollowing;
+                    model.followUnfollowUser();
+                  }
                 ),
         ],
       ),

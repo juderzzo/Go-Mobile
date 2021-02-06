@@ -63,6 +63,7 @@ class UserViewModel extends BaseViewModel {
 
   followUnfollowUser() {
     _userDataService.followUnfollowUser(user.id);
+    notifyListeners();
   }
 
   ///LOAD ALL DATA
