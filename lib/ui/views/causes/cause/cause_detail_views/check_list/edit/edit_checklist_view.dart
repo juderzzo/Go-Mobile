@@ -160,7 +160,23 @@ class _EditChecklistViewState extends State<EditChecklistView> {
         viewModelBuilder: () => EditChecklistViewModel(),
         onModelReady: initialize(EditChecklistViewModel()),
         createNewModelOnInsert: true,
-        builder: (context, model, child) => Container(child: wrapper(model)));
+        builder: (context, model, child) => Scaffold(
+          //resizeToAvoidBottomInset: false,
+          body: SingleChildScrollView
+          (
+            physics: ClampingScrollPhysics(),
+            child: ConstrainedBox
+            (
+              constraints: BoxConstraints(
+                //minHeight: MediaQuery.of(context).size.height,
+                //minWidth: MediaQuery.of(context).size.width,
+                maxHeight: MediaQuery.of(context).size.height,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              
+              child: wrapper(model))
+            )
+          ));
   }
 }
 

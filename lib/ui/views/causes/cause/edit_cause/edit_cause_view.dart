@@ -194,126 +194,129 @@ class EditCauseView extends StatelessWidget {
   }
 
   Widget form(BuildContext context, EditCauseViewModel model) {
-    return Container(
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          verticalSpaceSmall,
+    return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Container(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            verticalSpaceSmall,
 
-          ///NAME OF CAUSE
-          textFieldHeader(
-            "*Name",
-            "What is the name of your cause?",
-          ),
-          verticalSpaceSmall,
-          singleLineTextField(
-            controller: nameController,
-            hintText: "Name of Cause",
-            textLimit: 75,
-          ),
-          verticalSpaceMedium,
+            ///NAME OF CAUSE
+            textFieldHeader(
+              "*Name",
+              "What is the name of your cause?",
+            ),
+            verticalSpaceSmall,
+            singleLineTextField(
+              controller: nameController,
+              hintText: "Name of Cause",
+              textLimit: 75,
+            ),
+            verticalSpaceMedium,
 
-          ///CAUSE IMAGES
-          textFieldHeader(
-            "*Images",
-            "Select up to three images for your cause. The leftmost image is required, and will be your title image",
-          ),
-          verticalSpaceSmall,
-          addImagesRow(context, model),
-          verticalSpaceMedium,
+            ///CAUSE IMAGES
+            textFieldHeader(
+              "*Images",
+              "Select up to three images for your cause. The leftmost image is required, and will be your title image",
+            ),
+            verticalSpaceSmall,
+            addImagesRow(context, model),
+            verticalSpaceMedium,
 
-          ///GOALS FOR CAUSE
-          textFieldHeader(
-            "*Goals",
-            "What are the goals of your cause? What are you fighting for?",
-          ),
-          verticalSpaceSmall,
-          multiLineTextField(
-            controller: goalsController,
-            hintText: "Goals",
-          ),
-          verticalSpaceMedium,
+            ///GOALS FOR CAUSE
+            textFieldHeader(
+              "*Goals",
+              "What are the goals of your cause? What are you fighting for?",
+            ),
+            verticalSpaceSmall,
+            multiLineTextField(
+              controller: goalsController,
+              hintText: "Goals",
+            ),
+            verticalSpaceMedium,
 
-          ///REASONS FOR CAUSE
-          textFieldHeader(
-            "*Why?",
-            "Why is your cause important? Why is it worth it?",
-          ),
-          verticalSpaceSmall,
-          multiLineTextField(
-            controller: whyController,
-            hintText: "The reason for your cause",
-          ),
-          verticalSpaceMedium,
+            ///REASONS FOR CAUSE
+            textFieldHeader(
+              "*Why?",
+              "Why is your cause important? Why is it worth it?",
+            ),
+            verticalSpaceSmall,
+            multiLineTextField(
+              controller: whyController,
+              hintText: "The reason for your cause",
+            ),
+            verticalSpaceMedium,
 
-          ///WHO CREATED THIS CAUSE
-          textFieldHeader(
-            "*Who Are You?",
-            "Who are you as a changemaker? What is your experience in the fight for this cause?",
-          ),
-          verticalSpaceSmall,
-          multiLineTextField(
-            controller: whoController,
-            hintText: "Who are you?",
-          ),
-          verticalSpaceMedium,
+            ///WHO CREATED THIS CAUSE
+            textFieldHeader(
+              "*Who Are You?",
+              "Who are you as a changemaker? What is your experience in the fight for this cause?",
+            ),
+            verticalSpaceSmall,
+            multiLineTextField(
+              controller: whoController,
+              hintText: "Who are you?",
+            ),
+            verticalSpaceMedium,
 
-          ///CAUSE RESOURCES
-          textFieldHeader(
-            "Resources",
-            "Are there additional resources for anyone looking to learn more about your cause?\n"
-                "(e.g., websites, books, articles, videos, etc.)",
-          ),
-          verticalSpaceSmall,
-          multiLineTextField(
-            controller: resourcesController,
-            hintText: "Additional Resources",
-          ),
-          verticalSpaceMedium,
+            ///CAUSE RESOURCES
+            textFieldHeader(
+              "Resources",
+              "Are there additional resources for anyone looking to learn more about your cause?\n"
+                  "(e.g., websites, books, articles, videos, etc.)",
+            ),
+            verticalSpaceSmall,
+            multiLineTextField(
+              controller: resourcesController,
+              hintText: "Additional Resources",
+            ),
+            verticalSpaceMedium,
 
-          ///CHARITY LINK
-          textFieldHeader(
-            "Charity",
-            "Would you like to raise funds for this cause using Go!'s platform? If so, please provide a link to the charity of your choice.",
-          ),
-          verticalSpaceSmall,
-          singleLineTextField(
-            controller: charityWebsiteController,
-            hintText: "https://example.com",
-          ),
-          verticalSpaceMedium,
+            ///CHARITY LINK
+            textFieldHeader(
+              "Charity",
+              "Would you like to raise funds for this cause using Go!'s platform? If so, please provide a link to the charity of your choice.",
+            ),
+            verticalSpaceSmall,
+            singleLineTextField(
+              controller: charityWebsiteController,
+              hintText: "https://example.com",
+            ),
+            verticalSpaceMedium,
 
-          ///CAUSE TASKS
-          textFieldHeader(
-            "Actions!",
-            "To add actions, go to 'Edit Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
-                "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
-          ),
-          verticalSpaceSmall,
+            ///CAUSE TASKS
+            textFieldHeader(
+              "Actions!",
+              "To add actions, go to 'Edit Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
+                  "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
+            ),
+            verticalSpaceSmall,
 
-          verticalSpaceLarge,
-          CustomButton(
-            height: 48,
-            backgroundColor: CustomColors.goGreen,
-            text: "Publish",
-            textColor: Colors.white,
-            isBusy: model.isBusy,
-            onPressed: () async {
-              bool formSuccess = await model.validateAndSubmitForm(
-                causeID: causeID,
-                name: nameController.text.trim(),
-                goal: goalsController.text.trim(),
-                why: whyController.text.trim(),
-                who: whoController.text.trim(),
-                resources: resourcesController.text.trim(),
-                charityURL: charityWebsiteController.text.trim(),
-              );
-              if (formSuccess) {
-                model.displayCauseUploadSuccessBottomSheet();
-              }
-            },
-          ),
-        ],
+            verticalSpaceLarge,
+            CustomButton(
+              height: 48,
+              backgroundColor: CustomColors.goGreen,
+              text: "Publish",
+              textColor: Colors.white,
+              isBusy: model.isBusy,
+              onPressed: () async {
+                bool formSuccess = await model.validateAndSubmitForm(
+                  causeID: causeID,
+                  name: nameController.text.trim(),
+                  goal: goalsController.text.trim(),
+                  why: whyController.text.trim(),
+                  who: whoController.text.trim(),
+                  resources: resourcesController.text.trim(),
+                  charityURL: charityWebsiteController.text.trim(),
+                );
+                if (formSuccess) {
+                  model.displayCauseUploadSuccessBottomSheet();
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
