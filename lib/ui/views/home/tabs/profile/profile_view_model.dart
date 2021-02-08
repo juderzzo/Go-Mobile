@@ -36,7 +36,7 @@ class ProfileViewModel extends BaseViewModel {
 
   initialize(TabController tabController, GoUser currentUser) async {
     user = currentUser;
-    notifyListeners();
+    //notifyListeners();
     scrollController.addListener(() {
       double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
       if (scrollController.position.pixels > triggerFetchMoreSize) {
@@ -47,7 +47,7 @@ class ProfileViewModel extends BaseViewModel {
         }
       }
     });
-    notifyListeners();
+    //notifyListeners();
     await loadData();
     setBusy(false);
   }

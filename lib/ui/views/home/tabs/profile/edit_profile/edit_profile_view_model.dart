@@ -84,6 +84,10 @@ class EditProfileViewModel extends BaseViewModel {
       );
     } else {
       setBusy(false);
+      GoUser user = await _userDataService.getGoUserByID(id);
+      //have to display
+      await _dialogService.showDialog(
+          title: "Confirmation", description: "Your profile has been updated");
       replaceWithNormal();
     }
   }
@@ -91,7 +95,7 @@ class EditProfileViewModel extends BaseViewModel {
   ///NAVIGATION
   ///
   replaceWithNormal() {
-    _navigationService.navigateTo(Routes.UserViewRoute, arguments: {"uid": id});
+    _navigationService.navigateTo(Routes.HomeNavViewRoute);
   }
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);
