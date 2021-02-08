@@ -1,4 +1,4 @@
-package com.takeoff.go
+package com.takeoff.Goapp
 
 import io.flutter.embedding.android.FlutterActivity
 
