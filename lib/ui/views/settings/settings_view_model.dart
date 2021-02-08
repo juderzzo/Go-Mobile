@@ -34,8 +34,9 @@ class SettingsViewModel extends BaseViewModel {
       message: "Are You Sure You Want to Log Out?",
       context: context,
       actions: [
-        SheetAction(label: "Log Out", key: 'logout', isDestructiveAction: true),
+        SheetAction(label: "Log Out", key: 'logout', icon: Icons.logout, isDestructiveAction: true),
       ],
+      title: "Logout"
     );
     if (action == "logout") {
       await _authService.signOut();
