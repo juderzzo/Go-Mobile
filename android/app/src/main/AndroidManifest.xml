@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.takeoff.Goapp">
    <application
-        android:label="go"
+        android:label="Go! Be the change"
         android:icon="@mipmap/ic_launcher">
        <!-- FACEBOOK AUTH  -->
        <meta-data

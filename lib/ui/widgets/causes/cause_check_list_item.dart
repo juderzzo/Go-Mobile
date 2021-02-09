@@ -21,6 +21,7 @@ class CauseCheckListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      //width: MediaQuery.of(context).size.width * 1/3,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
         color: appTextFieldContainerColor(),
@@ -39,14 +40,18 @@ class CauseCheckListItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Checkbox(
+          isChecked ? Checkbox(
             activeColor: CustomColors.goGreen,
             //tristate: true,
             value: isChecked,
             onChanged: (value) {
               //value = true;
             },
-          ),
+          ) :
+          SizedBox(
+            width: 43,
+            child:Icon(Icons.check_box_outline_blank) ), 
+          
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,7 +64,7 @@ class CauseCheckListItem extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 292,
+                width: MediaQuery.of(context).size.width *11/16,
                 child: Text(
                   subHeader,
                   

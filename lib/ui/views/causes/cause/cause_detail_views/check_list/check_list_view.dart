@@ -133,7 +133,7 @@ class _CheckListViewState extends State<CheckListView> {
                             FlatButton(
                                 onPressed: () {
                                   model.addCheck(snapshot.data[0], currentUID);
-                                  print("tapped");
+                                  //print("tapped");
                                   Navigator.pop(context, true);
                                   snapshot.data[3] = "true";
                                   setState(() {});
