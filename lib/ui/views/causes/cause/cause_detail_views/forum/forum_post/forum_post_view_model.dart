@@ -42,6 +42,7 @@ class ForumPostViewModel extends BaseViewModel {
   GoUser author;
   GoForumPost post;
   bool isAuthor = false;
+  bool isAdmin = false;
   bool isReplying = false;
   bool refreshingComments = true;
   GoForumPostComment commentToReplyTo;
@@ -74,9 +75,15 @@ class ForumPostViewModel extends BaseViewModel {
         loadAdditionalComments();
       }
     });
+
+    isAdmin = (uid == post.causeID);
+    print(isAdmin);
+
     await loadComments();
     notifyListeners();
     setBusy(false);
+
+    
   }
 
   ///LOAD POSTS
@@ -124,20 +131,22 @@ class ForumPostViewModel extends BaseViewModel {
   showOptions() async {
     print("res");
     var sheetResponse = await _bottomSheetService.showCustomSheet(
-      variant: isAuthor
+      variant: isAuthor || isAdmin
           ? BottomSheetType.postAuthorOptions
           : BottomSheetType.postOptions,
     );
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
-      
+
       if (res == "edit") {
         //edit
         print("edit");
       } else if (res == "share") {
         //share
+         print("edit");
       } else if (res == "report") {
         //report
+         print("edit");
 
       } else if (res == "delete") {
         delete();

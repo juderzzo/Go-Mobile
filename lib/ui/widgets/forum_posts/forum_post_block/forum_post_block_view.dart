@@ -125,7 +125,7 @@ class ForumPostBlockView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ForumPostBlockViewModel>.reactive(
-      onModelReady: (model) => model.initialize(post.authorID),
+      onModelReady: (model) => model.initialize(post.authorID, post.causeID),
       viewModelBuilder: () => ForumPostBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: () => model.navigateToPostView(post.id),
