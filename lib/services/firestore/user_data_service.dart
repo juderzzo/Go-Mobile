@@ -202,10 +202,9 @@ class UserDataService {
       DocumentSnapshot user = await userRef.doc(id).get();
       List following = user.data()['following'];
       following.remove(uid);
-      userRef.doc(id).update({
-        'following': following,
-        'followingCount': following.length
-      });
+      userRef
+          .doc(id)
+          .update({'following': following, 'followingCount': following.length});
 
       DocumentSnapshot other = await userRef.doc(uid).get();
       List followers = other.data()['followers'];
@@ -214,16 +213,13 @@ class UserDataService {
         'followers': followers,
         'followersCount': followers.length,
       });
-
-
     } else {
       DocumentSnapshot user = await userRef.doc(id).get();
       List following = user.data()['following'];
       following.add(uid);
-      userRef.doc(id).update({
-        'following': following,
-        'followingCount': following.length
-      });
+      userRef
+          .doc(id)
+          .update({'following': following, 'followingCount': following.length});
 
       DocumentSnapshot other = await userRef.doc(uid).get();
       List followers = other.data()['followers'];
@@ -232,7 +228,6 @@ class UserDataService {
         'followers': followers,
         'followersCount': followers.length,
       });
-
     }
   }
 
@@ -288,5 +283,21 @@ class UserDataService {
     GoUser user = GoUser().generateDummyUserFromID(id);
     //var res = await createGoUser(user);
     //return res;
+  }
+
+  Future likeUnlikePost(String id, String postID) async {
+    //if they dont have a like list you have to make one
+
+    DocumentSnapshot user = await userRef.doc(id).get();
+    List liked = user.data()['liked'];
+
+    if (liked.contains(postID)) {
+      liked.remove(postID);
+    } else {
+      liked.add(postID);
+    }
+    userRef.doc(id).update({
+      'liked': liked
+    });
   }
 }

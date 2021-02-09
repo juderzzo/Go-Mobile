@@ -16,6 +16,7 @@ class GoUser {
   int followingCount;
   List following;
   List followers;
+  List liked;
   List blockedUsers;
   int appOpenTimeInMilliseconds;
   String messageToken;
@@ -36,6 +37,7 @@ class GoUser {
     this.followingCount,
     this.following,
     this.followers,
+    this.liked,
     this.blockedUsers,
     this.appOpenTimeInMilliseconds,
     this.messageToken,
@@ -58,6 +60,7 @@ class GoUser {
           followingCount: data['followingCount'],
           following: data['following'],
           followers: data['followers'],
+          liked: data['liked'],
           blockedUsers: data['blockedUsers'],
           appOpenTimeInMilliseconds: data['appOpenTimeInMilliseconds'],
           messageToken: data['messageToken'],
@@ -80,6 +83,7 @@ class GoUser {
         'following': this.following,
         'followers': this.followers,
         'blockedUsers': this.blockedUsers,
+        'liked': this.liked,
         'appOpenTimeInMilliseconds': this.appOpenTimeInMilliseconds,
         'messageToken': this.messageToken,
       };
@@ -107,6 +111,7 @@ class GoUser {
       followingCount: 0,
       followers: [],
       following: [],
+      liked: [],
       blockedUsers: [],
       appOpenTimeInMilliseconds: null,
       messageToken: null,
@@ -135,6 +140,7 @@ class GoUser {
       followingCount: 0,
       followers: [],
       following: [],
+      liked: [],
       blockedUsers: [],
       appOpenTimeInMilliseconds: null,
       messageToken: null,

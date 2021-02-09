@@ -58,7 +58,8 @@ class ForumPostBlockView extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () => model.showOptions(refreshAction: refreshAction, post: post),
+            onPressed: () =>
+                model.showOptions(refreshAction: refreshAction, post: post),
             icon: Icon(
               FontAwesomeIcons.ellipsisH,
               size: 16,
@@ -70,7 +71,7 @@ class ForumPostBlockView extends StatelessWidget {
     );
   }
 
-  Widget postBody(ForumPostBlockViewModel model) {
+  Widget postBody(ForumPostBlockViewModel model, BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 4.0),
       child: Column(
@@ -91,28 +92,60 @@ class ForumPostBlockView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Icon(
-                      FontAwesomeIcons.comment,
-                      size: 16,
-                      color: appFontColor(),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        IconButton(
+                          onPressed: () {
+                            model.likeUnlikePost(post.id);
+                            
+                          },
+                          icon: model.likedPost
+                              ? Icon(
+                                  Icons.favorite,
+                                  size: 22,
+                                  color: Colors.redAccent[200],
+                                )
+                              : Icon(
+                                  Icons.favorite_border,
+                                  size: 22,
+                                  color: appFontColor(),
+                                ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 5 / 9,
+                        ),
+                        Icon(
+                          FontAwesomeIcons.comment,
+                          size: 16,
+                          color: appFontColor(),
+                        ),
+                        horizontalSpaceSmall,
+                        CustomText(
+                          text: post.commentCount.toString(),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          color: appFontColor(),
+                        ),
+                      ],
                     ),
-                    horizontalSpaceSmall,
-                    CustomText(
-                      text: post.commentCount.toString(),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: appFontColor(),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 5 / 9,
+                        ),
+                        CustomText(
+                          text: TimeCalc().getPastTimeFromMilliseconds(
+                              post.dateCreatedInMilliseconds),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300,
+                          color: appFontColorAlt(),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-                CustomText(
-                  text: TimeCalc().getPastTimeFromMilliseconds(post.dateCreatedInMilliseconds),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                  color: appFontColorAlt(),
                 ),
               ],
             ),
@@ -125,7 +158,8 @@ class ForumPostBlockView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ForumPostBlockViewModel>.reactive(
-      onModelReady: (model) => model.initialize(post.authorID, post.causeID),
+      onModelReady: (model) =>
+          model.initialize(post.authorID, post.causeID, post.id),
       viewModelBuilder: () => ForumPostBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: () => model.navigateToPostView(post.id),
@@ -138,7 +172,7 @@ class ForumPostBlockView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     postHead(model),
-                    postBody(model),
+                    postBody(model, context),
                     verticalSpaceSmall,
                     displayBottomBorder
                         ? Divider(

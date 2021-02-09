@@ -27,10 +27,15 @@ class ForumPostBlockViewModel extends BaseViewModel {
   String authorProfilePicURL;
   bool isAuthor = false;
   bool isAdmin = false;
+  bool likedPost = false;
 
-  initialize(String authorID, String causeID) async {
+  initialize(String authorID, String causeID, String postID) async {
     setBusy(true);
     String currentUID = await _authService.getCurrentUserID();
+
+    GoUser user = await _userDataService.getGoUserByID(currentUID);
+    likedPost = user.liked.contains(postID);
+
     GoUser author = await _userDataService.getGoUserByID(authorID);
     if (currentUID == authorID) {
       isAuthor = true;
@@ -45,6 +50,12 @@ class ForumPostBlockViewModel extends BaseViewModel {
     authorProfilePicURL = author.profilePicURL;
     notifyListeners();
     setBusy(false);
+  }
+
+  likeUnlikePost(String postID) async {
+    String currentUID = await _authService.getCurrentUserID();
+    _userDataService.likeUnlikePost(currentUID, postID);
+    notifyListeners();
   }
 
   showOptions({GoForumPost post, VoidCallback refreshAction}) async {
