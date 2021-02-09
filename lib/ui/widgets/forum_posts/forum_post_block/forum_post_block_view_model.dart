@@ -55,6 +55,8 @@ class ForumPostBlockViewModel extends BaseViewModel {
   likeUnlikePost(String postID) async {
     String currentUID = await _authService.getCurrentUserID();
     _userDataService.likeUnlikePost(currentUID, postID);
+    likedPost = !likedPost;
+    print(likedPost);
     notifyListeners();
   }
 

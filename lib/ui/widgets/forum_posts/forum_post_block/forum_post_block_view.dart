@@ -97,23 +97,28 @@ class ForumPostBlockView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        IconButton(
-                          onPressed: () {
-                            model.likeUnlikePost(post.id);
-                            
-                          },
-                          icon: model.likedPost
-                              ? Icon(
+                        model.likedPost
+                            ? IconButton(
+                                onPressed: () {
+                                  model.likeUnlikePost(post.id);
+                                  
+                                  model.notifyListeners();
+                                },
+                                icon: Icon(
                                   Icons.favorite,
                                   size: 22,
                                   color: Colors.redAccent[200],
-                                )
-                              : Icon(
+                                ))
+                            : IconButton(
+                                onPressed: () {
+                                  model.likeUnlikePost(post.id);
+                                },
+                                icon: Icon(
                                   Icons.favorite_border,
                                   size: 22,
                                   color: appFontColor(),
                                 ),
-                        ),
+                              ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 5 / 9,
                         ),

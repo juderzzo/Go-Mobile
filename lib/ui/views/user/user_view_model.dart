@@ -38,7 +38,7 @@ class UserViewModel extends BaseViewModel {
   int resultsLimit = 15;
 
   initialize(TabController tabController, BuildContext context) async {
-    print("1");
+    //print("1");
     setBusy(true);
     Map<String, dynamic> args = RouteData.of(context).arguments;
     String uid = args['uid'];
