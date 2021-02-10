@@ -1,10 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
+import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
 import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_stats_row.dart';
@@ -17,12 +21,17 @@ class ProfileView extends StatefulWidget {
   ProfileView({this.user});
 
   @override
-  _ProfileViewState createState() => _ProfileViewState();
+  _ProfileViewState createState() => _ProfileViewState(user: this.user);
 }
 
-class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStateMixin {
+class _ProfileViewState extends State<ProfileView>
+    with SingleTickerProviderStateMixin {
+  final GoUser user;
+  _ProfileViewState({this.user});
   TabController _tabController;
-
+  List postFutures = [];
+  List<Widget> posts = [];
+  bool loading = true;
   Widget head(ProfileViewModel model) {
     return Container(
       height: 50,
@@ -63,7 +72,7 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
     );
   }
 
-  Widget userDetails() {
+  Widget userDetails(model) {
     return Container(
       child: Column(
         children: [
@@ -89,34 +98,71 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
             viewFollowersAction: null,
             viewFollowingAction: null,
           ),
+          Container(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                verticalSpaceLarge,
+                UserBio(
+                  username: model.user.username,
+                  profilePicURL: model.user.profilePicURL,
+                  bio: model.user.bio,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget tabBar() {
-    return GoProfileTabBar(
+    return GoProfilePageTabBar(
       //key: PageStorageKey('profile-tab-bar'),
+
       tabController: _tabController,
     );
   }
 
+  List<Widget> generateLiked(model, fut) {
+    List<Widget> ans = [];
+
+    if (fut.length == 0) {
+      return [
+        Center(
+            child: Text(
+          "You have not liked any posts yet",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+        ))
+      ];
+    }
+
+    //print(fut);
+    // for (int i = 0; i < fut.length; i) {
+    //   ans.add(FutureBuilder(
+    //       future: fut[i],
+    //       builder: (context, snapshot) {
+    //         if (snapshot.connectionState == ConnectionState.done) {
+    //           return Text(snapshot.data[0].toString());
+    //         } else {
+    //           return Text("loading");
+    //         }
+    //       }));
+    // }
+
+    return ans;
+  }
+
   Widget body(ProfileViewModel model) {
+    List<Widget> loader = [];
+    loader.add(Padding(
+        padding: EdgeInsets.all(165.0), child: CircularProgressIndicator()));
+
     return TabBarView(
       controller: _tabController,
       children: [
         Container(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              verticalSpaceLarge,
-              UserBio(
-                username: model.user.username,
-                profilePicURL: model.user.profilePicURL,
-                bio: model.user.bio,
-              ),
-            ],
-          ),
+          child: ListView(shrinkWrap: true, children: loading ? loader : posts),
         ),
         ListCauses(
           refreshData: model.refreshCausesFollowing,
@@ -141,6 +187,35 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
       length: 3,
       vsync: this,
     );
+    makeList();
+  }
+
+  void makeList() async {
+    //have to optimize this
+    for (int i = 0; i < user.liked.length; i++) {
+      dynamic u = await ProfileViewModel.generatePost(i, user.id);
+      //await u;
+      print(i);
+      if (u.runtimeType != Future) {
+        if (u == null) {
+          print("nullify");
+          user.liked.removeAt(i);
+          ProfileViewModel.updateLiked(user.id, user.liked);
+        } else if(u.runtimeType == GoForumPost && u != null){
+          posts.add(ForumPostBlockView(
+            post: u,
+            displayBottomBorder: (i != user.liked.length),
+          ));
+        }
+      }
+    }
+    //print(posts.length);
+    //print(posts.toString());
+    if (posts.length == user.liked.length) {
+      loading = false;
+      setState(() {});
+    }
+    //print(loading);
   }
 
   @override
@@ -152,6 +227,8 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    bool loading = true;
+
     return ViewModelBuilder<ProfileViewModel>.reactive(
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
@@ -177,13 +254,15 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
                             pinned: true,
                             floating: true,
                             forceElevated: innerBoxIsScrolled,
-                            expandedHeight: 200,
+                            expandedHeight: 350,
                             backgroundColor: appBackgroundColor(),
                             flexibleSpace: FlexibleSpaceBar(
                               background: Container(
                                 child: Column(
                                   children: [
-                                    widget.user == null ? Container() : userDetails(),
+                                    widget.user == null
+                                        ? Container()
+                                        : userDetails(model),
                                   ],
                                 ),
                               ),

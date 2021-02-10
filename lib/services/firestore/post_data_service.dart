@@ -54,6 +54,14 @@ class PostDataService {
     return post;
   }
 
+  Future checkpIfPostExists(id) async {
+   
+    DocumentSnapshot snapshot = await postRef.doc(id).get().catchError((e) {
+      return e.message;
+    });
+    return snapshot.exists;
+  }
+
   Future deletePost(id) async {
     await commentsRef.doc(id).delete();
     await postRef.doc(id).delete();

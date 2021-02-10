@@ -90,7 +90,10 @@ class _CheckListViewState extends State<CheckListView> {
       } else {
         return [
           Center(
-            child: Text("There are no actions to check off for this cause", style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),))
+              child: Text(
+            "There are no actions to check off for this cause",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+          ))
         ];
       }
     }
@@ -99,6 +102,7 @@ class _CheckListViewState extends State<CheckListView> {
         FutureBuilder(
             future: fut[i],
             builder: (context, snapshot) {
+              //print(fut[i].runtimeType);
               if (snapshot.connectionState == ConnectionState.done) {
                 //print(fut);
 

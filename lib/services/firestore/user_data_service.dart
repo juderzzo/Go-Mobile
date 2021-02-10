@@ -149,6 +149,14 @@ class UserDataService {
     }
   }
 
+  Future updateLikedPosts(String id, List likedPosts) async {
+    await userRef.doc(id).update({
+      "liked": likedPosts,
+    }).catchError((e) {
+      return e.message;
+    });
+  }
+
   Future updateGoUserBio(String id, String bio) async {
     await userRef.doc(id).update({
       "bio": bio,
