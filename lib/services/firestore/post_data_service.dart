@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
+import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class PostDataService {
@@ -26,14 +29,18 @@ class PostDataService {
     String causeID,
     String authorID,
     String body,
+    File image,
     int dateCreatedInMilliseconds,
     int commentCount,
   }) async {
+    FirestoreImageUploader().uploadImage(
+        img: image, storageBucket: 'posts', folderName: causeID, fileName: id);
     GoForumPost post = GoForumPost(
       id: id,
       causeID: causeID,
       authorID: authorID,
       body: body,
+      imageID: id,
       dateCreatedInMilliseconds: dateCreatedInMilliseconds,
       commentCount: commentCount,
     );
@@ -55,7 +62,6 @@ class PostDataService {
   }
 
   Future checkpIfPostExists(id) async {
-   
     DocumentSnapshot snapshot = await postRef.doc(id).get().catchError((e) {
       return e.message;
     });
