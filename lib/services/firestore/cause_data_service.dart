@@ -109,7 +109,7 @@ class CauseDataService {
       bool img1Changed,
       bool img2Changed,
       bool img3Changed) async {
-        print("1");
+    print("1");
     DocumentReference cause = causeRef.doc(causeID);
     //print(cause);
 
@@ -141,9 +141,6 @@ class CauseDataService {
         newImageURLs.add(imageURLs[2]);
       }
     }
-
-    
-
 
     //now upload the new images
 
@@ -420,6 +417,18 @@ class CauseDataService {
   }
 
   Future<bool> deleteCause(String id) async {
+    //first you have to delet the posts in this cause, so get all the posts
+    //where the cause ID is the same as this
+    QuerySnapshot posts = await FirebaseFirestore.instance
+        .collection('posts')
+        .where('causeID', isEqualTo: id)
+        .get();
+
+    for (int i = 0; i < posts.docs.length; i++) {
+      posts.docs[i].reference.delete();
+    }
+    
+
     //delete the cause and the images associated with it
     await FirebaseFirestore.instance
         .runTransaction((Transaction deleteTransaction) async {

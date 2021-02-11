@@ -2,6 +2,7 @@ class GoForumPost {
   String id;
   String causeID;
   String authorID;
+  String imageID;
   int dateCreatedInMilliseconds;
   String body;
   int commentCount;
@@ -13,6 +14,7 @@ class GoForumPost {
     this.dateCreatedInMilliseconds,
     this.body,
     this.commentCount,
+    this.imageID
   });
 
   GoForumPost.fromMap(Map<String, dynamic> data)
@@ -23,6 +25,7 @@ class GoForumPost {
           dateCreatedInMilliseconds: data['dateCreatedInMilliseconds'],
           body: data['body'],
           commentCount: data['commentCount'],
+          imageID: data['imageID']
         );
 
   Map<String, dynamic> toMap() => {
@@ -32,5 +35,6 @@ class GoForumPost {
         'dateCreatedInMilliseconds': this.dateCreatedInMilliseconds,
         'body': this.body,
         'commentCount': this.commentCount,
+        'imageID': this.imageID
       };
 }

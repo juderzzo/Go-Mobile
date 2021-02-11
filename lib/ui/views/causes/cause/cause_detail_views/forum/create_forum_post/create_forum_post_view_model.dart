@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
@@ -6,6 +8,7 @@ import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
+import 'package:go/utils/go_image_picker.dart';
 import 'package:go/utils/random_string_generator.dart';
 import 'package:go/utils/string_validator.dart';
 import 'package:stacked/stacked.dart';
@@ -25,6 +28,7 @@ class CreateForumPostViewModel extends BaseViewModel {
   ///DATA
   bool isEditing = false;
   GoForumPost originalPost;
+  File imgFile;
 
   String causeID;
   String postID;
@@ -91,6 +95,25 @@ class CreateForumPostViewModel extends BaseViewModel {
       }
     }
   }
+
+  selectImage() async {
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.imagePicker,
+    );
+    if (sheetResponse != null) {
+      String res = sheetResponse.responseData;
+      if (res == "camera") {
+        imgFile =
+            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+      } else if (res == "gallery") {
+        imgFile = await GoImagePicker()
+            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+      }
+      notifyListeners();
+    
+      }
+    }
+  
 
   ///BOTTOM SHEETS
   displayPostUploadSuccessBottomSheet() async {

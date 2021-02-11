@@ -47,7 +47,14 @@ class CreateForumPostView extends StatelessWidget {
             hintText: "What's on your mind?",
             maxLines: 10,
           ),
-          verticalSpaceLarge,
+          verticalSpaceTiny,
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.image, size: 35,), 
+                onPressed: null)],
+          ),
+          verticalSpaceTiny,
           CustomButton(
             height: 48,
             backgroundColor: CustomColors.goGreen,
