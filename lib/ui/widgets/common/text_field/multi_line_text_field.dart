@@ -6,17 +6,20 @@ class MultiLineTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final int maxLines;
+  final color;
 
   MultiLineTextField({
     @required this.controller,
     @required this.hintText,
     @required this.maxLines,
+    this.color
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextFormField(
+      
         controller: controller,
         cursorColor: appFontColorAlt(),
         maxLines: maxLines,

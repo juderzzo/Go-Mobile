@@ -38,21 +38,62 @@ class CreateForumPostView extends StatelessWidget {
 
   Widget form(BuildContext context, CreateForumPostViewModel model) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       child: ListView(
         shrinkWrap: true,
         children: [
           verticalSpaceSmall,
-          MultiLineTextField(
-            controller: model.postTextController,
-            hintText: "What's on your mind?",
-            maxLines: 10,
-          ),
-          verticalSpaceTiny,
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(Icons.image, size: 35,), 
-                onPressed: null)],
+          Container(
+            color: appBackgroundColor(),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: model.postTextController,
+                  decoration: InputDecoration(
+                      hintText: "What's on your mind?",
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(5),
+                      fillColor: appBackgroundColor()),
+                  maxLines: null,
+                ),
+                model.imgFile == null
+                    ? Container(
+                        //color: appTextFieldContainerColor(),
+                        child: Column(
+                          children: [
+                            verticalSpaceTiny,
+                            Row(
+                              children: [
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.filter_rounded,
+                                      size: 25,
+                                    ),
+                                    onPressed: () {
+                                      model.selectImage();
+                                    }),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    : Stack(
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                              child: Image.file(model.imgFile)),
+                          FloatingActionButton(
+                            child: Icon(Icons.cancel),
+                            onPressed: () {
+                              
+                            model.imgFile = null;
+                            model.notifyListeners();
+                          })
+                        ],
+                      ),
+              ],
+            ),
           ),
           verticalSpaceTiny,
           CustomButton(
@@ -79,7 +120,8 @@ class CreateForumPostView extends StatelessWidget {
       onModelReady: (model) => model.initialize(context),
       viewModelBuilder: () => CreateForumPostViewModel(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar().basicAppBar(title: "Create Post", showBackButton: true),
+        appBar: CustomAppBar()
+            .basicAppBar(title: "Create Post", showBackButton: true),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(

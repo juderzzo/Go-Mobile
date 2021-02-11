@@ -96,7 +96,8 @@ class CreateForumPostViewModel extends BaseViewModel {
     }
   }
 
-  selectImage() async {
+
+  void selectImage() async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.imagePicker,
     );
@@ -110,10 +111,8 @@ class CreateForumPostViewModel extends BaseViewModel {
             .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
       notifyListeners();
-    
-      }
     }
-  
+  }
 
   ///BOTTOM SHEETS
   displayPostUploadSuccessBottomSheet() async {
