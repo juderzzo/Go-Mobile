@@ -41,6 +41,7 @@ class EditCauseViewModel extends BaseViewModel {
     String who,
     String resources,
     String charityURL,
+    String videoLink,
   }) async {
     String formError;
     setBusy(true);
@@ -55,6 +56,9 @@ class EditCauseViewModel extends BaseViewModel {
     } else if (StringValidator().isValidString(charityURL) &&
         !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
+    } else if (!UrlHandler().isValidUrl(videoLink) ||
+        !videoLink.contains("youtube")) {
+      formError = "Please Provide a valid youtube link";
     }
     if (formError != null) {
       setBusy(false);
@@ -75,6 +79,7 @@ class EditCauseViewModel extends BaseViewModel {
           who,
           resources,
           charityURL,
+          videoLink,
           //link each checklist item to their id in the cause functionality
 
           img1,

@@ -14,6 +14,7 @@ class GoCause {
   List actionDescriptions;
   int followerCount;
   int forumPostCount;
+  String videoLink;
 
   GoCause({
     this.id,
@@ -31,6 +32,7 @@ class GoCause {
     this.actionDescriptions,
     this.followerCount,
     this.forumPostCount,
+    this.videoLink,
   });
 
   GoCause.fromMap(Map<String, dynamic> data)
@@ -50,6 +52,7 @@ class GoCause {
           followerCount: data['followerCount'],
           forumPostCount: data['forumPostCount'],
           actionDescriptions: data['actionDescriptions'],
+          videoLink: data['videoLink']
         );
 
   Map<String, dynamic> toMap() => {
@@ -67,7 +70,8 @@ class GoCause {
         'followers': this.followers,
         'followerCount': this.followerCount,
         'forumPostCount': this.forumPostCount,
-        'actionDescriptions': this.actionDescriptions
+        'actionDescriptions': this.actionDescriptions,
+        'videoLink': this.videoLink
       };
 
   GoCause generateDummyCause(String id) {

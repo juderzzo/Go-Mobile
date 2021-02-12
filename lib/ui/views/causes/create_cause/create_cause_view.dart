@@ -18,7 +18,7 @@ class CreateCauseView extends StatelessWidget {
   final whoController = TextEditingController();
   final resourcesController = TextEditingController();
   final charityWebsiteController = TextEditingController();
-  
+  final videoLinkController = TextEditingController();
 
   Widget textFieldHeader(String header, String subHeader) {
     return Container(
@@ -232,8 +232,18 @@ class CreateCauseView extends StatelessWidget {
             "To add actions, go to 'Edit Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
                 "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
           ),
+          verticalSpaceMedium,
+
+          textFieldHeader(
+            "Youtube Link",
+            "If you feel your cause would be supported by a short video on youtube, please link it here for display",
+          ),
           verticalSpaceSmall,
-         
+          singleLineTextField(
+            controller: videoLinkController,
+            hintText: "https://youtube.com/...",
+          ),
+
           verticalSpaceLarge,
           CustomButton(
             height: 48,
@@ -249,7 +259,7 @@ class CreateCauseView extends StatelessWidget {
                 who: whoController.text.trim(),
                 resources: resourcesController.text.trim(),
                 charityURL: charityWebsiteController.text.trim(),
-                
+                videoLink: videoLinkController.text.trim(),
               );
               if (formSuccess) {
                 model.displayCauseUploadSuccessBottomSheet();

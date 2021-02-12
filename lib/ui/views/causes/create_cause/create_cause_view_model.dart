@@ -37,7 +37,7 @@ class CreateCauseViewModel extends BaseViewModel {
       String who,
       String resources,
       String charityURL,
-      }) async {
+      String videoLink}) async {
     String formError;
     setBusy(true);
     if (!StringValidator().isValidString(name)) {
@@ -51,7 +51,10 @@ class CreateCauseViewModel extends BaseViewModel {
     } else if (StringValidator().isValidString(charityURL) &&
         !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
-    } 
+    } else if (!UrlHandler().isValidUrl(videoLink) ||
+        !videoLink.contains("youtube")) {
+      formError = "Please Provide a valid youtube link";
+    }
     if (formError != null) {
       setBusy(false);
       _dialogService.showDialog(
@@ -65,7 +68,6 @@ class CreateCauseViewModel extends BaseViewModel {
 
       //create the initial 3 actions
 
-      
       var res = await _causeDataService.createCause(
         creatorID: creatorID,
         name: name,
@@ -76,16 +78,14 @@ class CreateCauseViewModel extends BaseViewModel {
         charityURL: charityURL,
         //link each checklist item to their id in the cause functionality
         actions: [],
-       
+
         img1: img1,
         img2: img2,
         img3: img3,
+        videoLink: videoLink
       );
 
       //now push each of the checklistItems referecne
-
-      
-
 
       setBusy(false);
       if (res != null) {

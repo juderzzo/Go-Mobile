@@ -24,6 +24,7 @@ class EditCauseView extends StatelessWidget {
   String who;
   String resources;
   String charity;
+  String videoLink;
   dynamic img1;
   dynamic img2;
   dynamic img3;
@@ -34,6 +35,7 @@ class EditCauseView extends StatelessWidget {
   final whoController = TextEditingController();
   final resourcesController = TextEditingController();
   final charityWebsiteController = TextEditingController();
+  final videoLinkController = TextEditingController();
 
   EditCauseView(
       {this.causeID,
@@ -45,7 +47,8 @@ class EditCauseView extends StatelessWidget {
       this.charity,
       this.img1,
       this.img2,
-      this.img3});
+      this.img3,
+      this.videoLink});
 
   Void initialize() {
     //print(this.causeID);
@@ -55,6 +58,7 @@ class EditCauseView extends StatelessWidget {
     whyController.text = who;
     resourcesController.text = resources;
     charityWebsiteController.text = charity;
+    videoLinkController.text = videoLink;
   }
 
   Widget textFieldHeader(String header, String subHeader) {
@@ -124,7 +128,6 @@ class EditCauseView extends StatelessWidget {
     double iconSize = 20;
     double height = 75;
     double width = 110;
-    
 
     return model.isEditing
         ? CauseImgPreview(
@@ -147,7 +150,6 @@ class EditCauseView extends StatelessWidget {
                       imgNum: imgNum,
                       ratioX: width,
                       ratioY: height);
-                  
                 },
                 iconSize: iconSize,
                 height: height,
@@ -195,8 +197,8 @@ class EditCauseView extends StatelessWidget {
 
   Widget form(BuildContext context, EditCauseViewModel model) {
     return Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Container(
+      resizeToAvoidBottomInset: false,
+      body: Container(
         child: ListView(
           shrinkWrap: true,
           children: [
@@ -291,7 +293,15 @@ class EditCauseView extends StatelessWidget {
               "To add actions, go to 'Edit Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
                   "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
             ),
+            verticalSpaceMedium,
+
+            textFieldHeader("Youtube Link", "If you feel your cause would be supported by a short video on youtube, please link it here for display"),
             verticalSpaceSmall,
+            singleLineTextField(
+              controller: videoLinkController,
+              hintText: "https://youtube.com/...",
+            ),
+            verticalSpaceMedium,
 
             verticalSpaceLarge,
             CustomButton(
@@ -309,6 +319,7 @@ class EditCauseView extends StatelessWidget {
                   who: whoController.text.trim(),
                   resources: resourcesController.text.trim(),
                   charityURL: charityWebsiteController.text.trim(),
+                  videoLink: videoLinkController.text.trim(),
                 );
                 if (formSuccess) {
                   model.displayCauseUploadSuccessBottomSheet();

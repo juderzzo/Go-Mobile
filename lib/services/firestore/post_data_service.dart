@@ -35,17 +35,21 @@ class PostDataService {
     int commentCount,
   }) async {
     String url = "";
-    await FirestoreImageUploader()
-        .uploadImage(
-            img: image,
-            storageBucket: 'posts',
-            folderName: causeID,
-            fileName: id)
-        .then((v) async {
-      url = await FirebaseStorage.instance
-          .ref('posts/$causeID/$id')
-          .getDownloadURL();
-    });
+
+    if (image != null) {
+      await FirestoreImageUploader()
+          .uploadImage(
+              img: image,
+              storageBucket: 'posts',
+              folderName: causeID,
+              fileName: id)
+          .then((v) async {
+        url = await FirebaseStorage.instance
+            .ref('posts/$causeID/$id')
+            .getDownloadURL();
+      });
+    }
+    
 
     GoForumPost post = GoForumPost(
       id: id,
@@ -84,10 +88,10 @@ class PostDataService {
     //do the image
 
     GoForumPost post = await getPostByID(id);
-    if(post.imageID != null){
+    if (post.imageID != null && post.imageID.length > 10) {
       FirebaseStorage.instance.refFromURL(post.imageID).delete();
     }
-    
+
     await commentsRef.doc(id).delete();
     await postRef.doc(id).delete();
   }

@@ -95,7 +95,7 @@ class CommentTextFieldView extends StatelessWidget {
                     cursorColor: appFontColor(),
                     textInputAction: TextInputAction.send,
                     onSubmitted: (val) => onSubmitted(val),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: appFontColor(),),
                     controller: commentTextController, //messageFieldController,
                     textCapitalization: TextCapitalization.sentences,
                     inputFormatters: [
@@ -106,7 +106,7 @@ class CommentTextFieldView extends StatelessWidget {
                       isDense: true,
                       hintText: 'Comment',
                       hintStyle: TextStyle(
-                        color: Colors.white30,
+                        color: appFontColor(),
                       ),
                     ),
                   ),

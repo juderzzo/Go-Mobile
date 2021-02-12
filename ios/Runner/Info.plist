@@ -95,6 +95,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>This will allow you to access your music library to use in Go!</string>
 </dict>

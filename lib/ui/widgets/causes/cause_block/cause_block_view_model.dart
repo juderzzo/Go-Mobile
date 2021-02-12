@@ -78,6 +78,7 @@ class CauseBlockViewModel extends BaseViewModel {
                 img1: images[0],
                 img2: images.length > 1 ? images[1] : null,
                 img3: images.length > 2 ? images[2] : null,
+                videoLink: cause.videoLink
               ));
         }
         //share

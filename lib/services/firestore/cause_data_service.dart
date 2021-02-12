@@ -47,6 +47,7 @@ class CauseDataService {
     File img1,
     File img2,
     File img3,
+    String videoLink,
   }) async {
     GoCause cause = GoCause(
       id: getRandomString(35),
@@ -64,6 +65,7 @@ class CauseDataService {
       followers: [creatorID],
       followerCount: 1,
       forumPostCount: 0,
+      videoLink: videoLink
     );
 
     if (img1 != null) {
@@ -106,6 +108,7 @@ class CauseDataService {
       String who,
       String resources,
       String charityURL,
+      String videoLink,
       img1,
       img2,
       img3,
@@ -184,6 +187,7 @@ class CauseDataService {
         "why": why,
         "resources": resources,
         "charityURL": charityURL,
+        "videoLink": videoLink,
       });
     } else {
       cause.update({
@@ -192,7 +196,8 @@ class CauseDataService {
         "why": why,
         "resources": resources,
         "charityURL": charityURL,
-        "imageURLs": newImageURLs
+        "imageURLs": newImageURLs,
+        "videoLink": videoLink,
       });
     }
   }

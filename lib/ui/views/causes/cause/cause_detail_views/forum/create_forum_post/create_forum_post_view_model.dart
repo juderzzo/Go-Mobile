@@ -63,7 +63,7 @@ class CreateForumPostViewModel extends BaseViewModel {
     } else {
       String authorID = await _authService.getCurrentUserID();
       var res;
-      
+
       if (isEditing) {
         res = await _postDataService.createPost(
           id: originalPost.id,
@@ -76,14 +76,13 @@ class CreateForumPostViewModel extends BaseViewModel {
       } else {
         //first upload the images
         String id = getRandomString(35);
-        
+
         res = await _postDataService.createPost(
           id: id,
           causeID: causeID,
           authorID: authorID,
           body: body,
           image: imgFile,
-    
           dateCreatedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
           commentCount: 0,
         );
@@ -131,6 +130,7 @@ class CreateForumPostViewModel extends BaseViewModel {
     );
     if (sheetResponse == null || sheetResponse.responseData == "return") {
       _navigationService.back(result: "newPostCreated");
+      _navigationService.back();
     }
   }
 
