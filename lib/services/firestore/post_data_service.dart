@@ -81,6 +81,13 @@ class PostDataService {
   }
 
   Future deletePost(id) async {
+    //do the image
+
+    GoForumPost post = await getPostByID(id);
+    if(post.imageID != null){
+      FirebaseStorage.instance.refFromURL(post.imageID).delete();
+    }
+    
     await commentsRef.doc(id).delete();
     await postRef.doc(id).delete();
   }
