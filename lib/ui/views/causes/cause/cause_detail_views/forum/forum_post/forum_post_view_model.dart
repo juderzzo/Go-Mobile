@@ -46,6 +46,7 @@ class ForumPostViewModel extends BaseViewModel {
   bool isReplying = false;
   bool refreshingComments = true;
   GoForumPostComment commentToReplyTo;
+  bool likedPost = false;
 
   ///
 
@@ -224,6 +225,14 @@ class ForumPostViewModel extends BaseViewModel {
     commentToReplyTo = null;
     commentTextController.clear();
     FocusScope.of(context).unfocus();
+    notifyListeners();
+  }
+
+  likeUnlikePost(String postID) async {
+    String currentUID = await _authService.getCurrentUserID();
+    _userDataService.likeUnlikePost(currentUID, postID);
+    likedPost = !likedPost;
+    print(likedPost);
     notifyListeners();
   }
 

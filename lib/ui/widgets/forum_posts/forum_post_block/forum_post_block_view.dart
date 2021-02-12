@@ -1,3 +1,4 @@
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
@@ -6,6 +7,7 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:go/utils/time_calc.dart';
+import 'package:image/image.dart' as imMethods;
 import 'package:stacked/stacked.dart';
 
 import 'forum_post_block_view_model.dart';
@@ -72,10 +74,18 @@ class ForumPostBlockView extends StatelessWidget {
   }
 
   Widget postBody(ForumPostBlockViewModel model, BuildContext context) {
+    // Image postImage = Image.network(
+    //   post.imageID,
+    // );
+    // imMethods.Image postImage = 
+    // var resize = imMethods.copyResize(
+    //   postImage, 
+    //   width: 200);
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 4.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        //mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
@@ -88,20 +98,33 @@ class ForumPostBlockView extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+            padding: EdgeInsets.only( top: 10.0,),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Column(
                   children: [
+                    post.imageID != null && post.imageID.length > 5
+                        ? Container(
+                            height: 200,
+                            width: MediaQuery.of(context).size.width,
+                            child: Image.network(
+                              post.imageID,
+                              height: 200,
+                            
+                              fit: BoxFit.fitWidth,
+                              width: MediaQuery.of(context).size.width
+                            ))
+                        : Container(),
+                        SizedBox(height: 5,),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         model.likedPost
                             ? IconButton(
                                 onPressed: () {
                                   model.likeUnlikePost(post.id);
-                                  
+
                                   model.notifyListeners();
                                 },
                                 icon: Icon(
@@ -134,6 +157,9 @@ class ForumPostBlockView extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                           color: appFontColor(),
                         ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 1 / 5,
+                        ),
                       ],
                     ),
                     Row(
@@ -162,6 +188,7 @@ class ForumPostBlockView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ///print(post.imageID);
     return ViewModelBuilder<ForumPostBlockViewModel>.reactive(
       onModelReady: (model) =>
           model.initialize(post.authorID, post.causeID, post.id),

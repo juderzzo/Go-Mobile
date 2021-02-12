@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
@@ -33,14 +34,25 @@ class PostDataService {
     int dateCreatedInMilliseconds,
     int commentCount,
   }) async {
-    FirestoreImageUploader().uploadImage(
-        img: image, storageBucket: 'posts', folderName: causeID, fileName: id);
+    String url = "";
+    await FirestoreImageUploader()
+        .uploadImage(
+            img: image,
+            storageBucket: 'posts',
+            folderName: causeID,
+            fileName: id)
+        .then((v) async {
+      url = await FirebaseStorage.instance
+          .ref('posts/$causeID/$id')
+          .getDownloadURL();
+    });
+
     GoForumPost post = GoForumPost(
       id: id,
       causeID: causeID,
       authorID: authorID,
       body: body,
-      imageID: id,
+      imageID: url,
       dateCreatedInMilliseconds: dateCreatedInMilliseconds,
       commentCount: commentCount,
     );

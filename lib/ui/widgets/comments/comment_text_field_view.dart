@@ -84,7 +84,7 @@ class CommentTextFieldView extends StatelessWidget {
                   margin: EdgeInsets.only(left: 8.0),
                   padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 2.0),
                   decoration: BoxDecoration(
-                    color: Colors.black54,
+                    color: appBackgroundColor(),
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                   child: TextField(
@@ -92,7 +92,7 @@ class CommentTextFieldView extends StatelessWidget {
                     minLines: 1,
                     maxLines: 5,
                     maxLengthEnforced: true,
-                    cursorColor: Colors.white,
+                    cursorColor: appFontColor(),
                     textInputAction: TextInputAction.send,
                     onSubmitted: (val) => onSubmitted(val),
                     style: TextStyle(color: Colors.white),

@@ -14,7 +14,7 @@ import 'package:stacked/stacked.dart';
 class ForumPostView extends StatelessWidget {
   final FocusNode focusNode = FocusNode();
 
-  Widget postBody(ForumPostViewModel model) {
+  Widget postBody(ForumPostViewModel model, BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 4.0),
       child: Column(
@@ -51,7 +51,7 @@ class ForumPostView extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.all( 16.0),
             child: CustomText(
               text: model.post.body,
               textAlign: TextAlign.left,
@@ -60,6 +60,21 @@ class ForumPostView extends StatelessWidget {
               fontSize: 18,
             ),
           ),
+
+           model.post.imageID != null && model.post.imageID.length > 5
+                        ? Container(
+                            //height: 200,
+                            width: MediaQuery.of(context).size.width,
+                            child: Image.network(
+                              model.post.imageID,
+                              //height: 200,
+                            
+                              //fit: BoxFit.fitWidth,
+                              //width: MediaQuery.of(context).size.width
+                            ))
+                        : Container(),
+         
+          
           Padding(
             padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
             child: Row(
@@ -68,21 +83,34 @@ class ForumPostView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Icon(
-                      FontAwesomeIcons.comment,
-                      size: 16,
-                      color: appFontColor(),
-                    ),
+                    model.likedPost
+                            ? IconButton(
+                                onPressed: () {
+                                  model.likeUnlikePost(model.post.id);
+
+                                  model.notifyListeners();
+                                },
+                                icon: Icon(
+                                  Icons.favorite,
+                                  size: 22,
+                                  color: Colors.redAccent[200],
+                                ))
+                            : IconButton(
+                                onPressed: () {
+                                  model.likeUnlikePost(model.post.id);
+                                },
+                                icon: Icon(
+                                  Icons.favorite_border,
+                                  size: 22,
+                                  color: appFontColor(),
+                                ),
+                              ),
                     horizontalSpaceSmall,
-                    Text(
-                      model.post.commentCount.toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: appFontColor(),
-                      ),
-                    ),
+                    
                   ],
                 ),
+
+                
                 Text(
                   TimeCalc().getPastTimeFromMilliseconds(
                       model.post.dateCreatedInMilliseconds),
@@ -151,7 +179,7 @@ class ForumPostView extends StatelessWidget {
                         child: ListView(
                           shrinkWrap: true,
                           children: [
-                            postBody(model),
+                            postBody(model, context),
                             postComments(model),
                             SizedBox(height: 50),
                           ],
