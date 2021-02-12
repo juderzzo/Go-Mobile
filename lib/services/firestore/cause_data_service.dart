@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_checklist_model.dart';
+import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:go/utils/random_string_generator.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -19,6 +20,8 @@ class CauseDataService {
       FirebaseFirestore.instance.collection('checks');
 
   SnackbarService _snackbarService = locator<SnackbarService>();
+
+  PostDataService _postDataService = locator<PostDataService>();
 
   Future checkIfCauseExists(String id) async {
     bool exists = false;
@@ -425,9 +428,8 @@ class CauseDataService {
         .get();
 
     for (int i = 0; i < posts.docs.length; i++) {
-      posts.docs[i].reference.delete();
+      _postDataService.deletePost(posts.docs[i].reference.id);
     }
-    
 
     //delete the cause and the images associated with it
     await FirebaseFirestore.instance
