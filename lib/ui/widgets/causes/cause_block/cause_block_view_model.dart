@@ -60,6 +60,7 @@ class CauseBlockViewModel extends BaseViewModel {
             "resources": cause.resources,
             "charity": cause.charityURL,
             "imgURLs": cause.imageURLs,
+            "videoLink": cause.videoLink,
           });
         }
         //edit

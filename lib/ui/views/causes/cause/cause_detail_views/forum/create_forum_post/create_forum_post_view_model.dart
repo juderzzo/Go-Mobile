@@ -130,7 +130,7 @@ class CreateForumPostViewModel extends BaseViewModel {
     );
     if (sheetResponse == null || sheetResponse.responseData == "return") {
       _navigationService.back(result: "newPostCreated");
-      _navigationService.back();
+     // _navigationService.back();
     }
   }
 
