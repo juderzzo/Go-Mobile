@@ -2,9 +2,11 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'cause_block_view_model.dart';
 
@@ -16,7 +18,7 @@ class CauseBlockView extends StatelessWidget {
 
   Widget causeHead(CauseBlockViewModel model, BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 23/24,
+      width: MediaQuery.of(context).size.width * 23 / 24,
       padding: EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 0.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -38,10 +40,53 @@ class CauseBlockView extends StatelessWidget {
   }
 
   Widget causeImages(CauseBlockViewModel model, context) {
+    List<dynamic> images = model.images;
+    //print(cause.videoLink);
+    //print(images.length);
+    //print(model.orgLength);
+    //print(model.videoLink);
+    YoutubePlayerController _controller;
+    if ((cause.videoLink != null) &&
+        cause.videoLink.length > 5 &&
+        images.length == model.orgLength) {
+      //print(cause.videoLink);
+      String videoID = YoutubePlayer.convertUrlToId(cause.videoLink);
+      //print(videoID);
+      if (videoID != null) {
+        _controller = YoutubePlayerController(
+          initialVideoId: videoID,
+          flags: YoutubePlayerFlags(
+            isLive: true,
+            disableDragSeek: true,
+            hideControls: true,
+            mute: true,
+          ),
+        );
+
+        YoutubePlayer video = YoutubePlayer(
+          aspectRatio: 16/11,
+          controller: _controller,
+          liveUIColor: CustomColors.goGreen,
+          actionsPadding: EdgeInsets.only(bottom: 10.0),
+         
+        );
+        images.add(
+          ListView.separated(
+            itemBuilder: (context, index){
+              return video;
+            },
+            itemCount: 1,
+            separatorBuilder: (context, _) => const SizedBox(height: 10.0),
+          )
+          
+          );
+      }
+    }
+
     return model.isLoading
         ? Container()
         : SizedBox(
-            width: MediaQuery.of(context).size.width * 23/24,
+            width: MediaQuery.of(context).size.width * 23 / 24,
             height: 250,
             child: Carousel(
               autoplay: false,
@@ -51,19 +96,19 @@ class CauseBlockView extends StatelessWidget {
               dotColor: appFontColorAlt(),
               dotIncreaseSize: 1.01,
               dotIncreasedColor: appFontColor(),
-              showIndicator: model.images.length > 1 ? true : false,
-              images: model.images,
+              //showIndicator: model.images.length > 1 ? true : false,
+              images: images,
             ),
           );
   }
 
   Widget causeDetails(CauseBlockViewModel model, context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 23/24,
+      width: MediaQuery.of(context).size.width * 23 / 24,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
-                color: appBackgroundColor(),
-                borderRadius: BorderRadius.circular(10.0),
+        color: appBackgroundColor(),
+        borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -78,7 +123,9 @@ class CauseBlockView extends StatelessWidget {
             ),
           ),
           Text(
-            (cause.why.length < 95) ? cause.why : cause.why.substring(0,85) + "... See More",
+            (cause.why.length < 95)
+                ? cause.why
+                : cause.why.substring(0, 85) + "... See More",
             style: TextStyle(
               fontSize: 14,
               color: appFontColor(),
@@ -95,7 +142,9 @@ class CauseBlockView extends StatelessWidget {
             ),
           ),
           Text(
-            (cause.goal.length < 95) ? cause.goal : cause.goal.substring(0,85) + "... See More",
+            (cause.goal.length < 95)
+                ? cause.goal
+                : cause.goal.substring(0, 85) + "... See More",
             style: TextStyle(
               fontSize: 14,
               color: appFontColor(),
@@ -110,7 +159,7 @@ class CauseBlockView extends StatelessWidget {
 
   Widget causeOrganizer(CauseBlockViewModel model, context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 23/24,
+      width: MediaQuery.of(context).size.width * 23 / 24,
       padding: EdgeInsets.symmetric(horizontal: 8),
       child: RichText(
         textAlign: TextAlign.left,
@@ -123,7 +172,8 @@ class CauseBlockView extends StatelessWidget {
             TextSpan(
               text: model.creatorUsername,
               style: TextStyle(color: appTextButtonColor()),
-              recognizer: TapGestureRecognizer()..onTap = () => model.navigateToUserView(cause.creatorID),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => model.navigateToUserView(cause.creatorID),
             ),
           ],
         ),
@@ -137,30 +187,27 @@ class CauseBlockView extends StatelessWidget {
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
       fireOnModelReadyOnce: true,
-      onModelReady: (model) => model.initialize(cause.creatorID, cause.imageURLs),
+      onModelReady: (model) =>
+          model.initialize(cause.creatorID, cause.imageURLs),
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: () => model.navigateToCauseView(cause.id),
         child: Column(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 23/24,
-              
-              
+              width: MediaQuery.of(context).size.width * 23 / 24,
               decoration: BoxDecoration(
                 color: appBackgroundColor(),
                 borderRadius: BorderRadius.circular(10.0),
                 boxShadow: [
-                  
                   BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 2.0,
-                      spreadRadius: 2.0,
-                      // shadow direction: bottom right
+                    color: Colors.black26,
+                    blurRadius: 2.0,
+                    spreadRadius: 2.0,
+                    // shadow direction: bottom right
                   )
-              ],
-            ),
-              
+                ],
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -168,6 +215,7 @@ class CauseBlockView extends StatelessWidget {
                 children: <Widget>[
                   causeHead(model, context),
                   causeImages(model, context),
+                  
                   causeDetails(model, context),
                   causeOrganizer(model, context),
                   SizedBox(height: 16.0),
@@ -175,8 +223,9 @@ class CauseBlockView extends StatelessWidget {
                 ],
               ),
             ),
-
-            SizedBox(height: 30,)
+            SizedBox(
+              height: 30,
+            )
           ],
         ),
       ),

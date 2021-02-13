@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/about/about_view_model.dart';
@@ -8,6 +9,7 @@ import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:stacked/stacked.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class AboutView extends StatelessWidget {
   final GoCause cause;
@@ -17,13 +19,70 @@ class AboutView extends StatelessWidget {
   final VoidCallback viewCreator;
   final VoidCallback followUnfollowCause;
   final bool isFollowing;
-  AboutView({this.cause, this.images, this.creatorUsername, this.creatorProfilePicURL, this.viewCreator, this.followUnfollowCause, this.isFollowing});
+  int orgLength;
+  YoutubePlayerController _controller;
+  String videoID;
 
-  Widget causeImages(AboutViewModel model) {
+  AboutView(
+      {this.cause,
+      this.images,
+      this.creatorUsername,
+      this.creatorProfilePicURL,
+      this.viewCreator,
+      this.followUnfollowCause,
+      this.isFollowing});
+
+  initialize() {
+    if (cause.videoLink != null && cause.videoLink.length > 5) {
+      videoID = YoutubePlayer.convertUrlToId(cause.videoLink);
+    }
+
+    if (videoID != null) {
+      _controller = YoutubePlayerController(
+        initialVideoId: videoID,
+        flags: YoutubePlayerFlags(
+            isLive: true,
+            disableDragSeek: true,
+            //hideControls: true,
+            loop: true),
+      );
+    }
+  }
+
+  Widget causeImages(AboutViewModel model, Orientation orientation) {
+    //print(images.length);
+
+    if ((cause.videoLink != null) &&
+        cause.videoLink.length > 5 &&
+        images.length == orgLength) {
+      //print(cause.videoLink);
+
+      //print(videoID);
+      if (videoID != null) {
+        YoutubePlayer video = YoutubePlayer(
+          aspectRatio: 16 / 9,
+          controller: _controller,
+          liveUIColor: CustomColors.goGreen,
+          actionsPadding: EdgeInsets.only(bottom: 10.0),
+        );
+        images.insert(
+            0,
+            ListView.separated(
+              itemBuilder: (context, index) {
+                return video;
+              },
+              itemCount: 1,
+              separatorBuilder: (context, _) => const SizedBox(height: 0.1),
+            ));
+      }
+    }
+
     return SizedBox(
-      height: 300,
+      height: 210,
+      
       child: Carousel(
         autoplay: false,
+        showIndicator: false,
         indicatorBgPadding: 6,
         dotSpacing: 20,
         dotBgColor: appBackgroundColor(),
@@ -136,24 +195,46 @@ class AboutView extends StatelessWidget {
   }
 
   Widget causeCreator(BuildContext context) {
-    return CauseAuthorBio(username: creatorUsername, profilePicURL: creatorProfilePicURL, bio: cause.who);
+    return CauseAuthorBio(
+        username: creatorUsername,
+        profilePicURL: creatorProfilePicURL,
+        bio: cause.who);
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AboutViewModel>.reactive(
       viewModelBuilder: () => AboutViewModel(),
-      builder: (context, model, child) => Container(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            causeImages(model),
-            causeFollowers(context),
-            causeDetails(model),
-            causeCreator(context),
-          ],
-        ),
-      ),
+      onModelReady: (f) {
+        orgLength = cause.imageURLs.length;
+        initialize();
+        print(_controller == null);
+      },
+      builder: (context, model, child) =>
+          OrientationBuilder(builder: (context, orientation) {
+        if (orientation == Orientation.landscape) {
+          //_controller.pause();
+          return causeImages(model, orientation);
+        } else {
+          if (_controller != null) {
+            print('aaaaaaaaaaaaaaaaa');
+            _controller.play();
+          }
+
+          return Container(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                causeImages(model, orientation),
+                SizedBox(height: 10,),
+                causeFollowers(context),
+                causeDetails(model),
+                causeCreator(context),
+              ],
+            ),
+          );
+        }
+      }),
     );
   }
 }

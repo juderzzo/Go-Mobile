@@ -32,6 +32,8 @@ class CreateForumPostViewModel extends BaseViewModel {
 
   String causeID;
   String postID;
+  dynamic img;
+  bool imgChanged = false;
 
   initialize(BuildContext context) async {
     Map<String, dynamic> args = RouteData.of(context).arguments;
@@ -40,6 +42,15 @@ class CreateForumPostViewModel extends BaseViewModel {
     if (postID != null) {
       isEditing = true;
       originalPost = await _postDataService.getPostByID(postID);
+      if (originalPost.imageID != null) {
+        img = originalPost.imageID;
+      }
+      if (img.length < 3) {
+        //this will make sure if the img id is a blank string it gets turned back to null
+        //from above
+        img = null;
+      }
+      
       postTextController.text = originalPost.body;
       notifyListeners();
     }
@@ -65,11 +76,12 @@ class CreateForumPostViewModel extends BaseViewModel {
       var res;
 
       if (isEditing) {
-        res = await _postDataService.createPost(
+        res = await _postDataService.updatePost(
           id: originalPost.id,
           causeID: originalPost.causeID,
           authorID: authorID,
           body: body,
+          image: img,
           dateCreatedInMilliseconds: originalPost.dateCreatedInMilliseconds,
           commentCount: originalPost.commentCount,
         );
@@ -102,6 +114,7 @@ class CreateForumPostViewModel extends BaseViewModel {
   }
 
   void selectImage() async {
+    imgChanged = true;
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.imagePicker,
     );
@@ -114,6 +127,7 @@ class CreateForumPostViewModel extends BaseViewModel {
         imgFile = await GoImagePicker()
             .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
+      img = imgFile;
       notifyListeners();
     }
   }
@@ -130,7 +144,7 @@ class CreateForumPostViewModel extends BaseViewModel {
     );
     if (sheetResponse == null || sheetResponse.responseData == "return") {
       _navigationService.back(result: "newPostCreated");
-     // _navigationService.back();
+      // _navigationService.back();
     }
   }
 

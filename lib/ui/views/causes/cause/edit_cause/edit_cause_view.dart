@@ -129,59 +129,88 @@ class EditCauseView extends StatelessWidget {
     double height = 75;
     double width = 110;
 
-    return model.isEditing
-        ? CauseImgPreview(
-            onTap: () => model.selectImage(
-                context: context,
-                imgNum: imgNum,
-                ratioX: width,
-                ratioY: height),
-            height: height,
-            width: width,
-            imgURL: null,
-          )
-        : (imgNum == 1 && model.img1 == null) ||
-                (imgNum == 2 && model.img2 == null) ||
-                (imgNum == 3 && model.img3 == null)
-            ? AddImageButton(
-                onTap: () async {
-                  await model.selectImage(
-                      context: context,
-                      imgNum: imgNum,
-                      ratioX: width,
-                      ratioY: height);
-                },
-                iconSize: iconSize,
-                height: height,
-                width: width,
-              )
-            : CauseImgPreview(
-                onTap: () {
-                  print(1);
-                  model.selectImage(
-                      context: context,
-                      imgNum: imgNum,
-                      ratioX: width,
-                      ratioY: height);
-                  print(model.img2.runtimeType);
-                },
-                height: height,
-                width: width,
-                file: imgNum == 1 && model.img1Changed && model.img1 != null
-                    ? model.img1
-                    : imgNum == 2 && model.img2Changed && model.img2 != null
-                        ? model.img2
-                        : imgNum == 3 && model.img3Changed && model.img3 != null
-                            ? model.img3
-                            : null,
-                imgURL: imgNum == 1 && img1 != null
-                    ? img1.url
-                    : imgNum == 2 && img2 != null
-                        ? img2.url
-                        : imgNum == 3 && img3 != null
-                            ? img3.url
-                            : null,
-              );
+    return Stack(children: [
+      model.isEditing
+          ? CauseImgPreview(
+              onTap: () => model.selectImage(
+                  context: context,
+                  imgNum: imgNum,
+                  ratioX: width,
+                  ratioY: height),
+              height: height,
+              width: width,
+              imgURL: null,
+            )
+          : (imgNum == 1 && model.img1 == null) ||
+                  (imgNum == 2 && model.img2 == null) ||
+                  (imgNum == 3 && model.img3 == null)
+              ? AddImageButton(
+                  onTap: () async {
+                    await model.selectImage(
+                        context: context,
+                        imgNum: imgNum,
+                        ratioX: width,
+                        ratioY: height);
+                  },
+                  iconSize: iconSize,
+                  height: height,
+                  width: width,
+                )
+              : CauseImgPreview(
+                  onTap: () {
+                    print(1);
+                    model.selectImage(
+                        context: context,
+                        imgNum: imgNum,
+                        ratioX: width,
+                        ratioY: height);
+                    print(model.img2.runtimeType);
+                  },
+                  height: height,
+                  width: width,
+                  file: imgNum == 1 && model.img1Changed && model.img1 != null
+                      ? model.img1
+                      : imgNum == 2 && model.img2Changed && model.img2 != null
+                          ? model.img2
+                          : imgNum == 3 &&
+                                  model.img3Changed &&
+                                  model.img3 != null
+                              ? model.img3
+                              : null,
+                  imgURL: imgNum == 1 && img1 != null
+                      ? img1.url
+                      : imgNum == 2 && img2 != null
+                          ? img2.url
+                          : imgNum == 3 && img3 != null
+                              ? img3.url
+                              : null,
+                ),
+                //can only remove image 2 and 3, and only if their not alreayd null
+      (imgNum == 2 && model.img2 != null) || (imgNum == 2 && model.img2 != null)?
+      Padding(
+        padding: const EdgeInsets.only(bottom:48.0, left: 78.0),
+        child: Container(
+          height: 30,
+          width: 30,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom:8.0, left: 8.0),
+            child: FloatingActionButton(
+              backgroundColor: CustomColors.goGreen,
+                child: Icon(Icons.remove, color: Colors.white, size: 10,),
+                onPressed: () {
+                  if(imgNum == 2){
+                    model.img2 = null;
+                    model.notifyListeners();
+                  } else {
+                    model.img3 = null;
+                    model.notifyListeners();
+                  }
+                }),
+          ),
+        ),
+      ) :
+      Container()
+    ]);
   }
 
   Widget addImagesRow(BuildContext context, EditCauseViewModel model) {
@@ -295,7 +324,8 @@ class EditCauseView extends StatelessWidget {
             ),
             verticalSpaceMedium,
 
-            textFieldHeader("Youtube Link", "If you feel your cause would be supported by a short video on youtube, please link it here for display"),
+            textFieldHeader("Youtube Link",
+                "If you feel your cause would be supported by a short video on youtube, please link it here for display"),
             verticalSpaceSmall,
             singleLineTextField(
               controller: videoLinkController,
@@ -322,6 +352,8 @@ class EditCauseView extends StatelessWidget {
                   videoLink: videoLinkController.text.trim(),
                 );
                 if (formSuccess) {
+                  
+                  Navigator.pop(context);
                   model.displayCauseUploadSuccessBottomSheet();
                 }
               },

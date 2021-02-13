@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
@@ -23,6 +24,126 @@ class PostDataService {
       exists = true;
     }
     return exists;
+  }
+
+  Future updatePost({
+    String id,
+    String causeID,
+    String authorID,
+    String body,
+    dynamic image,
+    int dateCreatedInMilliseconds,
+    int commentCount,
+  }) async {
+    ///print("image runype === ");
+    //print(image.runtimeType);
+    GoForumPost post;
+    String url = "";
+    if (image.runtimeType == NetworkImage && image != null) {
+      GoForumPost currentPost = await getPostByID(id);
+      String h = currentPost.imageID;
+      post = GoForumPost(
+        id: id,
+        causeID: causeID,
+        authorID: authorID,
+        body: body,
+        imageID: h,
+        dateCreatedInMilliseconds: dateCreatedInMilliseconds,
+        commentCount: commentCount,
+      );
+    } else if (image.runtimeType != NetworkImage &&
+        image.runtimeType != Null &&
+        image != null) {
+      //see if you have to delete the old image
+
+      Future<Null> onError(error) async {
+        print("getting called");
+        await FirestoreImageUploader()
+            .uploadImage(
+                img: image,
+                storageBucket: 'posts',
+                folderName: causeID,
+                fileName: id)
+            .then((v) async {
+          print("WORKGIN");
+          url = await FirebaseStorage.instance
+              .ref('posts/$causeID/$id')
+              .getDownloadURL();
+          print(url);
+        }).then((value) {
+          post = GoForumPost(
+            id: id,
+            causeID: causeID,
+            authorID: authorID,
+            body: body,
+            imageID: url,
+            dateCreatedInMilliseconds: dateCreatedInMilliseconds,
+            commentCount: commentCount,
+          );
+        },).then((value) async {
+          await postRef.doc(post.id).set(post.toMap()).catchError((e) {
+            return e.message;
+          });
+        });
+      }
+      
+
+      onValue(String url) async {
+        print("incorrectly");
+        await FirebaseStorage.instance
+            .ref('posts/$causeID/$id')
+            .delete()
+            .then((d) async {
+          onError("");
+        });
+      }
+
+      if (image != null) {
+        await FirebaseStorage.instance
+            .ref('posts/$causeID/$id')
+            .getDownloadURL()
+            .then((f) async {
+          onValue(f);
+        }, onError: onError);
+
+        // url = await FirebaseStorage.instance
+        //     .ref('posts/$causeID/$id')
+        //     .getDownloadURL();
+
+        print(url);
+
+        post = GoForumPost(
+          id: id,
+          causeID: causeID,
+          authorID: authorID,
+          body: body,
+          imageID: url,
+          dateCreatedInMilliseconds: dateCreatedInMilliseconds,
+          commentCount: commentCount,
+        );
+      }
+    } else {
+      //this means its just null
+      await FirebaseStorage.instance
+          .ref('posts/$causeID/$id')
+          .delete()
+          .then((value) => null, onError: (object) {
+        print("nevermind");
+      });
+
+      post = GoForumPost(
+        id: id,
+        causeID: causeID,
+        authorID: authorID,
+        body: body,
+        imageID: "",
+        dateCreatedInMilliseconds: dateCreatedInMilliseconds,
+        commentCount: commentCount,
+      );
+    }
+    await postRef.doc(post.id).set(post.toMap()).catchError((e) {
+      return e.message;
+    });
   }
 
   Future createPost({
@@ -49,7 +170,6 @@ class PostDataService {
             .getDownloadURL();
       });
     }
-    
 
     GoForumPost post = GoForumPost(
       id: id,

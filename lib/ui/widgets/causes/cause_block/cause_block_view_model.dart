@@ -23,20 +23,28 @@ class CauseBlockViewModel extends BaseViewModel {
   bool isCreator = false;
   bool isLoading = true;
   List images = [];
+  String videoLink;
+  int orgLength = 0;
 
   initialize(String creatorID, List imageURLs) async {
     String currentUID = await _authService.getCurrentUserID();
     GoUser creator = await _userDataService.getGoUserByID(creatorID);
+
     if (currentUID == creatorID) {
       isCreator = true;
     }
     creatorUsername = "@" + creator.username;
     creatorProfilePicURL = creator.profilePicURL;
+
     imageURLs.forEach((url) {
       images.add(
         NetworkImage(url),
       );
+      orgLength++;
     });
+
+    //print(orgLength);
+
     isLoading = false;
     notifyListeners();
   }
@@ -49,7 +57,8 @@ class CauseBlockViewModel extends BaseViewModel {
     );
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
-      print(res);
+      print(cause.imageURLs);
+      //print(res);
       if (res == "edit") {
         if (isCreator) {
           _navigationService.navigateTo(Routes.EditCauseViewRoute, arguments: {
@@ -67,20 +76,28 @@ class CauseBlockViewModel extends BaseViewModel {
       } else if (res == "share") {
         if (isCreator) {
           //print(cause.id);
+          //redo the network images if theres a video
+          List imgs = [];
+          cause.imageURLs.forEach((url) {
+            imgs.add(
+              NetworkImage(url),
+            );
+            orgLength++;
+          });
+
           _navigationService.navigateTo(Routes.EditCauseViewRoute,
               arguments: EditCauseViewArguments(
-                causeID: cause.id,
-                name: cause.name,
-                goals: cause.goal,
-                who: cause.who,
-                why: cause.why,
-                charity: cause.charityURL,
-                resources: cause.resources,
-                img1: images[0],
-                img2: images.length > 1 ? images[1] : null,
-                img3: images.length > 2 ? images[2] : null,
-                videoLink: cause.videoLink
-              ));
+                  causeID: cause.id,
+                  name: cause.name,
+                  goals: cause.goal,
+                  who: cause.who,
+                  why: cause.why,
+                  charity: cause.charityURL,
+                  resources: cause.resources,
+                  img1: imgs[0],
+                  img2: imgs.length > 1 ? imgs[1] : null,
+                  img3: imgs.length > 2 ? imgs[2] : null,
+                  videoLink: cause.videoLink));
         }
         //share
       } else if (res == "report") {

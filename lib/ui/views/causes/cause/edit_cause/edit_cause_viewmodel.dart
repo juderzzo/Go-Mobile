@@ -15,6 +15,7 @@ import 'package:go/utils/string_validator.dart';
 import 'package:go/utils/url_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class EditCauseViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
@@ -56,9 +57,9 @@ class EditCauseViewModel extends BaseViewModel {
     } else if (StringValidator().isValidString(charityURL) &&
         !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
-    } else if (!UrlHandler().isValidUrl(videoLink) ||
-        !videoLink.contains("youtube")) {
-      formError = "Please Provide a valid youtube link";
+    } else if (
+        videoLink != null && YoutubePlayer.convertUrlToId(videoLink) == null ) {
+      formError = "Please provide a valid youtube link or leave the youtube field blank";
     }
     if (formError != null) {
       setBusy(false);

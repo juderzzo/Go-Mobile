@@ -121,7 +121,13 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
     return ViewModelBuilder<CauseViewModel>.reactive(
       onModelReady: (model) => model.initialize(context),
       viewModelBuilder: () => CauseViewModel(),
-      builder: (context, model, child) => Scaffold(
+      builder: (context, model, child) => 
+      OrientationBuilder(builder: (context, orientation){
+        if (orientation == Orientation.landscape && _tabController.index == 0){
+
+          return body(model);
+        } else {
+        return Scaffold(
         //appBar: GoAppBar().basicAppBar(title: "Title", showBackButton: true),
         body: Container(
           color: appBackgroundColor(),
@@ -140,7 +146,10 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
             ),
           ),
         ),
-      ),
+      );
+        }
+      },) 
+        
     );
   }
 }

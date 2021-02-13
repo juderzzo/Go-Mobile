@@ -29,6 +29,7 @@ class MultiLineTextField extends StatelessWidget {
           border: InputBorder.none,
           
         ),
+        enableInteractiveSelection: true,
       ),
     );
   }

@@ -32,6 +32,7 @@ class SingleLineTextField extends StatelessWidget {
           hintText: hintText,
           border: InputBorder.none,
         ),
+        enableInteractiveSelection: true,
       ),
     );
   }
