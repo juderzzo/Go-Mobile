@@ -50,7 +50,7 @@ class CreateForumPostViewModel extends BaseViewModel {
         //from above
         img = null;
       }
-      
+
       postTextController.text = originalPost.body;
       notifyListeners();
     }
@@ -88,7 +88,8 @@ class CreateForumPostViewModel extends BaseViewModel {
       } else {
         //first upload the images
         String id = getRandomString(35);
-
+        print("view model");
+        print(id);
         res = await _postDataService.createPost(
           id: id,
           causeID: causeID,

@@ -18,6 +18,7 @@ class GoUser {
   List followers;
   List liked;
   List blockedUsers;
+  List posts;
   int appOpenTimeInMilliseconds;
   String messageToken;
 
@@ -41,6 +42,7 @@ class GoUser {
     this.blockedUsers,
     this.appOpenTimeInMilliseconds,
     this.messageToken,
+    this.posts,
   });
 
   GoUser.fromMap(Map<String, dynamic> data)
@@ -64,6 +66,7 @@ class GoUser {
           blockedUsers: data['blockedUsers'],
           appOpenTimeInMilliseconds: data['appOpenTimeInMilliseconds'],
           messageToken: data['messageToken'],
+          posts: data['posts'],
         );
 
   Map<String, dynamic> toMap() => {
@@ -86,6 +89,7 @@ class GoUser {
         'liked': this.liked,
         'appOpenTimeInMilliseconds': this.appOpenTimeInMilliseconds,
         'messageToken': this.messageToken,
+        'posts': this.posts,
       };
 
   GoUser generateNewUser({

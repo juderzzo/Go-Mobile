@@ -162,7 +162,14 @@ class _ProfileViewState extends State<ProfileView>
       controller: _tabController,
       children: [
         Container(
-          child: ListView(shrinkWrap: true, children: loading ? loader : posts),
+          child: RefreshIndicator(
+              onRefresh: () async {
+                posts = [];
+                makeList();
+                await model.notifyListeners();
+              },
+              child: ListView(
+                  shrinkWrap: true, children: loading ? loader : posts)),
         ),
         ListCauses(
           refreshData: model.refreshCausesFollowing,
@@ -170,11 +177,16 @@ class _ProfileViewState extends State<ProfileView>
           pageStorageKey: PageStorageKey('profile-causes-following'),
           scrollController: null,
         ),
-        ListCauses(
-          refreshData: model.refreshCausesCreated,
-          causesResults: model.causesCreatedResults,
-          pageStorageKey: PageStorageKey('profile-causes-created'),
-          scrollController: null,
+        RefreshIndicator(
+          onRefresh: () async {
+            model.initialize(_tabController, user);
+            await model.notifyListeners();
+          },
+          child: ListView(
+            children: model.loadPosts().runtimeType == Null
+                ? loader
+                : model.loadPosts(),
+          ),
         ),
       ],
     );
@@ -201,7 +213,7 @@ class _ProfileViewState extends State<ProfileView>
           print("nullify");
           user.liked.removeAt(i);
           ProfileViewModel.updateLiked(user.id, user.liked);
-        } else if(u.runtimeType == GoForumPost && u != null){
+        } else if (u.runtimeType == GoForumPost && u != null) {
           posts.add(ForumPostBlockView(
             post: u,
             displayBottomBorder: (i != user.liked.length),

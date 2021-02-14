@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
+import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -14,6 +15,7 @@ class PostDataService {
   CollectionReference commentsRef =
       FirebaseFirestore.instance.collection("comments");
   SnackbarService _snackbarService = locator<SnackbarService>();
+  UserDataService _userDataService = locator<UserDataService>();
 
   Future checkIfPostExists(String id) async {
     bool exists = false;
@@ -70,23 +72,24 @@ class PostDataService {
               .ref('posts/$causeID/$id')
               .getDownloadURL();
           print(url);
-        }).then((value) {
-          post = GoForumPost(
-            id: id,
-            causeID: causeID,
-            authorID: authorID,
-            body: body,
-            imageID: url,
-            dateCreatedInMilliseconds: dateCreatedInMilliseconds,
-            commentCount: commentCount,
-          );
-        },).then((value) async {
+        }).then(
+          (value) {
+            post = GoForumPost(
+              id: id,
+              causeID: causeID,
+              authorID: authorID,
+              body: body,
+              imageID: url,
+              dateCreatedInMilliseconds: dateCreatedInMilliseconds,
+              commentCount: commentCount,
+            );
+          },
+        ).then((value) async {
           await postRef.doc(post.id).set(post.toMap()).catchError((e) {
             return e.message;
           });
         });
       }
-      
 
       onValue(String url) async {
         print("incorrectly");
@@ -183,6 +186,11 @@ class PostDataService {
     await postRef.doc(post.id).set(post.toMap()).catchError((e) {
       return e.message;
     });
+    print("post service");
+
+    await _userDataService.addPost(authorID, id).catchError((e) {
+      return e.message;
+    });
   }
 
   Future getPostByID(String id) async {
@@ -214,6 +222,7 @@ class PostDataService {
 
     await commentsRef.doc(id).delete();
     await postRef.doc(id).delete();
+    await _userDataService.removePost(post.authorID, post.id);
   }
 
   ///QUERIES
@@ -239,6 +248,36 @@ class PostDataService {
       docs = snapshot.docs;
     }
     return docs;
+  }
+
+  Future<List> loadPostsByUser(
+    String id,
+  ) async {
+    List ans = [];
+    Query query;
+
+    query = postRef
+        .where('authorID', isEqualTo: id)
+        .orderBy('dateCreatedInMilliseconds', descending: true);
+
+    QuerySnapshot snapshot = await query.get();
+    print(snapshot.docs.length);
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      //turn everything to a post and add it to the list
+      GoForumPost post = GoForumPost(
+          id: snapshot.docs[i].data()['id'],
+          causeID: snapshot.docs[i].data()['causeID'],
+          authorID: id,
+          dateCreatedInMilliseconds:
+              snapshot.docs[i].data()['dateCreatedInMilliseconds'],
+          body: snapshot.docs[i].data()['body'],
+          commentCount: snapshot.docs[i].data()['commentCount'],
+          imageID: snapshot.docs[i].data()['imageID']);
+
+      ans.add(post);
+    }
+
+    return ans;
   }
 
   //Load Additional Causes by Follower Count

@@ -8,6 +8,7 @@ import 'package:go/models/go_user_model.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -34,6 +35,8 @@ class ProfileViewModel extends BaseViewModel {
   List<DocumentSnapshot> causesCreatedResults = [];
   bool loadingAdditionalCausesCreated = false;
   bool moreCausesCreatedAvailable = true;
+  List<Widget> posts = [];
+  PostDataService _postDataService = locator<PostDataService>();
 
   int resultsLimit = 15;
 
@@ -53,6 +56,8 @@ class ProfileViewModel extends BaseViewModel {
     });
     //notifyListeners();
     await loadData();
+    posts = [];
+    loadPostsInitial();
     setBusy(false);
   }
 
@@ -60,6 +65,21 @@ class ProfileViewModel extends BaseViewModel {
   loadData() async {
     await loadCausesFollowing();
     await loadCausesCreated();
+  }
+
+  loadPostsInitial() async {
+    List p = await _postDataService.loadPostsByUser(user.id);
+    for (GoForumPost i in p) {
+      posts.add(new ForumPostBlockView(
+        post: i,
+        displayBottomBorder: true,
+      ));
+    }
+    print(posts.toString());
+  }
+
+  loadPosts() {
+    return posts;
   }
 
   ///REFRESH CAUSES FOLLOWING

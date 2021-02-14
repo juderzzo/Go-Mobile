@@ -203,7 +203,7 @@ class GoProfileTabBar extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "My Causes",
+                  "Posts",
                   style: TextStyle(fontWeight: fontWeight),
                 ),
               ),
@@ -282,7 +282,7 @@ class GoProfilePageTabBar extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "My Causes",
+                  "Posts",
                   style: TextStyle(fontWeight: fontWeight),
                 ),
               ),

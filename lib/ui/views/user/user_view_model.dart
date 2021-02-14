@@ -3,9 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
+import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
+import 'package:http/http.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -18,6 +22,7 @@ class UserViewModel extends BaseViewModel {
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
   UserDataService _userDataService = locator<UserDataService>();
+  PostDataService _postDataService = locator<PostDataService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
@@ -27,6 +32,7 @@ class UserViewModel extends BaseViewModel {
 
   ///DATA RESULTS
   List<DocumentSnapshot> causesFollowingResults = [];
+  List<Widget> posts = [];
   bool loadingAdditionalCausesFollowing = false;
   bool moreCausesFollowingAvailable = true;
   bool isFollowing = false;
@@ -34,6 +40,7 @@ class UserViewModel extends BaseViewModel {
   List<DocumentSnapshot> causesCreatedResults = [];
   bool loadingAdditionalCausesCreated = false;
   bool moreCausesCreatedAvailable = true;
+  int postCounter = 0;
 
   int resultsLimit = 15;
 
@@ -57,7 +64,9 @@ class UserViewModel extends BaseViewModel {
       }
     });
     notifyListeners();
+    posts = [];
     await loadData();
+    loadPostsInitial();
 
     setBusy(false);
   }
@@ -94,6 +103,21 @@ class UserViewModel extends BaseViewModel {
       uid: user.id,
     );
     notifyListeners();
+  }
+
+  loadPostsInitial() async {
+    List p = await _postDataService.loadPostsByUser(user.id);
+    for (GoForumPost i in p) {
+      posts.add(new ForumPostBlockView(
+        post: i,
+        displayBottomBorder: true,
+      ));
+    }
+    print(posts.toString());
+  }
+
+  loadPosts() {
+    return posts;
   }
 
   ///LOAD CAUSES CREATED

@@ -85,6 +85,19 @@ class UserDataService {
     return user;
   }
 
+  Future addPost(String id, String postID) async {
+    print("user service");
+    GoUser user = await getGoUserByID(id);
+    user.posts.add(postID);
+    updateGoUser(user);
+  }
+
+  Future removePost(String id, String postID) async {
+    GoUser user = await getGoUserByID(id);
+    user.posts.remove(postID);
+    updateGoUser(user);
+  }
+
   Future updateGoUser(GoUser user) async {
     await userRef.doc(user.id).update(user.toMap()).catchError((e) {
       return e.message;
@@ -304,8 +317,6 @@ class UserDataService {
     } else {
       liked.add(postID);
     }
-    userRef.doc(id).update({
-      'liked': liked
-    });
+    userRef.doc(id).update({'liked': liked});
   }
 }

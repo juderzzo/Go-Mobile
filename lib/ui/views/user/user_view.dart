@@ -11,6 +11,7 @@ import 'package:go/ui/widgets/user/follow_stats_row.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
+import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
 
 class UserView extends StatefulWidget {
   @override
@@ -20,6 +21,9 @@ class UserView extends StatefulWidget {
 class _UserViewState extends State<UserView>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  List postFutures = [];
+  List<Widget> posts = [];
+  bool loading = true;
 
   Widget head(BuildContext context, UserViewModel model) {
     return Container(
@@ -148,12 +152,28 @@ class _UserViewState extends State<UserView>
           pageStorageKey: PageStorageKey('user-causes-following'),
           scrollController: null,
         ),
-        ListCauses(
-          refreshData: model.refreshCausesCreated,
-          causesResults: model.causesCreatedResults,
-          pageStorageKey: PageStorageKey('user-causes-created'),
-          scrollController: null,
-        ),
+        RefreshIndicator(
+          onRefresh: () async {
+            posts = [];
+            model.initialize(_tabController, context);
+            await model.notifyListeners();
+          },
+          child: ListView(
+            children: model.loadPosts().runtimeType == Null
+                ? [
+                    Container(
+                      child: CircularProgressIndicator(),
+                    )
+                  ]
+                : model.loadPosts(),
+          ),
+        )
+        // ListCauses(
+        //   refreshData: model.refreshCausesCreated,
+        //   causesResults: model.causesCreatedResults,
+        //   pageStorageKey: PageStorageKey('user-causes-created'),
+        //   scrollController: null,
+        // ),
       ],
     );
   }
@@ -180,7 +200,6 @@ class _UserViewState extends State<UserView>
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
       onModelReady: (model) {
-        
         model.initialize(_tabController, context);
       },
       viewModelBuilder: () => UserViewModel(),
