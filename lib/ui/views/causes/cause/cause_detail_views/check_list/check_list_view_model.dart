@@ -1,3 +1,4 @@
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/services/auth/auth_service.dart';
@@ -14,9 +15,20 @@ class CheckListViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
   UserDataService _userService = locator<UserDataService>();
+  RewardedVideoAd adInstance = RewardedVideoAd.instance;
 
-  
-
+  initialize() {
+    //GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = @[kGADSimulatorID];
+    setBusy(true);
+    adInstance
+        .load(
+      adUnitId: 'ca-app-pub-9312496461922231/3137448396',
+    )
+        .then((value) {
+      print(value);
+      setBusy(false);
+    });
+  }
 
   Future<String> userID() async {
     return await _authService.getCurrentUserID();
@@ -43,9 +55,17 @@ class CheckListViewModel extends BaseViewModel {
     return strings;
   }
 
-  navigateToEdit(actions, creatorID, currentUID, name, causeID, headers, subheaders) {
-    _navigationService.navigateTo(Routes.EditChecklistView, arguments: EditChecklistViewArguments(arguments: 
-    [actions, creatorID, currentUID, name, causeID, headers, subheaders])
-    );
+  navigateToEdit(
+      actions, creatorID, currentUID, name, causeID, headers, subheaders) {
+    _navigationService.navigateTo(Routes.EditChecklistView,
+        arguments: EditChecklistViewArguments(arguments: [
+          actions,
+          creatorID,
+          currentUID,
+          name,
+          causeID,
+          headers,
+          subheaders
+        ]));
   }
 }

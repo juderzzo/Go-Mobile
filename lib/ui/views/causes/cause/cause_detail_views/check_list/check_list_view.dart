@@ -3,8 +3,10 @@ import 'package:flutter/semantics.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view_model.dart';
+import 'package:go/ui/widgets/busy_button.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/causes/cause_check_list_item.dart';
+import 'package:go/ui/widgets/common/text_field/text_field_header.dart';
 import 'package:stacked/stacked.dart';
 import 'dart:async';
 
@@ -61,6 +63,35 @@ class _CheckListViewState extends State<CheckListView> {
 
   bool parseBool(string) {
     return string.toLowerCase() == 'true';
+  }
+
+  Widget monetization(model) {
+    return Column(
+      // ans.add(Text("Monitize"));
+      // ans.add(FlatButton(
+      //     onPressed: () {
+      //       model.adInstance.show();
+      //     },
+      //     child: Text("Ad")));
+      children: [
+        textFieldHeader(
+          "Monetization",
+          "This cause has been monitized. Each time you choose to watch an ad, a large portion of the precedings are donated to supporting that cause directly. Click on the button below to raise money.",
+        ),
+        verticalSpaceSmall,
+        BusyButton(
+            title: "Watch Ad",
+            onPressed: () async {
+              await model.adInstance.show().then((value) {
+                print(value);
+                print("horray");
+                model.setBusy(true);
+                model.initialize();
+                model.setBusy(false);
+              });
+            })
+      ],
+    );
   }
 
   List<Widget> generateChecklist(model, fut) {
@@ -171,7 +202,17 @@ class _CheckListViewState extends State<CheckListView> {
 
     ans.add(verticalSpaceMedium);
     ans.add(verticalSpaceLarge);
+    ans.add(monetization(model));
+
+    // ans.add(Text("Monitize"));
+    // ans.add(FlatButton(
+    //     onPressed: () {
+    //       model.adInstance.show();
+    //     },
+    //     child: Text("Ad")));
+
     ans.add(verticalSpaceLarge);
+
     creatorId == currentUID
         ? ans.add(CustomButton(
             text: "Edit Checklist",
@@ -226,6 +267,7 @@ class _CheckListViewState extends State<CheckListView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CheckListViewModel>.nonReactive(
       viewModelBuilder: () => CheckListViewModel(),
+      onModelReady: (model) => model.initialize(),
       createNewModelOnInsert: true,
       builder: (context, model, child) => Container(
         child: checkListItems(model, actionFutures),

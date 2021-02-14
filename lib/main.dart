@@ -1,3 +1,4 @@
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/router.gr.dart';
@@ -13,6 +14,8 @@ void main() async {
   await ThemeManager.initialise();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-9312496461922231~5212290852');
+
   setupLocator();
   setupBottomSheetUI();
   setupSnackBarUi();
