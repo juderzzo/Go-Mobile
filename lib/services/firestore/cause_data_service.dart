@@ -103,7 +103,7 @@ class CauseDataService {
   }
 
   Future editCause(
-      String causeID,
+      {String causeID,
       String name,
       String goal,
       String why,
@@ -111,14 +111,14 @@ class CauseDataService {
       String resources,
       String charityURL,
       String videoLink,
-      img1,
-      img2,
-      img3,
+      dynamic img1,
+      dynamic img2,
+      dynamic img3,
       bool monetized,
       bool img1Changed,
       bool img2Changed,
-      bool img3Changed) async {
-    print("1");
+      bool img3Changed}) async {
+    //print("1");
     DocumentReference cause = causeRef.doc(causeID);
     //print(cause);
 

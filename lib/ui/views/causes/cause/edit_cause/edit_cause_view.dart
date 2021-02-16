@@ -56,11 +56,12 @@ class EditCauseView extends StatelessWidget {
     //print(this.causeID);
     nameController.text = name;
     goalsController.text = goals;
-    whoController.text = why;
-    whyController.text = who;
+    whoController.text = who;
+    whyController.text = why;
     resourcesController.text = resources;
     charityWebsiteController.text = charity;
     videoLinkController.text = videoLink;
+
   }
 
   Widget textFieldHeader(String header, String subHeader) {

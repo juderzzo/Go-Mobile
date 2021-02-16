@@ -38,6 +38,8 @@
 	<string>222465742607799</string>
 	<key>FacebookDisplayName</key>
 	<string>Go!</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-9312496461922231~5212290852</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -99,14 +101,5 @@
 	<true/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>This will allow you to access your music library to use in Go!</string>
-
-	
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-9312496461922231~5212290852</string>
-	
-
-
-	
-
 </dict>
 </plist>

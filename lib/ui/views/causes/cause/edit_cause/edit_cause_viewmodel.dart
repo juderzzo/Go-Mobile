@@ -80,25 +80,25 @@ class EditCauseViewModel extends BaseViewModel {
       //create the initial 3 actions
 
       var res = await _causeDataService.editCause(
-          causeID,
-          name,
-          goal,
-          why,
-          who,
-          resources,
-          charityURL,
-          videoLink,
+          causeID: causeID,
+          name: name,
+          goal: goal,
+          why: why,
+          who: who,
+          resources: resources,
+          charityURL: charityURL,
+          videoLink: videoLink,
           
 
           //link each checklist item to their id in the cause functionality
 
-          img1,
-          img2,
-          img3,
-          monetized,
-          img1Changed,
-          img2Changed,
-          img3Changed);
+          img1: img1,
+          img2: img2,
+          img3: img3,
+          monetized: monetized,
+          img1Changed: img1Changed,
+          img2Changed: img2Changed,
+          img3Changed: img3Changed);
 
       //now push each of the checklistItems referecne
 
