@@ -48,25 +48,27 @@ class CauseDataService {
     File img2,
     File img3,
     String videoLink,
+    bool monetized,
   }) async {
     GoCause cause = GoCause(
-      id: getRandomString(35),
-      creatorID: creatorID,
-      dateCreatedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-      name: name,
-      goal: goal,
-      why: why,
-      who: who,
-      resources: resources,
-      charityURL: charityURL,
-      actions: actions,
-      actionDescriptions: actionDescriptions,
-      imageURLs: [],
-      followers: [creatorID],
-      followerCount: 1,
-      forumPostCount: 0,
-      videoLink: videoLink
-    );
+        id: getRandomString(35),
+        creatorID: creatorID,
+        dateCreatedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+        name: name,
+        goal: goal,
+        why: why,
+        who: who,
+        resources: resources,
+        charityURL: charityURL,
+        actions: actions,
+        actionDescriptions: actionDescriptions,
+        imageURLs: [],
+        followers: [creatorID],
+        followerCount: 1,
+        forumPostCount: 0,
+        videoLink: videoLink,
+        monetized: monetized,
+        revenue: 0);
 
     if (img1 != null) {
       String imgURL = await FirestoreImageUploader().uploadImage(
@@ -112,6 +114,7 @@ class CauseDataService {
       img1,
       img2,
       img3,
+      bool monetized,
       bool img1Changed,
       bool img2Changed,
       bool img3Changed) async {
@@ -188,6 +191,7 @@ class CauseDataService {
         "resources": resources,
         "charityURL": charityURL,
         "videoLink": videoLink,
+        "monetized": monetized,
       });
     } else {
       cause.update({
@@ -198,6 +202,7 @@ class CauseDataService {
         "charityURL": charityURL,
         "imageURLs": newImageURLs,
         "videoLink": videoLink,
+        "monetized": monetized
       });
     }
   }
@@ -212,6 +217,12 @@ class CauseDataService {
       cause = GoCause.fromMap(snapshotData);
     }
     return cause;
+  }
+
+  Future addView(String causeID) async {
+    DocumentReference cause = causeRef.doc(causeID);
+    GoCause rev = await getCauseByID(causeID);
+    cause.update({"revenue": rev.revenue + 1});
   }
 
   Future followUnfollowCause(String causeID, String uid) async {

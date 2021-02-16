@@ -154,6 +154,7 @@ class GoRouter extends RouterBase {
           img2: args.img2,
           img3: args.img3,
           videoLink: args.videoLink,
+          monetized: args.monetized,
         ),
         settings: data,
       );
@@ -244,6 +245,7 @@ class EditCauseViewArguments {
   final dynamic img2;
   final dynamic img3;
   final String videoLink;
+  final bool monetized;
   EditCauseViewArguments(
       {this.causeID,
       this.name,
@@ -255,7 +257,8 @@ class EditCauseViewArguments {
       this.img1,
       this.img2,
       this.img3,
-      this.videoLink});
+      this.videoLink,
+      this.monetized});
 }
 
 /// EditChecklistView arguments holder class

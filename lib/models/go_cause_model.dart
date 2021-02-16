@@ -15,6 +15,8 @@ class GoCause {
   int followerCount;
   int forumPostCount;
   String videoLink;
+  bool monetized;
+  int revenue;
 
   GoCause({
     this.id,
@@ -33,27 +35,30 @@ class GoCause {
     this.followerCount,
     this.forumPostCount,
     this.videoLink,
+    this.monetized,
+    this.revenue,
   });
 
   GoCause.fromMap(Map<String, dynamic> data)
       : this(
-          id: data['id'],
-          creatorID: data['creatorID'],
-          dateCreatedInMilliseconds: data['dateCreatedInMilliseconds'],
-          name: data['name'],
-          goal: data['goal'],
-          why: data['why'],
-          who: data['who'],
-          resources: data['resources'],
-          charityURL: data['charityURL'],
-          imageURLs: data['imageURLs'],
-          actions: data['actions'],
-          followers: data['followers'],
-          followerCount: data['followerCount'],
-          forumPostCount: data['forumPostCount'],
-          actionDescriptions: data['actionDescriptions'],
-          videoLink: data['videoLink']
-        );
+            id: data['id'],
+            creatorID: data['creatorID'],
+            dateCreatedInMilliseconds: data['dateCreatedInMilliseconds'],
+            name: data['name'],
+            goal: data['goal'],
+            why: data['why'],
+            who: data['who'],
+            resources: data['resources'],
+            charityURL: data['charityURL'],
+            imageURLs: data['imageURLs'],
+            actions: data['actions'],
+            followers: data['followers'],
+            followerCount: data['followerCount'],
+            forumPostCount: data['forumPostCount'],
+            actionDescriptions: data['actionDescriptions'],
+            videoLink: data['videoLink'],
+            monetized: data['monetized'],
+            revenue: data['revenue']);
 
   Map<String, dynamic> toMap() => {
         'id': this.id,
@@ -71,7 +76,9 @@ class GoCause {
         'followerCount': this.followerCount,
         'forumPostCount': this.forumPostCount,
         'actionDescriptions': this.actionDescriptions,
-        'videoLink': this.videoLink
+        'videoLink': this.videoLink,
+        'monetized': this.monetized,
+        'revenue': this.revenue
       };
 
   GoCause generateDummyCause(String id) {

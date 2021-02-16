@@ -1,4 +1,5 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
@@ -10,6 +11,8 @@ import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:stacked/stacked.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:go/utils/url_handler.dart';
+
 
 class AboutView extends StatelessWidget {
   final GoCause cause;
@@ -144,7 +147,8 @@ class AboutView extends StatelessWidget {
     );
   }
 
-  Widget causeDetails(AboutViewModel model) {
+  Widget causeDetails(AboutViewModel model, BuildContext context) {
+    String url = cause.charityURL;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Column(
@@ -188,6 +192,22 @@ class AboutView extends StatelessWidget {
             fontWeight: FontWeight.w400,
             color: appFontColor(),
           ),
+
+          CustomText(
+            text: cause.charityURL.length > 1 ? "Donate!" : " ",
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: appFontColor(),
+          ),
+
+          url.length > 5 ? 
+          RichText(
+            text: TextSpan(
+              text: '$url',
+              style: TextStyle(color: Colors.blue),
+              recognizer: TapGestureRecognizer()..onTap = () => UrlHandler().launchInWebViewOrVC(context, "$url"),
+            ) ): Container(),
+          
           verticalSpaceMedium,
         ],
       ),
@@ -228,7 +248,7 @@ class AboutView extends StatelessWidget {
                 causeImages(model, orientation),
                 SizedBox(height: 10,),
                 causeFollowers(context),
-                causeDetails(model),
+                causeDetails(model, context),
                 causeCreator(context),
               ],
             ),

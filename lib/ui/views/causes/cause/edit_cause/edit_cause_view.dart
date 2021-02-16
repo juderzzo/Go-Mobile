@@ -28,6 +28,7 @@ class EditCauseView extends StatelessWidget {
   dynamic img1;
   dynamic img2;
   dynamic img3;
+  bool monetized;
 
   final nameController = TextEditingController();
   final goalsController = TextEditingController();
@@ -48,7 +49,8 @@ class EditCauseView extends StatelessWidget {
       this.img1,
       this.img2,
       this.img3,
-      this.videoLink});
+      this.videoLink,
+      this.monetized});
 
   Void initialize() {
     //print(this.causeID);
@@ -185,31 +187,35 @@ class EditCauseView extends StatelessWidget {
                               ? img3.url
                               : null,
                 ),
-                //can only remove image 2 and 3, and only if their not alreayd null
-      (imgNum == 2 && model.img2 != null) || (imgNum == 2 && model.img2 != null)?
-      Padding(
-        padding: const EdgeInsets.only(bottom:48.0, left: 78.0),
-        child: Container(
-          height: 30,
-          width: 30,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom:8.0, left: 8.0),
-            child: FloatingActionButton(
-              backgroundColor: CustomColors.goGreen,
-                child: Icon(Icons.remove, color: Colors.white, size: 10,),
-                onPressed: () {
-                  if(imgNum == 2){
-                    model.img2 = null;
-                    model.notifyListeners();
-                  } else {
-                    model.img3 = null;
-                    model.notifyListeners();
-                  }
-                }),
-          ),
-        ),
-      ) :
-      Container()
+      //can only remove image 2 and 3, and only if their not alreayd null
+      (imgNum == 2 && model.img2 != null) || (imgNum == 2 && model.img2 != null)
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 48.0, left: 78.0),
+              child: Container(
+                height: 30,
+                width: 30,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0, left: 8.0),
+                  child: FloatingActionButton(
+                      backgroundColor: CustomColors.goGreen,
+                      child: Icon(
+                        Icons.remove,
+                        color: Colors.white,
+                        size: 10,
+                      ),
+                      onPressed: () {
+                        if (imgNum == 2) {
+                          model.img2 = null;
+                          model.notifyListeners();
+                        } else {
+                          model.img3 = null;
+                          model.notifyListeners();
+                        }
+                      }),
+                ),
+              ),
+            )
+          : Container()
     ]);
   }
 
@@ -317,23 +323,54 @@ class EditCauseView extends StatelessWidget {
             verticalSpaceMedium,
 
             ///CAUSE TASKS
-            textFieldHeader(
-              "Actions!",
-              "To add actions, go to 'Edit Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
-                  "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
-            ),
-            verticalSpaceMedium,
+           textFieldHeader(
+            "Youtube Link",
+            "If you feel your cause would be supported by a short video on youtube, please link it here for display",
+          ),
+          verticalSpaceSmall,
+          singleLineTextField(
+            controller: videoLinkController,
+            hintText: "https://youtube.com/...",
+          ),
 
-            textFieldHeader("Youtube Link",
-                "If you feel your cause would be supported by a short video on youtube, please link it here for display"),
-            verticalSpaceSmall,
-            singleLineTextField(
-              controller: videoLinkController,
-              hintText: "https://youtube.com/...",
-            ),
-            verticalSpaceMedium,
+          verticalSpaceMedium,
 
-            verticalSpaceLarge,
+          textFieldHeader(
+            "Monetization",
+            "If you would like to monetize your cause by allowing users to watch advertisements, turn the switch to on",
+          ),
+
+          verticalSpaceSmall,
+
+          Container(
+           // width: MediaQuery.of(context).size.width * 2/4,
+           width: 200.0,
+            child: Switch(
+                value: monetized,
+                onChanged: (val) {
+                  print("yay");
+                  monetized = !monetized;
+                  model.notifyListeners();
+                }),
+          ),
+
+
+          verticalSpaceMedium,
+
+          monetized ? Center(child: Text("On", style: TextStyle(color: CustomColors.goGreen, fontSize: 20, fontWeight: FontWeight.bold))) 
+          : 
+          Center(child: Text("Off", style: TextStyle(color: Colors.grey, fontSize: 20),), ),
+
+          verticalSpaceLarge,
+
+          textFieldHeader(
+            "Actions!",
+            "To add actions, go to 'Edit Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
+                "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
+          ),
+          verticalSpaceMedium,
+
+          verticalSpaceLarge,
             CustomButton(
               height: 48,
               backgroundColor: CustomColors.goGreen,
@@ -350,9 +387,9 @@ class EditCauseView extends StatelessWidget {
                   resources: resourcesController.text.trim(),
                   charityURL: charityWebsiteController.text.trim(),
                   videoLink: videoLinkController.text.trim(),
+                  monetized: monetized
                 );
                 if (formSuccess) {
-                  
                   Navigator.pop(context);
                   model.displayCauseUploadSuccessBottomSheet();
                 }

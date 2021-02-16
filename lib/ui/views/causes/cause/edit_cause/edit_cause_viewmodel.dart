@@ -43,9 +43,13 @@ class EditCauseViewModel extends BaseViewModel {
     String resources,
     String charityURL,
     String videoLink,
+    bool monetized,
   }) async {
     String formError;
     setBusy(true);
+    if (videoLink.length < 2) {
+      videoLink = null;
+    }
     if (!StringValidator().isValidString(name)) {
       formError = "Cause Name Required";
     } else if (!StringValidator().isValidString(goal)) {
@@ -57,9 +61,12 @@ class EditCauseViewModel extends BaseViewModel {
     } else if (StringValidator().isValidString(charityURL) &&
         !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
-    } else if (
-        videoLink != null && YoutubePlayer.convertUrlToId(videoLink) == null ) {
-      formError = "Please provide a valid youtube link or leave the youtube field blank";
+    } else if (videoLink != null && !(videoLink.length < 2)) {
+      print(videoLink.length);
+      if (YoutubePlayer.convertUrlToId(videoLink) == null) {
+        formError =
+            "Please provide a valid youtube link or leave the field blank";
+      }
     }
     if (formError != null) {
       setBusy(false);
@@ -81,11 +88,14 @@ class EditCauseViewModel extends BaseViewModel {
           resources,
           charityURL,
           videoLink,
+          
+
           //link each checklist item to their id in the cause functionality
 
           img1,
           img2,
           img3,
+          monetized,
           img1Changed,
           img2Changed,
           img3Changed);

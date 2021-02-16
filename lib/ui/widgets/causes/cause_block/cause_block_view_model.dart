@@ -97,7 +97,9 @@ class CauseBlockViewModel extends BaseViewModel {
                   img1: imgs[0],
                   img2: imgs.length > 1 ? imgs[1] : null,
                   img3: imgs.length > 2 ? imgs[2] : null,
-                  videoLink: cause.videoLink));
+                  videoLink: cause.videoLink,
+                  monetized: cause.monetized
+                  ));
         }
         //share
       } else if (res == "report") {
@@ -110,14 +112,14 @@ class CauseBlockViewModel extends BaseViewModel {
                     content:
                         Text("Are you sure you want to delete this cause?"),
                     actions: [
-                      FlatButton(
+                      TextButton(
                           onPressed: () {
                             Navigator.pop(context, true);
                           },
                           child: Text(
                             "No",
                           )),
-                      FlatButton(
+                      TextButton(
                           onPressed: () {
                             _causeDataService.deleteCause(id);
                             Navigator.pop(context, true);

@@ -19,6 +19,7 @@ class CreateCauseView extends StatelessWidget {
   final resourcesController = TextEditingController();
   final charityWebsiteController = TextEditingController();
   final videoLinkController = TextEditingController();
+  bool value = false;
 
   Widget textFieldHeader(String header, String subHeader) {
     return Container(
@@ -137,6 +138,7 @@ class CreateCauseView extends StatelessWidget {
   }
 
   Widget form(BuildContext context, CreateCauseViewModel model) {
+    
     return Container(
       child: ListView(
         shrinkWrap: true,
@@ -227,12 +229,6 @@ class CreateCauseView extends StatelessWidget {
           verticalSpaceMedium,
 
           ///CAUSE TASKS
-          textFieldHeader(
-            "Actions!",
-            "To add actions, go to 'Edit Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
-                "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
-          ),
-          verticalSpaceMedium,
 
           textFieldHeader(
             "Youtube Link",
@@ -243,6 +239,43 @@ class CreateCauseView extends StatelessWidget {
             controller: videoLinkController,
             hintText: "https://youtube.com/...",
           ),
+
+          verticalSpaceMedium,
+
+          textFieldHeader(
+            "Monetization",
+            "If you would like to monetize your cause by allowing users to watch advertisements, turn the switch to on",
+          ),
+
+          verticalSpaceSmall,
+
+          Container(
+           // width: MediaQuery.of(context).size.width * 2/4,
+           width: 200.0,
+            child: Switch(
+                value: value,
+                onChanged: (val) {
+                  print("yay");
+                  value = !value;
+                  model.notifyListeners();
+                }),
+          ),
+
+
+          verticalSpaceMedium,
+
+          value ? Center(child: Text("On", style: TextStyle(color: CustomColors.goGreen, fontSize: 20, fontWeight: FontWeight.bold))) 
+          : 
+          Center(child: Text("Off", style: TextStyle(color: Colors.grey, fontSize: 20),), ),
+
+          verticalSpaceLarge,
+
+          textFieldHeader(
+            "Actions!",
+            "To add actions, go to 'Edit Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
+                "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media)",
+          ),
+          verticalSpaceMedium,
 
           verticalSpaceLarge,
           CustomButton(
@@ -260,6 +293,7 @@ class CreateCauseView extends StatelessWidget {
                 resources: resourcesController.text.trim(),
                 charityURL: charityWebsiteController.text.trim(),
                 videoLink: videoLinkController.text.trim(),
+                monetized: value
               );
               if (formSuccess) {
                 model.displayCauseUploadSuccessBottomSheet();

@@ -1,6 +1,7 @@
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
+import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
@@ -16,18 +17,45 @@ class CheckListViewModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
   UserDataService _userService = locator<UserDataService>();
   RewardedVideoAd adInstance = RewardedVideoAd.instance;
+  bool monetizer = false;
+  bool bus = false;
+  bool working;
 
-  initialize() {
+  initialize(id) async {
+    working = false;
+    print(busy("f"));
+    monetizer = await monetized(id);
     //GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = @[kGADSimulatorID];
     setBusy(true);
+    notifyListeners();
     adInstance
         .load(
       adUnitId: 'ca-app-pub-9312496461922231/3137448396',
     )
         .then((value) {
-      print(value);
+      print("new ad loaded");
       setBusy(false);
     });
+
+    RewardedVideoAd.instance.listener =
+        (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
+      if (event == RewardedVideoAdEvent.rewarded) {
+        {
+          print("rewarded");
+          // Here, apps should update state to reflect the reward.
+          _causeDataService.addView(id);
+          adInstance.load(
+            adUnitId: 'ca-app-pub-9312496461922231/3137448396',
+          );
+        }
+        ;
+      }
+    };
+  }
+
+  Future<bool> monetized(id) async {
+    GoCause cause = await _causeDataService.getCauseByID(id);
+    return cause.monetized;
   }
 
   Future<String> userID() async {
@@ -53,6 +81,41 @@ class CheckListViewModel extends BaseViewModel {
       strings.add('false');
     }
     return strings;
+  }
+
+  busyButton(bool g) {
+    bus = g;
+  }
+
+  playAd(causeID) async {
+    busyButton(true);
+    print("trying");
+    
+    notifyListeners();
+    
+
+    adInstance
+        .load(
+      adUnitId: 'ca-app-pub-9312496461922231/3137448396',
+    )
+        .then(
+      (value) {
+        print("new ad loaded");
+        
+          adInstance.show().then((value) {
+            print(value);
+            print("horray");
+            
+
+            busyButton(false);
+            notifyListeners();
+          }, onError: (object) {
+            playAd(causeID);
+          });
+        
+      },
+    );
+    
   }
 
   navigateToEdit(

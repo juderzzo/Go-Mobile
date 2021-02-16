@@ -38,8 +38,12 @@ class CreateCauseViewModel extends BaseViewModel {
       String who,
       String resources,
       String charityURL,
-      String videoLink}) async {
+      String videoLink,
+      bool monetized}) async {
     String formError;
+    if (videoLink.length < 2) {
+      videoLink = null;
+    }
     setBusy(true);
     if (!StringValidator().isValidString(name)) {
       formError = "Cause Name Required";
@@ -52,8 +56,12 @@ class CreateCauseViewModel extends BaseViewModel {
     } else if (StringValidator().isValidString(charityURL) &&
         !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
-    } else if (videoLink != null && YoutubePlayer.convertUrlToId(videoLink) == null ) {
-      formError = "Please provide a valid youtube link or leave the field blank";
+    } else if (videoLink != null && !(videoLink.length < 2)) {
+      print(videoLink.length);
+      if (YoutubePlayer.convertUrlToId(videoLink) == null) {
+        formError =
+            "Please provide a valid youtube link or leave the field blank";
+      }
     }
     if (formError != null) {
       setBusy(false);
@@ -69,21 +77,20 @@ class CreateCauseViewModel extends BaseViewModel {
       //create the initial 3 actions
 
       var res = await _causeDataService.createCause(
-        creatorID: creatorID,
-        name: name,
-        goal: goal,
-        why: why,
-        who: who,
-        resources: resources,
-        charityURL: charityURL,
-        //link each checklist item to their id in the cause functionality
-        actions: [],
-
-        img1: img1,
-        img2: img2,
-        img3: img3,
-        videoLink: videoLink
-      );
+          creatorID: creatorID,
+          name: name,
+          goal: goal,
+          why: why,
+          who: who,
+          resources: resources,
+          charityURL: charityURL,
+          //link each checklist item to their id in the cause functionality
+          actions: [],
+          monetized: monetized,
+          img1: img1,
+          img2: img2,
+          img3: img3,
+          videoLink: videoLink);
 
       //now push each of the checklistItems referecne
 
@@ -96,6 +103,7 @@ class CreateCauseViewModel extends BaseViewModel {
         );
         return false;
       } else {
+        pushAndReplaceUntilHomeNavView();
         return true;
       }
     }

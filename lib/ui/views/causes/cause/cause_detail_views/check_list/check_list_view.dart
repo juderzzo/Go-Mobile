@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:go/constants/app_colors.dart';
@@ -73,24 +75,21 @@ class _CheckListViewState extends State<CheckListView> {
       //       model.adInstance.show();
       //     },
       //     child: Text("Ad")));
-      children: [
-        textFieldHeader(
-          "Monetization",
-          "This cause has been monitized. Each time you choose to watch an ad, a large portion of the precedings are donated to supporting that cause directly. Click on the button below to raise money.",
-        ),
-        verticalSpaceSmall,
-        BusyButton(
-            title: "Watch Ad",
-            onPressed: () async {
-              await model.adInstance.show().then((value) {
-                print(value);
-                print("horray");
-                model.setBusy(true);
-                model.initialize();
-                model.setBusy(false);
-              });
-            })
-      ],
+      children: model.monetizer
+          ? [
+              textFieldHeader(
+                "Monetization",
+                "This cause has been monitized. Each time you choose to watch an ad, a large portion of the precedings are donated to supporting that cause directly. Click on the button below to raise money.",
+              ),
+              verticalSpaceSmall,
+              BusyButton(
+                busy: model.bus,
+                  title: "Watch Ad",
+                  onPressed: () async {
+                    model.playAd(causeID);
+                  })
+            ]
+          : [],
     );
   }
 
@@ -101,6 +100,8 @@ class _CheckListViewState extends State<CheckListView> {
     if (fut.length == 0) {
       if (creatorId == currentUID) {
         return [
+          verticalSpaceMedium,
+          monetization(model),
           verticalSpaceLarge,
           CustomButton(
             text: "Add Checklist",
@@ -120,6 +121,9 @@ class _CheckListViewState extends State<CheckListView> {
         ];
       } else {
         return [
+          verticalSpaceMedium,
+          monetization(model),
+          verticalSpaceLarge,
           Center(
               child: Text(
             "There are no actions to check off for this cause",
@@ -158,14 +162,14 @@ class _CheckListViewState extends State<CheckListView> {
                           content: Text(
                               "Once you check off an item, it cannot be unchecked. Are you sure you completed this item?"),
                           actions: [
-                            FlatButton(
+                            TextButton(
                                 onPressed: () {
                                   Navigator.pop(context, true);
                                 },
                                 child: Text(
                                   "No",
                                 )),
-                            FlatButton(
+                            TextButton(
                                 onPressed: () {
                                   model.addCheck(snapshot.data[0], currentUID);
                                   //print("tapped");
@@ -267,7 +271,7 @@ class _CheckListViewState extends State<CheckListView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CheckListViewModel>.nonReactive(
       viewModelBuilder: () => CheckListViewModel(),
-      onModelReady: (model) => model.initialize(),
+      onModelReady: (model) => model.initialize(causeID),
       createNewModelOnInsert: true,
       builder: (context, model, child) => Container(
         child: checkListItems(model, actionFutures),
