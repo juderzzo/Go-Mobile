@@ -93,7 +93,7 @@ class CreateCauseViewModel extends BaseViewModel {
           videoLink: videoLink);
 
       //now push each of the checklistItems referecne
-
+      
       setBusy(false);
       if (res != null) {
         _dialogService.showDialog(
@@ -103,7 +103,9 @@ class CreateCauseViewModel extends BaseViewModel {
         );
         return false;
       } else {
+        
         pushAndReplaceUntilHomeNavView();
+        _dialogService.showConfirmationDialog(title: 'Approval', description: 'Your cause will be submitted for review. Upon acceptance, it will be visible in your homepage. Review times typically take less than 24 hours');
         return true;
       }
     }

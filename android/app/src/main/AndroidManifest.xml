@@ -2,7 +2,7 @@
     package="com.takeoff.Goapp">
    <application
         android:label="Go! Be the change"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
        <!-- FACEBOOK AUTH  -->
        <meta-data
            android:name="com.facebook.sdk.ApplicationId"

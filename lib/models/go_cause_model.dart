@@ -17,6 +17,7 @@ class GoCause {
   String videoLink;
   bool monetized;
   int revenue;
+  bool approved;
 
   GoCause({
     this.id,
@@ -37,6 +38,7 @@ class GoCause {
     this.videoLink,
     this.monetized,
     this.revenue,
+    this.approved
   });
 
   GoCause.fromMap(Map<String, dynamic> data)
@@ -58,7 +60,9 @@ class GoCause {
             actionDescriptions: data['actionDescriptions'],
             videoLink: data['videoLink'],
             monetized: data['monetized'],
-            revenue: data['revenue']);
+            revenue: data['revenue'],
+            approved: data['approved']
+            );
 
   Map<String, dynamic> toMap() => {
         'id': this.id,
@@ -78,7 +82,8 @@ class GoCause {
         'actionDescriptions': this.actionDescriptions,
         'videoLink': this.videoLink,
         'monetized': this.monetized,
-        'revenue': this.revenue
+        'revenue': this.revenue,
+        'approved': this.approved
       };
 
   GoCause generateDummyCause(String id) {

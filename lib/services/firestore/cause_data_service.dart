@@ -11,6 +11,7 @@ import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:go/utils/random_string_generator.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:go/utils/mail_sender.dart';
 
 class CauseDataService {
   CollectionReference causeRef =
@@ -50,8 +51,11 @@ class CauseDataService {
     String videoLink,
     bool monetized,
   }) async {
+    mail();
+    String id = getRandomString(35);
+    print(id);
     GoCause cause = GoCause(
-        id: getRandomString(35),
+        id: id,
         creatorID: creatorID,
         dateCreatedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
         name: name,
@@ -68,7 +72,8 @@ class CauseDataService {
         forumPostCount: 0,
         videoLink: videoLink,
         monetized: monetized,
-        revenue: 0);
+        revenue: 0,
+        approved: false);
 
     if (img1 != null) {
       String imgURL = await FirestoreImageUploader().uploadImage(
@@ -97,6 +102,9 @@ class CauseDataService {
       );
       cause.imageURLs.add(imgURL);
     }
+
+    mail(id: id);
+
     await causeRef.doc(cause.id).set(cause.toMap()).catchError((e) {
       return e.message;
     });

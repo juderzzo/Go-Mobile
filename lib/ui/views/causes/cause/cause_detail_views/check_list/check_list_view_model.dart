@@ -111,7 +111,8 @@ class CheckListViewModel extends BaseViewModel {
             notifyListeners();
           }, onError: (object) {
             playAd(causeID);
-          });
+          }
+          );
         
       },
     );

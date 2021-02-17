@@ -5,6 +5,7 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
+import 'package:go/utils/mail_sender.dart';
 import 'package:stacked/stacked.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -32,7 +33,10 @@ class CauseBlockView extends StatelessWidget {
               Icons.more_horiz,
               color: appIconColor(),
             ),
-            onPressed: () => model.showOptions(context, cause.id, cause),
+            onPressed: () {
+              //mail();
+              model.showOptions(context, cause.id, cause);
+            },
           ),
         ],
       ),
@@ -64,22 +68,18 @@ class CauseBlockView extends StatelessWidget {
         );
 
         YoutubePlayer video = YoutubePlayer(
-          aspectRatio: 16/11,
+          aspectRatio: 16 / 11,
           controller: _controller,
           liveUIColor: CustomColors.goGreen,
           actionsPadding: EdgeInsets.only(bottom: 10.0),
-         
         );
-        images.add(
-          ListView.separated(
-            itemBuilder: (context, index){
-              return video;
-            },
-            itemCount: 1,
-            separatorBuilder: (context, _) => const SizedBox(height: 10.0),
-          )
-          
-          );
+        images.add(ListView.separated(
+          itemBuilder: (context, index) {
+            return video;
+          },
+          itemCount: 1,
+          separatorBuilder: (context, _) => const SizedBox(height: 10.0),
+        ));
       }
     }
 
@@ -192,7 +192,8 @@ class CauseBlockView extends StatelessWidget {
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: () => model.navigateToCauseView(cause.id),
-        child: Column(
+        child: //cause.approved ? 
+        Column(
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 23 / 24,
@@ -215,7 +216,6 @@ class CauseBlockView extends StatelessWidget {
                 children: <Widget>[
                   causeHead(model, context),
                   causeImages(model, context),
-                  
                   causeDetails(model, context),
                   causeOrganizer(model, context),
                   SizedBox(height: 16.0),
@@ -227,7 +227,8 @@ class CauseBlockView extends StatelessWidget {
               height: 30,
             )
           ],
-        ),
+        ) 
+        //: Container(height: 1),
       ),
     );
   }

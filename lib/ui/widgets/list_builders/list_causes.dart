@@ -10,7 +10,11 @@ class ListCauses extends StatelessWidget {
   final VoidCallback refreshData;
   final PageStorageKey pageStorageKey;
   final ScrollController scrollController;
-  ListCauses({@required this.refreshData, @required this.causesResults, @required this.pageStorageKey, @required this.scrollController});
+  ListCauses(
+      {@required this.refreshData,
+      @required this.causesResults,
+      @required this.pageStorageKey,
+      @required this.scrollController});
 
   Widget listCauses() {
     return RefreshIndicator(
@@ -42,10 +46,14 @@ class ListCauses extends StatelessWidget {
           if (causesResults.last == causesResults[index]) {
             displayBottomBorder = false;
           }
-          return CauseBlockView(
+
+          if(cause.approved){
+            return CauseBlockView(
             cause: cause,
             displayBottomBorder: displayBottomBorder,
           );
+          }
+          
         },
       ),
     );
