@@ -9,8 +9,7 @@ import 'root_view_model.dart';
 class RootView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        isDarkMode() ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(isDarkMode() ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
     return ViewModelBuilder<RootViewModel>.reactive(
       viewModelBuilder: () => RootViewModel(),
       onModelReady: (model) => model.checkAuthState(),
@@ -25,7 +24,10 @@ class RootView extends StatelessWidget {
               children: [
                 SizedBox(
                   height: 120,
-                  child: Image.asset('assets/images/go_logo.png'),
+                  child: Image.asset(
+                    'assets/images/go_logo.png',
+                    filterQuality: FilterQuality.medium,
+                  ),
                 ),
                 SizedBox(height: 32.0),
                 CustomCircleProgressIndicator(
