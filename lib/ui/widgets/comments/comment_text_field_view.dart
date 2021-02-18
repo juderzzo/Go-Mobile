@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/models/go_user_model.dart';
+import 'package:go/services/algolia/algolia_search_service.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
+import 'package:go/utils/get_last_word_in_string.dart';
 import 'package:stacked/stacked.dart';
 
 import 'comment_text_field_view_model.dart';
@@ -21,6 +27,8 @@ class CommentTextFieldView extends StatelessWidget {
     @required this.replyReceiverUsername,
     @required this.onSubmitted,
   });
+
+  final AlgoliaSearchService _algoliaSearchService = locator<AlgoliaSearchService>();
 
   Widget replyContainer() {
     return Container(
@@ -87,28 +95,86 @@ class CommentTextFieldView extends StatelessWidget {
                     color: appBackgroundColor(),
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
-                  child: TextField(
-                    focusNode: focusNode,
-                    minLines: 1,
-                    maxLines: 5,
-                    maxLengthEnforced: true,
-                    cursorColor: appFontColor(),
-                    textInputAction: TextInputAction.send,
-                    onSubmitted: (val) => onSubmitted(val),
-                    style: TextStyle(color: appFontColor(),),
-                    controller: commentTextController, //messageFieldController,
-                    textCapitalization: TextCapitalization.sentences,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(150),
-                    ],
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      isDense: true,
-                      hintText: 'Comment',
-                      hintStyle: TextStyle(
-                        color: appFontColor(),
+                  child: TypeAheadField(
+                    keepSuggestionsOnSuggestionSelected: true,
+                    hideOnEmpty: false,
+                    hideOnLoading: true,
+                    hideKeyboard: false,
+                    suggestionsBoxDecoration: SuggestionsBoxDecoration(color: appBackgroundColor(), borderRadius: BorderRadius.all(Radius.circular(8))),
+                    direction: AxisDirection.up,
+                    textFieldConfiguration: TextFieldConfiguration(
+                      onSubmitted: (val) => onSubmitted(val),
+                      focusNode: focusNode,
+                      textInputAction: TextInputAction.send,
+                      minLines: 1,
+                      maxLines: 5,
+                      maxLengthEnforced: true,
+                      enabled: true,
+                      controller: commentTextController,
+                      textCapitalization: TextCapitalization.sentences,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(150),
+                      ],
+                      cursorColor: appCursorColor(),
+                      decoration: InputDecoration(
+                        hintText: "Comment",
+                        border: InputBorder.none,
                       ),
+                      autofocus: false,
                     ),
+                    noItemsFoundBuilder: (context) {
+                      return Container(height: 0, width: 0);
+                    },
+                    suggestionsCallback: (searchTerm) async {
+                      int cursorPosition = commentTextController.selection.baseOffset;
+                      String cursorString = searchTerm.substring(0, cursorPosition);
+                      String lastWord = getLastWordInString(cursorString);
+                      if (lastWord.startsWith("@") && lastWord.length > 1) {
+                        return await _algoliaSearchService.queryUsers(searchTerm: lastWord.substring(1, lastWord.length - 1), resultsLimit: 3);
+                      }
+                      return null;
+                    },
+                    itemBuilder: (context, GoUser user) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        height: 50,
+                        child: Row(
+                          children: [
+                            UserProfilePic(
+                              userPicUrl: user.profilePicURL,
+                              size: 35,
+                              isBusy: false,
+                            ),
+                            horizontalSpaceTiny,
+                            CustomText(
+                              text: "@${user.username}",
+                              fontSize: 16,
+                              textAlign: TextAlign.left,
+                              fontWeight: FontWeight.bold,
+                              color: appFontColor(),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    onSuggestionSelected: (GoUser user) {
+                      focusNode.requestFocus();
+                      int cursorPosition = commentTextController.selection.baseOffset;
+                      String startOfString = commentTextController.text.substring(0, cursorPosition - 1);
+                      print(startOfString);
+
+                      String endOfString = commentTextController.text.substring(cursorPosition - 1, commentTextController.text.length - 1);
+                      if (endOfString.length == 1) {
+                        endOfString = "";
+                      } else if (endOfString.length > 1) {
+                        endOfString = endOfString.substring(2, endOfString.length - 1);
+                      }
+                      String modifiedStartOfString = replaceLastWordInString(startOfString, "@${user.username} ");
+
+                      commentTextController.text = modifiedStartOfString + " " + endOfString;
+
+                      commentTextController.selection = TextSelection.fromPosition(TextPosition(offset: modifiedStartOfString.length));
+                    },
                   ),
                 ),
               ],
