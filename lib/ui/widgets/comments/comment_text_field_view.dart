@@ -80,7 +80,7 @@ class CommentTextFieldView extends StatelessWidget {
             isBusy: false,
           ),
           Container(
-            height: isReplying ? 80 : 50,
+            height: isReplying ? 90 : 50,
             width: MediaQuery.of(context).size.width - 90,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -88,7 +88,7 @@ class CommentTextFieldView extends StatelessWidget {
               children: [
                 isReplying ? replyContainer() : Container(),
                 Container(
-                  height: 40,
+                  height: 50,
                   margin: EdgeInsets.only(left: 8.0),
                   padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 2.0),
                   decoration: BoxDecoration(

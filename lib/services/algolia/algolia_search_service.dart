@@ -46,7 +46,9 @@ class AlgoliaSearchService {
     List<GoUser> results = [];
     if (searchTerm != null && searchTerm.isNotEmpty) {
       AlgoliaQuery query = algolia.instance.index('users').setHitsPerPage(resultsLimit).search(searchTerm);
-      AlgoliaQuerySnapshot eventsSnapshot = await query.getObjects();
+      AlgoliaQuerySnapshot eventsSnapshot = await query.getObjects().catchError((e) {
+        print(e);
+      });
       eventsSnapshot.hits.forEach((snapshot) {
         if (snapshot.data != null) {
           GoUser result = GoUser.fromMap(snapshot.data);
