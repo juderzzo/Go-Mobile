@@ -8,7 +8,7 @@ import 'package:go/services/algolia/algolia_search_service.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
-import 'package:go/utils/get_last_word_in_string.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 
 import 'comment_text_field_view_model.dart';
@@ -161,7 +161,6 @@ class CommentTextFieldView extends StatelessWidget {
                       focusNode.requestFocus();
                       int cursorPosition = commentTextController.selection.baseOffset;
                       String startOfString = commentTextController.text.substring(0, cursorPosition - 1);
-                      print(startOfString);
 
                       String endOfString = commentTextController.text.substring(cursorPosition - 1, commentTextController.text.length - 1);
                       if (endOfString.length == 1) {
