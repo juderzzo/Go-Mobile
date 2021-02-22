@@ -68,7 +68,9 @@ class SignUpView extends StatelessWidget {
             TextSpan(
               text: 'Terms and Conditions ',
               style: TextStyle(color: Colors.blue),
-              recognizer: TapGestureRecognizer()..onTap = () => UrlHandler().launchInWebViewOrVC(context, "https://app.termly.io/document/terms-of-use-for-ios-app/78fa496a-010a-4d4f-b33c-c835e23059bb"),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () =>
+                    UrlHandler().launchInWebViewOrVC(context, "https://app.termly.io/document/terms-of-use-for-ios-app/78fa496a-010a-4d4f-b33c-c835e23059bb"),
             ),
             TextSpan(
               text: 'and ',
@@ -77,7 +79,9 @@ class SignUpView extends StatelessWidget {
             TextSpan(
               text: 'Privacy Policy. ',
               style: TextStyle(color: Colors.blue),
-              recognizer: TapGestureRecognizer()..onTap = () => UrlHandler().launchInWebViewOrVC(context, "https://app.termly.io/document/terms-of-use-for-ios-app/78fa496a-010a-4d4f-b33c-c835e23059bb"),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () =>
+                    UrlHandler().launchInWebViewOrVC(context, "https://app.termly.io/document/terms-of-use-for-ios-app/78fa496a-010a-4d4f-b33c-c835e23059bb"),
             ),
           ],
         ),
@@ -108,7 +112,10 @@ class SignUpView extends StatelessWidget {
                       children: <Widget>[
                         SizedBox(
                           height: 120,
-                          child: Image.asset('assets/images/go_logo.png'),
+                          child: Image.asset(
+                            'assets/images/go_logo.png',
+                            filterQuality: FilterQuality.medium,
+                          ),
                         ),
                         verticalSpaceLarge,
                         InputField(

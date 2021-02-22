@@ -8,17 +8,15 @@ import 'package:go/app/locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_checklist_model.dart';
 import 'package:go/services/firestore/post_data_service.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
-import 'package:go/utils/random_string_generator.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:go/utils/mail_sender.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class CauseDataService {
-  CollectionReference causeRef =
-      FirebaseFirestore.instance.collection('causes');
+  CollectionReference causeRef = FirebaseFirestore.instance.collection('causes');
 
-  CollectionReference checkRef =
-      FirebaseFirestore.instance.collection('checks');
+  CollectionReference checkRef = FirebaseFirestore.instance.collection('checks');
 
   SnackbarService _snackbarService = locator<SnackbarService>();
 
@@ -235,8 +233,7 @@ class CauseDataService {
 
   Future followUnfollowCause(String causeID, String uid) async {
     GoCause cause;
-    DocumentSnapshot snapshot =
-        await causeRef.doc(causeID).get().catchError((e) {
+    DocumentSnapshot snapshot = await causeRef.doc(causeID).get().catchError((e) {
       return e.message;
     });
     if (snapshot.exists) {
@@ -271,11 +268,7 @@ class CauseDataService {
   Future<List> getItem(id) async {
     DocumentSnapshot snapshot = await checkRef.doc(id).get();
     Map<String, dynamic> snapshotData = snapshot.data();
-    return [
-      snapshotData['id'],
-      snapshotData['header'],
-      snapshotData['subheader']
-    ];
+    return [snapshotData['id'], snapshotData['header'], snapshotData['subheader']];
   }
 
   Future<bool> checkExists(id) async {
@@ -298,8 +291,7 @@ class CauseDataService {
     @required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query =
-        causeRef.orderBy('followerCount', descending: true).limit(resultsLimit);
+    Query query = causeRef.orderBy('followerCount', descending: true).limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
         title: 'Error',
@@ -320,10 +312,7 @@ class CauseDataService {
     @required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = causeRef
-        .where('followers', arrayContains: uid)
-        .orderBy('followerCount', descending: true)
-        .limit(resultsLimit);
+    Query query = causeRef.where('followers', arrayContains: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
@@ -345,10 +334,7 @@ class CauseDataService {
     @required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = causeRef
-        .where('creatorID', isEqualTo: uid)
-        .orderBy('followerCount', descending: true)
-        .limit(resultsLimit);
+    Query query = causeRef.where('creatorID', isEqualTo: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
@@ -371,10 +357,7 @@ class CauseDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = causeRef
-        .orderBy('followerCount', descending: true)
-        .startAfterDocument(lastDocSnap)
-        .limit(resultsLimit);
+    query = causeRef.orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
@@ -397,11 +380,7 @@ class CauseDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = causeRef
-        .where('followers', arrayContains: uid)
-        .orderBy('followerCount', descending: true)
-        .startAfterDocument(lastDocSnap)
-        .limit(resultsLimit);
+    query = causeRef.where('followers', arrayContains: uid).orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
@@ -424,11 +403,7 @@ class CauseDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = causeRef
-        .where('creatorID', isEqualTo: uid)
-        .orderBy('followerCount', descending: true)
-        .startAfterDocument(lastDocSnap)
-        .limit(resultsLimit);
+    query = causeRef.where('creatorID', isEqualTo: uid).orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
@@ -446,18 +421,14 @@ class CauseDataService {
   Future<bool> deleteCause(String id) async {
     //first you have to delet the posts in this cause, so get all the posts
     //where the cause ID is the same as this
-    QuerySnapshot posts = await FirebaseFirestore.instance
-        .collection('posts')
-        .where('causeID', isEqualTo: id)
-        .get();
+    QuerySnapshot posts = await FirebaseFirestore.instance.collection('posts').where('causeID', isEqualTo: id).get();
 
     for (int i = 0; i < posts.docs.length; i++) {
       _postDataService.deletePost(posts.docs[i].reference.id);
     }
 
     //delete the cause and the images associated with it
-    await FirebaseFirestore.instance
-        .runTransaction((Transaction deleteTransaction) async {
+    await FirebaseFirestore.instance.runTransaction((Transaction deleteTransaction) async {
       GoCause cause = await getCauseByID(id);
       List imageURLs = cause.imageURLs;
       imageURLs.forEach((url) {

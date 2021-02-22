@@ -1,15 +1,12 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
-import 'package:go/ui/widgets/causes/cause_check_list_item.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
-import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
-import 'package:go/utils/random_string_generator.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
+
 import 'edit_checklist_viewmodel.dart';
 
 class EditChecklistView extends StatefulWidget {
@@ -18,8 +15,7 @@ class EditChecklistView extends StatefulWidget {
   EditChecklistView({this.arguments});
 
   @override
-  _EditChecklistViewState createState() =>
-      _EditChecklistViewState(arguments: arguments);
+  _EditChecklistViewState createState() => _EditChecklistViewState(arguments: arguments);
 }
 
 class _EditChecklistViewState extends State<EditChecklistView> {
@@ -161,22 +157,17 @@ class _EditChecklistViewState extends State<EditChecklistView> {
         onModelReady: initialize(EditChecklistViewModel()),
         createNewModelOnInsert: true,
         builder: (context, model, child) => Scaffold(
-          //resizeToAvoidBottomInset: false,
-          body: SingleChildScrollView
-          (
-            physics: ClampingScrollPhysics(),
-            child: ConstrainedBox
-            (
-              constraints: BoxConstraints(
-                //minHeight: MediaQuery.of(context).size.height,
-                //minWidth: MediaQuery.of(context).size.width,
-                maxHeight: MediaQuery.of(context).size.height,
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-              
-              child: wrapper(model))
-            )
-          ));
+            //resizeToAvoidBottomInset: false,
+            body: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      //minHeight: MediaQuery.of(context).size.height,
+                      //minWidth: MediaQuery.of(context).size.width,
+                      maxHeight: MediaQuery.of(context).size.height,
+                      maxWidth: MediaQuery.of(context).size.width,
+                    ),
+                    child: wrapper(model)))));
   }
 }
 
@@ -198,7 +189,6 @@ class CheckField extends StatelessWidget {
     subHeaderController.text = subheader;
     return Container(
       padding: EdgeInsets.fromLTRB(32.0, 10.0, 0.0, 0.0),
-      
       height: 200,
       width: MediaQuery.of(context).size.width,
       child: Row(
@@ -212,22 +202,16 @@ class CheckField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
               ),
               child: TextFormField(
-                textInputAction: TextInputAction.done,
-                
-                inputFormatters:[
-                  LengthLimitingTextInputFormatter(20),
-                ],
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  textInputAction: TextInputAction.done,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(20),
+                  ],
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   controller: headerController,
                   onChanged: (leon) {
                     header = headerController.text;
                   },
-                  
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0,8.0),
-                      
-                      hintText: "Action",
-                      border: InputBorder.none)),
+                  decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), hintText: "Action", border: InputBorder.none)),
             ),
             verticalSpaceSmall,
             Container(
@@ -237,43 +221,33 @@ class CheckField extends StatelessWidget {
               ),
               width: MediaQuery.of(context).size.width * 3 / 4,
               child: TextFormField(
-                textInputAction: TextInputAction.done,
-                onChanged: (leon) {
+                  textInputAction: TextInputAction.done,
+                  onChanged: (leon) {
                     subheader = subHeaderController.text;
                   },
                   keyboardType: TextInputType.multiline,
                   controller: subHeaderController,
                   maxLines: 2,
                   maxLength: 100,
-                  
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8.0),
-                      hintText: "Description",
-                      border: InputBorder.none)),
+                  decoration: InputDecoration(contentPadding: EdgeInsets.all(8.0), hintText: "Description", border: InputBorder.none)),
             ),
-
-            
           ]),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 75.0),
             child: Container(
               height: 40,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-              
-                child: GestureDetector(
-                  onTap: () {
-                    print(this.index);
-                    view.remove(this.index);
-                  },
-                      child: Icon(
-                      Icons.remove,
-                      size: 15,
-                      color: Colors.white,
-                    ),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+              child: GestureDetector(
+                onTap: () {
+                  print(this.index);
+                  view.remove(this.index);
+                },
+                child: Icon(
+                  Icons.remove,
+                  size: 15,
+                  color: Colors.white,
                 ),
-                  
-                
+              ),
             ),
           ),
         ],

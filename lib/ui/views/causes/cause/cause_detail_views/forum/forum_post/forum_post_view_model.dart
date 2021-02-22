@@ -13,6 +13,7 @@ import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -24,8 +25,7 @@ class ForumPostViewModel extends BaseViewModel {
   UserDataService _userDataService = locator<UserDataService>();
   PostDataService _postDataService = locator<PostDataService>();
   CommentDataService _commentDataService = locator<CommentDataService>();
-  NotificationDataService _notificationDataService =
-      locator<NotificationDataService>();
+  NotificationDataService _notificationDataService = locator<NotificationDataService>();
 
   ///HELPERS
   ScrollController commentScrollController = ScrollController();
@@ -70,8 +70,7 @@ class ForumPostViewModel extends BaseViewModel {
 
     ///SET SCROLL CONTROLLER
     commentScrollController.addListener(() {
-      double triggerFetchMoreSize =
-          0.9 * commentScrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize = 0.9 * commentScrollController.position.maxScrollExtent;
       if (commentScrollController.position.pixels > triggerFetchMoreSize) {
         loadAdditionalComments();
       }
@@ -83,8 +82,6 @@ class ForumPostViewModel extends BaseViewModel {
     await loadComments();
     notifyListeners();
     setBusy(false);
-
-    
   }
 
   ///LOAD POSTS
@@ -96,8 +93,7 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   loadComments() async {
-    commentResults = await _commentDataService.loadComments(
-        postID: post.id, resultsLimit: resultsLimit);
+    commentResults = await _commentDataService.loadComments(postID: post.id, resultsLimit: resultsLimit);
     refreshingComments = false;
     notifyListeners();
     print(commentResults.length);
@@ -114,8 +110,7 @@ class ForumPostViewModel extends BaseViewModel {
     }
     loadingAdditionalComments = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults =
-        await _commentDataService.loadAdditionalComments(
+    List<DocumentSnapshot> newResults = await _commentDataService.loadAdditionalComments(
       lastDocSnap: commentResults[commentResults.length - 1],
       resultsLimit: resultsLimit,
       postID: post.id,
@@ -132,9 +127,7 @@ class ForumPostViewModel extends BaseViewModel {
   showOptions() async {
     print("res");
     var sheetResponse = await _bottomSheetService.showCustomSheet(
-      variant: isAuthor || isAdmin
-          ? BottomSheetType.postAuthorOptions
-          : BottomSheetType.postOptions,
+      variant: isAuthor || isAdmin ? BottomSheetType.postAuthorOptions : BottomSheetType.postOptions,
     );
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
@@ -144,11 +137,10 @@ class ForumPostViewModel extends BaseViewModel {
         print("edit");
       } else if (res == "share") {
         //share
-         print("edit");
+        print("edit");
       } else if (res == "report") {
         //report
-         print("edit");
-
+        print("edit");
       } else if (res == "delete") {
         delete();
       }
@@ -180,6 +172,7 @@ class ForumPostViewModel extends BaseViewModel {
       );
       await _commentDataService.sendComment(post.id, post.authorID, comment);
       sendCommentNotification(text);
+      sendUserMentionNotification(text);
       clearState(context);
     }
     refreshComments();
@@ -204,8 +197,7 @@ class ForumPostViewModel extends BaseViewModel {
         replies: [],
         replyCount: 0,
         replyReceiverUsername: commentToReplyTo.username,
-        originalReplyCommentID:
-            commentToReplyTo.timePostedInMilliseconds.toString(),
+        originalReplyCommentID: commentToReplyTo.timePostedInMilliseconds.toString(),
         timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       );
       await _commentDataService.replyToComment(
@@ -216,6 +208,7 @@ class ForumPostViewModel extends BaseViewModel {
       );
     }
     sendCommentReplyNotification(commentToReplyTo.senderUID, text);
+    sendUserMentionNotification(text);
     clearState(context);
     refreshComments();
   }
@@ -238,8 +231,7 @@ class ForumPostViewModel extends BaseViewModel {
 
   ///NOTIFICATIONS
   sendCommentNotification(String comment) {
-    GoNotification notification =
-        GoNotification().generateGoCommentNotification(
+    GoNotification notification = GoNotification().generateGoCommentNotification(
       postID: post.id,
       receiverUID: post.authorID,
       senderUID: currentUser.id,
@@ -250,8 +242,7 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   sendCommentReplyNotification(String receiverUID, String comment) {
-    GoNotification notification =
-        GoNotification().generateCommmentReplyNotification(
+    GoNotification notification = GoNotification().generateCommmentReplyNotification(
       postID: post.id,
       receiverUID: receiverUID,
       senderUID: currentUser.id,
@@ -261,10 +252,28 @@ class ForumPostViewModel extends BaseViewModel {
     _notificationDataService.sendNotification(notif: notification);
   }
 
+  sendUserMentionNotification(String comment) async {
+    List<String> mentionedUsernames = getListOfUsernamesFromString(comment);
+    print(mentionedUsernames);
+    mentionedUsernames.forEach((username) async {
+      GoUser user = await _userDataService.getGoUserByUsername(username);
+      if (user != null) {
+        GoNotification notification = GoNotification().generateGoCommentMentionNotification(
+          postID: post.id,
+          receiverUID: user.id,
+          senderUID: currentUser.id,
+          commenterUsername: "@${currentUser.username}",
+          comment: comment,
+        );
+        print(notification.toMap());
+        _notificationDataService.sendNotification(notif: notification);
+      }
+    });
+  }
+
   ///NAVIGATION
   navigateToUserView(String uid) {
-    _navigationService
-        .navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
+    _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);

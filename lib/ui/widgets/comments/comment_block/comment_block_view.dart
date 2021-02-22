@@ -14,6 +14,37 @@ class CommentBlockView extends StatelessWidget {
   final GoForumPostComment comment;
   CommentBlockView({@required this.comment, @required this.replyToComment});
 
+  List<TextSpan> convertToRichText(String text) {
+    List<String> words = text.split(" ");
+    List<TextSpan> richText = [
+      TextSpan(
+        text: '${comment.username} ',
+        style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.bold),
+      ),
+    ];
+    words.forEach((word) {
+      TextSpan textSpan;
+      if (word.startsWith("@")) {
+        textSpan = TextSpan(
+          text: "$word ",
+          style: TextStyle(color: appTextButtonColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+        );
+      } else if (word.startsWith("#")) {
+        textSpan = TextSpan(
+          text: "$word ",
+          style: TextStyle(color: appTextButtonColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+        );
+      } else {
+        textSpan = TextSpan(
+          text: "$word ",
+          style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+        );
+      }
+      richText.add(textSpan);
+    });
+    return richText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CommentBlockViewModel>.reactive(
@@ -46,25 +77,12 @@ class CommentBlockView extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                          onLongPress: null, //widget.commentOptions,
-                          onDoubleTap: null, //commentOptions,
-                          child: Container(
-                            width: comment.isReply ? MediaQuery.of(context).size.width - 120 : MediaQuery.of(context).size.width - 74,
-                            child: RichText(
-                              text: TextSpan(
-                                style: TextStyle(fontSize: 14.0, color: appFontColor()),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${comment.username} ',
-                                    style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.bold),
-                                  ),
-                                  TextSpan(
-                                    text: comment.message,
-                                    style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
-                                  ),
-                                ],
-                              ),
+                        Container(
+                          width: comment.isReply ? MediaQuery.of(context).size.width - 120 : MediaQuery.of(context).size.width - 74,
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(fontSize: 14.0, color: appFontColor()),
+                              children: convertToRichText(comment.message),
                             ),
                           ),
                         ),

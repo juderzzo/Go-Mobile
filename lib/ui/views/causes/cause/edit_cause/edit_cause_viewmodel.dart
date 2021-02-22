@@ -4,14 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
-import 'package:go/models/go_cause_model.dart';
-import 'package:go/models/go_checklist_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
-import 'package:go/ui/widgets/causes/cause_check_list_item.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/go_image_picker.dart';
-import 'package:go/utils/random_string_generator.dart';
-import 'package:go/utils/string_validator.dart';
 import 'package:go/utils/url_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -50,22 +46,20 @@ class EditCauseViewModel extends BaseViewModel {
     if (videoLink.length < 2) {
       videoLink = null;
     }
-    if (!StringValidator().isValidString(name)) {
+    if (isValidString(name)) {
       formError = "Cause Name Required";
-    } else if (!StringValidator().isValidString(goal)) {
+    } else if (isValidString(goal)) {
       formError = "Please list your causes's goals";
-    } else if (!StringValidator().isValidString(why)) {
+    } else if (isValidString(why)) {
       formError = "Please describe why your cause is important";
-    } else if (!StringValidator().isValidString(who)) {
+    } else if (isValidString(who)) {
       formError = "Please describe who you are in regards to this cause";
-    } else if (StringValidator().isValidString(charityURL) &&
-        !UrlHandler().isValidUrl(charityURL)) {
+    } else if (isValidString(charityURL) && !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
     } else if (videoLink != null && !(videoLink.length < 2)) {
       print(videoLink.length);
       if (YoutubePlayer.convertUrlToId(videoLink) == null) {
-        formError =
-            "Please provide a valid youtube link or leave the field blank";
+        formError = "Please provide a valid youtube link or leave the field blank";
       }
     }
     if (formError != null) {
@@ -88,7 +82,6 @@ class EditCauseViewModel extends BaseViewModel {
           resources: resources,
           charityURL: charityURL,
           videoLink: videoLink,
-          
 
           //link each checklist item to their id in the cause functionality
 
@@ -117,8 +110,7 @@ class EditCauseViewModel extends BaseViewModel {
   }
 
   ///BOTTOM SHEETS
-  selectImage(
-      {BuildContext context, int imgNum, double ratioX, double ratioY}) async {
+  selectImage({BuildContext context, int imgNum, double ratioX, double ratioY}) async {
     File img;
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.imagePicker,
@@ -126,11 +118,9 @@ class EditCauseViewModel extends BaseViewModel {
     if (sheetResponse.responseData != null) {
       String res = sheetResponse.responseData;
       if (res == "camera") {
-        img = await GoImagePicker()
-            .retrieveImageFromCamera(ratioX: ratioX, ratioY: ratioY);
+        img = await GoImagePicker().retrieveImageFromCamera(ratioX: ratioX, ratioY: ratioY);
       } else if (res == "gallery") {
-        img = await GoImagePicker()
-            .retrieveImageFromLibrary(ratioX: ratioX, ratioY: ratioY);
+        img = await GoImagePicker().retrieveImageFromLibrary(ratioX: ratioX, ratioY: ratioY);
       }
       //print(img2.runtimeType);
 

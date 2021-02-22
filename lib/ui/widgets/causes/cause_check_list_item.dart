@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
-import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view_model.dart';
-import 'package:go/utils/random_string_generator.dart';
 
 class CauseCheckListItem extends StatelessWidget {
-  bool isChecked;
+  final bool isChecked;
 
   final String header;
   final String subHeader;
@@ -40,18 +38,16 @@ class CauseCheckListItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          isChecked ? Checkbox(
-            activeColor: CustomColors.goGreen,
-            //tristate: true,
-            value: isChecked,
-            onChanged: (value) {
-              //value = true;
-            },
-          ) :
-          SizedBox(
-            width: 43,
-            child:Icon(Icons.check_box_outline_blank) ), 
-          
+          isChecked
+              ? Checkbox(
+                  activeColor: CustomColors.goGreen,
+                  //tristate: true,
+                  value: isChecked,
+                  onChanged: (value) {
+                    //value = true;
+                  },
+                )
+              : SizedBox(width: 43, child: Icon(Icons.check_box_outline_blank)),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -64,10 +60,9 @@ class CauseCheckListItem extends StatelessWidget {
                 ),
               ),
               Container(
-                width: MediaQuery.of(context).size.width *11/16,
+                width: MediaQuery.of(context).size.width * 11 / 16,
                 child: Text(
                   subHeader,
-                  
                   style: TextStyle(
                     fontSize: 14,
                     color: appFontColor(),
