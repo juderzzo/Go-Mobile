@@ -13,6 +13,7 @@ import '../services/algolia/algolia_search_service.dart';
 import '../services/auth/auth_service.dart';
 import '../services/firestore/cause_data_service.dart';
 import '../services/firestore/comment_data_service.dart';
+import '../services/dynamic_links/dynamic_link_service.dart';
 import '../ui/views/home/tabs/explore/explore_view_model.dart';
 import '../services/firebase_messaging/firebase_messaging_service.dart';
 import '../ui/views/home/tabs/home/home_view_model.dart';
@@ -20,6 +21,7 @@ import '../services/firestore/notification_data_service.dart';
 import '../services/firestore/post_data_service.dart';
 import '../ui/views/home/tabs/profile/profile_view_model.dart';
 import '../services/services_module.dart';
+import '../services/share/share_service.dart';
 import '../services/firestore/user_data_service.dart';
 import '../ui/views/user/user_view_model.dart';
 
@@ -40,12 +42,14 @@ GetIt $initGetIt(
   gh.lazySingleton<CauseDataService>(() => servicesModule.causeDataService);
   gh.lazySingleton<CommentDataService>(() => servicesModule.commentDataService);
   gh.lazySingleton<DialogService>(() => servicesModule.dialogService);
+  gh.lazySingleton<DynamicLinkService>(() => servicesModule.dynamicLinkService);
   gh.lazySingleton<FirebaseMessagingService>(
       () => servicesModule.firebaseMessagingService);
   gh.lazySingleton<NavigationService>(() => servicesModule.navigationService);
   gh.lazySingleton<NotificationDataService>(
       () => servicesModule.notificationDataService);
   gh.lazySingleton<PostDataService>(() => servicesModule.postDataService);
+  gh.lazySingleton<ShareService>(() => servicesModule.shareService);
   gh.lazySingleton<SnackbarService>(() => servicesModule.snackBarService);
   gh.lazySingleton<ThemeService>(() => servicesModule.themeService);
   gh.lazySingleton<UserDataService>(() => servicesModule.userDataService);
@@ -72,6 +76,8 @@ class _$ServicesModule extends ServicesModule {
   @override
   DialogService get dialogService => DialogService();
   @override
+  DynamicLinkService get dynamicLinkService => DynamicLinkService();
+  @override
   FirebaseMessagingService get firebaseMessagingService =>
       FirebaseMessagingService();
   @override
@@ -81,6 +87,8 @@ class _$ServicesModule extends ServicesModule {
       NotificationDataService();
   @override
   PostDataService get postDataService => PostDataService();
+  @override
+  ShareService get shareService => ShareService();
   @override
   SnackbarService get snackBarService => SnackbarService();
   @override

@@ -247,6 +247,9 @@ PODS:
     - FirebaseAuth (~> 6.9.2)
   - Firebase/CoreOnly (6.33.0):
     - FirebaseCore (= 6.10.3)
+  - Firebase/DynamicLinks (6.33.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 4.3.1)
   - Firebase/Firestore (6.33.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 1.18.0)
@@ -268,6 +271,11 @@ PODS:
     - Flutter
   - firebase_core (0.5.2-1):
     - Firebase/CoreOnly (~> 6.33.0)
+    - Flutter
+  - firebase_dynamic_links (0.6.2):
+    - Firebase/CoreOnly (~> 6.33.0)
+    - Firebase/DynamicLinks (~> 6.33.0)
+    - firebase_core
     - Flutter
   - firebase_messaging (7.0.3):
     - Firebase/CoreOnly (~> 6.33.0)
@@ -293,6 +301,8 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
     - nanopb (~> 1.30906.0)
+  - FirebaseDynamicLinks (4.3.1):
+    - FirebaseCore (~> 6.10)
   - FirebaseFirestore (1.18.0):
     - abseil/algorithm (= 0.20200225.0)
     - abseil/base (= 0.20200225.0)
@@ -465,6 +475,7 @@ DEPENDENCIES:
   - firebase_admob (from `.symlinks/plugins/firebase_admob/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
@@ -495,6 +506,7 @@ SPEC REPOS:
     - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseDynamicLinks
     - FirebaseFirestore
     - FirebaseInstallations
     - FirebaseInstanceID
@@ -534,6 +546,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_dynamic_links:
+    :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   firebase_storage:
@@ -582,11 +596,13 @@ SPEC CHECKSUMS:
   firebase_admob: 4dfb68c1440c0f3ba19ff103f4d78928d5348047
   firebase_auth: cb33b01b51904969161403bbcb20036519f0c578
   firebase_core: 7423d688a1c6f2f2d859d64ae26991be39989781
+  firebase_dynamic_links: 38928487fbdf96ce7b23ad20ffffd5fc09047b55
   firebase_messaging: 0aea2cd5885b65e19ede58ee3507f485c992cc75
   firebase_storage: 617bd8f94dc9948a70dddb85ccc4d61a898735fd
   FirebaseAuth: c92d49ada7948d1a23466e3db17bc4c2039dddc3
   FirebaseCore: d889d9e12535b7f36ac8bfbf1713a0836a3012cd
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
+  FirebaseDynamicLinks: 6eac37d86910382eafb6315d952cc44c9e176094
   FirebaseFirestore: adff4877869ca91a11250cc0989a6cd56bad163f
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1

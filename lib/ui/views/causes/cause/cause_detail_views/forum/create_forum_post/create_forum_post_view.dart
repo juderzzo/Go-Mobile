@@ -137,12 +137,7 @@ class CreateForumPostView extends StatelessWidget {
             text: model.isEditing ? "Update" : "Publish",
             textColor: Colors.white,
             isBusy: model.isBusy,
-            onPressed: () async {
-              bool formSuccess = await model.validateAndSubmitForm();
-              if (formSuccess) {
-                model.displayPostUploadSuccessBottomSheet();
-              }
-            },
+            onPressed: () => model.validateAndSubmitForm(),
           ),
         ],
       ),
