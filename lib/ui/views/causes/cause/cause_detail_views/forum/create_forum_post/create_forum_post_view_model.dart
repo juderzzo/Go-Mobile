@@ -131,7 +131,7 @@ class CreateForumPostViewModel extends BaseViewModel {
   }
 
   ///BOTTOM SHEETS
-  displayPostUploadSuccessBottomSheet() async {
+  displayPostUploadSuccessBottomSheet(String postID) async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.postPublished,
       takesInput: false,

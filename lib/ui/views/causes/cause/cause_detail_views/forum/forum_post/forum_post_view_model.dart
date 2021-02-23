@@ -9,10 +9,12 @@ import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_notification_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/share/share_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -26,6 +28,8 @@ class ForumPostViewModel extends BaseViewModel {
   PostDataService _postDataService = locator<PostDataService>();
   CommentDataService _commentDataService = locator<CommentDataService>();
   NotificationDataService _notificationDataService = locator<NotificationDataService>();
+  DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
+  ShareService _shareService = locator<ShareService>();
 
   ///HELPERS
   ScrollController commentScrollController = ScrollController();
@@ -125,7 +129,6 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   showOptions() async {
-    print("res");
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: isAuthor || isAdmin ? BottomSheetType.postAuthorOptions : BottomSheetType.postOptions,
     );
@@ -136,8 +139,9 @@ class ForumPostViewModel extends BaseViewModel {
         //edit
         print("edit");
       } else if (res == "share") {
-        //share
-        print("edit");
+        //share post link
+        String url = await _dynamicLinkService.createPostLink(postAuthorUsername: "${author.username}", post: post);
+        _shareService.shareLink(url);
       } else if (res == "report") {
         //report
         print("edit");

@@ -5,10 +5,12 @@ import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
+import 'package:go/services/share/share_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
 
+import 'dynamic_links/dynamic_link_service.dart';
 import 'firestore/user_data_service.dart';
 
 ///RUN "flutter pub run build_runner build --delete-conflicting-outputs" in Project Terminal to Generate Service Modules
@@ -41,4 +43,8 @@ abstract class ServicesModule {
   CommentDataService get commentDataService;
   @lazySingleton
   AlgoliaSearchService get algoliaSearchService;
+  @lazySingleton
+  DynamicLinkService get dynamicLinkService;
+  @lazySingleton
+  ShareService get shareService;
 }

@@ -38,6 +38,17 @@
 	<string>222465742607799</string>
 	<key>FacebookDisplayName</key>
 	<string>Go!</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
+    <key>FirebaseDynamicLinksCustomDomains</key>
+    <array>
+    	<string>https://appgo.page.link</string>
+    </array>
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:appgo.page.link</string>
+        <string>applinks:appgo.page.link?mode=developer</string>
+    </array>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-9312496461922231~5212290852</string>
 	<key>LSApplicationQueriesSchemes</key>

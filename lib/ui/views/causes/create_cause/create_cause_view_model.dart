@@ -130,9 +130,7 @@ class CreateCauseViewModel extends BaseViewModel {
       variant: BottomSheetType.causePublished,
       takesInput: false,
       barrierDismissible: true,
-      customData: {
-        'causeID': null,
-      },
+      customData: cause,
     );
     if (sheetResponse == null || sheetResponse.responseData != "return") {
       _navigationService.pushNamedAndRemoveUntil(Routes.HomeNavViewRoute);

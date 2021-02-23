@@ -2,6 +2,7 @@ import 'package:go/app/locator.dart';
 import 'package:go/enums/init_error_status.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/utils/network_status.dart';
 import 'package:stacked/stacked.dart';
@@ -15,6 +16,7 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
   UserDataService _userDataService = locator<UserDataService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
 
   ///INITIAL DATA
   InitErrorStatus initErrorStatus = InitErrorStatus.network;
@@ -45,6 +47,7 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
       );
     } else {
       initErrorStatus = InitErrorStatus.none;
+      await _dynamicLinkService.handleDynamicLinks();
       notifyListeners();
     }
   }
