@@ -282,7 +282,7 @@ class ForumPostView extends StatelessWidget {
                                   )
                                 : Container(),
                                 Container(height: MediaQuery.of(context).size.height * 1/20,
-                                color: appBackgroundColor(),
+                                color: model.isDarkMode() ? Colors.black45 : appBackgroundColor(),
                                 )
                             
                           ],

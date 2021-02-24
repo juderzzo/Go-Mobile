@@ -6,10 +6,12 @@ import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/share/share_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -22,6 +24,8 @@ class ForumPostBlockViewModel extends BaseViewModel {
   PostDataService _postDataService = locator<PostDataService>();
   CommentDataService _commentDataService = locator<CommentDataService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
+  DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
+  ShareService _shareService = locator<ShareService>();
 
   String authorUsername;
   String authorProfilePicURL;
@@ -62,16 +66,13 @@ class ForumPostBlockViewModel extends BaseViewModel {
 
   showOptions({GoForumPost post, VoidCallback refreshAction}) async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
-      variant: isAuthor || isAdmin
-          ? BottomSheetType.postAuthorOptions
-          : BottomSheetType.postOptions,
+      variant: isAuthor || isAdmin ? BottomSheetType.postAuthorOptions : BottomSheetType.postOptions,
     );
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
       //print(res);
       if (res == "edit") {
-        String data = await _navigationService
-            .navigateTo(Routes.CreateForumPostViewRoute, arguments: {
+        String data = await _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {
           'causeID': post.causeID,
           'postID': post.id,
         });
@@ -79,7 +80,9 @@ class ForumPostBlockViewModel extends BaseViewModel {
           refreshAction();
         }
       } else if (res == "share") {
-        //share
+        //share post link
+        String url = await _dynamicLinkService.createPostLink(postAuthorUsername: "$authorUsername", post: post);
+        _shareService.shareLink(url);
       } else if (res == "report") {
         //report
         if (isAuthor || isAdmin) {
@@ -100,12 +103,10 @@ class ForumPostBlockViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToPostView(String postID) {
-    _navigationService
-        .navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': postID});
+    _navigationService.navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': postID});
   }
 
   navigateToUserView(String uid) {
-    _navigationService
-        .navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
+    _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 }

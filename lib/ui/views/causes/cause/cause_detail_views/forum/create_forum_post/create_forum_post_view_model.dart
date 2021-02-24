@@ -8,9 +8,8 @@ import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/go_image_picker.dart';
-import 'package:go/utils/random_string_generator.dart';
-import 'package:go/utils/string_validator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -60,7 +59,7 @@ class CreateForumPostViewModel extends BaseViewModel {
     String formError;
     String body = postTextController.text.trim();
     setBusy(true);
-    if (!StringValidator().isValidString(body)) {
+    if (isValidString(body)) {
       formError = "Post Cannot Be Empty";
     }
     if (formError != null) {
@@ -122,11 +121,9 @@ class CreateForumPostViewModel extends BaseViewModel {
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
       if (res == "camera") {
-        imgFile =
-            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
       } else if (res == "gallery") {
-        imgFile = await GoImagePicker()
-            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
       img = imgFile;
       notifyListeners();
@@ -134,7 +131,7 @@ class CreateForumPostViewModel extends BaseViewModel {
   }
 
   ///BOTTOM SHEETS
-  displayPostUploadSuccessBottomSheet() async {
+  displayPostUploadSuccessBottomSheet(String postID) async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.postPublished,
       takesInput: false,

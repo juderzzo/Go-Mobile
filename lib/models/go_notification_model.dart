@@ -91,6 +91,27 @@ class GoNotification {
     return notif;
   }
 
+  GoNotification generateGoCommentMentionNotification({
+    @required String postID,
+    @required String receiverUID,
+    @required String senderUID,
+    @required String commenterUsername,
+    @required String comment,
+  }) {
+    GoNotification notif = GoNotification(
+      receiverUID: receiverUID,
+      senderUID: senderUID,
+      type: NotificationType.postComment.toString(),
+      header: '$commenterUsername mentioned you in post',
+      subHeader: comment,
+      additionalData: {'postID': postID},
+      timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+      expDateInMilliseconds: DateTime.now().millisecondsSinceEpoch + 7884000000, //Expiration Date Set 3 Months from Now
+      read: false,
+    );
+    return notif;
+  }
+
   GoNotification generateGoFollowUserNotification({
     @required String uid,
     @required String senderUID,

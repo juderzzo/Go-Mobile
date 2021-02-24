@@ -9,15 +9,20 @@ import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_notification_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/utils/go_image_picker.dart';
+import 'package:go/services/share/share_service.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 class ForumPostViewModel extends BaseViewModel {
+  ThemeService _themeService = locator<ThemeService>();
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -27,6 +32,8 @@ class ForumPostViewModel extends BaseViewModel {
   CommentDataService _commentDataService = locator<CommentDataService>();
   NotificationDataService _notificationDataService =
       locator<NotificationDataService>();
+  DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
+  ShareService _shareService = locator<ShareService>();
 
   ///HELPERS
   ScrollController commentScrollController = ScrollController();
@@ -92,6 +99,10 @@ class ForumPostViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  bool isDarkMode()  {
+    return _themeService.isDarkMode ? true : false;
+  }
+
   ///LOAD POSTS
   Future<void> refreshComments() async {
     refreshingComments = true;
@@ -135,7 +146,6 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   showOptions() async {
-    print("res");
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: isAuthor || isAdmin
           ? BottomSheetType.postAuthorOptions
@@ -148,8 +158,10 @@ class ForumPostViewModel extends BaseViewModel {
         //edit
         print("edit");
       } else if (res == "share") {
-        //share
-        print("edit");
+        //share post link
+        String url = await _dynamicLinkService.createPostLink(
+            postAuthorUsername: "${author.username}", post: post);
+        _shareService.shareLink(url);
       } else if (res == "report") {
         //report
         print("edit");
@@ -183,10 +195,10 @@ class ForumPostViewModel extends BaseViewModel {
           replies: [],
           replyCount: 0,
           timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-          image: image
-          );
+          image: image);
       await _commentDataService.sendComment(post.id, post.authorID, comment);
       sendCommentNotification(text);
+      sendUserMentionNotification(text);
       clearState(context);
     }
     refreshComments();
@@ -224,6 +236,7 @@ class ForumPostViewModel extends BaseViewModel {
       );
     }
     sendCommentReplyNotification(commentToReplyTo.senderUID, text);
+    sendUserMentionNotification(text);
     clearState(context);
     refreshComments();
   }
@@ -288,6 +301,26 @@ class ForumPostViewModel extends BaseViewModel {
       comment: comment,
     );
     _notificationDataService.sendNotification(notif: notification);
+  }
+
+  sendUserMentionNotification(String comment) async {
+    List<String> mentionedUsernames = getListOfUsernamesFromString(comment);
+    print(mentionedUsernames);
+    mentionedUsernames.forEach((username) async {
+      GoUser user = await _userDataService.getGoUserByUsername(username);
+      if (user != null) {
+        GoNotification notification =
+            GoNotification().generateGoCommentMentionNotification(
+          postID: post.id,
+          receiverUID: user.id,
+          senderUID: currentUser.id,
+          commenterUsername: "@${currentUser.username}",
+          comment: comment,
+        );
+        print(notification.toMap());
+        _notificationDataService.sendNotification(notif: notification);
+      }
+    });
   }
 
   ///NAVIGATION

@@ -15,6 +15,37 @@ class CommentBlockView extends StatelessWidget {
   bool deleted = false;
   CommentBlockView({@required this.comment, @required this.replyToComment});
 
+  List<TextSpan> convertToRichText(String text) {
+    List<String> words = text.split(" ");
+    List<TextSpan> richText = [
+      TextSpan(
+        text: '${comment.username} ',
+        style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.bold),
+      ),
+    ];
+    words.forEach((word) {
+      TextSpan textSpan;
+      if (word.startsWith("@")) {
+        textSpan = TextSpan(
+          text: "$word ",
+          style: TextStyle(color: appTextButtonColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+        );
+      } else if (word.startsWith("#")) {
+        textSpan = TextSpan(
+          text: "$word ",
+          style: TextStyle(color: appTextButtonColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+        );
+      } else {
+        textSpan = TextSpan(
+          text: "$word ",
+          style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+        );
+      }
+      richText.add(textSpan);
+    });
+    return richText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return deleted
