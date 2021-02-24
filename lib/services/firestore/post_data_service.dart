@@ -71,7 +71,7 @@ class PostDataService {
           url = await FirebaseStorage.instance
               .ref('posts/$causeID/$id')
               .getDownloadURL();
-          print(url);
+          //print(url);
         }).then(
           (value) {
             post = GoForumPost(

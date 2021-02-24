@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view_model.dart';
 import 'package:go/ui/widgets/comments/comment_text_field_view.dart';
@@ -9,7 +10,9 @@ import 'package:go/ui/widgets/list_builders/list_comments.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:go/utils/time_calc.dart';
+import 'package:mailer/mailer.dart';
 import 'package:stacked/stacked.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class ForumPostView extends StatelessWidget {
   final FocusNode focusNode = FocusNode();
@@ -51,7 +54,7 @@ class ForumPostView extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all( 16.0),
+            padding: EdgeInsets.all(16.0),
             child: CustomText(
               text: model.post.body,
               textAlign: TextAlign.left,
@@ -60,21 +63,18 @@ class ForumPostView extends StatelessWidget {
               fontSize: 18,
             ),
           ),
+          model.post.imageID != null && model.post.imageID.length > 5
+              ? Container(
+                  //height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.network(
+                    model.post.imageID,
+                    //height: 200,
 
-           model.post.imageID != null && model.post.imageID.length > 5
-                        ? Container(
-                            //height: 200,
-                            width: MediaQuery.of(context).size.width,
-                            child: Image.network(
-                              model.post.imageID,
-                              //height: 200,
-                            
-                              //fit: BoxFit.fitWidth,
-                              //width: MediaQuery.of(context).size.width
-                            ))
-                        : Container(),
-         
-          
+                    //fit: BoxFit.fitWidth,
+                    //width: MediaQuery.of(context).size.width
+                  ))
+              : Container(),
           Padding(
             padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
             child: Row(
@@ -84,33 +84,30 @@ class ForumPostView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     model.likedPost
-                            ? IconButton(
-                                onPressed: () {
-                                  model.likeUnlikePost(model.post.id);
+                        ? IconButton(
+                            onPressed: () {
+                              model.likeUnlikePost(model.post.id);
 
-                                  model.notifyListeners();
-                                },
-                                icon: Icon(
-                                  Icons.favorite,
-                                  size: 22,
-                                  color: Colors.redAccent[200],
-                                ))
-                            : IconButton(
-                                onPressed: () {
-                                  model.likeUnlikePost(model.post.id);
-                                },
-                                icon: Icon(
-                                  Icons.favorite_border,
-                                  size: 22,
-                                  color: appFontColor(),
-                                ),
-                              ),
+                              model.notifyListeners();
+                            },
+                            icon: Icon(
+                              Icons.favorite,
+                              size: 22,
+                              color: Colors.redAccent[200],
+                            ))
+                        : IconButton(
+                            onPressed: () {
+                              model.likeUnlikePost(model.post.id);
+                            },
+                            icon: Icon(
+                              Icons.favorite_border,
+                              size: 22,
+                              color: appFontColor(),
+                            ),
+                          ),
                     horizontalSpaceSmall,
-                    
                   ],
                 ),
-
-                
                 Text(
                   TimeCalc().getPastTimeFromMilliseconds(
                       model.post.dateCreatedInMilliseconds),
@@ -154,7 +151,6 @@ class ForumPostView extends StatelessWidget {
           showBackButton: true,
           actionWidget: IconButton(
             onPressed: () {
-              
               model.showOptions();
             },
             icon: Icon(
@@ -170,7 +166,13 @@ class ForumPostView extends StatelessWidget {
             height: screenHeight(context),
             color: appBackgroundColor(),
             child: model.isBusy
-                ? Container()
+                ? Center(
+                    child: SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
                 : Stack(
                     children: [
                       RefreshIndicator(
@@ -187,20 +189,103 @@ class ForumPostView extends StatelessWidget {
                       ),
                       Container(
                         alignment: Alignment.bottomCenter,
-                        child: CommentTextFieldView(
-                          onSubmitted: model.isReplying
-                              ? (val) => model.replyToComment(
-                                    context: context,
-                                    commentVal: val,
+                        child: Column(
+                          children: [
+                            Spacer(
+                              flex: 20,
+                            ),
+                            CommentTextFieldView(
+                              onSubmitted: model.isReplying
+                                  ? (val) {
+                                      model.replyToComment(
+                                          context: context,
+                                          commentVal: val,
+                                          image: model.img);
+                                          model.setBusy(true);
+                                      Future.delayed(model.img == null ? Duration(seconds: 1) : Duration(seconds: 3))
+                                          .then((b) {
+                                        model.img = null;
+                                        model.setBusy(false);
+                                      });
+                                    }
+                                  : (val) {
+                                      model.submitComment(
+                                        context: context,
+                                        commentVal: val,
+                                        image: model.img,
+                                        //image:
+                                      );
+                                      model.setBusy(true);
+                                      Future.delayed(model.img == null ? Duration(seconds: 1) : Duration(seconds: 3))
+                                          .then((b) {
+                                        model.img = null;
+                                        model.setBusy(false);
+                                      });
+                                      //model.setBusy(false);
+                                    },
+                              selectImage: model.selectImage,
+                              focusNode: focusNode,
+                              commentTextController:
+                                  model.commentTextController,
+                              isReplying: model.isReplying,
+                              replyReceiverUsername: model.isReplying
+                                  ? model.commentToReplyTo.username
+                                  : null,
+                            ),
+                            model.img != null
+                                ? Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    1 /
+                                                    4 -
+                                                23,
+                                          ),
+                                          SizedBox(
+                                            height: 22,
+                                            width: 22,
+                                            child: IconButton(
+                                                icon: Icon(
+                                                  Icons.cancel,
+                                                  color: CustomColors.goGreen,
+                                                  size: 15,
+                                                ),
+                                                onPressed: () {
+                                                  model.img = null;
+                                                  model.notifyListeners();
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                1 /
+                                                4,
+                                          ),
+                                          ConstrainedBox(
+                                              constraints: BoxConstraints(
+                                                maxHeight: 100,
+                                                maxWidth: 600,
+                                              ),
+                                              child: Image.file(model.imgFile)),
+                                        ],
+                                      ),
+                                    ],
                                   )
-                              : (val) => model.submitComment(
-                                  context: context, commentVal: val),
-                          focusNode: focusNode,
-                          commentTextController: model.commentTextController,
-                          isReplying: model.isReplying,
-                          replyReceiverUsername: model.isReplying
-                              ? model.commentToReplyTo.username
-                              : null,
+                                : Container(),
+                                Container(height: MediaQuery.of(context).size.height * 1/20,
+                                color: appBackgroundColor(),
+                                )
+                            
+                          ],
                         ),
                       ),
                     ],

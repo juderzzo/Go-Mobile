@@ -5,6 +5,7 @@ import 'package:go/ui/views/home/tabs/profile/edit_profile/edit_profile_view_mod
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/common/text_field/multi_line_text_field.dart';
+import 'package:go/ui/widgets/common/text_field/single_line_text_field.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
@@ -84,12 +85,28 @@ class EditProfileView extends StatelessWidget {
                 ),
                 verticalSpaceMedium,
                 CustomText(
+                  text: "Username", fontSize: 16, 
+                fontWeight: FontWeight.bold, 
+                color: appFontColor(),),
+
+                verticalSpaceSmall,
+                SingleLineTextField(
+                  controller: model.usernameTextController,
+                  hintText: "Username",
+                  textLimit: 30,
+                  isPassword: false,
+                  
+                ),
+                verticalSpaceMedium,
+
+                CustomText(
                   text: "Bio",
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: appFontColor(),
                 ),
                 verticalSpaceSmall,
+
                 MultiLineTextField(
                   controller: model.bioTextController,
                   hintText: "Tell Us About Yourself",

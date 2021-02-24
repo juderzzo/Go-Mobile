@@ -82,7 +82,7 @@ class ForumPostBlockViewModel extends BaseViewModel {
         //share
       } else if (res == "report") {
         //report
-        if (isAuthor) {
+        if (isAuthor || isAdmin) {
           delete(post.id);
         }
       } else if (res == "delete") {

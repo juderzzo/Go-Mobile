@@ -1,6 +1,9 @@
 import 'package:go/app/locator.dart';
+import 'package:go/app/router.gr.dart';
+import 'package:go/models/go_forum_post_comment_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -10,9 +13,11 @@ class CommentBlockViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   UserDataService _userDataService = locator<UserDataService>();
+  CommentDataService _commentDataService = locator<CommentDataService>();
 
   GoUser user;
   bool showingReplies = false;
+  String currentUID = "";
 
   initialize(String uid) async {
     setBusy(true);
@@ -21,6 +26,7 @@ class CommentBlockViewModel extends BaseViewModel {
     } else {
       user = res;
     }
+    currentUID = await _authService.getCurrentUserID();
     notifyListeners();
     setBusy(false);
   }
@@ -32,6 +38,19 @@ class CommentBlockViewModel extends BaseViewModel {
       showingReplies = true;
     }
     notifyListeners();
+  }
+
+  delete(GoForumPostComment comment) async {
+    print("chungus");
+    _commentDataService.deleteComment(
+        comment.postID, comment.timePostedInMilliseconds.toString());
+    _navigationService.back();
+    navigateToPostView(comment.postID);
+  }
+
+  navigateToPostView(String postID) {
+    _navigationService
+        .navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': postID});
   }
 
   ///NAVIGATION

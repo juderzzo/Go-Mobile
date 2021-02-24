@@ -56,7 +56,11 @@ class CreateCauseViewModel extends BaseViewModel {
     } else if (StringValidator().isValidString(charityURL) &&
         !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
-    } else if (videoLink != null && !(videoLink.length < 2)) {
+    } else if (img1 == null){
+      formError = "Please fill in the left most image for your cause";
+    }
+
+    else if (videoLink != null && !(videoLink.length < 2)) {
       print(videoLink.length);
       if (YoutubePlayer.convertUrlToId(videoLink) == null) {
         formError =
@@ -92,7 +96,7 @@ class CreateCauseViewModel extends BaseViewModel {
           img3: img3,
           videoLink: videoLink);
 
-      //now push each of the checklistItems referecne
+      
       
       setBusy(false);
       if (res != null) {

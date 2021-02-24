@@ -21,41 +21,42 @@ class ListCauses extends StatelessWidget {
       onRefresh: refreshData,
       backgroundColor: appBackgroundColor(),
       child: ListView.builder(
-        physics: AlwaysScrollableScrollPhysics(),
-        controller: scrollController,
-        key: pageStorageKey,
-        addAutomaticKeepAlives: true,
-        shrinkWrap: true,
-        padding: EdgeInsets.only(
-          top: 4.0,
-          bottom: 4.0,
-        ),
-        itemCount: causesResults.length,
-        itemBuilder: (context, index) {
-          GoCause cause;
-          bool displayBottomBorder = true;
+          physics: AlwaysScrollableScrollPhysics(),
+          controller: scrollController,
+          key: pageStorageKey,
+          addAutomaticKeepAlives: true,
+          shrinkWrap: true,
+          padding: EdgeInsets.only(
+            top: 4.0,
+            bottom: 4.0,
+          ),
+          itemCount: causesResults.length,
+          itemBuilder: (context, index) {
+            GoCause cause;
+            bool displayBottomBorder = true;
 
-          ///GET CAUSE OBJECT
-          if (causesResults[index] is DocumentSnapshot) {
-            cause = GoCause.fromMap(causesResults[index].data());
-          } else {
-            cause = causesResults[index];
-          }
+            ///GET CAUSE OBJECT
+            if (causesResults[index] is DocumentSnapshot) {
+              cause = GoCause.fromMap(causesResults[index].data());
+            } else {
+              cause = causesResults[index];
+            }
 
-          ///DISPLAY BOTTOM BORDER
-          if (causesResults.last == causesResults[index]) {
-            displayBottomBorder = false;
-          }
+            ///DISPLAY BOTTOM BORDER
+            if (causesResults.last == causesResults[index]) {
+              displayBottomBorder = false;
+            }
 
-          if(cause.approved){
-            return CauseBlockView(
-            cause: cause,
-            displayBottomBorder: displayBottomBorder,
-          );
-          }
-          
-        },
-      ),
+            if (cause.approved) {
+              return CauseBlockView(
+                cause: cause,
+                displayBottomBorder: displayBottomBorder,
+              );
+            } else {
+              return Container();
+            }
+            ;
+          }),
     );
   }
 

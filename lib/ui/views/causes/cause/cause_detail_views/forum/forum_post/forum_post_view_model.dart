@@ -13,6 +13,7 @@ import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/utils/go_image_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -34,6 +35,7 @@ class ForumPostViewModel extends BaseViewModel {
   ///DATA RESULTS
   bool loadingAdditionalComments = false;
   bool moreCommentsAvailable = true;
+
   List<DocumentSnapshot> commentResults = [];
   int resultsLimit = 15;
 
@@ -47,6 +49,11 @@ class ForumPostViewModel extends BaseViewModel {
   bool refreshingComments = true;
   GoForumPostComment commentToReplyTo;
   bool likedPost = false;
+
+  //images
+  bool imgChanged = false;
+  dynamic imgFile;
+  dynamic img;
 
   ///
 
@@ -83,8 +90,6 @@ class ForumPostViewModel extends BaseViewModel {
     await loadComments();
     notifyListeners();
     setBusy(false);
-
-    
   }
 
   ///LOAD POSTS
@@ -144,11 +149,10 @@ class ForumPostViewModel extends BaseViewModel {
         print("edit");
       } else if (res == "share") {
         //share
-         print("edit");
+        print("edit");
       } else if (res == "report") {
         //report
-         print("edit");
-
+        print("edit");
       } else if (res == "delete") {
         delete();
       }
@@ -164,20 +168,23 @@ class ForumPostViewModel extends BaseViewModel {
     focusNode.requestFocus();
   }
 
-  submitComment({BuildContext context, String commentVal}) async {
+  submitComment(
+      {BuildContext context, String commentVal, dynamic image}) async {
     isReplying = false;
     String text = commentVal.trim();
+    print("we got this far");
     if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
-        postID: post.id,
-        senderUID: currentUser.id,
-        username: currentUser.username,
-        message: text,
-        isReply: false,
-        replies: [],
-        replyCount: 0,
-        timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-      );
+          postID: post.id,
+          senderUID: currentUser.id,
+          username: currentUser.username,
+          message: text,
+          isReply: false,
+          replies: [],
+          replyCount: 0,
+          timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+          image: image
+          );
       await _commentDataService.sendComment(post.id, post.authorID, comment);
       sendCommentNotification(text);
       clearState(context);
@@ -192,22 +199,23 @@ class ForumPostViewModel extends BaseViewModel {
     refreshComments();
   }
 
-  replyToComment({BuildContext context, String commentVal}) async {
+  replyToComment(
+      {BuildContext context, String commentVal, dynamic image}) async {
     String text = commentVal.trim();
     if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
-        postID: post.id,
-        senderUID: currentUser.id,
-        username: currentUser.username,
-        message: text,
-        isReply: true,
-        replies: [],
-        replyCount: 0,
-        replyReceiverUsername: commentToReplyTo.username,
-        originalReplyCommentID:
-            commentToReplyTo.timePostedInMilliseconds.toString(),
-        timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-      );
+          postID: post.id,
+          senderUID: currentUser.id,
+          username: currentUser.username,
+          message: text,
+          isReply: true,
+          replies: [],
+          replyCount: 0,
+          replyReceiverUsername: commentToReplyTo.username,
+          originalReplyCommentID:
+              commentToReplyTo.timePostedInMilliseconds.toString(),
+          timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+          image: image);
       await _commentDataService.replyToComment(
         post.id,
         commentToReplyTo.senderUID,
@@ -234,6 +242,27 @@ class ForumPostViewModel extends BaseViewModel {
     likedPost = !likedPost;
     print(likedPost);
     notifyListeners();
+  }
+
+  //comments with images
+
+  void selectImage() async {
+    imgChanged = true;
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.imagePicker,
+    );
+    if (sheetResponse != null) {
+      String res = sheetResponse.responseData;
+      if (res == "camera") {
+        imgFile =
+            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+      } else if (res == "gallery") {
+        imgFile = await GoImagePicker()
+            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+      }
+      img = imgFile;
+      notifyListeners();
+    }
   }
 
   ///NOTIFICATIONS

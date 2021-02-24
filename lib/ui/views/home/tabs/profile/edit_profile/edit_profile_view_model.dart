@@ -23,10 +23,13 @@ class EditProfileViewModel extends BaseViewModel {
 
   Map<String, dynamic> args;
   TextEditingController bioTextController = TextEditingController();
+  TextEditingController usernameTextController = TextEditingController();
 
   File updatedProfilePic;
   String updatedBio;
   String id;
+  String updatedUsername;
+  String initialUsername;
   String initialProfilePicURL = "";
   String initialProfileBio = "";
 
@@ -43,7 +46,9 @@ class EditProfileViewModel extends BaseViewModel {
     GoUser user = await _userDataService.getGoUserByID(id);
     initialProfilePicURL = user.profilePicURL ?? "";
     initialProfileBio = user.bio ?? "";
+    initialUsername = user.username;
     bioTextController.text = initialProfileBio;
+    usernameTextController.text = initialUsername;
   }
 
   selectImage() async {
@@ -76,6 +81,9 @@ class EditProfileViewModel extends BaseViewModel {
     setBusy(true);
     var res =
         await _userDataService.updateBio(id, bioTextController.text.trim());
+    var res2 = await _userDataService.updateGoUserName(
+        id, usernameTextController.text.trim());
+
     if (res is String) {
       _snackbarService.showSnackbar(
         title: 'Update Error',
