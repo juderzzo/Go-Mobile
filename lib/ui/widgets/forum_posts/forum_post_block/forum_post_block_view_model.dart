@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
@@ -57,7 +58,16 @@ class ForumPostBlockViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  
+  showImage(Widget image, context) {
+    // print(image);
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: image,
+          );
+        });
+  }
 
   likeUnlikePost(String postID) async {
     String currentUID = await _authService.getCurrentUserID();
