@@ -27,7 +27,7 @@ class CreateForumPostViewModel extends BaseViewModel {
   ///DATA
   bool isEditing = false;
   GoForumPost originalPost;
-  File imgFile;
+  dynamic imgFile;
 
   String causeID;
   String postID;
@@ -56,10 +56,11 @@ class CreateForumPostViewModel extends BaseViewModel {
   }
 
   Future<bool> validateAndSubmitForm() async {
+    String id;
     String formError;
     String body = postTextController.text.trim();
     setBusy(true);
-    if (isValidString(body)) {
+    if (!isValidString(body)) {
       formError = "Post Cannot Be Empty";
     }
     if (formError != null) {
@@ -86,7 +87,7 @@ class CreateForumPostViewModel extends BaseViewModel {
         );
       } else {
         //first upload the images
-        String id = getRandomString(35);
+        id = getRandomString(35);
         print("view model");
         print(id);
         res = await _postDataService.createPost(
@@ -108,12 +109,14 @@ class CreateForumPostViewModel extends BaseViewModel {
         );
         return false;
       } else {
+        displayPostUploadSuccessBottomSheet(id);
         return true;
       }
     }
   }
 
-  void selectImage() async {
+  void selectImage(context) async {
+    FocusScope.of(context).requestFocus(FocusNode());
     imgChanged = true;
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.imagePicker,
@@ -121,9 +124,11 @@ class CreateForumPostViewModel extends BaseViewModel {
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
       if (res == "camera") {
-        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+        imgFile =
+            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
       } else if (res == "gallery") {
-        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker()
+            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
       img = imgFile;
       notifyListeners();

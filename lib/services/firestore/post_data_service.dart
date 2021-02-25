@@ -28,6 +28,15 @@ class PostDataService {
     return exists;
   }
 
+  updatePostby(GoForumPost post) async {
+          await postRef.doc(post.id).update(post.toMap()).catchError((e) {
+          print(e);
+          return;
+        });
+        }
+
+  
+
   Future updatePost({
     String id,
     String causeID,
@@ -90,6 +99,9 @@ class PostDataService {
           });
         });
       }
+
+        
+      
 
       onValue(String url) async {
         print("incorrectly");
@@ -189,6 +201,7 @@ class PostDataService {
     print("post service");
 
     await _userDataService.addPost(authorID, id).catchError((e) {
+      
       return e.message;
     });
   }

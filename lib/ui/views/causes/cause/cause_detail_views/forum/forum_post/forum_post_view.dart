@@ -17,7 +17,6 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class ForumPostView extends StatelessWidget {
   final FocusNode focusNode = FocusNode();
   ScrollController controller = new ScrollController();
-  
 
   Widget postBody(ForumPostViewModel model, BuildContext context) {
     return Container(
@@ -189,127 +188,139 @@ class ForumPostView extends StatelessWidget {
                           ],
                         ),
                       ),
-                      !model.commentSending ? Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          children: [
-                            Spacer(
-                              flex: 20,
-                            ),
-                            CommentTextFieldView(
-                              onSubmitted: model.isReplying
-                                  ? (val) {
-                                      model.replyToComment(
-                                          context: context,
-                                          commentVal: val,
-                                          image: model.img);
-                                      model.setBusy(true);
-                                      
-                                        
-                                        model.img = null;
-                                        model.setBusy(false);
-                                      
-                                    }
-                                  : (val) {
-                                      model.submitComment(
-                                        context: context,
-                                        commentVal: val,
-                                        image: model.img,
-                                        //image:
-                                      );
-                                      model.setBusy(true);
-                                      
-                                        
-                                        model.img = null;
-                                        model.setBusy(false);
-                                      
-                                      //model.setBusy(false);
-                                    },
-                              selectImage: model.selectImage,
-                              focusNode: focusNode,
-                              commentTextController:
-                                  model.commentTextController,
-                              isReplying: model.isReplying,
-                              replyReceiverUsername: model.isReplying
-                                  ? model.commentToReplyTo.username
-                                  : null,
-                            ),
-                            model.img != null
-                                ? Container(
-                                    color: isDarkMode()
+                      !model.commentSending
+                          ? Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Column(
+                                children: [
+                                  Spacer(
+                                    flex: 20,
+                                  ),
+                                  CommentTextFieldView(
+                                    onSubmitted: model.isReplying
+                                        ? (val) {
+                                            if (val == null &&
+                                                model.img != null) {
+                                              val = "";
+                                            }
+                                            model.replyToComment(
+                                                context: context,
+                                                commentVal: val,
+                                                image: model.img);
+                                            model.setBusy(true);
+
+                                            model.img = null;
+                                            model.setBusy(false);
+                                          }
+                                        : (val) {
+                                          if (val == null &&
+                                                model.img != null) {
+                                              val = "";
+                                            }
+                                            model.submitComment(
+                                              context: context,
+                                              commentVal: val,
+                                              image: model.img,
+                                              //image:
+                                            );
+                                            model.setBusy(true);
+
+                                            model.img = null;
+                                            model.setBusy(false);
+
+                                            //model.setBusy(false);
+                                          },
+                                    selectImage: model.selectImage,
+                                    focusNode: focusNode,
+                                    commentTextController:
+                                        model.commentTextController,
+                                    isReplying: model.isReplying,
+                                    replyReceiverUsername: model.isReplying
+                                        ? model.commentToReplyTo.username
+                                        : null,
+                                  ),
+                                  model.img != null
+                                      ? Container(
+                                          color: isDarkMode()
+                                              ? Color.fromRGBO(22, 22, 22, 1)
+                                              : appBackgroundColor(),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                    .size
+                                                                    .width *
+                                                                1 /
+                                                                4 -
+                                                            23,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 22,
+                                                    width: 22,
+                                                    child: IconButton(
+                                                        icon: Icon(
+                                                          Icons.cancel,
+                                                          color: CustomColors
+                                                              .goGreen,
+                                                          size: 15,
+                                                        ),
+                                                        onPressed: () {
+                                                          model.img = null;
+                                                          model
+                                                              .notifyListeners();
+                                                        }),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            1 /
+                                                            4,
+                                                  ),
+                                                  ConstrainedBox(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                        maxHeight: 100,
+                                                        maxWidth: 600,
+                                                      ),
+                                                      child: Image.file(
+                                                          model.imgFile)),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Container(),
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        1 /
+                                        20,
+                                    color: model.isDarkMode()
                                         ? Color.fromRGBO(22, 22, 22, 1)
                                         : appBackgroundColor(),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      1 /
-                                                      4 -
-                                                  23,
-                                            ),
-                                            SizedBox(
-                                              height: 22,
-                                              width: 22,
-                                              child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.cancel,
-                                                    color: CustomColors.goGreen,
-                                                    size: 15,
-                                                  ),
-                                                  onPressed: () {
-                                                    model.img = null;
-                                                    model.notifyListeners();
-                                                  }),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  1 /
-                                                  4,
-                                            ),
-                                            ConstrainedBox(
-                                                constraints: BoxConstraints(
-                                                  maxHeight: 100,
-                                                  maxWidth: 600,
-                                                ),
-                                                child:
-                                                    Image.file(model.imgFile)),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
                                   )
-                                : Container(),
-                            Container(
-                              height:
-                                  MediaQuery.of(context).size.height * 1 / 20,
-                              color: model.isDarkMode()
-                                  ? Color.fromRGBO(22, 22, 22, 1)
-                                  : appBackgroundColor(),
+                                ],
+                              ),
                             )
-                          ],
-                        ),
-                      ) : 
-                      Column(
-                        children: [
-                          Spacer(flex: 20),
-                          Container(
-                            height: 20,
-                            width: MediaQuery.of(context).size.width,
-                            child: LinearProgressIndicator(),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
+                          : Column(
+                              children: [
+                                Spacer(flex: 20),
+                                Container(
+                                  height: 20,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: LinearProgressIndicator(),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
                     ],
                   ),
           ),

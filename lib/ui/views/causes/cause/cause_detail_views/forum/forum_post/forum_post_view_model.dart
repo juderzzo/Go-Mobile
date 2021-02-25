@@ -93,7 +93,7 @@ class ForumPostViewModel extends BaseViewModel {
     });
 
     isAdmin = (uid == post.causeID);
-    print(isAdmin);
+    //print(isAdmin);
 
     await loadComments();
     notifyListeners();
@@ -117,7 +117,9 @@ class ForumPostViewModel extends BaseViewModel {
         postID: post.id, resultsLimit: resultsLimit);
     refreshingComments = false;
     notifyListeners();
-    print(commentResults.length);
+    if (commentResults.length != post.commentCount) ;
+    post.commentCount = commentResults.length;
+    _postDataService.updatePostby(post);
   }
 
   delete() async {

@@ -41,6 +41,8 @@ class CreateForumPostView extends StatelessWidget {
     ///print(model.imgFile.runtimeType);
     //print("img");
     //print(model.img);
+    print(model.imgFile);
+    print(model.imgFile != null);
     return Container(
       width: MediaQuery.of(context).size.width,
       child: ListView(
@@ -75,7 +77,7 @@ class CreateForumPostView extends StatelessWidget {
                                       size: 25,
                                     ),
                                     onPressed: () {
-                                      model.selectImage();
+                                      model.selectImage(context);
                                     }),
                               ],
                             ),
@@ -91,15 +93,17 @@ class CreateForumPostView extends StatelessWidget {
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                                   child: Image.file(model.imgFile)),
                               SizedBox(
-                                height: 22,
-                                width: 22,
+                                height: 42,
+                                width: 42,
                                 child: IconButton(
-                                      icon: Icon(
-                                        Icons.cancel,
-                                      ),
-                                    
+                                    icon: Icon(
+                                      Icons.cancel,
+                                    ),
                                     onPressed: () {
+                                      print("chuggers");
+
                                       model.imgFile = null;
+                                      model.img = null;
                                       model.notifyListeners();
                                     }),
                               )

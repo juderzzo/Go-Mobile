@@ -109,17 +109,14 @@ class ForumPostBlockView extends StatelessWidget {
                             height: 200,
                             width: MediaQuery.of(context).size.width,
                             child: 
-                            GestureDetector(
-                              onTap: model.showImage(Image.network(
-                                post.imageID,), context),
-                                child: Image.network(
+                             Image.network(
                                 post.imageID,
                                 height: 200,
                               
                                 fit: BoxFit.fitWidth,
                                 width: MediaQuery.of(context).size.width
                               ),
-                            ))
+                            )
                         : Container(),
                         SizedBox(height: 5,),
                     Row(
