@@ -51,7 +51,8 @@ class EditProfileViewModel extends BaseViewModel {
     usernameTextController.text = initialUsername;
   }
 
-  selectImage() async {
+  selectImage(context) async {
+    FocusScope.of(context).requestFocus(FocusNode());
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.imagePicker,
     );

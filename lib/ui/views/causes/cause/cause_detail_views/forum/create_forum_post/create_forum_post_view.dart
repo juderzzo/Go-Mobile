@@ -37,12 +37,7 @@ class CreateForumPostView extends StatelessWidget {
   }
 
   Widget form(BuildContext context, CreateForumPostViewModel model) {
-    //print("imgfile");
-    ///print(model.imgFile.runtimeType);
-    //print("img");
-    //print(model.img);
-    print(model.imgFile);
-    print(model.imgFile != null);
+    
     return Container(
       width: MediaQuery.of(context).size.width,
       child: ListView(
@@ -100,7 +95,7 @@ class CreateForumPostView extends StatelessWidget {
                                       Icons.cancel,
                                     ),
                                     onPressed: () {
-                                      print("chuggers");
+                                      //print("chuggers");
 
                                       model.imgFile = null;
                                       model.img = null;

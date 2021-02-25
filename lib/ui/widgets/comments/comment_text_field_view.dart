@@ -110,7 +110,7 @@ class CommentTextFieldView extends StatelessWidget {
                     textFieldConfiguration: TextFieldConfiguration(
                       onSubmitted: (val) => onSubmitted(val),
                       focusNode: focusNode,
-                      textInputAction: TextInputAction.send,
+                      textInputAction: commentTextController.text.length > 1 ? TextInputAction.send : TextInputAction.done,
                       minLines: 1,
                       maxLines: 5,
                       maxLengthEnforced: true,

@@ -52,7 +52,7 @@ class EditProfileView extends StatelessWidget {
                 verticalSpaceMedium,
                 model.updatedProfilePic == null
                     ? GestureDetector(
-                        onTap: () => model.selectImage(),
+                        onTap: () => model.selectImage(context),
                         child: Align(
                           child: UserProfilePic(
                             isBusy: model.isBusy,
@@ -62,7 +62,7 @@ class EditProfileView extends StatelessWidget {
                         ),
                       )
                     : GestureDetector(
-                        onTap: () => model.selectImage(),
+                        onTap: () => model.selectImage(context),
                         child: Align(
                           child: UserProfilePicFromFile(
                             file: model.updatedProfilePic,
@@ -73,7 +73,7 @@ class EditProfileView extends StatelessWidget {
                 verticalSpaceSmall,
                 Align(
                   child: GestureDetector(
-                    onTap: () => model.selectImage(),
+                    onTap: () => model.selectImage(context),
                     child: CustomText(
                       text: "Change Profile Pic",
                       textAlign: TextAlign.center,

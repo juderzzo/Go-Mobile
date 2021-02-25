@@ -43,7 +43,8 @@ class OnboardingViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  selectImage() async {
+  selectImage(context) async {
+    FocusScope.of(context).requestFocus(FocusNode());
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.imagePicker,
     );
