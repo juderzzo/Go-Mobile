@@ -26,6 +26,7 @@ class ForumPostBlockViewModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
   DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
   ShareService _shareService = locator<ShareService>();
+  DialogService _dialogService = locator<DialogService>();
 
   String authorUsername;
   String authorProfilePicURL;
@@ -56,6 +57,8 @@ class ForumPostBlockViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  
+
   likeUnlikePost(String postID) async {
     String currentUID = await _authService.getCurrentUserID();
     _userDataService.likeUnlikePost(currentUID, postID);
@@ -66,13 +69,16 @@ class ForumPostBlockViewModel extends BaseViewModel {
 
   showOptions({GoForumPost post, VoidCallback refreshAction}) async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
-      variant: isAuthor || isAdmin ? BottomSheetType.postAuthorOptions : BottomSheetType.postOptions,
+      variant: isAuthor || isAdmin
+          ? BottomSheetType.postAuthorOptions
+          : BottomSheetType.postOptions,
     );
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
       //print(res);
       if (res == "edit") {
-        String data = await _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {
+        String data = await _navigationService
+            .navigateTo(Routes.CreateForumPostViewRoute, arguments: {
           'causeID': post.causeID,
           'postID': post.id,
         });
@@ -81,7 +87,8 @@ class ForumPostBlockViewModel extends BaseViewModel {
         }
       } else if (res == "share") {
         //share post link
-        String url = await _dynamicLinkService.createPostLink(postAuthorUsername: "$authorUsername", post: post);
+        String url = await _dynamicLinkService.createPostLink(
+            postAuthorUsername: "$authorUsername", post: post);
         _shareService.shareLink(url);
       } else if (res == "report") {
         //report
@@ -103,10 +110,12 @@ class ForumPostBlockViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToPostView(String postID) {
-    _navigationService.navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': postID});
+    _navigationService
+        .navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': postID});
   }
 
   navigateToUserView(String uid) {
-    _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
+    _navigationService
+        .navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 }

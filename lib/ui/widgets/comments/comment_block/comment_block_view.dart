@@ -20,7 +20,8 @@ class CommentBlockView extends StatelessWidget {
     List<TextSpan> richText = [
       TextSpan(
         text: '${comment.username} ',
-        style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.bold),
       ),
     ];
     words.forEach((word) {
@@ -28,17 +29,26 @@ class CommentBlockView extends StatelessWidget {
       if (word.startsWith("@")) {
         textSpan = TextSpan(
           text: "$word ",
-          style: TextStyle(color: appTextButtonColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+          style: TextStyle(
+              color: appTextButtonColor(),
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400),
         );
       } else if (word.startsWith("#")) {
         textSpan = TextSpan(
           text: "$word ",
-          style: TextStyle(color: appTextButtonColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+          style: TextStyle(
+              color: appTextButtonColor(),
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400),
         );
       } else {
         textSpan = TextSpan(
           text: "$word ",
-          style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w400),
+          style: TextStyle(
+              color: appFontColor(),
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400),
         );
       }
       richText.add(textSpan);
@@ -64,20 +74,17 @@ class CommentBlockView extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          GestureDetector(
-                            onTap: null, //viewUser,
-                            child: Row(
-                              children: <Widget>[
-                                UserProfilePic(
-                                  userPicUrl: model.user.profilePicURL,
-                                  size: comment.isReply ? 20 : 35,
-                                  isBusy: false,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            children: <Widget>[
+                              UserProfilePic(
+                                userPicUrl: model.user.profilePicURL,
+                                size: comment.isReply ? 20 : 35,
+                                isBusy: false,
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                            ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,33 +109,42 @@ class CommentBlockView extends StatelessWidget {
                                               fontSize: 14.0,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        
                                       ],
                                     ),
                                   ),
                                 ),
                               ),
                               RichText(
-                              text: TextSpan(
-                                          text: comment.message,
-                                          style: TextStyle(
-                                              color: appFontColor(),
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w400),
-                                        )),
-                              comment.image == null ? SizedBox(height: 2) :
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(maxHeight: 100),
-                                    child: Image.network(
-                                       comment.image,
-                                     ),
-                                  ),
-                                ],
-                              ),
-                              
+                                  text: TextSpan(
+                                text: comment.message,
+                                style: TextStyle(
+                                    color: appFontColor(),
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400),
+                              )),
+                              comment.image == null
+                                  ? SizedBox(height: 2)
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            model.showImage(
+                                              Image.network(
+                                              comment.image,
+                                            ), context);
+                                          },
+                                          child: ConstrainedBox(
+                                            constraints:
+                                                BoxConstraints(maxHeight: 100),
+                                            child: Image.network(
+                                              comment.image,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [

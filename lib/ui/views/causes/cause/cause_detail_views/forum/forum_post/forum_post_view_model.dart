@@ -42,6 +42,7 @@ class ForumPostViewModel extends BaseViewModel {
   ///DATA RESULTS
   bool loadingAdditionalComments = false;
   bool moreCommentsAvailable = true;
+  bool commentSending = false;
 
   List<DocumentSnapshot> commentResults = [];
   int resultsLimit = 15;
@@ -99,7 +100,7 @@ class ForumPostViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  bool isDarkMode()  {
+  bool isDarkMode() {
     return _themeService.isDarkMode ? true : false;
   }
 
@@ -183,6 +184,7 @@ class ForumPostViewModel extends BaseViewModel {
   submitComment(
       {BuildContext context, String commentVal, dynamic image}) async {
     isReplying = false;
+    commentSending = true;
     String text = commentVal.trim();
     print("we got this far");
     if (text.isNotEmpty) {
@@ -202,6 +204,7 @@ class ForumPostViewModel extends BaseViewModel {
       clearState(context);
     }
     refreshComments();
+    commentSending = false;
   }
 
   deleteComment({BuildContext context, String commentID}) async {
@@ -214,6 +217,7 @@ class ForumPostViewModel extends BaseViewModel {
   replyToComment(
       {BuildContext context, String commentVal, dynamic image}) async {
     String text = commentVal.trim();
+    commentSending = true;
     if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
           postID: post.id,
@@ -239,6 +243,7 @@ class ForumPostViewModel extends BaseViewModel {
     sendUserMentionNotification(text);
     clearState(context);
     refreshComments();
+    commentSending = false;
   }
 
   clearState(BuildContext context) {
@@ -328,6 +333,12 @@ class ForumPostViewModel extends BaseViewModel {
     _navigationService
         .navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
+
+  navigateToPostView(String postID) {
+    _navigationService
+        .navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': postID});
+  }
+
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);
 // }

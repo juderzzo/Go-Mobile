@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_forum_post_comment_model.dart';
@@ -46,6 +47,17 @@ class CommentBlockViewModel extends BaseViewModel {
         comment.postID, comment.timePostedInMilliseconds.toString());
     _navigationService.back();
     navigateToPostView(comment.postID);
+  }
+
+  showImage(Widget image, context) {
+    // print(image);
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: image,
+          );
+        });
   }
 
   navigateToPostView(String postID) {

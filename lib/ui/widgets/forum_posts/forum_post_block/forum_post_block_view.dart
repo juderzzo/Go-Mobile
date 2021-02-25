@@ -120,6 +120,24 @@ class ForumPostBlockView extends StatelessWidget {
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        horizontalSpaceMedium,
+                         Icon(
+                          FontAwesomeIcons.comment,
+                          size: 16,
+                          color: appFontColor(),
+                        ),
+                        horizontalSpaceSmall,
+                        CustomText(
+                          text: post.commentCount.toString(),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          color: appFontColor(),
+                        ),
+                        
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 4 / 9,
+                        ),
+
                         model.likedPost
                             ? IconButton(
                                 onPressed: () {
@@ -142,39 +160,27 @@ class ForumPostBlockView extends StatelessWidget {
                                   color: appFontColor(),
                                 ),
                               ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 5 / 9,
-                        ),
-                        Icon(
-                          FontAwesomeIcons.comment,
-                          size: 16,
-                          color: appFontColor(),
-                        ),
-                        horizontalSpaceSmall,
-                        CustomText(
-                          text: post.commentCount.toString(),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          color: appFontColor(),
-                        ),
+                       
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 1 / 5,
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 5 / 9,
-                        ),
-                        CustomText(
-                          text: TimeCalc().getPastTimeFromMilliseconds(
-                              post.dateCreatedInMilliseconds),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w300,
-                          color: appFontColorAlt(),
-                        ),
-                      ],
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          Spacer(flex:10),
+                          CustomText(
+                            text: TimeCalc().getPastTimeFromMilliseconds(
+                                post.dateCreatedInMilliseconds),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: appFontColorAlt(),
+                          ),
+                          Spacer(),
+                        ],
+                      ),
                     ),
                   ],
                 ),

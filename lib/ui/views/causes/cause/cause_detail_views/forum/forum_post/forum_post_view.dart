@@ -16,6 +16,8 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class ForumPostView extends StatelessWidget {
   final FocusNode focusNode = FocusNode();
+  ScrollController controller = new ScrollController();
+  
 
   Widget postBody(ForumPostViewModel model, BuildContext context) {
     return Container(
@@ -131,7 +133,7 @@ class ForumPostView extends StatelessWidget {
   postComments(ForumPostViewModel model) {
     return ListComments(
       refreshData: () async {},
-      scrollController: null,
+      scrollController: controller,
       showingReplies: false,
       pageStorageKey: PageStorageKey('post-comments'),
       refreshingData: false,
@@ -187,7 +189,7 @@ class ForumPostView extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
+                      !model.commentSending ? Container(
                         alignment: Alignment.bottomCenter,
                         child: Column(
                           children: [
@@ -201,12 +203,12 @@ class ForumPostView extends StatelessWidget {
                                           context: context,
                                           commentVal: val,
                                           image: model.img);
-                                          model.setBusy(true);
-                                      Future.delayed(model.img == null ? Duration(seconds: 1) : Duration(seconds: 3))
-                                          .then((b) {
+                                      model.setBusy(true);
+                                      
+                                        
                                         model.img = null;
                                         model.setBusy(false);
-                                      });
+                                      
                                     }
                                   : (val) {
                                       model.submitComment(
@@ -216,11 +218,11 @@ class ForumPostView extends StatelessWidget {
                                         //image:
                                       );
                                       model.setBusy(true);
-                                      Future.delayed(model.img == null ? Duration(seconds: 1) : Duration(seconds: 3))
-                                          .then((b) {
+                                      
+                                        
                                         model.img = null;
                                         model.setBusy(false);
-                                      });
+                                      
                                       //model.setBusy(false);
                                     },
                               selectImage: model.selectImage,
@@ -233,60 +235,80 @@ class ForumPostView extends StatelessWidget {
                                   : null,
                             ),
                             model.img != null
-                                ? Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    1 /
-                                                    4 -
-                                                23,
-                                          ),
-                                          SizedBox(
-                                            height: 22,
-                                            width: 22,
-                                            child: IconButton(
-                                                icon: Icon(
-                                                  Icons.cancel,
-                                                  color: CustomColors.goGreen,
-                                                  size: 15,
+                                ? Container(
+                                    color: isDarkMode()
+                                        ? Color.fromRGBO(22, 22, 22, 1)
+                                        : appBackgroundColor(),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      1 /
+                                                      4 -
+                                                  23,
+                                            ),
+                                            SizedBox(
+                                              height: 22,
+                                              width: 22,
+                                              child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.cancel,
+                                                    color: CustomColors.goGreen,
+                                                    size: 15,
+                                                  ),
+                                                  onPressed: () {
+                                                    model.img = null;
+                                                    model.notifyListeners();
+                                                  }),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  1 /
+                                                  4,
+                                            ),
+                                            ConstrainedBox(
+                                                constraints: BoxConstraints(
+                                                  maxHeight: 100,
+                                                  maxWidth: 600,
                                                 ),
-                                                onPressed: () {
-                                                  model.img = null;
-                                                  model.notifyListeners();
-                                                }),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                1 /
-                                                4,
-                                          ),
-                                          ConstrainedBox(
-                                              constraints: BoxConstraints(
-                                                maxHeight: 100,
-                                                maxWidth: 600,
-                                              ),
-                                              child: Image.file(model.imgFile)),
-                                        ],
-                                      ),
-                                    ],
+                                                child:
+                                                    Image.file(model.imgFile)),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   )
                                 : Container(),
-                                Container(height: MediaQuery.of(context).size.height * 1/20,
-                                color: model.isDarkMode() ? Colors.black45 : appBackgroundColor(),
-                                )
-                            
+                            Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 1 / 20,
+                              color: model.isDarkMode()
+                                  ? Color.fromRGBO(22, 22, 22, 1)
+                                  : appBackgroundColor(),
+                            )
                           ],
                         ),
+                      ) : 
+                      Column(
+                        children: [
+                          Spacer(flex: 20),
+                          Container(
+                            height: 20,
+                            width: MediaQuery.of(context).size.width,
+                            child: LinearProgressIndicator(),
+                          ),
+                          Spacer(),
+                        ],
                       ),
                     ],
                   ),
