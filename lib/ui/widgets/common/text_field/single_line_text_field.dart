@@ -8,11 +8,16 @@ class SingleLineTextField extends StatelessWidget {
   final String hintText;
   final int textLimit;
   final bool isPassword;
+  final Function(String) onChanged;
+  final Function(String) onSubmitted;
+
   SingleLineTextField({
     @required this.controller,
     @required this.hintText,
     @required this.textLimit,
     @required this.isPassword,
+    @required this.onChanged,
+    @required this.onSubmitted,
   });
 
   @override
@@ -22,17 +27,15 @@ class SingleLineTextField extends StatelessWidget {
         controller: controller,
         cursorColor: appFontColor(),
         obscureText: isPassword,
-        inputFormatters: textLimit == null
-            ? []
-            : [
-                LengthLimitingTextInputFormatter(textLimit),
-              ],
+        inputFormatters: textLimit == null ? [] : [LengthLimitingTextInputFormatter(textLimit)],
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
         ),
         enableInteractiveSelection: true,
+        onFieldSubmitted: onSubmitted == null ? null : (val) => onSubmitted(val),
+        onChanged: onChanged == null ? null : (val) => onChanged(val),
       ),
     );
   }

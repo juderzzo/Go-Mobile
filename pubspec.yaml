@@ -46,6 +46,13 @@ dependencies:
   permission_handler:
   app_settings:
   
+  #LOCATION
+  location:
+  geoflutterfire:
+  geocoder:
+  flutter_google_places:
+  flutter_google_places_api:
+  google_maps_webservice:
 
   #IMAGES
   cached_network_image: ^2.5.0

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
+import 'package:go/ui/widgets/causes/check_list_item_formdart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 
-import 'edit_checklist_viewmodel.dart';
+import 'edit_checklist_view_model.dart';
 
 class EditChecklistView extends StatefulWidget {
   final List arguments;
@@ -54,15 +53,15 @@ class _EditChecklistViewState extends State<EditChecklistView> {
         child: Icon(Icons.add),
         onPressed: addAction,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: appBackgroundColor(),
       appBar: AppBar(
         elevation: 0.0,
         toolbarHeight: 70,
-        backgroundColor: Colors.white,
+        backgroundColor: appBackgroundColor(),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: appIconColor(),
           ),
           onPressed: () {
             model.navigateBack();
@@ -127,13 +126,9 @@ class _EditChecklistViewState extends State<EditChecklistView> {
       subHeaders = arguments[6];
       for (int i = 0; i < actions.length; i++) {
         print(i);
-        dynamicList.add(CheckField(
-          id: actions[i],
-          header: headers[i],
-          subheader: subHeaders[i],
-          index: i,
-          view: this,
-        ));
+        dynamicList.add(
+          CheckField(id: actions[i], header: headers[i], subheader: subHeaders[i], index: i, onChangedHeader: null, onChangedSubHeader: null, onDelete: null),
+        );
       }
       initialized = true;
     }
@@ -152,106 +147,24 @@ class _EditChecklistViewState extends State<EditChecklistView> {
   }
 
   Widget build(BuildContext context) {
-    return ViewModelBuilder<EditChecklistViewModel>.nonReactive(
+    return ViewModelBuilder<EditChecklistViewModel>.reactive(
         viewModelBuilder: () => EditChecklistViewModel(),
         onModelReady: initialize(EditChecklistViewModel()),
         createNewModelOnInsert: true,
         builder: (context, model, child) => Scaffold(
-            //resizeToAvoidBottomInset: false,
-            body: SingleChildScrollView(
+              //resizeToAvoidBottomInset: false,
+              body: SingleChildScrollView(
                 physics: ClampingScrollPhysics(),
                 child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      //minHeight: MediaQuery.of(context).size.height,
-                      //minWidth: MediaQuery.of(context).size.width,
-                      maxHeight: MediaQuery.of(context).size.height,
-                      maxWidth: MediaQuery.of(context).size.width,
-                    ),
-                    child: wrapper(model)))));
-  }
-}
-
-class CheckField extends StatelessWidget {
-  String id;
-  String header;
-  String subheader;
-  int index;
-  _EditChecklistViewState view;
-
-  CheckField({this.id, this.header, this.subheader, this.index, this.view});
-  TextEditingController headerController = new TextEditingController();
-  TextEditingController subHeaderController = new TextEditingController();
-
-  //we need an index and and id to have the cause
-  //CheckField({this.id, this.header, this.subheader, this.index});
-  Widget build(BuildContext context) {
-    headerController.text = header;
-    subHeaderController.text = subheader;
-    return Container(
-      padding: EdgeInsets.fromLTRB(32.0, 10.0, 0.0, 0.0),
-      height: 200,
-      width: MediaQuery.of(context).size.width,
-      child: Row(
-        children: [
-          Column(children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 3 / 4,
-              height: 50,
-              decoration: BoxDecoration(
-                color: appTextFieldContainerColor(),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: TextFormField(
-                  textInputAction: TextInputAction.done,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(20),
-                  ],
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  controller: headerController,
-                  onChanged: (leon) {
-                    header = headerController.text;
-                  },
-                  decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), hintText: "Action", border: InputBorder.none)),
-            ),
-            verticalSpaceSmall,
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              width: MediaQuery.of(context).size.width * 3 / 4,
-              child: TextFormField(
-                  textInputAction: TextInputAction.done,
-                  onChanged: (leon) {
-                    subheader = subHeaderController.text;
-                  },
-                  keyboardType: TextInputType.multiline,
-                  controller: subHeaderController,
-                  maxLines: 2,
-                  maxLength: 100,
-                  decoration: InputDecoration(contentPadding: EdgeInsets.all(8.0), hintText: "Description", border: InputBorder.none)),
-            ),
-          ]),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 75.0),
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-              child: GestureDetector(
-                onTap: () {
-                  print(this.index);
-                  view.remove(this.index);
-                },
-                child: Icon(
-                  Icons.remove,
-                  size: 15,
-                  color: Colors.white,
+                  constraints: BoxConstraints(
+                    //minHeight: MediaQuery.of(context).size.height,
+                    //minWidth: MediaQuery.of(context).size.width,
+                    maxHeight: MediaQuery.of(context).size.height,
+                    maxWidth: MediaQuery.of(context).size.width,
+                  ),
+                  child: wrapper(model),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+            ));
   }
 }

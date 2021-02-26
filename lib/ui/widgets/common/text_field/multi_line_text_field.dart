@@ -6,30 +6,32 @@ class MultiLineTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final int maxLines;
-  final color;
+  final Function(String) onChanged;
+  final Function(String) onSubmitted;
 
   MultiLineTextField({
     @required this.controller,
     @required this.hintText,
     @required this.maxLines,
-    this.color
+    @required this.onChanged,
+    @required this.onSubmitted,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextFormField(
-      
         controller: controller,
-        cursorColor: appFontColorAlt(),
+        cursorColor: appCursorColor(),
         maxLines: maxLines,
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
-          
         ),
         enableInteractiveSelection: true,
+        onFieldSubmitted: onSubmitted == null ? null : (val) => onSubmitted(val),
+        onChanged: onChanged == null ? null : (val) => onChanged(val),
       ),
     );
   }
