@@ -16,8 +16,11 @@ import '../services/firestore/comment_data_service.dart';
 import '../services/dynamic_links/dynamic_link_service.dart';
 import '../ui/views/home/tabs/explore/explore_view_model.dart';
 import '../services/firebase_messaging/firebase_messaging_service.dart';
+import '../services/location/google_places_service.dart';
 import '../ui/views/home/tabs/home/home_view_model.dart';
+import '../services/location/location_service.dart';
 import '../services/firestore/notification_data_service.dart';
+import '../services/firestore/platform_data_service.dart';
 import '../services/firestore/post_data_service.dart';
 import '../ui/views/home/tabs/profile/profile_view_model.dart';
 import '../services/services_module.dart';
@@ -45,9 +48,14 @@ GetIt $initGetIt(
   gh.lazySingleton<DynamicLinkService>(() => servicesModule.dynamicLinkService);
   gh.lazySingleton<FirebaseMessagingService>(
       () => servicesModule.firebaseMessagingService);
+  gh.lazySingleton<GooglePlacesService>(
+      () => servicesModule.googlePlacesService);
+  gh.lazySingleton<LocationService>(() => servicesModule.locationService);
   gh.lazySingleton<NavigationService>(() => servicesModule.navigationService);
   gh.lazySingleton<NotificationDataService>(
       () => servicesModule.notificationDataService);
+  gh.lazySingleton<PlatformDataService>(
+      () => servicesModule.platformDataService);
   gh.lazySingleton<PostDataService>(() => servicesModule.postDataService);
   gh.lazySingleton<ShareService>(() => servicesModule.shareService);
   gh.lazySingleton<SnackbarService>(() => servicesModule.snackBarService);
@@ -81,10 +89,16 @@ class _$ServicesModule extends ServicesModule {
   FirebaseMessagingService get firebaseMessagingService =>
       FirebaseMessagingService();
   @override
+  GooglePlacesService get googlePlacesService => GooglePlacesService();
+  @override
+  LocationService get locationService => LocationService();
+  @override
   NavigationService get navigationService => NavigationService();
   @override
   NotificationDataService get notificationDataService =>
       NotificationDataService();
+  @override
+  PlatformDataService get platformDataService => PlatformDataService();
   @override
   PostDataService get postDataService => PostDataService();
   @override

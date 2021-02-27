@@ -38,6 +38,7 @@ class CheckListItemForm extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: SingleLineTextField(
+                  initialValue: item.header,
                   controller: null,
                   hintText: "Action",
                   textLimit: 20,
@@ -51,11 +52,12 @@ class CheckListItemForm extends StatelessWidget {
             verticalSpaceSmall,
             Container(
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: appTextFieldContainerColor(),
                 borderRadius: BorderRadius.circular(10),
               ),
               width: MediaQuery.of(context).size.width * 3 / 4,
               child: MultiLineTextField(
+                initialValue: item.subHeader,
                 controller: null,
                 hintText: "Description",
                 maxLines: 2,

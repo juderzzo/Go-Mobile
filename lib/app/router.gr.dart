@@ -38,7 +38,7 @@ class Routes {
   static const String CauseViewRoute = '/cause-view';
   static const String EditCauseViewRoute = '/edit-cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
-  static const String EditChecklistView = '/edit-checklist-view';
+  static const String EditCheckListView = '/edit-check-list-view';
   static const String ForumPostViewRoute = '/forum-post-view';
   static const String CreateForumPostViewRoute = '/create-forum-post-view';
   static const String UserViewRoute = '/user-view';
@@ -57,7 +57,7 @@ class Routes {
     CauseViewRoute,
     EditCauseViewRoute,
     CreateCauseViewRoute,
-    EditChecklistView,
+    EditCheckListView,
     ForumPostViewRoute,
     CreateForumPostViewRoute,
     UserViewRoute,
@@ -82,7 +82,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.CauseViewRoute, page: CauseView),
     RouteDef(Routes.EditCauseViewRoute, page: EditCauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
-    RouteDef(Routes.EditChecklistView, page: EditChecklistView),
+    RouteDef(Routes.EditCheckListView, page: EditCheckListView),
     RouteDef(Routes.ForumPostViewRoute, page: ForumPostView),
     RouteDef(Routes.CreateForumPostViewRoute, page: CreateForumPostView),
     RouteDef(Routes.UserViewRoute, page: UserView),
@@ -165,12 +165,9 @@ class GoRouter extends RouterBase {
         settings: data,
       );
     },
-    EditChecklistView: (data) {
-      final args = data.getArgs<EditChecklistViewArguments>(
-        orElse: () => EditChecklistViewArguments(),
-      );
+    EditCheckListView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => EditChecklistView(arguments: args.arguments),
+        builder: (context) => EditCheckListView(),
         settings: data,
       );
     },
@@ -259,12 +256,6 @@ class EditCauseViewArguments {
       this.img3,
       this.videoLink,
       this.monetized});
-}
-
-/// EditChecklistView arguments holder class
-class EditChecklistViewArguments {
-  final List<dynamic> arguments;
-  EditChecklistViewArguments({this.arguments});
 }
 
 /// AllSearchResultsView arguments holder class

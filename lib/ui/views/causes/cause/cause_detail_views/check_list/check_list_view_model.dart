@@ -14,6 +14,7 @@ class CheckListViewModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
   UserDataService _userService = locator<UserDataService>();
   RewardedVideoAd adInstance = RewardedVideoAd.instance;
+
   bool monetizer = false;
   bool bus = false;
   bool working;
@@ -110,8 +111,9 @@ class CheckListViewModel extends BaseViewModel {
     );
   }
 
-  navigateToEdit(actions, creatorID, currentUID, name, causeID, headers, subheaders) {
-    _navigationService.navigateTo(Routes.EditChecklistView,
-        arguments: EditChecklistViewArguments(arguments: [actions, creatorID, currentUID, name, causeID, headers, subheaders]));
+  navigateToEdit(String causeID) {
+    _navigationService.navigateTo(Routes.EditCheckListView, arguments: {'id': causeID});
+    // _navigationService.navigateTo(Routes.EditChecklistView,
+    //     arguments: EditChecklistViewArguments(arguments: [actions, creatorID, currentUID, name, causeID, headers, subheaders]));
   }
 }

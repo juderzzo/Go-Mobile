@@ -216,7 +216,12 @@ class CauseDataService {
   Future getCauseByID(String id) async {
     GoCause cause;
     DocumentSnapshot snapshot = await causeRef.doc(id).get().catchError((e) {
-      return e.message;
+      _snackbarService.showSnackbar(
+        title: 'Cause Load Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+      return null;
     });
     if (snapshot.exists) {
       Map<String, dynamic> snapshotData = snapshot.data();

@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route_annotations.dart';
-import 'package:flutter/material.dart';
 import 'package:go/ui/views/auth/forgot_password/forgot.dart';
 import 'package:go/ui/views/auth/sign_in/sign_in_view.dart';
 import 'package:go/ui/views/auth/sign_up/sign_up_view.dart';
@@ -38,9 +37,9 @@ import 'package:go/ui/views/user/user_view.dart';
 
     //CAUSES
     MaterialRoute(page: CauseView, name: "CauseViewRoute"),
-    MaterialRoute(page: EditCauseView, name:"EditCauseViewRoute"),
+    MaterialRoute(page: EditCauseView, name: "EditCauseViewRoute"),
     MaterialRoute(page: CreateCauseView, name: "CreateCauseViewRoute"),
-    MaterialRoute(page: EditChecklistView, name: "EditChecklistView"),
+    MaterialRoute(page: EditCheckListView, name: "EditCheckListView"),
 
     //FORUM POSTS
     MaterialRoute(page: ForumPostView, name: "ForumPostViewRoute"),

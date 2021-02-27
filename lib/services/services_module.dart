@@ -4,7 +4,10 @@ import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
+import 'package:go/services/firestore/platform_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
+import 'package:go/services/location/google_places_service.dart';
+import 'package:go/services/location/location_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -34,6 +37,8 @@ abstract class ServicesModule {
   @lazySingleton
   NotificationDataService get notificationDataService;
   @lazySingleton
+  PlatformDataService get platformDataService;
+  @lazySingleton
   UserDataService get userDataService;
   @lazySingleton
   CauseDataService get causeDataService;
@@ -47,4 +52,8 @@ abstract class ServicesModule {
   DynamicLinkService get dynamicLinkService;
   @lazySingleton
   ShareService get shareService;
+  @lazySingleton
+  LocationService get locationService;
+  @lazySingleton
+  GooglePlacesService get googlePlacesService;
 }

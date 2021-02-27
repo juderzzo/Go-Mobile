@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_cause_model.dart';
+import 'package:go/models/go_check_list_item.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
@@ -35,6 +36,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   bool refreshingPosts = false;
 
   ///DATA RESULTS
+  List<GoCheckListItem> checkListItems = [];
   List<DocumentSnapshot> postResults = [];
   bool loadingAdditionalPosts = false;
   bool morePostsAvailable = true;
@@ -75,6 +77,14 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   followUnfollowCause() {
     _causeDataService.followUnfollowCause(causeID, currentUID);
   }
+
+  ///CHECK LIST ITEMS
+  loadCheckListItems() async {
+    checkListItems = await _causeDataService.getCheckListItems(cause.id);
+    notifyListeners();
+  }
+
+  checkOffItem(GoCheckListItem item) async {}
 
   ///LOAD POSTS
   Future<void> refreshPosts() async {
@@ -132,6 +142,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
         loadedImages = true;
       }
       getCauseCreator(cause.creatorID);
+      loadCheckListItems();
       loadPosts();
       notifyListeners();
       setBusy(false);

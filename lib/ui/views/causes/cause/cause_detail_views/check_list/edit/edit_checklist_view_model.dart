@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
+import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
@@ -8,19 +9,21 @@ import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class EditChecklistViewModel extends BaseViewModel {
+class EditCheckListViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   NavigationService _navigationService = locator<NavigationService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
 
-  String causeID;
+  GoCause cause;
   List<GoCheckListItem> checkListItems = [];
 
   initialize(BuildContext context) async {
     setBusy(true);
     Map<String, dynamic> args = RouteData.of(context).arguments;
-    causeID = args['causeID'];
+    String causeID = args['id'];
+    cause = await _causeDataService.getCauseByID(causeID);
+    print(cause);
     checkListItems = await _causeDataService.getCheckListItems(causeID);
 
     notifyListeners();
@@ -28,8 +31,27 @@ class EditChecklistViewModel extends BaseViewModel {
   }
 
   addCheckListItem() {
-    GoCheckListItem item = GoCheckListItem(id: getRandomString(30), causeID: causeID, checkedOffBy: []);
+    GoCheckListItem item = GoCheckListItem(id: getRandomString(30), causeID: cause.id, checkedOffBy: []);
     checkListItems.add(item);
+    notifyListeners();
+  }
+
+  updateItemHeader({String id, String header}) {
+    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
+    checkListItems[itemIndex].header = header;
+    notifyListeners();
+  }
+
+  updateItemSubHeader({String id, String subHeader}) {
+    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
+    checkListItems[itemIndex].subHeader = subHeader;
+    notifyListeners();
+  }
+
+  updateItemCoordinates({String id, double lat, double lon}) {
+    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
+    checkListItems[itemIndex].lat = lat;
+    checkListItems[itemIndex].lon = lon;
     notifyListeners();
   }
 
@@ -52,7 +74,7 @@ class EditChecklistViewModel extends BaseViewModel {
   submitCheckList() async {
     if (checkListIsValid()) {
       bool updatedCheckList = false;
-      updatedCheckList = await _causeDataService.updateCheckListItems(causeID: causeID, items: checkListItems);
+      updatedCheckList = await _causeDataService.updateCheckListItems(causeID: cause.id, items: checkListItems);
       if (updatedCheckList) {
         _navigationService.popRepeated(2);
       }

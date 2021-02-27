@@ -5,6 +5,7 @@ import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
 class MultiLineTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  final String initialValue;
   final int maxLines;
   final Function(String) onChanged;
   final Function(String) onSubmitted;
@@ -12,6 +13,7 @@ class MultiLineTextField extends StatelessWidget {
   MultiLineTextField({
     @required this.controller,
     @required this.hintText,
+    @required this.initialValue,
     @required this.maxLines,
     @required this.onChanged,
     @required this.onSubmitted,
@@ -21,6 +23,7 @@ class MultiLineTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextFormField(
+        initialValue: initialValue,
         controller: controller,
         cursorColor: appCursorColor(),
         maxLines: maxLines,
