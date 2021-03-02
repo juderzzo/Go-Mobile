@@ -7,7 +7,7 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view_model.dart';
 import 'package:go/ui/widgets/busy_button.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
-import 'package:go/ui/widgets/causes/cause_check_list_item.dart';
+import 'package:go/ui/widgets/check_list_item/check_list_item/check_list_item_view.dart';
 import 'package:go/ui/widgets/common/text_field/text_field_header.dart';
 import 'package:stacked/stacked.dart';
 
@@ -61,7 +61,7 @@ class CheckListView extends StatelessWidget {
         physics: NeverScrollableScrollPhysics(),
         itemCount: checkListItems.length,
         itemBuilder: (context, index) {
-          return CauseCheckListItem(
+          return CheckListItemView(
             item: checkListItems[index],
             isChecked: checkListItems[index].checkedOffBy.contains(currentUID),
             checkOffItem: (item) => checkOffItem(item),

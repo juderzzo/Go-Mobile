@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/services/firestore/platform_data_service.dart';
 import 'package:location/location.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class LocationService {
@@ -20,15 +20,15 @@ class LocationService {
       if (e.code == 'PERMISSION_DENIED') {
         _snackbarService.showSnackbar(
           title: 'Error',
-          message: "Please Enable Location Services from Your App Settings to Find Events",
-          onTap: (val) => openAppSettings(),
+          message: "Please Enable Location Services from Your App Settings to Find Causes & Events",
+          onTap: (val) => Geolocator.openAppSettings(),
           duration: Duration(seconds: 5),
         );
       } else if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
         _snackbarService.showSnackbar(
           title: 'Error',
-          message: "Please Enable Location Services from Your App Settings to Find Events",
-          onTap: (val) => openAppSettings(),
+          message: "Please Enable Location Services from Your App Settings to Find Causes & Events",
+          onTap: (val) => Geolocator.openAppSettings(),
           duration: Duration(seconds: 5),
         );
       }
@@ -75,5 +75,15 @@ class LocationService {
     var address = addresses.first;
     province = address.adminArea;
     return province;
+  }
+
+  Future<bool> isNearbyLocation({double lat, double lon}) async {
+    bool isNearby = true;
+    LocationData currentLocationData = await getCurrentLocation();
+    double distanceInMeters = Geolocator.distanceBetween(lat, lon, currentLocationData.latitude, currentLocationData.longitude);
+    if (distanceInMeters >= 500) {
+      isNearby = false;
+    }
+    return isNearby;
   }
 }

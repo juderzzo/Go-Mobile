@@ -48,10 +48,19 @@ class EditCheckListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  updateItemCoordinates({String id, double lat, double lon}) {
+  updateItemLocationDetails({String id, double lat, double lon, String address}) {
     int itemIndex = checkListItems.indexWhere((item) => item.id == id);
     checkListItems[itemIndex].lat = lat;
     checkListItems[itemIndex].lon = lon;
+    checkListItems[itemIndex].address = address;
+    notifyListeners();
+  }
+
+  deleteItemLocationDetails({String id}) {
+    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
+    checkListItems[itemIndex].lat = null;
+    checkListItems[itemIndex].lon = null;
+    checkListItems[itemIndex].address = null;
     notifyListeners();
   }
 

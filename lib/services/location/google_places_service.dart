@@ -3,12 +3,16 @@ import 'package:flutter_google_places_api/flutter_google_places_api.dart';
 import 'package:flutter_google_places_api/requests/place_autocomplete_request.dart';
 import 'package:flutter_google_places_api/responses/place_autocomplete_response.dart';
 import 'package:go/app/locator.dart';
+import 'package:go/services/firestore/platform_data_service.dart';
 
 import 'location_service.dart';
 
 class GooglePlacesService {
+  PlatformDataService _platformDataService = locator<PlatformDataService>();
   LocationService _locationService = locator<LocationService>();
-  Future googleSearchAutoComplete({@required String key, @required String input}) async {
+
+  Future googleSearchAutoComplete({@required String input}) async {
+    String key = await _platformDataService.getGoogleApiKey().catchError((e) {});
     Map<String, dynamic> places = {};
     PlaceAutocompleteResponse response = await PlaceAutocompleteRequest(
       key: key,
@@ -20,18 +24,17 @@ class GooglePlacesService {
     return places;
   }
 
-  Future<Map<String, dynamic>> getDetailsFromPlaceID({@required String key, @required String placeID}) async {
-    Map<String, dynamic> details = {};
+  Future<Map<String, dynamic>> getLatLonFromPlaceID({@required String placeID}) async {
+    String key = await _platformDataService.getGoogleApiKey().catchError((e) {});
+    Map<String, dynamic> coordinates = {};
     PlaceDetailsResponse response = await PlaceDetailsRequest(
       key: key,
       placeId: placeID,
     ).call();
     if (response.status.errorMessage == null) {
-      double lat = response.result.geometry.location.lat;
-      double lon = response.result.geometry.location.lng;
-      details['cityName'] = await _locationService.getCityNameFromLatLon(lat, lon);
-      details['areaCode'] = await _locationService.getZipFromLatLon(lat, lon);
+      coordinates['lat'] = response.result.geometry.location.lat;
+      coordinates['lon'] = response.result.geometry.location.lng;
     }
-    return details;
+    return coordinates;
   }
 }

@@ -48,7 +48,7 @@ dependencies:
   
   #LOCATION
   location:
-  geoflutterfire:
+  geolocator:
   geocoder:
   flutter_google_places:
   flutter_google_places_api:

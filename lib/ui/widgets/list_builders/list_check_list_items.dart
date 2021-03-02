@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/widgets/causes/check_list_item_form.dart';
+import 'package:go/ui/widgets/check_list_item/check_list_item_form/check_list_item_form_view.dart';
 
 // class ListCheckListItems extends StatelessWidget {
 //   final List<GoCheckListItem> items;
@@ -78,6 +78,7 @@ class ListCheckListItemsForEditing extends StatelessWidget {
   final Function(Map<String, dynamic>) onChangedSubHeader;
   final Function(Map<String, dynamic>) onSetLocation;
   final Function(String) onDelete;
+  final Function(String) onRemoveLocation;
 
   ListCheckListItemsForEditing({
     @required this.refreshData,
@@ -88,6 +89,7 @@ class ListCheckListItemsForEditing extends StatelessWidget {
     @required this.onChangedSubHeader,
     @required this.onSetLocation,
     @required this.onDelete,
+    @required this.onRemoveLocation,
   });
 
   Widget listCauses() {
@@ -106,12 +108,13 @@ class ListCheckListItemsForEditing extends StatelessWidget {
         ),
         itemCount: items.length,
         itemBuilder: (context, index) {
-          return CheckListItemForm(
+          return CheckListItemFormView(
             item: items[index],
             onChangedHeader: (val) => onChangedHeader(val),
             onChangedSubHeader: (val) => onChangedSubHeader(val),
             onSetLocation: (val) => onSetLocation(val),
             onDelete: (val) => onDelete(val),
+            onRemoveLocation: (val) => onRemoveLocation(val),
           );
         },
       ),

@@ -5,6 +5,7 @@ class GoCheckListItem {
   String subHeader;
   double lat;
   double lon;
+  String address;
   List checkedOffBy;
 
   GoCheckListItem({
@@ -14,6 +15,7 @@ class GoCheckListItem {
     this.subHeader,
     this.lat,
     this.lon,
+    this.address,
     this.checkedOffBy,
   });
 
@@ -25,6 +27,7 @@ class GoCheckListItem {
           subHeader: data['subHeader'],
           lat: data['lat'],
           lon: data['lon'],
+          address: data['address'],
           checkedOffBy: data['checkedOffBy'],
         );
 
@@ -35,6 +38,7 @@ class GoCheckListItem {
         'subHeader': this.subHeader,
         'lat': this.lat,
         'lon': this.lon,
+        'address': this.address,
         'checkedOffBy': this.checkedOffBy,
       };
 }

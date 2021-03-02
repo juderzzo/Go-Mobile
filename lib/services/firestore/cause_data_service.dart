@@ -303,6 +303,18 @@ class CauseDataService {
     return updated;
   }
 
+  Future<bool> checkOffCheckListItem({String id, List checkedOffBy}) async {
+    await checkRef.doc(id).update({'checkedOffBy': checkedOffBy}).catchError((e) {
+      _snackbarService.showSnackbar(
+        title: 'Error',
+        message: "There was an issues signing off this item. Please try again.",
+        duration: Duration(seconds: 5),
+      );
+      return false;
+    });
+    return true;
+  }
+
   ///QUERIES
   //Load Cause by Follower Count
   Future<List<DocumentSnapshot>> loadCauses({

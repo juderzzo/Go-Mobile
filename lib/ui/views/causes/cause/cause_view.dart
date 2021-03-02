@@ -87,7 +87,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                 isCauseAdmin: model.currentUID == model.cause.creatorID ? true : false,
                 causeID: model.cause.id,
                 currentUID: model.currentUID,
-                checkOffItem: (item) {},
+                checkOffItem: (item) => model.checkOffItem(item),
                 refreshData: () {}),
             ListPosts(
               refreshingData: model.refreshingPosts,
