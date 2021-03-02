@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/about/about_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/list_builders/list_posts.dart';
+import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:stacked/stacked.dart';
 
@@ -32,26 +34,19 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
               Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width * .7,
-                child: ListView(
-                  
-                  scrollDirection: Axis.horizontal,
-                    children: 
-                    [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
-                        child: CustomFittedText(
-                        text: model.cause.name,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: appFontColor(),
-                        textAlign: TextAlign.left,
-                        ),
-                      ),
-                    ]
-                   
+                child: ListView(scrollDirection: Axis.horizontal, children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
+                    child: CustomFittedText(
+                      text: model.cause.name,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: appFontColor(),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
+                ]),
               ),
-              
             ],
           ),
           IconButton(
@@ -88,13 +83,12 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                     followUnfollowCause: () => model.followUnfollowCause(),
                   ),
             CheckListView(
-              actions: model.cause.actions,
-              //descriptors: model.cause.actionDescriptions,
-              creatorId: model.cause.creatorID,
-              currentUID: model.currentUID,
-              name: model.cause.name,
-              causeID: model.cause.id,
-            ),
+                checkListItems: model.checkListItems,
+                isCauseAdmin: model.currentUID == model.cause.creatorID ? true : false,
+                causeID: model.cause.id,
+                currentUID: model.currentUID,
+                checkOffItem: (item) => model.checkOffItem(item),
+                refreshData: () {}),
             ListPosts(
               refreshingData: model.refreshingPosts,
               refreshData: () => model.refreshPosts(),
@@ -119,37 +113,44 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CauseViewModel>.reactive(
-      onModelReady: (model) => model.initialize(context),
-      viewModelBuilder: () => CauseViewModel(),
-      builder: (context, model, child) => 
-      OrientationBuilder(builder: (context, orientation){
-        if (orientation == Orientation.landscape && _tabController.index == 0){
-
-          return body(model);
-        } else {
-        return Scaffold(
-        //appBar: GoAppBar().basicAppBar(title: "Title", showBackButton: true),
-        body: Container(
-          color: appBackgroundColor(),
-          child: SafeArea(
-            child: Container(
-              child: model.isBusy
-                  ? Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48))
-                  : Column(
-                      children: [
-                        head(model),
-                        SizedBox(height: 8),
-                        tabBar(),
-                        body(model),
-                      ],
+        onModelReady: (model) => model.initialize(context),
+        viewModelBuilder: () => CauseViewModel(),
+        builder: (context, model, child) => OrientationBuilder(
+              builder: (context, orientation) {
+                if (orientation == Orientation.landscape && _tabController.index == 0) {
+                  return body(model);
+                } else {
+                  return Scaffold(
+                    appBar: CustomAppBar().basicActionAppBar(
+                      title: model.isBusy ? "" : model.cause.name,
+                      showBackButton: true,
+                      actionWidget: model.isBusy
+                          ? Container()
+                          : IconButton(
+                              onPressed: () => model.navigateToCreatePostView(),
+                              icon: Icon(FontAwesomeIcons.edit, color: appFontColor(), size: 18),
+                            ),
                     ),
-            ),
-          ),
-        ),
-      );
-        }
-      },) 
-        
-    );
+                    body: Container(
+                      color: appBackgroundColor(),
+                      child: SafeArea(
+                        child: Container(
+                          child: model.isBusy
+                              ? Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48))
+                              : Column(
+                                  children: [
+                                    verticalSpaceSmall,
+                                    tabBar(),
+                                    verticalSpaceSmall,
+                                    body(model),
+                                  ],
+                                ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ));
   }
 }

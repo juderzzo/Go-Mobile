@@ -5,9 +5,6 @@ import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
-import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
-import 'package:go/ui/widgets/causes/cause_check_list_item.dart';
-import 'package:go/ui/widgets/search/search_result_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -17,6 +14,7 @@ class CheckListViewModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
   UserDataService _userService = locator<UserDataService>();
   RewardedVideoAd adInstance = RewardedVideoAd.instance;
+
   bool monetizer = false;
   bool bus = false;
   bool working;
@@ -37,8 +35,7 @@ class CheckListViewModel extends BaseViewModel {
       setBusy(false);
     });
 
-    RewardedVideoAd.instance.listener =
-        (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
+    RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
       if (event == RewardedVideoAdEvent.rewarded) {
         {
           print("rewarded");
@@ -74,7 +71,7 @@ class CheckListViewModel extends BaseViewModel {
 
   static Future<List> generateItem(id, uid) async {
     CauseDataService _causeDataService = locator<CauseDataService>();
-    List strings = await _causeDataService.getItem(id);
+    List strings = []; //await _causeDataService.getItem(id);
     if (await isChecked(id, uid)) {
       strings.add('true');
     } else {
@@ -90,9 +87,8 @@ class CheckListViewModel extends BaseViewModel {
   playAd(causeID) async {
     busyButton(true);
     print("trying");
-    
+
     notifyListeners();
-    
 
     adInstance
         .load(
@@ -101,35 +97,23 @@ class CheckListViewModel extends BaseViewModel {
         .then(
       (value) {
         print("new ad loaded");
-        
-          adInstance.show().then((value) {
-            print(value);
-            print("horray");
-            
 
-            busyButton(false);
-            notifyListeners();
-          }, onError: (object) {
-            playAd(causeID);
-          }
-          );
-        
+        adInstance.show().then((value) {
+          print(value);
+          print("horray");
+
+          busyButton(false);
+          notifyListeners();
+        }, onError: (object) {
+          playAd(causeID);
+        });
       },
     );
-    
   }
 
-  navigateToEdit(
-      actions, creatorID, currentUID, name, causeID, headers, subheaders) {
-    _navigationService.navigateTo(Routes.EditChecklistView,
-        arguments: EditChecklistViewArguments(arguments: [
-          actions,
-          creatorID,
-          currentUID,
-          name,
-          causeID,
-          headers,
-          subheaders
-        ]));
+  navigateToEdit(String causeID) {
+    _navigationService.navigateTo(Routes.EditCheckListView, arguments: {'id': causeID});
+    // _navigationService.navigateTo(Routes.EditChecklistView,
+    //     arguments: EditChecklistViewArguments(arguments: [actions, creatorID, currentUID, name, causeID, headers, subheaders]));
   }
 }

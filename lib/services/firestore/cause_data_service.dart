@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_cause_model.dart';
-import 'package:go/models/go_checklist_model.dart';
+import 'package:go/models/go_check_list_item.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
@@ -216,7 +216,12 @@ class CauseDataService {
   Future getCauseByID(String id) async {
     GoCause cause;
     DocumentSnapshot snapshot = await causeRef.doc(id).get().catchError((e) {
-      return e.message;
+      _snackbarService.showSnackbar(
+        title: 'Cause Load Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+      return null;
     });
     if (snapshot.exists) {
       Map<String, dynamic> snapshotData = snapshot.data();
@@ -256,33 +261,58 @@ class CauseDataService {
   }
 
   //Checklist
-
-  Future<void> pushItem(GoChecklistItem item) async {
-    await checkRef.doc(item.id).set({
-      'id': item.id,
-      'header': item.item.header,
-      'subheader': item.item.subHeader,
-    });
+  Future<List<GoCheckListItem>> getCheckListItems(String causeID) async {
+    List<GoCheckListItem> causeCheckListItems = [];
+    QuerySnapshot snapshot = await checkRef.where("causeID", isEqualTo: causeID).get();
+    if (snapshot.docs.isNotEmpty) {
+      snapshot.docs.forEach((doc) {
+        GoCheckListItem item = GoCheckListItem.fromMap(doc.data());
+        causeCheckListItems.add(item);
+      });
+    }
+    return causeCheckListItems;
   }
 
-  Future<List> getItem(id) async {
-    DocumentSnapshot snapshot = await checkRef.doc(id).get();
-    Map<String, dynamic> snapshotData = snapshot.data();
-    return [snapshotData['id'], snapshotData['header'], snapshotData['subheader']];
+  Future<bool> updateCheckListItems({String causeID, List<GoCheckListItem> items}) async {
+    bool updated = true;
+    //delete old instances of check list items
+    QuerySnapshot snapshot = await checkRef.where("causeID", isEqualTo: causeID).get();
+    if (snapshot.docs.isNotEmpty) {
+      snapshot.docs.forEach((doc) async {
+        await checkRef.doc(doc.id).delete().catchError((e) {
+          _snackbarService.showSnackbar(
+            title: 'Check List Submission Error',
+            message: "There was an issues submitting your checklist. Please try again.",
+            duration: Duration(seconds: 5),
+          );
+          return false;
+        });
+      });
+    }
+    //upload new instances of check list items
+    items.forEach((item) async {
+      await checkRef.doc(item.id).set(item.toMap()).catchError((e) {
+        _snackbarService.showSnackbar(
+          title: 'Check List Submission Error',
+          message: "There was an issues submitting your checklist. Please try again.",
+          duration: Duration(seconds: 5),
+        );
+        return false;
+      });
+    });
+    return updated;
   }
 
-  Future<bool> checkExists(id) async {
-    await checkRef.doc(id).get().catchError((onError) {
-      return true;
+  Future<bool> checkOffCheckListItem({String id, List checkedOffBy}) async {
+    await checkRef.doc(id).update({'checkedOffBy': checkedOffBy}).catchError((e) {
+      _snackbarService.showSnackbar(
+        title: 'Error',
+        message: "There was an issues signing off this item. Please try again.",
+        duration: Duration(seconds: 5),
+      );
+      return false;
     });
-    return false;
-  }
-
-  Future updateList(String causeID, items) async {
-    await causeRef.doc(causeID).update({
-      //link up the actions to the list of causeIDs
-      "actions": items,
-    });
+    return true;
   }
 
   ///QUERIES

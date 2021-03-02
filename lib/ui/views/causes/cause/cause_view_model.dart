@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_cause_model.dart';
+import 'package:go/models/go_check_list_item.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/location/location_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -19,6 +21,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   CauseDataService _causeDataService = locator<CauseDataService>();
   PostDataService _postDataService = locator<PostDataService>();
   UserDataService _userDataService = locator<UserDataService>();
+  LocationService _locationService = locator<LocationService>();
 
   ///HELPERS
   ScrollController postsScrollController = ScrollController();
@@ -35,6 +38,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   bool refreshingPosts = false;
 
   ///DATA RESULTS
+  List<GoCheckListItem> checkListItems = [];
   List<DocumentSnapshot> postResults = [];
   bool loadingAdditionalPosts = false;
   bool morePostsAvailable = true;
@@ -74,6 +78,42 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
   followUnfollowCause() {
     _causeDataService.followUnfollowCause(causeID, currentUID);
+  }
+
+  ///CHECK LIST ITEMS
+  loadCheckListItems() async {
+    checkListItems = await _causeDataService.getCheckListItems(cause.id);
+    notifyListeners();
+  }
+
+  checkOffItem(GoCheckListItem item) async {
+    List checkedOffBy = item.checkedOffBy.toList(growable: true);
+    if (!checkedOffBy.contains(currentUID)) {
+      DialogResponse response = await _dialogService.showConfirmationDialog(
+        title: "Are You Sure You've Completed this Task?",
+        description: "Checking off this task is irreversible",
+        cancelTitle: "Cancel",
+        confirmationTitle: "Confirm",
+        barrierDismissible: true,
+      );
+      if (response.confirmed) {
+        //validate location if required
+        if (item.lat != null && item.lon != null && item.address != null) {
+          bool isNearbyLocation = await _locationService.isNearbyLocation(lat: item.lat, lon: item.lon);
+          if (!isNearbyLocation) {
+            _dialogService.showDialog(
+              title: "Location Error",
+              description: "You are not near the required location to check off this item.",
+              buttonTitle: "Ok",
+            );
+            return;
+          }
+        }
+        //check off item
+        checkedOffBy.add(currentUID);
+        await _causeDataService.checkOffCheckListItem(id: item.id, checkedOffBy: checkedOffBy);
+      }
+    }
   }
 
   ///LOAD POSTS
@@ -132,6 +172,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
         loadedImages = true;
       }
       getCauseCreator(cause.creatorID);
+      loadCheckListItems();
       loadPosts();
       notifyListeners();
       setBusy(false);
