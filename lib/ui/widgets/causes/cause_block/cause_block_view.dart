@@ -24,10 +24,21 @@ class CauseBlockView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(
+          Container(
+            height: 20,
+            width: MediaQuery.of(context).size.width * 3/4,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                Text(
             cause.name,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: appFontColor()),
           ),
+              ],
+              
+            ),
+          ),
+          
           IconButton(
             icon: Icon(
               Icons.more_horiz,

@@ -19,14 +19,17 @@ class CommentTextFieldView extends StatelessWidget {
   final String replyReceiverUsername;
   final TextEditingController commentTextController;
   final Function(String) onSubmitted;
+  final Function() selectImage;
 
-  CommentTextFieldView({
-    @required this.focusNode,
-    @required this.commentTextController,
-    @required this.isReplying,
-    @required this.replyReceiverUsername,
-    @required this.onSubmitted,
-  });
+  CommentTextFieldView(
+      {@required this.focusNode,
+      @required this.commentTextController,
+      @required this.isReplying,
+      @required this.replyReceiverUsername,
+      @required this.onSubmitted,
+      @required this.selectImage});
+
+  bool imgChanged = false;
 
   final AlgoliaSearchService _algoliaSearchService = locator<AlgoliaSearchService>();
 
@@ -51,11 +54,13 @@ class CommentTextFieldView extends StatelessWidget {
     );
   }
 
-  Widget commentTextField(BuildContext context, CommentTextFieldViewModel model) {
+//setting up the images in comments
+
+  Widget commentTextField(
+      BuildContext context, CommentTextFieldViewModel model) {
     return Container(
       padding: EdgeInsets.only(
         top: 16,
-        bottom: 32,
         left: 16,
         right: 16,
       ),
@@ -76,12 +81,12 @@ class CommentTextFieldView extends StatelessWidget {
         children: [
           UserProfilePic(
             userPicUrl: model.currentUserProfilePicURL,
-            size: 45,
+            size: 40,
             isBusy: false,
           ),
           Container(
-            height: isReplying ? 90 : 50,
-            width: MediaQuery.of(context).size.width - 90,
+            height: isReplying ? 85 : 50,
+            width: MediaQuery.of(context).size.width - 130,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +95,7 @@ class CommentTextFieldView extends StatelessWidget {
                 Container(
                   height: 50,
                   margin: EdgeInsets.only(left: 8.0),
-                  padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 2.0),
+                  padding: EdgeInsets.only(left: 8.0, top: 2.0),
                   decoration: BoxDecoration(
                     color: appBackgroundColor(),
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -105,7 +110,7 @@ class CommentTextFieldView extends StatelessWidget {
                     textFieldConfiguration: TextFieldConfiguration(
                       onSubmitted: (val) => onSubmitted(val),
                       focusNode: focusNode,
-                      textInputAction: TextInputAction.send,
+                      textInputAction: commentTextController.text.length > 1 ? TextInputAction.send : TextInputAction.done,
                       minLines: 1,
                       maxLines: 5,
                       maxLengthEnforced: true,
@@ -179,6 +184,8 @@ class CommentTextFieldView extends StatelessWidget {
               ],
             ),
           ),
+          IconButton(
+              icon: Icon(Icons.filter_rounded), onPressed: selectImage)
         ],
       ),
     );
@@ -189,7 +196,10 @@ class CommentTextFieldView extends StatelessWidget {
     return ViewModelBuilder<CommentTextFieldViewModel>.reactive(
       onModelReady: (model) => model.initialize(),
       viewModelBuilder: () => CommentTextFieldViewModel(),
-      builder: (context, model, child) => model.isBusy || model.errorDetails != null ? Container() : commentTextField(context, model),
+      builder: (context, model, child) =>
+          model.isBusy || model.errorDetails != null
+              ? Container()
+              : commentTextField(context, model),
     );
   }
 }

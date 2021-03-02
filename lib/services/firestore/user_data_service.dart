@@ -185,6 +185,13 @@ class UserDataService {
     });
   }
 
+  Future updateGoUsername(String id, String username) async {
+    await userRef.doc(id).update({"username": username}).catchError((e) {
+      return e.message;
+    });
+    
+  }
+
   Future updateProfilePic(String id, File img) async {
     String imgURL = await FirestoreImageUploader().uploadImage(
       img: img,

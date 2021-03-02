@@ -80,7 +80,6 @@ class CreateCauseViewModel extends BaseViewModel {
           img3: img3,
           videoLink: videoLink);
 
-      //now push each of the checklistItems referecne
 
       setBusy(false);
       if (res != null) {

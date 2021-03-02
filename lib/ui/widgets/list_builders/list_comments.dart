@@ -65,7 +65,7 @@ class ListComments extends StatelessWidget {
       onRefresh: refreshData,
       backgroundColor: appBackgroundColor(),
       child: ListView.builder(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: ScrollPhysics(),
         controller: scrollController,
         key: pageStorageKey,
         addAutomaticKeepAlives: true,

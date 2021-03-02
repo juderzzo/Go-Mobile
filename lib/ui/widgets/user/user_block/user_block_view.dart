@@ -53,7 +53,7 @@ class UserBlockView extends StatelessWidget {
               children: [
                 true ? isFollowingUser() : Container(),
                 CustomText(
-                  text: "@${user.username}",
+                  text: user.username.length < 20 ? "@${user.username}" : "@${user.username.substring(0,20)}...",
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: appFontColor(),

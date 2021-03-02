@@ -14,12 +14,15 @@ import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/utils/go_image_picker.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 class ForumPostViewModel extends BaseViewModel {
+  ThemeService _themeService = locator<ThemeService>();
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -27,7 +30,8 @@ class ForumPostViewModel extends BaseViewModel {
   UserDataService _userDataService = locator<UserDataService>();
   PostDataService _postDataService = locator<PostDataService>();
   CommentDataService _commentDataService = locator<CommentDataService>();
-  NotificationDataService _notificationDataService = locator<NotificationDataService>();
+  NotificationDataService _notificationDataService =
+      locator<NotificationDataService>();
   DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
   ShareService _shareService = locator<ShareService>();
 
@@ -38,6 +42,8 @@ class ForumPostViewModel extends BaseViewModel {
   ///DATA RESULTS
   bool loadingAdditionalComments = false;
   bool moreCommentsAvailable = true;
+  bool commentSending = false;
+
   List<DocumentSnapshot> commentResults = [];
   int resultsLimit = 15;
 
@@ -51,6 +57,11 @@ class ForumPostViewModel extends BaseViewModel {
   bool refreshingComments = true;
   GoForumPostComment commentToReplyTo;
   bool likedPost = false;
+
+  //images
+  bool imgChanged = false;
+  dynamic imgFile;
+  dynamic img;
 
   ///
 
@@ -74,18 +85,23 @@ class ForumPostViewModel extends BaseViewModel {
 
     ///SET SCROLL CONTROLLER
     commentScrollController.addListener(() {
-      double triggerFetchMoreSize = 0.9 * commentScrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize =
+          0.9 * commentScrollController.position.maxScrollExtent;
       if (commentScrollController.position.pixels > triggerFetchMoreSize) {
         loadAdditionalComments();
       }
     });
 
     isAdmin = (uid == post.causeID);
-    print(isAdmin);
+    //print(isAdmin);
 
     await loadComments();
     notifyListeners();
     setBusy(false);
+  }
+
+  bool isDarkMode() {
+    return _themeService.isDarkMode ? true : false;
   }
 
   ///LOAD POSTS
@@ -97,10 +113,13 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   loadComments() async {
-    commentResults = await _commentDataService.loadComments(postID: post.id, resultsLimit: resultsLimit);
+    commentResults = await _commentDataService.loadComments(
+        postID: post.id, resultsLimit: resultsLimit);
     refreshingComments = false;
     notifyListeners();
-    print(commentResults.length);
+    if (commentResults.length != post.commentCount) ;
+    post.commentCount = commentResults.length;
+    _postDataService.updatePostby(post);
   }
 
   delete() async {
@@ -114,7 +133,8 @@ class ForumPostViewModel extends BaseViewModel {
     }
     loadingAdditionalComments = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _commentDataService.loadAdditionalComments(
+    List<DocumentSnapshot> newResults =
+        await _commentDataService.loadAdditionalComments(
       lastDocSnap: commentResults[commentResults.length - 1],
       resultsLimit: resultsLimit,
       postID: post.id,
@@ -130,7 +150,9 @@ class ForumPostViewModel extends BaseViewModel {
 
   showOptions() async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
-      variant: isAuthor || isAdmin ? BottomSheetType.postAuthorOptions : BottomSheetType.postOptions,
+      variant: isAuthor || isAdmin
+          ? BottomSheetType.postAuthorOptions
+          : BottomSheetType.postOptions,
     );
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
@@ -140,7 +162,8 @@ class ForumPostViewModel extends BaseViewModel {
         print("edit");
       } else if (res == "share") {
         //share post link
-        String url = await _dynamicLinkService.createPostLink(postAuthorUsername: "${author.username}", post: post);
+        String url = await _dynamicLinkService.createPostLink(
+            postAuthorUsername: "${author.username}", post: post);
         _shareService.shareLink(url);
       } else if (res == "report") {
         //report
@@ -160,26 +183,30 @@ class ForumPostViewModel extends BaseViewModel {
     focusNode.requestFocus();
   }
 
-  submitComment({BuildContext context, String commentVal}) async {
+  submitComment(
+      {BuildContext context, String commentVal, dynamic image}) async {
     isReplying = false;
+    commentSending = true;
     String text = commentVal.trim();
+    print("we got this far");
     if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
-        postID: post.id,
-        senderUID: currentUser.id,
-        username: currentUser.username,
-        message: text,
-        isReply: false,
-        replies: [],
-        replyCount: 0,
-        timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-      );
+          postID: post.id,
+          senderUID: currentUser.id,
+          username: currentUser.username,
+          message: text,
+          isReply: false,
+          replies: [],
+          replyCount: 0,
+          timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+          image: image);
       await _commentDataService.sendComment(post.id, post.authorID, comment);
       sendCommentNotification(text);
       sendUserMentionNotification(text);
       clearState(context);
     }
     refreshComments();
+    commentSending = false;
   }
 
   deleteComment({BuildContext context, String commentID}) async {
@@ -189,21 +216,24 @@ class ForumPostViewModel extends BaseViewModel {
     refreshComments();
   }
 
-  replyToComment({BuildContext context, String commentVal}) async {
+  replyToComment(
+      {BuildContext context, String commentVal, dynamic image}) async {
     String text = commentVal.trim();
+    commentSending = true;
     if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
-        postID: post.id,
-        senderUID: currentUser.id,
-        username: currentUser.username,
-        message: text,
-        isReply: true,
-        replies: [],
-        replyCount: 0,
-        replyReceiverUsername: commentToReplyTo.username,
-        originalReplyCommentID: commentToReplyTo.timePostedInMilliseconds.toString(),
-        timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-      );
+          postID: post.id,
+          senderUID: currentUser.id,
+          username: currentUser.username,
+          message: text,
+          isReply: true,
+          replies: [],
+          replyCount: 0,
+          replyReceiverUsername: commentToReplyTo.username,
+          originalReplyCommentID:
+              commentToReplyTo.timePostedInMilliseconds.toString(),
+          timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+          image: image);
       await _commentDataService.replyToComment(
         post.id,
         commentToReplyTo.senderUID,
@@ -215,6 +245,7 @@ class ForumPostViewModel extends BaseViewModel {
     sendUserMentionNotification(text);
     clearState(context);
     refreshComments();
+    commentSending = false;
   }
 
   clearState(BuildContext context) {
@@ -233,9 +264,31 @@ class ForumPostViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  //comments with images
+
+  void selectImage() async {
+    imgChanged = true;
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.imagePicker,
+    );
+    if (sheetResponse != null) {
+      String res = sheetResponse.responseData;
+      if (res == "camera") {
+        imgFile =
+            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+      } else if (res == "gallery") {
+        imgFile = await GoImagePicker()
+            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+      }
+      img = imgFile;
+      notifyListeners();
+    }
+  }
+
   ///NOTIFICATIONS
   sendCommentNotification(String comment) {
-    GoNotification notification = GoNotification().generateGoCommentNotification(
+    GoNotification notification =
+        GoNotification().generateGoCommentNotification(
       postID: post.id,
       receiverUID: post.authorID,
       senderUID: currentUser.id,
@@ -246,7 +299,8 @@ class ForumPostViewModel extends BaseViewModel {
   }
 
   sendCommentReplyNotification(String receiverUID, String comment) {
-    GoNotification notification = GoNotification().generateCommmentReplyNotification(
+    GoNotification notification =
+        GoNotification().generateCommmentReplyNotification(
       postID: post.id,
       receiverUID: receiverUID,
       senderUID: currentUser.id,
@@ -262,7 +316,8 @@ class ForumPostViewModel extends BaseViewModel {
     mentionedUsernames.forEach((username) async {
       GoUser user = await _userDataService.getGoUserByUsername(username);
       if (user != null) {
-        GoNotification notification = GoNotification().generateGoCommentMentionNotification(
+        GoNotification notification =
+            GoNotification().generateGoCommentMentionNotification(
           postID: post.id,
           receiverUID: user.id,
           senderUID: currentUser.id,
@@ -277,8 +332,15 @@ class ForumPostViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToUserView(String uid) {
-    _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
+    _navigationService
+        .navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
+
+  navigateToPostView(String postID) {
+    _navigationService
+        .navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': postID});
+  }
+
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);
 // }

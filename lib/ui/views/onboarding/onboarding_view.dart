@@ -94,7 +94,7 @@ class OnboardingView extends StatelessWidget {
     );
   }
 
-  PageViewModel profilePicUsernamePage(OnboardingViewModel model) {
+  PageViewModel profilePicUsernamePage(OnboardingViewModel model, context) {
     PageDecoration pageDecoration = PageDecoration(
       contentPadding: EdgeInsets.all(0),
       titlePadding: EdgeInsets.only(top: 0.0, bottom: 8.0, left: 16, right: 16),
@@ -117,7 +117,7 @@ class OnboardingView extends StatelessWidget {
           ),
           verticalSpaceMedium,
           GestureDetector(
-            onTap: () => model.selectImage(),
+            onTap: () => model.selectImage(context),
             child: model.imgFile == null
                 ? UserProfilePic(
                     userPicUrl: model.profilePlaceholderImgURL,
@@ -218,7 +218,7 @@ class OnboardingView extends StatelessWidget {
     );
   }
 
-  PageViewModel interestsPage(OnboardingViewModel model) {
+  PageViewModel interestsPage(OnboardingViewModel model, context) {
     PageDecoration pageDecoration = PageDecoration(
       contentPadding: EdgeInsets.all(0),
       titlePadding:
@@ -242,7 +242,7 @@ class OnboardingView extends StatelessWidget {
           ),
           verticalSpaceMedium,
           GestureDetector(
-            onTap: () => model.selectImage(),
+            onTap: () => model.selectImage(context),
             child: model.imgFile == null
                 ? UserProfilePic(
                     userPicUrl: model.profilePlaceholderImgURL,
@@ -400,7 +400,7 @@ class OnboardingView extends StatelessWidget {
           key: introKey,
           pages: [
             initialPage(),
-            profilePicUsernamePage(model),
+            profilePicUsernamePage(model, context),
             bioPage(model),
             // interestsPage(model),
             notificationPermissionPage(model),
