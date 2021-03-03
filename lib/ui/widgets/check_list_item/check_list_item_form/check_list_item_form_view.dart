@@ -35,7 +35,7 @@ class CheckListItemFormView extends StatelessWidget {
       viewModelBuilder: () => CheckListItemFormViewModel(),
       builder: (context, model, child) => Container(
         padding: EdgeInsets.fromLTRB(32.0, 10.0, 0.0, 0.0),
-        height: 210,
+        height: 250,
         width: MediaQuery.of(context).size.width,
         child: Row(
           children: [
@@ -83,7 +83,7 @@ class CheckListItemFormView extends StatelessWidget {
                 verticalSpaceSmall,
                 model.requiresLocationVerification
                     ? TextFieldContainer(
-                        height: 38,
+                        height: 48,
                         width: MediaQuery.of(context).size.width * 3 / 4,
                         child: Padding(
                           padding: EdgeInsets.only(

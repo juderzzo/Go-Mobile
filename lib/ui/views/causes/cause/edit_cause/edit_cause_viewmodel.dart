@@ -46,17 +46,17 @@ class EditCauseViewModel extends BaseViewModel {
     if (videoLink.length < 2) {
       videoLink = null;
     }
-    if (isValidString(name)) {
+    if (!isValidString(name)) {
       formError = "Cause Name Required";
-    } else if (isValidString(goal)) {
+    } else if (!isValidString(goal)) {
       formError = "Please list your causes's goals";
-    } else if (isValidString(why)) {
+    } else if (!isValidString(why)) {
       formError = "Please describe why your cause is important";
-    } else if (isValidString(who)) {
+    } else if (!isValidString(who)) {
       formError = "Please describe who you are in regards to this cause";
     } else if (isValidString(charityURL) && !UrlHandler().isValidUrl(charityURL)) {
       formError = "Please provide a valid URL your cause";
-    } else if (videoLink != null && !(videoLink.length < 2)) {
+    } else if (videoLink != null && !(videoLink.length < 1)) {
       print(videoLink.length);
       if (YoutubePlayer.convertUrlToId(videoLink) == null) {
         formError = "Please provide a valid youtube link or leave the field blank";

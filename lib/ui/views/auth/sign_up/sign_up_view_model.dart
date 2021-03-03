@@ -59,7 +59,7 @@ class SignUpViewModel extends BaseViewModel {
   ///DATA VALIDATION
   Future<bool> credentialsAreValid(String email, String password, String confirmPassword) async {
     bool isValid = true;
-    if (isValidEmail(email)) {
+    if (!isValidEmail(email)) {
       await _dialogService.showDialog(
         title: "Email Error",
         description: "Please Provide a Valid Email",
@@ -70,7 +70,7 @@ class SignUpViewModel extends BaseViewModel {
         title: "Password Error",
         description: "The password must be 7-50 characters long",
       );
-    } else if (isValidPassword(password)) {
+    } else if (!isValidPassword(password)) {
       await _dialogService.showDialog(
         title: "Password Error",
         description: "The password must contain at least...\n\n"

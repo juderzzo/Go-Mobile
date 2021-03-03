@@ -33,6 +33,8 @@ class CheckListViewModel extends BaseViewModel {
         .then((value) {
       print("new ad loaded");
       setBusy(false);
+      print("monetizer");
+      print(monetizer);
     });
 
     RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {

@@ -72,11 +72,21 @@ class CheckListView extends StatelessWidget {
     );
   }
 
+  //only initizlize once
+  bool init = false;
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CheckListViewModel>.reactive(
       viewModelBuilder: () => CheckListViewModel(),
-      builder: (context, model, child) => Container(
+      //onModelReady: model.initialize(causeID),
+      builder: (context, model, child){
+        if(!init){
+          model.initialize(causeID);
+          init = true;
+        }
+        
+        return Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         color: appBackgroundColor(),
         child: ListView(
@@ -102,7 +112,8 @@ class CheckListView extends StatelessWidget {
             monetization(model),
           ],
         ),
-      ),
+      );
+      }
     );
   }
 }

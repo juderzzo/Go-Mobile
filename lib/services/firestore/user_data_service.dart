@@ -95,6 +95,9 @@ class UserDataService {
 
   Future addPost(String id, String postID) async {
     GoUser user = await getGoUserByID(id);
+    if(user.posts == null){
+      user.posts = [];
+    }
     user.posts.add(postID);
     updateGoUser(user);
   }

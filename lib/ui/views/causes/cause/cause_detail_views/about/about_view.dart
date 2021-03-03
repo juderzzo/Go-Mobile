@@ -63,10 +63,10 @@ class AboutView extends StatelessWidget {
       //print(videoID);
       if (videoID != null) {
         YoutubePlayer video = YoutubePlayer(
-          aspectRatio: 16 / 9,
+          aspectRatio: 17 / 9,
           controller: _controller,
           liveUIColor: CustomColors.goGreen,
-          actionsPadding: EdgeInsets.only(bottom: 10.0),
+          actionsPadding: EdgeInsets.only(bottom: 20.0),
         );
         images.insert(
             0,
@@ -237,7 +237,7 @@ class AboutView extends StatelessWidget {
           return causeImages(model, orientation);
         } else {
           if (_controller != null) {
-            print('aaaaaaaaaaaaaaaaa');
+            //print('aaaaaaaaaaaaaaaaa');
             _controller.play();
           }
 

@@ -201,9 +201,12 @@ class PostDataService {
     print("post service");
 
     await _userDataService.addPost(authorID, id).catchError((e) {
-      
+      print("post service2");
+      print(e);
       return e.message;
     });
+    print("post service2");
+    return;
   }
 
   Future getPostByID(String id) async {

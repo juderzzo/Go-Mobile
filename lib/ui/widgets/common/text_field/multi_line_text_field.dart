@@ -27,6 +27,8 @@ class MultiLineTextField extends StatelessWidget {
         controller: controller,
         cursorColor: appCursorColor(),
         maxLines: maxLines,
+        maxLength: 250,
+        
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: hintText,

@@ -110,7 +110,8 @@ class EditProfileView extends StatelessWidget {
                 MultiLineTextField(
                   controller: model.bioTextController,
                   hintText: "Tell Us About Yourself",
-                  maxLines: 10,
+                  maxLines: 7,
+                  
                 ),
               ],
             ),

@@ -30,7 +30,7 @@ class CauseCreatorBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "share")),
+              onPressed: () => completer(SheetResponse(responseData: "Edit")),
               text: "Edit",
               textSize: 16,
               textColor: appFontColor(),

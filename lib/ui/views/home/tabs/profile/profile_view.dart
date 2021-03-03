@@ -99,8 +99,11 @@ class _ProfileViewState extends State<ProfileView>
             viewFollowingAction: null,
           ),
           Container(
+            //height: MediaQuery.of(context).size.height * 4/10,
             child: ListView(
               shrinkWrap: true,
+              physics: AlwaysScrollableScrollPhysics(),
+              //controller: new ScrollController(),
               children: [
                 verticalSpaceLarge,
                 UserBio(
@@ -266,7 +269,7 @@ class _ProfileViewState extends State<ProfileView>
                             pinned: true,
                             floating: true,
                             forceElevated: innerBoxIsScrolled,
-                            expandedHeight: 350,
+                            expandedHeight: MediaQuery.of(context).size.height * 7/13,
                             backgroundColor: appBackgroundColor(),
                             flexibleSpace: FlexibleSpaceBar(
                               background: Container(

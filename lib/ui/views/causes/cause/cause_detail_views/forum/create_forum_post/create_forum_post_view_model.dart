@@ -100,6 +100,7 @@ class CreateForumPostViewModel extends BaseViewModel {
           commentCount: 0,
         );
       }
+      print("chungus");
       setBusy(false);
       if (res is String) {
         _snackbarService.showSnackbar(

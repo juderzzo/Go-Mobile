@@ -34,8 +34,11 @@ class CauseBlockViewModel extends BaseViewModel {
     String currentUID = await _authService.getCurrentUserID();
     GoUser creator = await _userDataService.getGoUserByID(creatorID);
 
+
+    
     if (currentUID == creatorID) {
       isCreator = true;
+      
     }
     creatorUsername = "@" + creator.username;
     creatorProfilePicURL = creator.profilePicURL;
@@ -59,20 +62,55 @@ class CauseBlockViewModel extends BaseViewModel {
     );
     if (sheetResponse != null) {
       String res = sheetResponse.responseData;
-      print(cause.imageURLs);
-      //print(res);
-      if (res == "edit") {
+      //print(cause.imageURLs);
+      print(res);
+      
+      if (res == "Edit") {
+      
+        
+        
         if (isCreator) {
-          _navigationService.navigateTo(Routes.EditCauseViewRoute, arguments: {
-            "causeID": cause.id,
-            "name": cause.name,
-            "why": cause.why,
-            "who": cause.who,
-            "resources": cause.resources,
-            "charity": cause.charityURL,
-            "imgURLs": cause.imageURLs,
-            "videoLink": cause.videoLink,
-          });
+          print(cause.charityURL);
+          
+           
+
+          try{
+            print("le");
+          //   _navigationService.navigateTo(Routes.EditCauseViewRoute, arguments: {
+          //   "causeID": cause.id,
+          //   "name": cause.name,
+          //   "goals": cause.goal,
+          //   "why": cause.why,
+          //   "who": cause.who,
+          //   "resources": cause.resources,
+          //   "charity": cause.charityURL,
+          //   "videoLink": cause.videoLink,
+          //   "img1": cause.imageURLs[0],
+          //   "img2": cause.imageURLs.length > 1 ? cause.imageURLs[1] : null,
+          //   "img3": cause.imageURLs.length > 2 ? cause.imageURLs[2] : null,
+          //   "monetized": cause.monetized
+            
+          // });
+
+          _navigationService.navigateTo(Routes.EditCauseViewRoute, arguments: EditCauseViewArguments(
+            causeID: cause.id,
+            name: cause.name,
+            goals: cause.goal,
+            why: cause.why,
+            who: cause.who,
+            resources: cause.resources,
+            charity: cause.charityURL,
+            videoLink: cause.videoLink,
+            img1: NetworkImage(cause.imageURLs[0]),
+            img2: cause.imageURLs.length > 1 ? NetworkImage(cause.imageURLs[1]) : null,
+            img3: cause.imageURLs.length > 2 ? NetworkImage(cause.imageURLs[2]) : null,
+            monetized: cause.monetized
+          ));
+
+          } catch(e)
+          {
+            print(e);
+          }          
         }
         // if (isCreator) {
         //   //print(cause.id);
