@@ -39,16 +39,11 @@
 	<key>FacebookDisplayName</key>
 	<string>Go!</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-    <false/>
-    <key>FirebaseDynamicLinksCustomDomains</key>
-    <array>
-    	<string>https://appgo.page.link</string>
-    </array>
-    <key>com.apple.developer.associated-domains</key>
-    <array>
-        <string>applinks:appgo.page.link</string>
-        <string>applinks:appgo.page.link?mode=developer</string>
-    </array>
+	<false/>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://appgo.page.link</string>
+	</array>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-9312496461922231~5212290852</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -76,7 +71,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This will enable you to save events to your calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This will enable you to take take photos to upload and use</string>
+	<string>This will enable you to take take photos to upload and use them as your profile picture or cause image in the app.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This will enable you to find and share with your contacts on Go!</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -86,7 +81,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>This will allow you to find the nearby events in Go!</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This will enable you to choose photos from your library to upload and use</string>
+	<string>This will enable you to choose photos from your library to upload and use them as a profile picture, or cause image in the app.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This will allow you to use send voice messages in Go!</string>
 	<key>UILaunchStoryboardName</key>
@@ -108,6 +103,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:appgo.page.link</string>
+		<string>applinks:appgo.page.link?mode=developer</string>
+	</array>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>kTCCServiceMediaLibrary</key>

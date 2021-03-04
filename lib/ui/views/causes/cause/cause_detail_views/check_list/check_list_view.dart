@@ -94,7 +94,7 @@ class CheckListView extends StatelessWidget {
           children: [
             isCauseAdmin
                 ? CustomButton(
-                    text: "Update Check List",
+                    text: checkListItems.length > 0 ? "Update Check List" : "Create Check List",
                     textSize: 16,
                     textColor: appFontColor(),
                     height: 40,
