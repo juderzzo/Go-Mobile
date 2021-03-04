@@ -356,7 +356,7 @@ PODS:
   - FMDB/standard (2.7.5)
   - geocoder (0.0.1):
     - Flutter
-  - geoflutterfire (0.0.1):
+  - geolocator (6.2.0):
     - Flutter
   - Google-Mobile-Ads-SDK (7.67.0):
     - GoogleAppMeasurement (~> 6.0)
@@ -491,7 +491,7 @@ DEPENDENCIES:
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
   - geocoder (from `.symlinks/plugins/geocoder/ios`)
-  - geoflutterfire (from `.symlinks/plugins/geoflutterfire/ios`)
+  - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - Google-Mobile-Ads-SDK
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
@@ -575,8 +575,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_statusbarcolor/ios"
   geocoder:
     :path: ".symlinks/plugins/geocoder/ios"
-  geoflutterfire:
-    :path: ".symlinks/plugins/geoflutterfire/ios"
+  geolocator:
+    :path: ".symlinks/plugins/geolocator/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   image_cropper:
@@ -631,7 +631,7 @@ SPEC CHECKSUMS:
   flutter_statusbarcolor: 8afb1071ed8c58be929f1e32b36c629771fd2259
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geocoder: 3cfab70531a0b367e917bafe82df4c30f6d4c45a
-  geoflutterfire: 2a6493e01fb6eef1a6c9046b1baf9a943d0c5ffe
+  geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
   Google-Mobile-Ads-SDK: 8b58584890539de4527c47ef01e4da941a10bc8a
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
   GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e

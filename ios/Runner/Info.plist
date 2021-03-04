@@ -31,6 +31,16 @@
 				<string>com.googleusercontent.apps.865785917892-7ntg5p40eouc2cs5r6djc3l0ahd0dbg4</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>bundleID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.takeoff.Goapp</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -39,16 +49,11 @@
 	<key>FacebookDisplayName</key>
 	<string>Go!</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-    <false/>
-    <key>FirebaseDynamicLinksCustomDomains</key>
-    <array>
-    	<string>https://appgo.page.link</string>
-    </array>
-    <key>com.apple.developer.associated-domains</key>
-    <array>
-        <string>applinks:appgo.page.link</string>
-        <string>applinks:appgo.page.link?mode=developer</string>
-    </array>
+	<false/>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://appgo.page.link</string>
+	</array>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-9312496461922231~5212290852</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -108,6 +113,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:appgo.page.link</string>
+		<string>applinks:appgo.page.link?mode=developer</string>
+	</array>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>kTCCServiceMediaLibrary</key>

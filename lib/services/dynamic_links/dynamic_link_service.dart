@@ -13,17 +13,17 @@ class DynamicLinkService {
   String shareContentPrefix = 'https://appgo.page.link';
   String androidPackageName = 'com.takeoff.Goapp';
   String iosBundleID = 'com.takeoff.Goapp';
-  String iosAppStoreID = '';
+  String iosAppStoreID = '1543627114';
 
   Future<String> createPostLink({@required String postAuthorUsername, @required GoForumPost post}) async {
     //set post uri
-    Uri postURI = Uri.parse('https://lipsum.com/posts/post?id=${post.id}');
+    Uri uri = Uri.parse('https://test.com/posts/post?id=${post.id}');
 
     //set dynamic link params
     final DynamicLinkParameters params = DynamicLinkParameters(
       dynamicLinkParametersOptions: DynamicLinkParametersOptions(shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short),
       uriPrefix: shareContentPrefix,
-      link: postURI,
+      link: uri,
       androidParameters: AndroidParameters(
         packageName: androidPackageName,
       ),
@@ -41,19 +41,19 @@ class DynamicLinkService {
 
     ShortDynamicLink shortDynamicLink = await params.buildShortLink();
     Uri dynamicURL = shortDynamicLink.shortUrl;
-
+    print(dynamicURL);
     return dynamicURL.toString();
   }
 
   Future<String> createCauseLink({@required GoCause cause}) async {
-    //set post uri
-    Uri postURI = Uri.parse('https://lipsum.com/causes/cause?id=${cause.id}');
+    //set uri
+    Uri uri = Uri.parse('https://test.com/causes/cause?id=${cause.id}');
 
     //set dynamic link params
     final DynamicLinkParameters params = DynamicLinkParameters(
       dynamicLinkParametersOptions: DynamicLinkParametersOptions(shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short),
       uriPrefix: shareContentPrefix,
-      link: postURI,
+      link: uri,
       androidParameters: AndroidParameters(
         packageName: androidPackageName,
       ),
