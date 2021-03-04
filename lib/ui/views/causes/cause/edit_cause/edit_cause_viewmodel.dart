@@ -111,33 +111,38 @@ class EditCauseViewModel extends BaseViewModel {
 
   ///BOTTOM SHEETS
   selectImage({BuildContext context, int imgNum, double ratioX, double ratioY}) async {
-    File img;
+    File imgFile;
+    FocusScope.of(context).requestFocus(FocusNode());
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.imagePicker,
     );
-    if (sheetResponse.responseData != null) {
+    if (sheetResponse != null) {
       String res = sheetResponse.responseData;
       if (res == "camera") {
-        img = await GoImagePicker().retrieveImageFromCamera(ratioX: ratioX, ratioY: ratioY);
+        imgFile =
+            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
       } else if (res == "gallery") {
-        img = await GoImagePicker().retrieveImageFromLibrary(ratioX: ratioX, ratioY: ratioY);
+        imgFile = await GoImagePicker()
+            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
+      notifyListeners();
+    }
       //print(img2.runtimeType);
 
       if (imgNum == 1) {
-        img1 = img;
+        img1 = imgFile;
         img1Changed = true;
       } else if (imgNum == 2) {
-        img2 = img;
+        img2 = imgFile;
         img2Changed = true;
       } else {
-        img3 = img;
+        img3 = imgFile;
         img3Changed = true;
       }
       //print(img.runtimeType);
-      notifyListeners();
-      return img;
-    }
+      //notifyListeners();
+      return imgFile;
+    
   }
 
   displayCauseUploadSuccessBottomSheet() async {

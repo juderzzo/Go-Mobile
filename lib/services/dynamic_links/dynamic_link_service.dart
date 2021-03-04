@@ -49,7 +49,7 @@ class DynamicLinkService {
 
   Future<String> createCauseLink({@required GoCause cause}) async {
     //set uri
-    Uri uri = Uri.parse('https://test.com/causes/cause?id=${cause.id}');
+    Uri uri = Uri.parse('https://appgo.page.link/cause?id=${cause.id}');
 
     //set dynamic link params
     final DynamicLinkParameters params = DynamicLinkParameters(
