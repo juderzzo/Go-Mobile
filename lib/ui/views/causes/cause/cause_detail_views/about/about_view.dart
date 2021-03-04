@@ -25,6 +25,7 @@ class AboutView extends StatelessWidget {
   int orgLength;
   YoutubePlayerController _controller;
   String videoID;
+  bool initialized = false;
 
   AboutView(
       {this.cause,
@@ -36,21 +37,25 @@ class AboutView extends StatelessWidget {
       this.isFollowing});
 
   initialize() {
+    
     if (cause.videoLink != null && cause.videoLink.length > 5) {
       videoID = YoutubePlayer.convertUrlToId(cause.videoLink);
     }
 
     if (videoID != null) {
-      _controller = YoutubePlayerController(
+      _controller = new YoutubePlayerController(
         initialVideoId: videoID,
         flags: YoutubePlayerFlags(
             isLive: true,
             disableDragSeek: true,
+            autoPlay: true,
             //hideControls: true,
             loop: true),
       );
     }
+    //print(_controller.value);
   }
+
 
   Widget causeImages(AboutViewModel model, Orientation orientation) {
     //print(images.length);
@@ -62,11 +67,27 @@ class AboutView extends StatelessWidget {
 
       //print(videoID);
       if (videoID != null) {
-        YoutubePlayer video = YoutubePlayer(
+        YoutubePlayerBuilder video = 
+        YoutubePlayerBuilder(
+        
+        player: YoutubePlayer(
+          
           aspectRatio: 17 / 9,
           controller: _controller,
           liveUIColor: CustomColors.goGreen,
           actionsPadding: EdgeInsets.only(bottom: 20.0),
+          
+        ),
+
+        builder: (context, player){
+        return Column(
+            children: [
+                // some widgets
+                player,
+                //some other widgets
+            ],
+        );
+        }
         );
         images.insert(
             0,
@@ -227,25 +248,33 @@ class AboutView extends StatelessWidget {
       viewModelBuilder: () => AboutViewModel(),
       onModelReady: (f) {
         orgLength = cause.imageURLs.length;
-        initialize();
-        print(_controller == null);
+        if(!initialized){
+          initialize();
+          initialized = true;
+          //_controller.addListener(listener);
+        }
+        
+        if (_controller != null) {
+            print(_controller.value.isPlaying);
+            //_controller.play();
+            
+          }
+        
+        
       },
       builder: (context, model, child) =>
           OrientationBuilder(builder: (context, orientation) {
         if (orientation == Orientation.landscape) {
-          
-          if (_controller != null) {
-            //print('aaaaaaaaaajaaaaaaa');
-            _controller.pause();
-            
+          if(_controller != null){
+            _controller.reset();
           }
+          
           return causeImages(model, orientation);
         } else {
-          if (_controller != null) {
-            //print('aaaaaaaaaaaaaaaaa');
-            _controller.pause();
-            
+          if(_controller != null){
+            _controller.reset();
           }
+          
 
           return Container(
             child: ListView(
