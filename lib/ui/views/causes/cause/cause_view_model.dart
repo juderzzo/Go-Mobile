@@ -48,9 +48,9 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   initialize(BuildContext context) async {
     setBusy(true);
     currentUID = await _authService.getCurrentUserID();
-    notifyListeners();
     Map<String, dynamic> args = RouteData.of(context).arguments;
     causeID = args['id'];
+    notifyListeners();
 
     ///SET SCROLL CONTROLLER
     postsScrollController.addListener(() {
@@ -184,6 +184,9 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
   Stream<GoCause> streamCause() async* {
     while (true) {
+      if (causeID == null) {
+        yield null;
+      }
       await Future.delayed(Duration(seconds: 1));
       var res = await _causeDataService.getCauseByID(causeID);
       if (res is String) {
