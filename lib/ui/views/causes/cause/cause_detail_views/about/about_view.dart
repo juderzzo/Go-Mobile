@@ -233,12 +233,18 @@ class AboutView extends StatelessWidget {
       builder: (context, model, child) =>
           OrientationBuilder(builder: (context, orientation) {
         if (orientation == Orientation.landscape) {
-          //_controller.pause();
+          
+          if (_controller != null) {
+            //print('aaaaaaaaaajaaaaaaa');
+            _controller.pause();
+            
+          }
           return causeImages(model, orientation);
         } else {
           if (_controller != null) {
             //print('aaaaaaaaaaaaaaaaa');
-            _controller.play();
+            _controller.pause();
+            
           }
 
           return Container(

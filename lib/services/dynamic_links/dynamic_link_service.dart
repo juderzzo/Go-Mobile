@@ -13,11 +13,11 @@ class DynamicLinkService {
   String shareContentPrefix = 'https://appgo.page.link';
   String androidPackageName = 'com.takeoff.Goapp';
   String iosBundleID = 'com.takeoff.Goapp';
-  String iosAppStoreID = '';
+  String iosAppStoreID = '1543627114';
 
   Future<String> createPostLink({@required String postAuthorUsername, @required GoForumPost post}) async {
     //set post uri
-    Uri postURI = Uri.parse('https://lipsum.com/posts/post?id=${post.id}');
+    Uri postURI = Uri.parse('https://appgo.page.link/post?id=${post.id}');
 
     //set dynamic link params
     final DynamicLinkParameters params = DynamicLinkParameters(

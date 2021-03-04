@@ -57,13 +57,6 @@ class CausePublishSuccessfulBottomSheet extends StatelessWidget {
               color: appTextButtonColor(),
             ),
             verticalSpaceMedium,
-            CustomTextButton(
-              onTap: () => model.shareCauseLink(request.customData),
-              text: "Copy Link",
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: appTextButtonColor(),
-            ),
             verticalSpaceMedium,
             CustomButton(
               onPressed: () => completer(SheetResponse(responseData: "return")),

@@ -31,6 +31,16 @@
 				<string>com.googleusercontent.apps.865785917892-7ntg5p40eouc2cs5r6djc3l0ahd0dbg4</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>bundleID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.takeoff.Goapp</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
