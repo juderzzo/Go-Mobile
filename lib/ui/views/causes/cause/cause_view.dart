@@ -58,19 +58,21 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
     );
   }
 
-  Widget tabBar() {
+  Widget tabBar(model) {
     return GoCauseViewTabBar(
       tabController: _tabController,
+      isAdmin: model.isAdmin,
     );
   }
 
   Widget body(CauseViewModel model) {
     return Expanded(
       child: DefaultTabController(
-        length: 3,
-        child: TabBarView(
+        length: !model.isAdmin ? 3 : 4,
+        child: 
+        TabBarView(
           controller: _tabController,
-          children: [
+          children: !model.isAdmin ? [
             model.causeCreator == null
                 ? Container()
                 : AboutView(
@@ -95,7 +97,39 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
               postResults: model.postResults,
               scrollController: model.postsScrollController,
             ),
-          ],
+
+          ] : [
+            model.causeCreator == null
+                ? Container()
+                : AboutView(
+                    cause: model.cause,
+                    images: model.images,
+                    creatorUsername: "@${model.causeCreator.username}",
+                    creatorProfilePicURL: model.causeCreator.profilePicURL,
+                    viewCreator: null,
+                    isFollowing: model.isFollowingCause,
+                    followUnfollowCause: () => model.followUnfollowCause(),
+                  ),
+            CheckListView(
+                checkListItems: model.checkListItems,
+                isCauseAdmin: model.currentUID == model.cause.creatorID ? true : false,
+                causeID: model.cause.id,
+                currentUID: model.currentUID,
+                checkOffItem: (item) => model.checkOffItem(item),
+                refreshData: () {}),
+            ListPosts(
+              refreshingData: model.refreshingPosts,
+              refreshData: () => model.refreshPosts(),
+              postResults: model.postResults,
+              scrollController: model.postsScrollController,
+            ),
+
+            Center(
+              child: Text("Admin page")
+            )
+
+          ]
+          ,
         ),
       ),
     );
@@ -104,16 +138,26 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: 3,
-      vsync: this,
-    );
+    
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CauseViewModel>.reactive(
-        onModelReady: (model) => model.initialize(context),
+        onModelReady: (model){
+          
+          model.initialize(context).then((v){
+            print("Is admin: ${model.isAdmin}");
+          _tabController = TabController(
+            length: model.isAdmin ? 4 : 3,
+            vsync: this,
+          );
+          });
+          
+        
+
+          
+        },
         viewModelBuilder: () => CauseViewModel(),
         builder: (context, model, child) => OrientationBuilder(
               builder: (context, orientation) {
@@ -140,7 +184,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                               : Column(
                                   children: [
                                     verticalSpaceSmall,
-                                    tabBar(),
+                                    tabBar(model),
                                     verticalSpaceSmall,
                                     body(model),
                                   ],

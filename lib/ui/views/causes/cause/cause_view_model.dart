@@ -36,6 +36,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   bool isFollowingCause;
   bool loadedImages = false;
   bool refreshingPosts = false;
+  bool isAdmin = false;
 
   ///DATA RESULTS
   List<GoCheckListItem> checkListItems = [];
@@ -50,6 +51,16 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     currentUID = await _authService.getCurrentUserID();
     Map<String, dynamic> args = RouteData.of(context).arguments;
     causeID = args['id'];
+    cause = await _causeDataService.getCauseByID(causeID);
+    String causeCreatorID = cause.creatorID;
+    isAdmin = (causeCreatorID == currentUID);
+    
+    //eventually add the admins feature
+    
+   
+
+    
+    
     notifyListeners();
 
     ///SET SCROLL CONTROLLER

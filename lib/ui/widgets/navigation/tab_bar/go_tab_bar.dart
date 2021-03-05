@@ -4,7 +4,8 @@ import 'package:go/constants/app_colors.dart';
 class GoExplorePageTabBar extends StatelessWidget {
   final TabController tabController;
   
-  GoExplorePageTabBar({this.tabController});
+  
+  GoExplorePageTabBar({this.tabController,});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,8 @@ class GoExplorePageTabBar extends StatelessWidget {
 
 class GoCauseViewTabBar extends StatelessWidget {
   final TabController tabController;
-  GoCauseViewTabBar({this.tabController});
+  bool isAdmin = false;
+  GoCauseViewTabBar({this.tabController,  this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +85,74 @@ class GoCauseViewTabBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: appActiveColor(),
         ),
-        tabs: [
+        tabs: isAdmin ? 
+        [
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "About",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Check List",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Forum",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+           Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Admin",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+        ] : 
+        [
           Tab(
             child: Container(
               height: 30,
