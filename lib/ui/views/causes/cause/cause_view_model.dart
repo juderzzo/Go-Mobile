@@ -43,6 +43,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   List<DocumentSnapshot> postResults = [];
   bool loadingAdditionalPosts = false;
   bool morePostsAvailable = true;
+  int tab = -1;
 
   int resultsLimit = 15;
 
@@ -51,6 +52,10 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     currentUID = await _authService.getCurrentUserID();
     Map<String, dynamic> args = RouteData.of(context).arguments;
     causeID = args['id'];
+    if(args['tab'] != null){
+      tab = args['tab'];
+    }
+    
     cause = await _causeDataService.getCauseByID(causeID);
     String causeCreatorID = cause.creatorID;
     isAdmin = (causeCreatorID == currentUID);

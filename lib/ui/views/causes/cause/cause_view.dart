@@ -21,6 +21,7 @@ class CauseView extends StatefulWidget {
 
 class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMixin {
   TabController _tabController;
+  bool openAdmins = false;
 
   Widget head(CauseViewModel model) {
     return Container(
@@ -128,6 +129,7 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
 
             AdminView(
               cause: model.cause,
+              admin: openAdmins,
             )
 
           ]
@@ -143,6 +145,9 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
     
   }
 
+  //this is for reloading the amdin page after you add a cause
+  
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CauseViewModel>.reactive(
@@ -153,7 +158,14 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
           _tabController = TabController(
             length: model.isAdmin ? 4 : 3,
             vsync: this,
+            initialIndex: model.tab > -1 ? model.tab : 0
+            //initialIndex: model.tab > -1 ? model.tab : 0
           );
+
+          if(model.tab == 4) {
+            openAdmins = true;
+          }
+
           });
           
         

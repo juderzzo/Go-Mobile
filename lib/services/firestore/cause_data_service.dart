@@ -236,6 +236,13 @@ class CauseDataService {
     cause.update({"revenue": rev.revenue + 1});
   }
 
+  Future updateAdmins(GoCause cause){
+    DocumentReference causeR = causeRef.doc(cause.id);
+    causeR.update({
+      "admins": cause.admins
+    });
+  }
+
   Future followUnfollowCause(String causeID, String uid) async {
     GoCause cause;
     DocumentSnapshot snapshot = await causeRef.doc(causeID).get().catchError((e) {

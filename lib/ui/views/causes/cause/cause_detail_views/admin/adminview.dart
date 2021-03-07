@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
@@ -19,9 +21,10 @@ import 'adminviewmodel.dart';
 class AdminView extends StatelessWidget {
   
   final GoCause cause; 
+  bool admin;
   ScrollController scrollController;
   
-  AdminView({this.cause});
+  AdminView({this.cause, this.admin});
 
   
 
@@ -44,9 +47,11 @@ class AdminView extends StatelessWidget {
       ),);
   }
 
+  
 
+//the add admin will dirctly alter the firebase first, then it will pull in the current admins
   Widget Admins(){
-    return AdminSearchView();
+    return AdminSearchView(cause: cause, );
   }
 
   Widget listAdminResults(AdminViewModel model){
@@ -59,17 +64,16 @@ class AdminView extends StatelessWidget {
           results: model.currentAdmins,
           scrollController: null,
           isScrollable: false,
-
           onSearchTermSelected: (val){
             model.navigateToUserView(val);},
+          removeAdmin: (){},
+          cause: cause,
         ),
       ],
     );
   }
 
-  onSearchTermSelected(val, model){
-            model.navigateToUserView(val);
-  }
+  
         
   
 bool initialized = false;
@@ -77,10 +81,15 @@ bool initialized = false;
   Widget build(BuildContext context) {
     
     return ViewModelBuilder<AdminViewModel>.reactive(
-      onModelReady: (model) => model.initialize(cause),
+      onModelReady: (model) => model.initialize(cause, admin),
       viewModelBuilder: () => AdminViewModel(),
       builder: (context, model, child) {
-        
+        //model.initialize(cause);
+        //  new Timer.periodic(Duration(seconds: 10), (Timer t){
+        //    model.initialize(cause);
+        //    model.updateAdmins(cause);
+        //    print("chi");
+        //  });
         return Scaffold(
         backgroundColor: appBackgroundColor(),
         body: Center(
@@ -207,8 +216,6 @@ bool initialized = false;
                         listAdminResults(model),
                       ],
                     ) : Container(),
-
-                    
                   ],
                 ),
               ],

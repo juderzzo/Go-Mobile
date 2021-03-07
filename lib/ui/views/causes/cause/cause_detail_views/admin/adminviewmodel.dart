@@ -4,6 +4,7 @@ import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/models/search_results_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -13,6 +14,7 @@ class AdminViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   UserDataService _userDataService = locator<UserDataService>();
+  CauseDataService _causeDataService = locator<CauseDataService>();
   //index = 0
   bool showMoney = false;
 
@@ -25,8 +27,13 @@ class AdminViewModel extends BaseViewModel {
   List<SearchResult> currentAdmins = [];
   
 
-  initialize(GoCause cause) async {
-    print("init");
+  initialize(GoCause cause, bool admin) async {
+    currentAdmins = [];
+    if(admin != null){
+      showAdmins = admin;
+    }
+    
+    //print("init");
     cause.admins.forEach((element) async {
       print(element);
       GoUser user = await _userDataService.getGoUserByID(element);
@@ -40,6 +47,32 @@ class AdminViewModel extends BaseViewModel {
       currentAdmins.add(result);
     });
       
+    }
+
+
+    updateAdmins(GoCause cause) async {
+    GoCause c = await _causeDataService.getCauseByID(cause.id);
+    if(c.admins != cause.admins){
+      currentAdmins = [];
+      c.admins.forEach((element) async {
+      print(element);
+      GoUser user = await _userDataService.getGoUserByID(element);
+      SearchResult result = SearchResult(
+        additionalData: user.profilePicURL,
+        id: user.id,
+        type: null,
+        name: user.username
+      );
+      
+      currentAdmins.add(result);
+    });
+    }
+
+    }
+
+
+    showAdminDialog(){
+      _dialogService.showCustomDialog(title: "Max number of administrators", description: "You are only allowed 3 administrators in addition to yourself per cause");
     }
   
  

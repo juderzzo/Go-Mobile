@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/search_results_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/search/search_result_view.dart';
@@ -10,8 +11,10 @@ class ListUsersSearchResults extends StatelessWidget {
   final ScrollController scrollController;
   final bool isScrollable;
   Function addAdmin;
+  Function removeAdmin;
+  GoCause cause;
 
-  ListUsersSearchResults({@required this.onSearchTermSelected, @required this.results, @required this.isScrollable, @required this.scrollController, this.addAdmin});
+  ListUsersSearchResults({@required this.onSearchTermSelected, @required this.results, @required this.isScrollable, @required this.scrollController, this.addAdmin, this.cause, this.removeAdmin});
 
   Widget listResults() {
     return ListView.builder(
@@ -32,6 +35,8 @@ class ListUsersSearchResults extends StatelessWidget {
           isFollowing: false,
           displayBottomBorder: index == results.length - 1 ? false : true,
           addAdmin: addAdmin,
+          removeAdmin: removeAdmin,
+          cause: cause
         );
       },
     );

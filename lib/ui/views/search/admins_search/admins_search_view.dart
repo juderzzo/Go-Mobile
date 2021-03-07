@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
@@ -16,8 +17,10 @@ import 'admins_search_view_model.dart';
 
 class AdminSearchView extends StatelessWidget {
 
-  final Function onUserTapped;
-  AdminSearchView({this.onUserTapped, });
+
+  final Function addAdmin;
+  final GoCause cause;
+  AdminSearchView({this.addAdmin, this.cause});
 
   Widget head(BuildContext context, AdminSearchViewModel model) {
     return Container(
@@ -129,7 +132,9 @@ class AdminSearchView extends StatelessWidget {
           scrollController: null,
           isScrollable: false,
           addAdmin: (){
-            print('booyah5');},
+
+          },
+          cause: cause,
 
           onSearchTermSelected: (val){
             model.navigateToUserView(val);},
