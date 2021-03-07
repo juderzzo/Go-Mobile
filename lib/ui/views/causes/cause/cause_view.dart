@@ -12,6 +12,8 @@ import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:stacked/stacked.dart';
 
+import 'cause_detail_views/admin/adminview.dart';
+
 class CauseView extends StatefulWidget {
   @override
   _CauseViewState createState() => _CauseViewState();
@@ -124,8 +126,8 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
               scrollController: model.postsScrollController,
             ),
 
-            Center(
-              child: Text("Admin page")
+            AdminView(
+              cause: model.cause,
             )
 
           ]

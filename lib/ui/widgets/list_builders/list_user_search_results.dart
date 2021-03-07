@@ -9,8 +9,9 @@ class ListUsersSearchResults extends StatelessWidget {
   final List<SearchResult> results;
   final ScrollController scrollController;
   final bool isScrollable;
+  Function addAdmin;
 
-  ListUsersSearchResults({@required this.onSearchTermSelected, @required this.results, @required this.isScrollable, @required this.scrollController});
+  ListUsersSearchResults({@required this.onSearchTermSelected, @required this.results, @required this.isScrollable, @required this.scrollController, this.addAdmin});
 
   Widget listResults() {
     return ListView.builder(
@@ -24,11 +25,13 @@ class ListUsersSearchResults extends StatelessWidget {
       ),
       itemCount: results.length,
       itemBuilder: (context, index) {
+        //print('add admin' + '${addAdmin == null}');
         return UserSearchResultView(
           onTap: () => onSearchTermSelected(results[index].id),
           searchResult: results[index],
           isFollowing: false,
           displayBottomBorder: index == results.length - 1 ? false : true,
+          addAdmin: addAdmin,
         );
       },
     );

@@ -9,9 +9,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../models/go_cause_model.dart';
 import '../ui/views/auth/forgot_password/forgot.dart';
 import '../ui/views/auth/sign_in/sign_in_view.dart';
 import '../ui/views/auth/sign_up/sign_up_view.dart';
+import '../ui/views/causes/cause/cause_detail_views/admin/adminview.dart';
 import '../ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/forum/create_forum_post/create_forum_post_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
@@ -23,6 +25,8 @@ import '../ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import '../ui/views/notifications/notifications_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
+import '../ui/views/search/admins_search/admins_search_results/admins_search_results_view.dart';
+import '../ui/views/search/admins_search/admins_search_view.dart';
 import '../ui/views/search/all_search_results/all_search_results_view.dart';
 import '../ui/views/search/search_view.dart';
 import '../ui/views/settings/settings_view.dart';
@@ -39,12 +43,16 @@ class Routes {
   static const String EditCauseViewRoute = '/edit-cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
   static const String EditCheckListView = '/edit-check-list-view';
+  static const String AdminView = '/admin-view';
   static const String ForumPostViewRoute = '/forum-post-view';
   static const String CreateForumPostViewRoute = '/create-forum-post-view';
   static const String UserViewRoute = '/user-view';
   static const String NotificationsViewRoute = '/notifications-view';
   static const String SearchViewRoute = '/search-view';
   static const String AllSearchResultsViewRoute = '/all-search-results-view';
+  static const String AdminSearchViewRoute = '/admin-search-view';
+  static const String AdminSearchResultsViewRoute =
+      '/admin-search-results-view';
   static const String SettingsViewRoute = '/settings-view';
   static const String EditProfileViewRoute = '/edit-profile-view';
   static const all = <String>{
@@ -58,12 +66,15 @@ class Routes {
     EditCauseViewRoute,
     CreateCauseViewRoute,
     EditCheckListView,
+    AdminView,
     ForumPostViewRoute,
     CreateForumPostViewRoute,
     UserViewRoute,
     NotificationsViewRoute,
     SearchViewRoute,
     AllSearchResultsViewRoute,
+    AdminSearchViewRoute,
+    AdminSearchResultsViewRoute,
     SettingsViewRoute,
     EditProfileViewRoute,
   };
@@ -83,12 +94,15 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.EditCauseViewRoute, page: EditCauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
     RouteDef(Routes.EditCheckListView, page: EditCheckListView),
+    RouteDef(Routes.AdminView, page: AdminView),
     RouteDef(Routes.ForumPostViewRoute, page: ForumPostView),
     RouteDef(Routes.CreateForumPostViewRoute, page: CreateForumPostView),
     RouteDef(Routes.UserViewRoute, page: UserView),
     RouteDef(Routes.NotificationsViewRoute, page: NotificationsView),
     RouteDef(Routes.SearchViewRoute, page: SearchView),
     RouteDef(Routes.AllSearchResultsViewRoute, page: AllSearchResultsView),
+    RouteDef(Routes.AdminSearchViewRoute, page: AdminSearchView),
+    RouteDef(Routes.AdminSearchResultsViewRoute, page: AdminSearchResultsView),
     RouteDef(Routes.SettingsViewRoute, page: SettingsView),
     RouteDef(Routes.EditProfileViewRoute, page: EditProfileView),
   ];
@@ -171,6 +185,15 @@ class GoRouter extends RouterBase {
         settings: data,
       );
     },
+    AdminView: (data) {
+      final args = data.getArgs<AdminViewArguments>(
+        orElse: () => AdminViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AdminView(cause: args.cause),
+        settings: data,
+      );
+    },
     ForumPostView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => ForumPostView(),
@@ -207,6 +230,22 @@ class GoRouter extends RouterBase {
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) => AllSearchResultsView(searchTerm: args.searchTerm),
+        settings: data,
+      );
+    },
+    AdminSearchView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => AdminSearchView(),
+        settings: data,
+      );
+    },
+    AdminSearchResultsView: (data) {
+      final args = data.getArgs<AdminSearchResultsViewArguments>(
+        orElse: () => AdminSearchResultsViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) =>
+            AdminSearchResultsView(searchTerm: args.searchTerm),
         settings: data,
       );
     },
@@ -258,8 +297,20 @@ class EditCauseViewArguments {
       this.monetized});
 }
 
+/// AdminView arguments holder class
+class AdminViewArguments {
+  final GoCause cause;
+  AdminViewArguments({this.cause});
+}
+
 /// AllSearchResultsView arguments holder class
 class AllSearchResultsViewArguments {
   final String searchTerm;
   AllSearchResultsViewArguments({this.searchTerm});
+}
+
+/// AdminSearchResultsView arguments holder class
+class AdminSearchResultsViewArguments {
+  final String searchTerm;
+  AdminSearchResultsViewArguments({this.searchTerm});
 }

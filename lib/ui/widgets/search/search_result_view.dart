@@ -11,12 +11,17 @@ class UserSearchResultView extends StatelessWidget {
   final SearchResult searchResult;
   final bool isFollowing;
   final bool displayBottomBorder;
+  Function addAdmin;
+  
 
-  UserSearchResultView({@required this.onTap, @required this.searchResult, @required this.isFollowing, @required this.displayBottomBorder});
+  UserSearchResultView({@required this.onTap, @required this.searchResult, @required this.isFollowing, @required this.displayBottomBorder, this.addAdmin});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    //print(addAdmin == null);
+    return 
+    addAdmin == null ? 
+    GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -43,7 +48,43 @@ class UserSearchResultView extends StatelessWidget {
           ],
         ),
       ),
+    ) :
+    Row(
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: displayBottomBorder ? appBorderColor() : Colors.transparent, width: 0.5),
+              ),
+            ),
+            child: Row(
+              children: <Widget>[
+                UserProfilePic(userPicUrl: searchResult.additionalData, size: 35, isBusy: false),
+                SizedBox(
+                  width: 10.0,
+                ),
+                
+                    
+                    CustomText(
+                      text: "@${searchResult.name}",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      color: appFontColor(),
+                    ),
+                  
+              ],
+            ),
+          ),
+        ),
+        
+        IconButton(icon: Icon(Icons.add), onPressed: addAdmin,)
+
+      ],
     );
+    
   }
 }
 

@@ -25,4 +25,17 @@ class SearchResult {
         'name': this.name,
         'additionalData': this.additionalData,
       };
+
+  String toString(){
+    String ans = '';
+    ans += "Id: ";
+    ans += this.id;
+    ans += " Type: ";
+    ans += this.type;
+    ans += " Name: ";
+    ans += this.name;
+    ans += " Additional Data: ";
+    ans += this.additionalData;
+    return ans;
+  }
 }

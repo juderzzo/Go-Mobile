@@ -26,6 +26,7 @@ class AboutView extends StatelessWidget {
   YoutubePlayerController _controller;
   String videoID;
   bool initialized = false;
+  YoutubePlayerBuilder video;
 
   AboutView(
       {this.cause,
@@ -269,7 +270,28 @@ class AboutView extends StatelessWidget {
             _controller.reset();
           }
           
-          return causeImages(model, orientation);
+          return 
+        YoutubePlayerBuilder(
+        
+        player: YoutubePlayer(
+          
+          aspectRatio: 17 / 9,
+          controller: _controller,
+          liveUIColor: CustomColors.goGreen,
+          actionsPadding: EdgeInsets.only(bottom: 20.0),
+          
+        ),
+
+        builder: (context, player){
+        return Column(
+            children: [
+                // some widgets
+                player,
+                //some other widgets
+            ],
+        );
+        }
+        );
         } else {
           if(_controller != null){
             _controller.reset();

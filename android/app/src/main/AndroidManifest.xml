@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.takeoff.Goapp">
    <application
-        android:label="Go! Be the change"
-        android:icon="@mipmap/launcher_icon">
+        android:label="Go!"
+        android:icon="@mipmap/ic_launcher">
        <!-- FACEBOOK AUTH  -->
        <meta-data
            android:name="com.facebook.sdk.ApplicationId"

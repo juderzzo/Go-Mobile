@@ -90,7 +90,7 @@ class GoCauseViewTabBar extends StatelessWidget {
           Tab(
             child: Container(
               height: 30,
-              width: 100,
+              width: 75,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
@@ -106,7 +106,7 @@ class GoCauseViewTabBar extends StatelessWidget {
           Tab(
             child: Container(
               height: 30,
-              width: 100,
+              width: 75,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
@@ -122,7 +122,7 @@ class GoCauseViewTabBar extends StatelessWidget {
           Tab(
             child: Container(
               height: 30,
-              width: 100,
+              width: 75,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),
@@ -138,7 +138,7 @@ class GoCauseViewTabBar extends StatelessWidget {
            Tab(
             child: Container(
               height: 30,
-              width: 100,
+              width: 75,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60),
               ),

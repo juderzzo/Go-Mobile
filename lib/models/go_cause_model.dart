@@ -11,7 +11,7 @@ class GoCause {
   List imageURLs;
   List actions;
   List followers;
-  List actionDescriptions;
+  List admins;
   int followerCount;
   int forumPostCount;
   String videoLink;
@@ -32,7 +32,7 @@ class GoCause {
     this.imageURLs,
     this.actions,
     this.followers,
-    this.actionDescriptions,
+    this.admins,
     this.followerCount,
     this.forumPostCount,
     this.videoLink,
@@ -57,7 +57,7 @@ class GoCause {
             followers: data['followers'],
             followerCount: data['followerCount'],
             forumPostCount: data['forumPostCount'],
-            actionDescriptions: data['actionDescriptions'],
+            admins: data['admins'],
             videoLink: data['videoLink'],
             monetized: data['monetized'],
             revenue: data['revenue'],
@@ -79,7 +79,7 @@ class GoCause {
         'followers': this.followers,
         'followerCount': this.followerCount,
         'forumPostCount': this.forumPostCount,
-        'actionDescriptions': this.actionDescriptions,
+        'admins': this.admins,
         'videoLink': this.videoLink,
         'monetized': this.monetized,
         'revenue': this.revenue,

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route_annotations.dart';
 import 'package:go/ui/views/auth/forgot_password/forgot.dart';
 import 'package:go/ui/views/auth/sign_in/sign_in_view.dart';
 import 'package:go/ui/views/auth/sign_up/sign_up_view.dart';
+import 'package:go/ui/views/causes/cause/cause_detail_views/admin/adminview.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/create_forum_post/create_forum_post_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
@@ -13,6 +14,8 @@ import 'package:go/ui/views/home/tabs/profile/edit_profile/edit_profile_view.dar
 import 'package:go/ui/views/notifications/notifications_view.dart';
 import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
+import 'package:go/ui/views/search/admins_search/admins_search_results/admins_search_results_view.dart';
+import 'package:go/ui/views/search/admins_search/admins_search_view.dart';
 import 'package:go/ui/views/search/all_search_results/all_search_results_view.dart';
 import 'package:go/ui/views/search/search_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
@@ -40,6 +43,7 @@ import 'package:go/ui/views/user/user_view.dart';
     MaterialRoute(page: EditCauseView, name: "EditCauseViewRoute"),
     MaterialRoute(page: CreateCauseView, name: "CreateCauseViewRoute"),
     MaterialRoute(page: EditCheckListView, name: "EditCheckListView"),
+    MaterialRoute(page: AdminView, name:"AdminView"),
 
     //FORUM POSTS
     MaterialRoute(page: ForumPostView, name: "ForumPostViewRoute"),
@@ -54,6 +58,8 @@ import 'package:go/ui/views/user/user_view.dart';
     //SEARCH
     MaterialRoute(page: SearchView, name: "SearchViewRoute"),
     MaterialRoute(page: AllSearchResultsView, name: "AllSearchResultsViewRoute"),
+    MaterialRoute(page: AdminSearchView, name:"AdminSearchViewRoute"),
+    MaterialRoute(page: AdminSearchResultsView, name: "AdminSearchResultsViewRoute"),
 
     //SETTINGS
     MaterialRoute(page: SettingsView, name: "SettingsViewRoute"),
