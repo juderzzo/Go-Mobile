@@ -162,7 +162,9 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
             //initialIndex: model.tab > -1 ? model.tab : 0
           );
 
-          if(model.tab == 4) {
+          print(model.tab);
+          if(model.tab == 3) {
+            
             openAdmins = true;
           }
 

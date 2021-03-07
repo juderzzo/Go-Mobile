@@ -54,6 +54,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     causeID = args['id'];
     if(args['tab'] != null){
       tab = args['tab'];
+      
     }
     
     cause = await _causeDataService.getCauseByID(causeID);
