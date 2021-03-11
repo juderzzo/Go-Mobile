@@ -10,6 +10,7 @@ import 'package:go/ui/views/causes/cause/cause_view.dart';
 import 'package:go/ui/views/causes/cause/edit_cause/edit_cause_view.dart';
 import 'package:go/ui/views/causes/create_cause/create_cause_view.dart';
 import 'package:go/ui/views/home/home_nav_view.dart';
+import 'package:go/ui/views/home/tabs/feed/feed_view.dart';
 import 'package:go/ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import 'package:go/ui/views/notifications/notifications_view.dart';
 import 'package:go/ui/views/onboarding/onboarding_view.dart';
@@ -37,6 +38,9 @@ import 'package:go/ui/views/user/user_view.dart';
 
     //HOME
     MaterialRoute(page: HomeNavView, name: "HomeNavViewRoute"),
+
+    //FEED
+    MaterialRoute(page: FeedView, name: "FeedViewRoute" ),
 
     //CAUSES
     MaterialRoute(page: CauseView, name: "CauseViewRoute"),

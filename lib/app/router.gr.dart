@@ -21,6 +21,7 @@ import '../ui/views/causes/cause/cause_view.dart';
 import '../ui/views/causes/cause/edit_cause/edit_cause_view.dart';
 import '../ui/views/causes/create_cause/create_cause_view.dart';
 import '../ui/views/home/home_nav_view.dart';
+import '../ui/views/home/tabs/feed/feed_view.dart';
 import '../ui/views/home/tabs/profile/edit_profile/edit_profile_view.dart';
 import '../ui/views/notifications/notifications_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
@@ -39,6 +40,7 @@ class Routes {
   static const String ForgotViewRoute = '/forgot-view';
   static const String OnboardingViewRoute = '/onboarding-view';
   static const String HomeNavViewRoute = '/home-nav-view';
+  static const String FeedViewRoute = '/feed-view';
   static const String CauseViewRoute = '/cause-view';
   static const String EditCauseViewRoute = '/edit-cause-view';
   static const String CreateCauseViewRoute = '/create-cause-view';
@@ -62,6 +64,7 @@ class Routes {
     ForgotViewRoute,
     OnboardingViewRoute,
     HomeNavViewRoute,
+    FeedViewRoute,
     CauseViewRoute,
     EditCauseViewRoute,
     CreateCauseViewRoute,
@@ -90,6 +93,7 @@ class GoRouter extends RouterBase {
     RouteDef(Routes.ForgotViewRoute, page: ForgotView),
     RouteDef(Routes.OnboardingViewRoute, page: OnboardingView),
     RouteDef(Routes.HomeNavViewRoute, page: HomeNavView),
+    RouteDef(Routes.FeedViewRoute, page: FeedView),
     RouteDef(Routes.CauseViewRoute, page: CauseView),
     RouteDef(Routes.EditCauseViewRoute, page: EditCauseView),
     RouteDef(Routes.CreateCauseViewRoute, page: CreateCauseView),
@@ -145,6 +149,12 @@ class GoRouter extends RouterBase {
         settings: data,
       );
     },
+    FeedView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => FeedView(),
+        settings: data,
+      );
+    },
     CauseView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => CauseView(),
@@ -190,7 +200,10 @@ class GoRouter extends RouterBase {
         orElse: () => AdminViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => AdminView(cause: args.cause),
+        builder: (context) => AdminView(
+          cause: args.cause,
+          admin: args.admin,
+        ),
         settings: data,
       );
     },
@@ -234,8 +247,14 @@ class GoRouter extends RouterBase {
       );
     },
     AdminSearchView: (data) {
+      final args = data.getArgs<AdminSearchViewArguments>(
+        orElse: () => AdminSearchViewArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => AdminSearchView(),
+        builder: (context) => AdminSearchView(
+          addAdmin: args.addAdmin,
+          cause: args.cause,
+        ),
         settings: data,
       );
     },
@@ -300,13 +319,21 @@ class EditCauseViewArguments {
 /// AdminView arguments holder class
 class AdminViewArguments {
   final GoCause cause;
-  AdminViewArguments({this.cause});
+  final bool admin;
+  AdminViewArguments({this.cause, this.admin});
 }
 
 /// AllSearchResultsView arguments holder class
 class AllSearchResultsViewArguments {
   final String searchTerm;
   AllSearchResultsViewArguments({this.searchTerm});
+}
+
+/// AdminSearchView arguments holder class
+class AdminSearchViewArguments {
+  final Function addAdmin;
+  final GoCause cause;
+  AdminSearchViewArguments({this.addAdmin, this.cause});
 }
 
 /// AdminSearchResultsView arguments holder class

@@ -59,7 +59,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     
     cause = await _causeDataService.getCauseByID(causeID);
     String causeCreatorID = cause.creatorID;
-    isAdmin = (causeCreatorID == currentUID);
+    isAdmin = (causeCreatorID == currentUID || cause.admins.contains(currentUID));
     
     //eventually add the admins feature
     

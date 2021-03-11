@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
+import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_forum_post_comment_model.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_notification_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
+import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/comment_data_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
@@ -34,6 +36,7 @@ class ForumPostViewModel extends BaseViewModel {
       locator<NotificationDataService>();
   DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
   ShareService _shareService = locator<ShareService>();
+  CauseDataService _causeDataService = locator<CauseDataService>();
 
   ///HELPERS
   ScrollController commentScrollController = ScrollController();
@@ -69,6 +72,7 @@ class ForumPostViewModel extends BaseViewModel {
     setBusy(true);
     String uid = await _authService.getCurrentUserID();
     currentUser = await _userDataService.getGoUserByID(uid);
+    GoCause cause = await _causeDataService.getCauseByID(post.causeID);
 
     Map<String, dynamic> args = RouteData.of(context).arguments;
     String postID = args['postID'] ?? "";
@@ -92,7 +96,7 @@ class ForumPostViewModel extends BaseViewModel {
       }
     });
 
-    isAdmin = (uid == post.causeID);
+    isAdmin = (uid == post.causeID || cause.admins.contains(uid));
     //print(isAdmin);
 
     await loadComments();

@@ -4,6 +4,7 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/enums/init_error_status.dart';
 import 'package:go/ui/views/home/home_nav_view_model.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view.dart';
+import 'package:go/ui/views/home/tabs/feed/feed_view.dart';
 import 'package:go/ui/views/home/tabs/home/home_view.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
@@ -25,9 +26,11 @@ class HomeNavView extends StatelessWidget {
         return ExploreView(user: model.user);
       case 2:
         return ProfileView(user: model.user);
+      case 3: 
+        return FeedView(user: model.user, navigateToExplorePage: () => model.setNavBarIndex(1),);
       default:
         return HomeView(
-          user: model.user,
+          user: model.user, 
         );
     }
   }
@@ -69,6 +72,11 @@ class HomeNavView extends StatelessWidget {
               onTap: () => model.setNavBarIndex(2),
               iconData: FontAwesomeIcons.user,
               isActive: model.navBarIndex == 2 ? true : false,
+            ),
+            CustomNavBarItem(
+              onTap: () => model.setNavBarIndex(3),
+              iconData: FontAwesomeIcons.envelope,
+              isActive: model.navBarIndex == 3 ? true : false,
             ),
           ],
         ),
