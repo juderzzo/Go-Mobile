@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/locator.dart';
+import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/services/auth/auth_service.dart';
@@ -31,7 +32,7 @@ class EditCheckListViewModel extends BaseViewModel {
   }
 
   addCheckListItem() {
-    GoCheckListItem item = GoCheckListItem(id: getRandomString(30), causeID: cause.id, checkedOffBy: []);
+    GoCheckListItem item = GoCheckListItem(id: getRandomString(30), causeID: cause.id, checkedOffBy: [], dateTimePublished: DateTime.now().millisecondsSinceEpoch,);
     checkListItems.add(item);
     notifyListeners();
   }
@@ -86,6 +87,7 @@ class EditCheckListViewModel extends BaseViewModel {
       updatedCheckList = await _causeDataService.updateCheckListItems(causeID: cause.id, items: checkListItems);
       if (updatedCheckList) {
         _navigationService.popRepeated(2);
+        _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {"id": cause.id, "tab": 1});
       }
     } else {
       _snackbarService.showSnackbar(

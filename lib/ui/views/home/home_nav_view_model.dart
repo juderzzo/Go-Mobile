@@ -3,12 +3,16 @@ import 'package:go/enums/init_error_status.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
+import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/utils/network_status.dart';
+import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+@singleton
 class HomeNavViewModel extends StreamViewModel<GoUser> {
+
   ///SERVICES
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
@@ -17,6 +21,7 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
   SnackbarService _snackbarService = locator<SnackbarService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
+  FirebaseMessagingService _firebaseMessagingService = locator<FirebaseMessagingService>();
 
   ///INITIAL DATA
   InitErrorStatus initErrorStatus = InitErrorStatus.network;
@@ -27,6 +32,9 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
   ///TAB BAR STATE
   int _navBarIndex = 0;
   int get navBarIndex => _navBarIndex;
+
+  //notifs
+  bool configuredFirebaseMessaging = false;
 
   void setNavBarIndex(int index) {
     _navBarIndex = index;
@@ -48,6 +56,8 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
     } else {
       initErrorStatus = InitErrorStatus.none;
       await _dynamicLinkService.handleDynamicLinks();
+      // _firebaseMessagingService.configFirebaseMessaging();
+      // _firebaseMessagingService.updateFirebaseMessageToken(user.id);
       notifyListeners();
     }
   }
@@ -61,6 +71,12 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
   void onData(GoUser data) {
     if (data != null) {
       user = data;
+      if(!configuredFirebaseMessaging){
+        _firebaseMessagingService.configFirebaseMessaging();
+      _firebaseMessagingService.updateFirebaseMessageToken(user.id);
+      configuredFirebaseMessaging = true;
+      }
+      
       notifyListeners();
       setBusy(false);
     }

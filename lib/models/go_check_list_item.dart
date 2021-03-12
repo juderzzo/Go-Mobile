@@ -7,6 +7,7 @@ class GoCheckListItem {
   double lon;
   String address;
   List checkedOffBy;
+  int dateTimePublished;
 
   GoCheckListItem({
     this.id,
@@ -17,6 +18,8 @@ class GoCheckListItem {
     this.lon,
     this.address,
     this.checkedOffBy,
+    this.dateTimePublished
+
   });
 
   GoCheckListItem.fromMap(Map<String, dynamic> data)
@@ -29,6 +32,7 @@ class GoCheckListItem {
           lon: data['lon'],
           address: data['address'],
           checkedOffBy: data['checkedOffBy'],
+          dateTimePublished: data['dateTimePublished']
         );
 
   Map<String, dynamic> toMap() => {
@@ -40,5 +44,6 @@ class GoCheckListItem {
         'lon': this.lon,
         'address': this.address,
         'checkedOffBy': this.checkedOffBy,
+        'dateTimePublished': this.dateTimePublished,
       };
 }

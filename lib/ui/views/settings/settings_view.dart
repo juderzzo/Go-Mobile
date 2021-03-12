@@ -29,10 +29,10 @@ class SettingsView extends StatelessWidget {
                 showBottomBorder: true,
               ),
               CustomFlatButton(
-                onTap: null,
+                onTap: model.enableNotifications,
                 fontColor: appFontColor(),
                 fontSize: 16,
-                text: "Help/FAQ",
+                text: "Enable Notifications",
                 showBottomBorder: true,
               ),
               CustomFlatButton(

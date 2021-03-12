@@ -85,11 +85,11 @@ class FeedView extends StatelessWidget {
                       head(model),
                       bodyEmpty(model),
                       Container(),
-                    ],
-                  ),
-              ),
-              )
-              ));
+                  ],
+                ),
+            ),
+          )
+        ));
       }
 }
       

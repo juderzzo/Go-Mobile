@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go/app/locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/enums/init_error_status.dart';
 import 'package:go/ui/views/home/home_nav_view_model.dart';
@@ -39,7 +40,7 @@ class HomeNavView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeNavViewModel>.reactive(
       onModelReady: (model) => model.initialize(),
-      viewModelBuilder: () => HomeNavViewModel(),
+      viewModelBuilder: () => locator<HomeNavViewModel>(),
       builder: (context, model, child) => Scaffold(
         body: model.isBusy
             ? Container(

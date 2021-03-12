@@ -94,6 +94,11 @@
 	<string>This will enable you to choose photos from your library to upload and use them as a profile picture, or cause image in the app.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This will allow you to use send voice messages in Go!</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

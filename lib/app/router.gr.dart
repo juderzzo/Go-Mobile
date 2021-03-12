@@ -10,6 +10,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../models/go_cause_model.dart';
+import '../models/go_user_model.dart';
 import '../ui/views/auth/forgot_password/forgot.dart';
 import '../ui/views/auth/sign_in/sign_in_view.dart';
 import '../ui/views/auth/sign_up/sign_up_view.dart';
@@ -150,8 +151,14 @@ class GoRouter extends RouterBase {
       );
     },
     FeedView: (data) {
+      final args = data.getArgs<FeedViewArguments>(
+        orElse: () => FeedViewArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => FeedView(),
+        builder: (context) => FeedView(
+          user: args.user,
+          navigateToExplorePage: args.navigateToExplorePage,
+        ),
         settings: data,
       );
     },
@@ -286,6 +293,13 @@ class GoRouter extends RouterBase {
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
+
+/// FeedView arguments holder class
+class FeedViewArguments {
+  final GoUser user;
+  final void Function() navigateToExplorePage;
+  FeedViewArguments({this.user, this.navigateToExplorePage});
+}
 
 /// EditCauseView arguments holder class
 class EditCauseViewArguments {

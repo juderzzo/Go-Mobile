@@ -43,7 +43,9 @@ class FirebaseMessagingService {
 
   updateFirebaseMessageToken(String uid) {
     firebaseMessaging.getToken().then((token) {
+      print(token);
       _userDataService.updateUserMessageToken(uid, token);
     });
+    
   }
 }

@@ -17,6 +17,7 @@ import '../services/dynamic_links/dynamic_link_service.dart';
 import '../ui/views/home/tabs/explore/explore_view_model.dart';
 import '../services/firebase_messaging/firebase_messaging_service.dart';
 import '../services/location/google_places_service.dart';
+import '../ui/views/home/home_nav_view_model.dart';
 import '../ui/views/home/tabs/home/home_view_model.dart';
 import '../services/location/location_service.dart';
 import '../services/firestore/notification_data_service.dart';
@@ -64,6 +65,7 @@ GetIt $initGetIt(
 
   // Eager singletons must be registered in the right order
   gh.singleton<ExploreViewModel>(ExploreViewModel());
+  gh.singleton<HomeNavViewModel>(HomeNavViewModel());
   gh.singleton<HomeViewModel>(HomeViewModel());
   gh.singleton<ProfileViewModel>(ProfileViewModel());
   gh.singleton<UserViewModel>(UserViewModel());
