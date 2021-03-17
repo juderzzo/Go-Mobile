@@ -48,7 +48,7 @@ class FeedView extends StatelessWidget {
 
 
   Widget bodyEmpty(FeedViewModel model){
-    print(model.causesFollowingResults);
+    //print(model.causesFollowingResults);
     return Center(
               child: ZeroStateView(
                 imageAssetName: 'coding',

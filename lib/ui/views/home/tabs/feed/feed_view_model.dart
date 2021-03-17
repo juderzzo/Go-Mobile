@@ -36,6 +36,10 @@ class FeedViewModel extends BaseViewModel{
 
   int resultsLimit = 15;
 
+
+  List newPosts = [];
+  List newActions = [];
+
   initialize({GoUser currentUser}) async {
     user = currentUser;
     notifyListeners();
@@ -48,7 +52,11 @@ class FeedViewModel extends BaseViewModel{
     notifyListeners();
     await loadCausesFollowing();
     setBusy(false);
+
+
   }
+
+
 
   Future<void> refreshCausesFollowing() async {
     isReloading = true;
