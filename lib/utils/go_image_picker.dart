@@ -22,7 +22,7 @@ class GoImagePicker {
   Future<File> retrieveImageFromLibrary({double ratioX, double ratioY}) async {
     imageCache.clear();
     File croppedImageFile;
-    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery, imageQuality: 50);
     File img = File(pickedFile.path);
     if (img != null) {
       croppedImageFile = await cropImage(img: img, ratioX: ratioX, ratioY: ratioY);
@@ -33,7 +33,7 @@ class GoImagePicker {
   Future<File> retrieveImageFromCamera({double ratioX, double ratioY}) async {
     imageCache.clear();
     File croppedImageFile;
-    final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.camera, imageQuality: 50);
     File img = File(pickedFile.path);
     if (img != null) {
       croppedImageFile = await cropImage(

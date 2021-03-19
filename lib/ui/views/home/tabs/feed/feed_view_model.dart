@@ -5,6 +5,7 @@ import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -18,7 +19,7 @@ class FeedViewModel extends BaseViewModel{
   SnackbarService _snackbarService = locator<SnackbarService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
-
+  PostDataService _postDataService = locator<PostDataService>();
 
 
 
@@ -29,19 +30,24 @@ class FeedViewModel extends BaseViewModel{
   GoUser user;
 
   ///DATA RESULTS
-  List<DocumentSnapshot> causesFollowingResults = [];
+  List<QueryDocumentSnapshot> causesFollowingResults = [];
   bool loadingAdditionalCausesFollowing = false;
   bool moreCausesFollowingAvailable = true;
-  bool isReloading = true;
+  bool refreshingPosts = false;
 
   int resultsLimit = 15;
 
 
   List newPosts = [];
   List newActions = [];
+  //for later
+  List recCauses;
+
 
   initialize({GoUser currentUser}) async {
+    
     user = currentUser;
+    await loadPosts();
     notifyListeners();
     scrollController.addListener(() {
       double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
@@ -50,29 +56,70 @@ class FeedViewModel extends BaseViewModel{
       }
     });
     notifyListeners();
-    await loadCausesFollowing();
+    //await loadCausesFollowing();
+   //print(causesFollowingResults);
+    //print(loadPosts());
     setBusy(false);
 
 
   }
 
+  // Future<void> refreshPosts() async {
+  //   refreshingPosts = true;
+  //   postResults = [];
+  //   notifyListeners();
+  //   await loadPosts();
+  // }
 
 
   Future<void> refreshCausesFollowing() async {
-    isReloading = true;
+    refreshingPosts = true;
     causesFollowingResults = [];
     notifyListeners();
     await loadCausesFollowing();
   }
 
   loadCausesFollowing() async {
+    //print(user);
     causesFollowingResults = await _causeDataService.loadCausesFollowing(
       resultsLimit: resultsLimit,
       uid: user.id,
     );
-    isReloading = false;
+    refreshingPosts  = false;
     notifyListeners();
   }
+  
+
+  loadPostsCause(causeID) async {
+    List posts = await _postDataService.loadPosts(
+      resultsLimit: resultsLimit,
+      causeID: causeID,
+    );
+    refreshingPosts = false;
+    //notifyListeners();
+    return posts;
+  }
+
+  Future<void> loadPosts() async {
+    await loadCausesFollowing().then((b){
+      //print(b);
+      causesFollowingResults.forEach((element) async { 
+       // print(element.get('id'));
+        List causePosts = await loadPostsCause(element.get('id'));
+       // print(causePosts);
+        newPosts.addAll(causePosts);
+        notifyListeners();
+      });
+    });
+
+  
+
+  }
+
+
+
+
+  
 
   loadAdditionalCausesFollowing() async {
     if (loadingAdditionalCausesFollowing || !moreCausesFollowingAvailable) {
@@ -80,7 +127,7 @@ class FeedViewModel extends BaseViewModel{
     }
     loadingAdditionalCausesFollowing = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesFollowing(
+    List<QueryDocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesFollowing(
       lastDocSnap: causesFollowingResults[causesFollowingResults.length - 1],
       resultsLimit: resultsLimit,
       uid: user.id,

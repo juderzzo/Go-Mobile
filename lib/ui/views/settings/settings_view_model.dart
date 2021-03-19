@@ -63,6 +63,10 @@ class SettingsViewModel extends BaseViewModel {
     }
   }
 
+  // disableNotifications(){
+  //   notificationsEnabled = false;
+  // }
+
   signOut(BuildContext context) async {
     String action = await showModalActionSheet(
       message: "Are You Sure You Want to Log Out?",

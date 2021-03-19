@@ -5,6 +5,7 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
+import 'package:go/ui/widgets/list_builders/list_posts.dart';
 import 'package:go/ui/widgets/notifications/notification_bell/notification_bell_view.dart';
 import 'package:stacked/stacked.dart';
 
@@ -14,6 +15,7 @@ class FeedView extends StatelessWidget {
 
   final GoUser user;
   final VoidCallback navigateToExplorePage;
+  ScrollController _scrollController = new ScrollController();
   
   FeedView({this.user, this.navigateToExplorePage});
   
@@ -49,22 +51,33 @@ class FeedView extends StatelessWidget {
 
   Widget bodyEmpty(FeedViewModel model){
     //print(model.causesFollowingResults);
-    return Center(
-              child: ZeroStateView(
-                imageAssetName: 'coding',
-                header: "You're Not Following Any Causes or Changemakers",
-                subHeader: "Follow the causes and changemakers that youre interested in",
-                mainActionButtonTitle: "Explore Causes",
-                mainAction: navigateToExplorePage,
-                secondaryActionButtonTitle: 'Refresh Page',
-                secondaryAction: () => model.refreshCausesFollowing(),
+    return SafeArea(
 
-              ),
-            );
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+                  child: ZeroStateView(
+                    imageAssetName: 'coding',
+                    header: "You're Not Following Any Causes or Changemakers",
+                    subHeader: "Follow the causes and changemakers that youre interested in",
+                    mainActionButtonTitle: "Explore Causes",
+                    mainAction: navigateToExplorePage,
+                    secondaryActionButtonTitle: 'Refresh Page',
+                    secondaryAction: () => model.refreshCausesFollowing(),
+
+                  ),
+                ),
+          ),
+    );
   }
 
-  Widget bodyFull(FeedViewMode){
-
+  Widget bodyFull(FeedViewModel model ){
+    return ListPosts(
+      postResults: model.newPosts,
+      scrollController: _scrollController,
+      refreshingData: model.refreshingPosts,
+      refreshData: model.loadPosts,
+    );
   }
 
   
@@ -83,14 +96,14 @@ class FeedView extends StatelessWidget {
                 child: Column(
                     children: [
                       head(model),
-                      bodyEmpty(model),
+                      model.newPosts == null ? bodyEmpty(model) : bodyFull(model),
                       Container(),
-                  ],
+                    ],
                 ),
-            ),
-          )
-        ));
-      }
+              ),
+            )
+          ));
+        }
 }
       
       

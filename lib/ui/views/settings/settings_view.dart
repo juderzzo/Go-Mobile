@@ -35,6 +35,8 @@ class SettingsView extends StatelessWidget {
                 text: "Enable Notifications",
                 showBottomBorder: true,
               ),
+
+              
               CustomFlatButton(
                 onTap: () {
                   print("tapped");

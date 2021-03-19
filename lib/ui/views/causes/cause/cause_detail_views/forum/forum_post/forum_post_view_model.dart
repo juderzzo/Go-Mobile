@@ -72,7 +72,8 @@ class ForumPostViewModel extends BaseViewModel {
     setBusy(true);
     String uid = await _authService.getCurrentUserID();
     currentUser = await _userDataService.getGoUserByID(uid);
-    GoCause cause = await _causeDataService.getCauseByID(post.causeID);
+    GoCause cause; 
+    
 
     Map<String, dynamic> args = RouteData.of(context).arguments;
     String postID = args['postID'] ?? "";
@@ -81,6 +82,8 @@ class ForumPostViewModel extends BaseViewModel {
     if (res is String) {
     } else {
       post = res;
+      //print(post);
+      cause = await _causeDataService.getCauseByID(post.causeID);
     }
     author = await _userDataService.getGoUserByID(post.authorID);
     if (currentUser.id == post.authorID) {
@@ -95,6 +98,7 @@ class ForumPostViewModel extends BaseViewModel {
         loadAdditionalComments();
       }
     });
+    print(cause);
 
     isAdmin = (uid == post.causeID || cause.admins.contains(uid));
     //print(isAdmin);

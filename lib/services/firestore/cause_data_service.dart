@@ -344,7 +344,7 @@ class CauseDataService {
   }
 
   //Load Causes Following
-  Future<List<DocumentSnapshot>> loadCausesFollowing({
+  Future<List<QueryDocumentSnapshot>> loadCausesFollowing({
     @required String uid,
     @required int resultsLimit,
   }) async {
