@@ -23,6 +23,7 @@ class FeedView extends StatelessWidget {
     Widget head(FeedViewModel model) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
+      color: appBackgroundColor(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -71,12 +72,16 @@ class FeedView extends StatelessWidget {
     );
   }
 
-  Widget bodyFull(FeedViewModel model ){
-    return ListPosts(
-      postResults: model.newPosts,
-      scrollController: _scrollController,
-      refreshingData: model.refreshingPosts,
-      refreshData: model.loadPosts,
+  Widget bodyFull(FeedViewModel model, BuildContext context ){
+    return 
+    Container(
+      height: MediaQuery.of(context).size.height*3/4,
+      child: ListPosts(
+        postResults: model.newPosts,
+        scrollController: _scrollController,
+        refreshingData: model.refreshingPosts,
+        refreshData: model.loadPosts,
+      ),
     );
   }
 
@@ -91,18 +96,22 @@ class FeedView extends StatelessWidget {
       viewModelBuilder: () => FeedViewModel(),
             builder: (context, model, child) => Scaffold(
               body: 
-              SafeArea(
-              child: Container(
-                child: Column(
-                    children: [
-                      head(model),
-                      model.newPosts == null ? bodyEmpty(model) : bodyFull(model),
-                      Container(),
-                    ],
+              Container(
+                color: appBackgroundColor(),
+                child: SafeArea(
+            
+                  child: Column(
+                      children: [
+                        head(model),
+                        SizedBox(height: 10,),
+                        model.newPosts == null ? bodyEmpty(model) : bodyFull(model, context),
+                        Container(),
+                      ],
+                  ),
                 ),
               ),
             )
-          ));
+          );
         }
 }
       
