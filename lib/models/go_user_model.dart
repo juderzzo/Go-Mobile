@@ -21,6 +21,7 @@ class GoUser {
   List posts;
   int appOpenTimeInMilliseconds;
   String messageToken;
+  int points;
 
   GoUser({
     this.id,
@@ -43,6 +44,7 @@ class GoUser {
     this.appOpenTimeInMilliseconds,
     this.messageToken,
     this.posts,
+    this.points
   });
 
   GoUser.fromMap(Map<String, dynamic> data)
@@ -67,6 +69,7 @@ class GoUser {
           appOpenTimeInMilliseconds: data['appOpenTimeInMilliseconds'],
           messageToken: data['messageToken'],
           posts: data['posts'],
+          points: data['points']
         );
 
   Map<String, dynamic> toMap() => {
@@ -90,6 +93,7 @@ class GoUser {
         'appOpenTimeInMilliseconds': this.appOpenTimeInMilliseconds,
         'messageToken': this.messageToken,
         'posts': this.posts,
+        'points': this.points
       };
 
   GoUser generateNewUser({

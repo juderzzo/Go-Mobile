@@ -4,6 +4,7 @@ import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view_model.dart';
+import 'package:image/image.dart';
 import 'package:stacked/stacked.dart';
 
 class CheckListItemView extends StatelessWidget {
@@ -108,6 +109,15 @@ class CheckListItemView extends StatelessWidget {
                         ),
                       ],
                     ),
+
+                    Text(
+                     item.points.toString(),
+                     style: TextStyle(
+                       color: CustomColors.goGreen,
+                       fontSize: 20
+                     ),
+                    ),
+                    Spacer(),
             ],
           ),
         ),

@@ -31,14 +31,17 @@ class UserDataService {
       return e.message;
     });
     if (snapshot.exists) {
-      onboarded = snapshot.data()['onboarded'] == null ? false : snapshot.data()['onboarded'];
+      onboarded = snapshot.data()['onboarded'] == null
+          ? false
+          : snapshot.data()['onboarded'];
     }
     return onboarded;
   }
 
   Future checkIfUsernameExists(String uid, String username) async {
     bool exists = false;
-    QuerySnapshot snapshot = await userRef.where('username', isEqualTo: username).get();
+    QuerySnapshot snapshot =
+        await userRef.where('username', isEqualTo: username).get();
     if (snapshot.docs.isNotEmpty) {
       snapshot.docs.forEach((doc) {
         if (doc.id != uid) {
@@ -84,7 +87,8 @@ class UserDataService {
 
   Future getGoUserByUsername(String username) async {
     GoUser user;
-    QuerySnapshot querySnapshot = await userRef.where("username", isEqualTo: username).get();
+    QuerySnapshot querySnapshot =
+        await userRef.where("username", isEqualTo: username).get();
     if (querySnapshot.docs.isNotEmpty) {
       DocumentSnapshot doc = querySnapshot.docs.first;
       Map<String, dynamic> docData = doc.data();
@@ -95,7 +99,7 @@ class UserDataService {
 
   Future addPost(String id, String postID) async {
     GoUser user = await getGoUserByID(id);
-    if(user.posts == null){
+    if (user.posts == null) {
       user.posts = [];
     }
     user.posts.add(postID);
@@ -188,11 +192,17 @@ class UserDataService {
     });
   }
 
+  Future updateGoUserPoints(String id, int number) async {
+    GoUser user = await getGoUserByID(id);
+    await userRef.doc(id).update({"points": user.points + number}).catchError((e) {
+      return e.message;
+    });
+  }
+
   Future updateGoUsername(String id, String username) async {
     await userRef.doc(id).update({"username": username}).catchError((e) {
       return e.message;
     });
-    
   }
 
   Future updateProfilePic(String id, File img) async {
@@ -240,7 +250,9 @@ class UserDataService {
       DocumentSnapshot user = await userRef.doc(id).get();
       List following = user.data()['following'];
       following.remove(uid);
-      userRef.doc(id).update({'following': following, 'followingCount': following.length});
+      userRef
+          .doc(id)
+          .update({'following': following, 'followingCount': following.length});
 
       DocumentSnapshot other = await userRef.doc(uid).get();
       List followers = other.data()['followers'];
@@ -253,7 +265,9 @@ class UserDataService {
       DocumentSnapshot user = await userRef.doc(id).get();
       List following = user.data()['following'];
       following.add(uid);
-      userRef.doc(id).update({'following': following, 'followingCount': following.length});
+      userRef
+          .doc(id)
+          .update({'following': following, 'followingCount': following.length});
 
       DocumentSnapshot other = await userRef.doc(uid).get();
       List followers = other.data()['followers'];
@@ -271,7 +285,8 @@ class UserDataService {
     @required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = userRef.orderBy('followerCount', descending: true).limit(resultsLimit);
+    Query query =
+        userRef.orderBy('followerCount', descending: true).limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(
         title: 'Error',
@@ -293,7 +308,10 @@ class UserDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = userRef.orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    query = userRef
+        .orderBy('followerCount', descending: true)
+        .startAfterDocument(lastDocSnap)
+        .limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService.showSnackbar(

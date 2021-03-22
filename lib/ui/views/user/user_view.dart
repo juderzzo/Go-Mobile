@@ -91,6 +91,7 @@ class _UserViewState extends State<UserView>
             followingLength: model.user.following.length,
             viewFollowersAction: null,
             viewFollowingAction: null,
+            points: model.user.points,
           ),
           SizedBox(height: 28),
           model.isFollowing == null || model.isFollowing == false
@@ -168,12 +169,6 @@ class _UserViewState extends State<UserView>
                 : model.loadPosts(),
           ),
         )
-        // ListCauses(
-        //   refreshData: model.refreshCausesCreated,
-        //   causesResults: model.causesCreatedResults,
-        //   pageStorageKey: PageStorageKey('user-causes-created'),
-        //   scrollController: null,
-        // ),
       ],
     );
   }

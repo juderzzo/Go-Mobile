@@ -97,6 +97,7 @@ class _ProfileViewState extends State<ProfileView>
             followingLength: widget.user.following.length,
             viewFollowersAction: null,
             viewFollowingAction: null,
+            points: widget.user.points,
           ),
           Container(
             //height: MediaQuery.of(context).size.height * 4/10,

@@ -52,26 +52,23 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     currentUID = await _authService.getCurrentUserID();
     Map<String, dynamic> args = RouteData.of(context).arguments;
     causeID = args['id'];
-    if(args['tab'] != null){
+    if (args['tab'] != null) {
       tab = args['tab'];
-      
     }
-    
+
     cause = await _causeDataService.getCauseByID(causeID);
     String causeCreatorID = cause.creatorID;
-    isAdmin = (causeCreatorID == currentUID || cause.admins.contains(currentUID));
-    
-    //eventually add the admins feature
-    
-   
+    isAdmin =
+        (causeCreatorID == currentUID || cause.admins.contains(currentUID));
 
-    
-    
+    //eventually add the admins feature
+
     notifyListeners();
 
     ///SET SCROLL CONTROLLER
     postsScrollController.addListener(() {
-      double triggerFetchMoreSize = 0.9 * postsScrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize =
+          0.9 * postsScrollController.position.maxScrollExtent;
       if (postsScrollController.position.pixels > triggerFetchMoreSize) {
         loadAdditionalPosts();
       }
@@ -84,7 +81,8 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     if (res is String) {
       _dialogService.showDialog(
         title: "Cause Creator Error",
-        description: "There was an issue loading the details of the creator of this cause",
+        description:
+            "There was an issue loading the details of the creator of this cause",
         barrierDismissible: true,
       );
     } else {
@@ -116,11 +114,13 @@ class CauseViewModel extends StreamViewModel<GoCause> {
       if (response.confirmed) {
         //validate location if required
         if (item.lat != null && item.lon != null && item.address != null) {
-          bool isNearbyLocation = await _locationService.isNearbyLocation(lat: item.lat, lon: item.lon);
+          bool isNearbyLocation = await _locationService.isNearbyLocation(
+              lat: item.lat, lon: item.lon);
           if (!isNearbyLocation) {
             _dialogService.showDialog(
               title: "Location Error",
-              description: "You are not near the required location to check off this item.",
+              description:
+                  "You are not near the required location to check off this item.",
               buttonTitle: "Ok",
             );
             return;
@@ -128,7 +128,10 @@ class CauseViewModel extends StreamViewModel<GoCause> {
         }
         //check off item
         checkedOffBy.add(currentUID);
-        await _causeDataService.checkOffCheckListItem(id: item.id, checkedOffBy: checkedOffBy);
+
+        await _causeDataService.checkOffCheckListItem(
+            id: item.id, checkedOffBy: checkedOffBy);
+        await _userDataService.updateGoUserPoints(currentUID, item.points);
       }
     }
   }
@@ -156,7 +159,8 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     }
     loadingAdditionalPosts = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _postDataService.loadAdditionalPosts(
+    List<DocumentSnapshot> newResults =
+        await _postDataService.loadAdditionalPosts(
       lastDocSnap: postResults[postResults.length - 1],
       resultsLimit: resultsLimit,
       causeID: cause.id,
@@ -216,7 +220,9 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
   ///NAVIGATION
   navigateToCreatePostView() async {
-    String data = await _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {'causeID': cause.id});
+    String data = await _navigationService.navigateTo(
+        Routes.CreateForumPostViewRoute,
+        arguments: {'causeID': cause.id});
     if (data == 'newPostCreated') {
       refreshPosts();
     }

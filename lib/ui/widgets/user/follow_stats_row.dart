@@ -5,12 +5,14 @@ class FollowStatsRow extends StatelessWidget {
   final int followingLength;
   final VoidCallback viewFollowersAction;
   final VoidCallback viewFollowingAction;
+  final int points;
 
   FollowStatsRow({
     this.followersLength,
     this.followingLength,
     this.viewFollowersAction,
     this.viewFollowingAction,
+    this.points,
   });
 
   @override
@@ -45,6 +47,22 @@ class FollowStatsRow extends StatelessWidget {
                 ),
                 Text(
                   "Following",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 32.0),
+          GestureDetector(
+            //onTap: viewFollowingAction,
+            child: Column(
+              children: [
+                Text(
+                  points.toString(),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "   Points  ",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                 ),
               ],
