@@ -43,14 +43,17 @@ class NotificationBlockViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToCauseView(String id) {
-    //_navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
+    _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
   }
 
   navigateToPostView(String id) {
-    _navigationService.navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': id});
+    print(id);
+    _navigationService
+        .navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': id});
   }
 
   navigateToUserView(String uid) {
-    //_navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
+    _navigationService
+        .navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 }

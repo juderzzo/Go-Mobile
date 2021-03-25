@@ -288,7 +288,7 @@ class CauseDataService {
       snapshot.docs.forEach((doc) async {
         await checkRef.doc(doc.id).delete().catchError((e) {
           _snackbarService.showSnackbar(
-            title: 'Check List Submission Error',
+            title: 'Action List Submission Error',
             message: "There was an issues submitting your checklist. Please try again.",
             duration: Duration(seconds: 5),
           );
@@ -300,7 +300,7 @@ class CauseDataService {
     items.forEach((item) async {
       await checkRef.doc(item.id).set(item.toMap()).catchError((e) {
         _snackbarService.showSnackbar(
-          title: 'Check List Submission Error',
+          title: 'Action List Submission Error',
           message: "There was an issues submitting your checklist. Please try again.",
           duration: Duration(seconds: 5),
         );

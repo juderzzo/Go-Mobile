@@ -54,8 +54,10 @@ class AuthService {
   Future signInWithEmail(
       {@required String email, @required String password}) async {
     try {
+       print("1");
       UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
+     
       if (credential.user != null) {
         if (credential.user.emailVerified) {
           String uid = await getCurrentUserID();
@@ -75,6 +77,7 @@ class AuthService {
         }
       }
     } catch (e) {
+      print(e.message);
       return e.message;
     }
   }
@@ -251,7 +254,6 @@ class AuthService {
             googleID: googleAuth.idToken,
             email: null,
             phoneNo: null,
-            
           );
           if (res is String) {
             _snackbarService.showSnackbar(

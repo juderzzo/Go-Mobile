@@ -273,7 +273,7 @@ class CreateCauseView extends StatelessWidget {
           textFieldHeader(
             "Actions!",
             "To add actions, go to 'Update Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
-                "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media). The checklist page can be accessed by clicking on your cause in your home page, and then swiping to the second tab, titled 'Check List;",
+                "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media). The checklist page can be accessed by clicking on your cause in your home page, and then swiping to the second tab, titled 'Action List;",
           ),
           verticalSpaceMedium,
 

@@ -72,16 +72,17 @@ class ForumPostViewModel extends BaseViewModel {
     setBusy(true);
     String uid = await _authService.getCurrentUserID();
     currentUser = await _userDataService.getGoUserByID(uid);
-    GoCause cause; 
-    
+    GoCause cause;
 
     Map<String, dynamic> args = RouteData.of(context).arguments;
     String postID = args['postID'] ?? "";
 
+    print(postID);
     var res = await _postDataService.getPostByID(postID);
+    print(res);
     if (res is String) {
     } else {
-      post = res;
+      //post = res;
       //print(post);
       cause = await _causeDataService.getCauseByID(post.causeID);
     }

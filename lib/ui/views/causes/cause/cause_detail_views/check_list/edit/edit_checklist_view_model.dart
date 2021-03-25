@@ -116,8 +116,8 @@ class EditCheckListViewModel extends BaseViewModel {
       }
     } else {
       _snackbarService.showSnackbar(
-        title: 'Check List Incomplete',
-        message: "One or More of Your Check List Items is Incomplete",
+        title: 'Actions Incomplete',
+        message: "One or More of Your Actions Items is Incomplete",
         duration: Duration(seconds: 5),
       );
     }

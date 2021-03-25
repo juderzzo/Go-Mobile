@@ -159,8 +159,15 @@ class _ProfileViewState extends State<ProfileView>
 
   Widget body(ProfileViewModel model) {
     List<Widget> loader = [];
-    loader.add(Padding(
-        padding: EdgeInsets.all(165.0), child: CircularProgressIndicator()));
+    loader.add(
+      Padding(
+        padding: const EdgeInsets.all(138.0),
+        child: Container(
+          height: 100,
+          width: 100,
+          child: CircularProgressIndicator()),
+      )
+      );
 
     return TabBarView(
       controller: _tabController,

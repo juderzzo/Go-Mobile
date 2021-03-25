@@ -113,7 +113,7 @@ class GoCauseViewTabBar extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Check List",
+                  "Actions",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -179,7 +179,7 @@ class GoCauseViewTabBar extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Check List",
+                  "Actions",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

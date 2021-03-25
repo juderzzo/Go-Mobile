@@ -11,7 +11,11 @@ class ListNotifications extends StatelessWidget {
   final VoidCallback refreshData;
   final PageStorageKey pageStorageKey;
   final ScrollController scrollController;
-  ListNotifications({@required this.refreshData, @required this.data, @required this.pageStorageKey, @required this.scrollController});
+  ListNotifications(
+      {@required this.refreshData,
+      @required this.data,
+      @required this.pageStorageKey,
+      @required this.scrollController});
 
   Widget listCauses() {
     return RefreshIndicator(
@@ -37,6 +41,7 @@ class ListNotifications extends StatelessWidget {
           } else {
             notification = data[index];
           }
+          print(notification);
 
           return NotificationBlockView(
             notification: notification,

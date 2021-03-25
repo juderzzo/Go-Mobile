@@ -45,7 +45,7 @@ class EditCheckListView extends StatelessWidget {
       viewModelBuilder: () => EditCheckListViewModel(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar().basicActionAppBar(
-          title: "Edit Check List",
+          title: "Edit Actions",
           showBackButton: true,
           actionWidget: model.isBusy
               ? Padding(
