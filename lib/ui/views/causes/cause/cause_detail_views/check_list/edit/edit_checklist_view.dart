@@ -33,6 +33,7 @@ class EditCheckListView extends StatelessWidget {
               onSetLocation: (val) => model.updateItemLocationDetails(id: val['id'], lat: val['lat'], lon: val['lon'], address: val['address']),
               onDelete: (val) => model.deleteCheckListItem(id: val),
               onRemoveLocation: (val) => model.deleteItemLocationDetails(id: val),
+              onSetPoints: (val) => model.updateItemPoints(id: val['id'], points: val['points']),
             ),
     );
   }

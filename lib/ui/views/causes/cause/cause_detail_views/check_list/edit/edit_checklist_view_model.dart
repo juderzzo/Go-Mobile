@@ -32,7 +32,12 @@ class EditCheckListViewModel extends BaseViewModel {
   }
 
   addCheckListItem() {
-    GoCheckListItem item = GoCheckListItem(id: getRandomString(30), causeID: cause.id, checkedOffBy: [], dateTimePublished: DateTime.now().millisecondsSinceEpoch,);
+    GoCheckListItem item = GoCheckListItem(
+        id: getRandomString(30),
+        causeID: cause.id,
+        checkedOffBy: [],
+        dateTimePublished: DateTime.now().millisecondsSinceEpoch,
+        points: 0);
     checkListItems.add(item);
     notifyListeners();
   }
@@ -49,7 +54,14 @@ class EditCheckListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  updateItemLocationDetails({String id, double lat, double lon, String address}) {
+  updateItemPoints({String id, int points}) {
+    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
+    checkListItems[itemIndex].points = points;
+    notifyListeners();
+  }
+
+  updateItemLocationDetails(
+      {String id, double lat, double lon, String address}) {
     int itemIndex = checkListItems.indexWhere((item) => item.id == id);
     checkListItems[itemIndex].lat = lat;
     checkListItems[itemIndex].lon = lon;
@@ -65,6 +77,12 @@ class EditCheckListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  editItemPoints({String id, int points}) {
+    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
+    checkListItems[itemIndex].points = points;
+    notifyListeners();
+  }
+
   deleteCheckListItem({@required String id}) {
     checkListItems.removeWhere((item) => item.id == id);
     notifyListeners();
@@ -73,8 +91,13 @@ class EditCheckListViewModel extends BaseViewModel {
   bool checkListIsValid() {
     bool isValid = true;
     int numberOfIncompleteItems = 0;
-    numberOfIncompleteItems =
-        checkListItems.where((item) => item.header == null || item.header.isEmpty || item.subHeader == null || item.subHeader.isEmpty).length;
+    numberOfIncompleteItems = checkListItems
+        .where((item) =>
+            item.header == null ||
+            item.header.isEmpty ||
+            item.subHeader == null ||
+            item.subHeader.isEmpty)
+        .length;
     if (numberOfIncompleteItems > 0) {
       isValid = false;
     }
@@ -84,10 +107,12 @@ class EditCheckListViewModel extends BaseViewModel {
   submitCheckList() async {
     if (checkListIsValid()) {
       bool updatedCheckList = false;
-      updatedCheckList = await _causeDataService.updateCheckListItems(causeID: cause.id, items: checkListItems);
+      updatedCheckList = await _causeDataService.updateCheckListItems(
+          causeID: cause.id, items: checkListItems);
       if (updatedCheckList) {
         _navigationService.popRepeated(2);
-        _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {"id": cause.id, "tab": 1});
+        _navigationService.navigateTo(Routes.CauseViewRoute,
+            arguments: {"id": cause.id, "tab": 1});
       }
     } else {
       _snackbarService.showSnackbar(

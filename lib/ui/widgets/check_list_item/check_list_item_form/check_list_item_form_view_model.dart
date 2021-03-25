@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go/app/locator.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/services/auth/auth_service.dart';
@@ -18,6 +19,7 @@ class CheckListItemFormViewModel extends BaseViewModel {
   bool requiresLocationVerification = false;
 
   Map<String, dynamic> placeSearchResults = {};
+  int points = 0;
 
   initialize(GoCheckListItem item) async {
     setBusy(true);
@@ -27,6 +29,7 @@ class CheckListItemFormViewModel extends BaseViewModel {
       notifyListeners();
     }
     setBusy(false);
+    points = item.points;
   }
 
   setPlacesSearchResults(Map<String, dynamic> val) {
@@ -42,7 +45,8 @@ class CheckListItemFormViewModel extends BaseViewModel {
 
     //get place ID for LAT & LON
     String placeID = placeSearchResults[place];
-    Map<String, dynamic> coordinates = await googlePlacesService.getLatLonFromPlaceID(placeID: placeID);
+    Map<String, dynamic> coordinates =
+        await googlePlacesService.getLatLonFromPlaceID(placeID: placeID);
 
     //set place details
     details = {

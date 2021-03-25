@@ -3,6 +3,7 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/check_list_item/check_list_item_form/check_list_item_form_view.dart';
+import 'package:image/image.dart';
 
 // class ListCheckListItems extends StatelessWidget {
 //   final List<GoCheckListItem> items;
@@ -77,8 +78,10 @@ class ListCheckListItemsForEditing extends StatelessWidget {
   final Function(Map<String, dynamic>) onChangedHeader;
   final Function(Map<String, dynamic>) onChangedSubHeader;
   final Function(Map<String, dynamic>) onSetLocation;
+  final Function(Map<String, dynamic>) onSetPoints;
   final Function(String) onDelete;
   final Function(String) onRemoveLocation;
+  
 
   ListCheckListItemsForEditing({
     @required this.refreshData,
@@ -90,6 +93,7 @@ class ListCheckListItemsForEditing extends StatelessWidget {
     @required this.onSetLocation,
     @required this.onDelete,
     @required this.onRemoveLocation,
+    @required this.onSetPoints
   });
 
   Widget listCauses() {
@@ -115,6 +119,7 @@ class ListCheckListItemsForEditing extends StatelessWidget {
             onSetLocation: (val) => onSetLocation(val),
             onDelete: (val) => onDelete(val),
             onRemoveLocation: (val) => onRemoveLocation(val),
+            onSetPoints: (val) => onSetPoints(val),
           );
         },
       ),

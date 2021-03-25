@@ -131,7 +131,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
         await _causeDataService.checkOffCheckListItem(
             id: item.id, checkedOffBy: checkedOffBy);
-        await _userDataService.updateGoUserPoints(currentUID, item.points);
+        await _userDataService.updateGoUserPoints(currentUID, item.points); 
       }
     }
   }

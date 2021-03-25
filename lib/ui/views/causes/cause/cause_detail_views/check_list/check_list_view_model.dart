@@ -21,7 +21,7 @@ class CheckListViewModel extends BaseViewModel {
 
   initialize(id) async {
     working = false;
-    print(busy("f"));
+    //print(busy("f"));
     monetizer = await monetized(id);
     //GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = @[kGADSimulatorID];
     setBusy(true);
@@ -31,16 +31,16 @@ class CheckListViewModel extends BaseViewModel {
       adUnitId: 'ca-app-pub-9312496461922231/3137448396',
     )
         .then((value) {
-      print("new ad loaded");
+      //print("new ad loaded");
       setBusy(false);
-      print("monetizer");
-      print(monetizer);
+      //print("monetizer");
+      //print(monetizer);
     });
 
     RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
       if (event == RewardedVideoAdEvent.rewarded) {
         {
-          print("rewarded");
+          //print("rewarded");
           // Here, apps should update state to reflect the reward.
           _causeDataService.addView(id);
           adInstance.load(

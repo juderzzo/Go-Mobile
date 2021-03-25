@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/buttons/custom_text_button.dart';
@@ -12,21 +13,52 @@ import 'package:stacked/stacked.dart';
 import 'check_list_item_form_view_model.dart';
 
 class CheckListItemFormView extends StatelessWidget {
-  final GoCheckListItem item;
+  GoCheckListItem item;
   final Function(Map<String, dynamic>) onChangedHeader;
   final Function(Map<String, dynamic>) onChangedSubHeader;
   final Function(Map<String, dynamic>) onSetLocation;
+  final Function(Map<String, dynamic>) onSetPoints;
   final Function(String) onDelete;
   final Function(String) onRemoveLocation;
+  //int points;
 
-  CheckListItemFormView({
-    @required this.item,
-    @required this.onChangedHeader,
-    @required this.onChangedSubHeader,
-    @required this.onSetLocation,
-    @required this.onDelete,
-    @required this.onRemoveLocation,
-  });
+  CheckListItemFormView(
+      {@required this.item,
+      @required this.onChangedHeader,
+      @required this.onChangedSubHeader,
+      @required this.onSetLocation,
+      @required this.onDelete,
+      @required this.onRemoveLocation,
+      this.onSetPoints});
+
+  Widget dropdown(BuildContext context, CheckListItemFormViewModel model) {
+    return DropdownButton<int>(
+      value: model.points,
+      //icon: const Icon(Icons.arrow_downward),
+      iconSize: 0,
+      elevation: 16,
+      style: const TextStyle(color: CustomColors.goGreen),
+      underline: Container(
+        height: 2,
+        color: appBackgroundColor(),
+      ),
+      onChanged: (int newValue) {
+        //dropdownValue = newValue;
+        model.points = newValue;
+        print(item.id);
+        print(newValue);
+        onSetPoints({'id': item.id, 'points': newValue});
+        model.notifyListeners();
+      },
+      items: <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          .map<DropdownMenuItem<int>>((int value) {
+        return DropdownMenuItem<int>(
+          value: value,
+          child: Text(value.toString()),
+        );
+      }).toList(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +135,9 @@ class CheckListItemFormView extends StatelessWidget {
                               autofocus: false,
                             ),
                             suggestionsCallback: (searchTerm) async {
-                              Map<String, dynamic> res = await model.googlePlacesService.googleSearchAutoComplete(input: searchTerm);
+                              Map<String, dynamic> res = await model
+                                  .googlePlacesService
+                                  .googleSearchAutoComplete(input: searchTerm);
                               model.setPlacesSearchResults(res);
                               return model.placeSearchResults.keys.toList();
                             },
@@ -111,12 +145,16 @@ class CheckListItemFormView extends StatelessWidget {
                               return ListTile(
                                 title: Text(
                                   place,
-                                  style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w500),
+                                  style: TextStyle(
+                                      color: appFontColor(),
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               );
                             },
                             onSuggestionSelected: (val) async {
-                              Map<String, dynamic> details = await model.getPlaceDetails(val);
+                              Map<String, dynamic> details =
+                                  await model.getPlaceDetails(val);
                               onSetLocation({
                                 'id': item.id,
                                 'lat': details['lat'],
@@ -129,33 +167,54 @@ class CheckListItemFormView extends StatelessWidget {
                       )
                     : Container(),
                 verticalSpaceSmall,
-                model.requiresLocationVerification
-                    ? CustomTextButton(
-                        onTap: () {
-                          model.toggleRequiresLocationVerification();
-                          onRemoveLocation(item.id);
-                        },
-                        text: 'Remove Location',
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: appTextButtonColor(),
-                      )
-                    : CustomTextButton(
-                        onTap: () {
-                          model.toggleRequiresLocationVerification();
-                        },
-                        text: 'Add Location',
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: appTextButtonColor(),
-                      ),
+                Row(
+                  children: [
+                    model.requiresLocationVerification
+                        ? CustomTextButton(
+                            onTap: () {
+                              model.toggleRequiresLocationVerification();
+                              onRemoveLocation(item.id);
+                            },
+                            text: 'Remove Location',
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: appTextButtonColor(),
+                          )
+                        : CustomTextButton(
+                            onTap: () {
+                              model.toggleRequiresLocationVerification();
+                            },
+                            text: 'Add Location',
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: appTextButtonColor(),
+                          ),
+                    SizedBox(
+                      width: 150,
+                    ),
+                    CustomTextButton(
+                      onTap: () {
+                        model.toggleRequiresLocationVerification();
+                      },
+                      text: 'Points: ',
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: appTextButtonColor(),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    dropdown(context, model),
+                  ],
+                ),
               ],
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 75.0),
               child: Container(
                 height: 40,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                 child: GestureDetector(
                   onTap: () => onDelete(item.id),
                   child: Icon(
