@@ -98,6 +98,13 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
     }
   }
 
+
+  @override 
+  void dispose() {
+    // TODO: implement dispose
+    //super.dispose();
+  }
+
   ///NAVIGATION
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);

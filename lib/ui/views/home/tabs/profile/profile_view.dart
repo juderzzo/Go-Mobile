@@ -14,6 +14,7 @@ import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_stats_row.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class ProfileView extends StatefulWidget {
@@ -257,51 +258,54 @@ class _ProfileViewState extends State<ProfileView>
       initialiseSpecialViewModelsOnce: true,
       onModelReady: (model) => model.initialize(_tabController, widget.user),
       viewModelBuilder: () => locator<ProfileViewModel>(),
-      builder: (context, model, child) => Container(
-        height: MediaQuery.of(context).size.height,
-        color: appBackgroundColor(),
-        child: SafeArea(
-          child: Container(
-            child: Column(
-              children: [
-                head(model),
-                Expanded(
-                  child: DefaultTabController(
-                    key: PageStorageKey('profile-tab-bar'),
-                    length: 4,
-                    child: NestedScrollView(
-                      controller: model.scrollController,
-                      headerSliverBuilder: (context, innerBoxIsScrolled) {
-                        return [
-                          SliverAppBar(
-                            pinned: true,
-                            floating: true,
-                            forceElevated: innerBoxIsScrolled,
-                            expandedHeight: MediaQuery.of(context).size.height * 7/13,
-                            backgroundColor: appBackgroundColor(),
-                            flexibleSpace: FlexibleSpaceBar(
-                              background: Container(
-                                child: Column(
-                                  children: [
-                                    widget.user == null
-                                        ? Container()
-                                        : userDetails(model),
-                                  ],
+      builder: (context, model, child) => ChangeNotifierProvider.value(
+        value: model,
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          color: appBackgroundColor(),
+          child: SafeArea(
+            child: Container(
+              child: Column(
+                children: [
+                  head(model),
+                  Expanded(
+                    child: DefaultTabController(
+                      key: PageStorageKey('profile-tab-bar'),
+                      length: 4,
+                      child: NestedScrollView(
+                        controller: model.scrollController,
+                        headerSliverBuilder: (context, innerBoxIsScrolled) {
+                          return [
+                            SliverAppBar(
+                              pinned: true,
+                              floating: true,
+                              forceElevated: innerBoxIsScrolled,
+                              expandedHeight: MediaQuery.of(context).size.height * 7/13,
+                              backgroundColor: appBackgroundColor(),
+                              flexibleSpace: FlexibleSpaceBar(
+                                background: Container(
+                                  child: Column(
+                                    children: [
+                                      widget.user == null
+                                          ? Container()
+                                          : userDetails(model),
+                                    ],
+                                  ),
                                 ),
                               ),
+                              bottom: PreferredSize(
+                                preferredSize: Size.fromHeight(40),
+                                child: tabBar(),
+                              ),
                             ),
-                            bottom: PreferredSize(
-                              preferredSize: Size.fromHeight(40),
-                              child: tabBar(),
-                            ),
-                          ),
-                        ];
-                      },
-                      body: body(model),
+                          ];
+                        },
+                        body: body(model),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

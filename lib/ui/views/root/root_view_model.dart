@@ -15,8 +15,8 @@ class RootViewModel extends BaseViewModel {
 
   ///CHECKS IF USER IS LOGGED IN
   Future checkAuthState() async {
-    print(
-        'eufhwefuqhweofiuqwhefoiquwehfoiquwehfoiqwuefhqoiweufhqoiweufhqowieufhqweoifuhqweofiuqwhefoiquwehfoiqwuefhqowieufhqw');
+    //print(
+     //   'eufhwefuqhweofiuqwhefoiquwehfoiquwehfoiqwuefhqoiweufhqoiweufhqowieufhqweoifuhqweofiuqwhefoiquwehfoiqwuefhqowieufhqw');
     bool isLoggedIn = await _authService.isLoggedIn();
     if (isLoggedIn) {
       ///CHECK IF USER HAS BEEN ONBOARDED
@@ -25,14 +25,14 @@ class RootViewModel extends BaseViewModel {
       bool userOnboarded =
           await _userDataService.checkIfUserHasBeenOnboarded(uid);
       if (userOnboarded) {
-        print(
-        'LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
-        _navigationService.navigateTo(Routes.HomeNavViewRoute);
+       // print(
+      //  'LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+        _navigationService.replaceWith(Routes.HomeNavViewRoute);
       } else {
-        _navigationService.navigateTo(Routes.OnboardingViewRoute);
+        _navigationService.replaceWith(Routes.OnboardingViewRoute);
       }
     } else {
-      _navigationService.navigateTo(Routes.SignInViewRoute);
+      _navigationService.replaceWith(Routes.SignInViewRoute);
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:go/ui/widgets/notifications/notification_bell/notification_bell_view.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
@@ -61,7 +62,7 @@ class HomeView extends StatelessWidget {
                 subHeader: "Find Causes You're Interested In!",
                 mainActionButtonTitle: "Explore Causes",
                 mainAction: navigateToExplorePage,
-               // secondaryActionButtonTitle: 'Refresh Page',
+                // secondaryActionButtonTitle: 'Refresh Page',
                 //secondaryAction: model.refreshCausesFollowing,
               ),
             )
@@ -76,21 +77,26 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG');
     return ViewModelBuilder<HomeViewModel>.reactive(
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
       onModelReady: (model) => model.initialize(currentUser: user),
       viewModelBuilder: () => locator<HomeViewModel>(),
-      builder: (context, model, child) => Container(
-        height: screenHeight(context),
-        color: appBackgroundColor(),
-        child: SafeArea(
-          child: Container(
-            child: Column(
-              children: [
-                head(model),
-                listCauses(model),
-              ],
+      builder: (context, model, child) => ChangeNotifierProvider.value(
+        value: model,
+        child: Container(
+          height: screenHeight(context),
+          color: appBackgroundColor(),
+          child: SafeArea(
+            child: Container(
+              child: Column(
+                children: [
+                  head(model),
+                  listCauses(model),
+                ],
+              ),
             ),
           ),
         ),

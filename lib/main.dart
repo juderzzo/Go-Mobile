@@ -39,7 +39,8 @@ class GoApp extends StatelessWidget {
     return ThemeBuilder(
       lightTheme: regularTheme,
       darkTheme: darkTheme,
-      builder: (context, regularTheme, darkTheme, themeMode) => MaterialApp(
+      builder: (context, regularTheme, darkTheme, themeMode) => 
+      MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Go App',
         theme: regularTheme,
