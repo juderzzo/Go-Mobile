@@ -51,6 +51,7 @@ class HomeView extends StatelessWidget {
   }
 
   Widget listCauses(HomeViewModel model) {
+    //print(!model.isReloading);
     return Expanded(
       child: model.causesFollowingResults.isEmpty && !model.isReloading
           ? Center(
@@ -60,8 +61,8 @@ class HomeView extends StatelessWidget {
                 subHeader: "Find Causes You're Interested In!",
                 mainActionButtonTitle: "Explore Causes",
                 mainAction: navigateToExplorePage,
-                secondaryActionButtonTitle: 'Refresh Page',
-                secondaryAction: () => model.refreshCausesFollowing(),
+               // secondaryActionButtonTitle: 'Refresh Page',
+                //secondaryAction: model.refreshCausesFollowing,
               ),
             )
           : ListCauses(

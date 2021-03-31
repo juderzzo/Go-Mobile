@@ -26,7 +26,7 @@ class HomeViewModel extends BaseViewModel {
   List<DocumentSnapshot> causesFollowingResults = [];
   bool loadingAdditionalCausesFollowing = false;
   bool moreCausesFollowingAvailable = true;
-  bool isReloading = true;
+  bool isReloading = false;
 
   int resultsLimit = 15;
 
@@ -34,12 +34,15 @@ class HomeViewModel extends BaseViewModel {
     user = currentUser;
     notifyListeners();
     scrollController.addListener(() {
-      double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize =
+          0.9 * scrollController.position.maxScrollExtent;
       if (scrollController.position.pixels > triggerFetchMoreSize) {
         loadAdditionalCausesFollowing();
       }
     });
     notifyListeners();
+    //print('isreloading');
+    //print(isReloading);
     await loadCausesFollowing();
     setBusy(false);
   }
@@ -47,8 +50,10 @@ class HomeViewModel extends BaseViewModel {
   Future<void> refreshCausesFollowing() async {
     isReloading = true;
     causesFollowingResults = [];
-    notifyListeners();
     await loadCausesFollowing();
+    isReloading = false;
+    notifyListeners();
+    
   }
 
   loadCausesFollowing() async {
@@ -66,7 +71,8 @@ class HomeViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesFollowing = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesFollowing(
+    List<DocumentSnapshot> newResults =
+        await _causeDataService.loadAdditionalCausesFollowing(
       lastDocSnap: causesFollowingResults[causesFollowingResults.length - 1],
       resultsLimit: resultsLimit,
       uid: user.id,
@@ -78,6 +84,7 @@ class HomeViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesFollowing = false;
     notifyListeners();
+    //isReloading = false;
   }
 
   ///NAVIGATION

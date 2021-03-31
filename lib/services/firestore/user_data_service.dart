@@ -199,6 +199,13 @@ class UserDataService {
     });
   }
 
+  Future setGoUserPoints(String id, int number) async {
+    
+    await userRef.doc(id).update({"points":  number}).catchError((e) {
+      return e.message;
+    });
+  }
+
   Future updateGoUsername(String id, String username) async {
     await userRef.doc(id).update({"username": username}).catchError((e) {
       return e.message;

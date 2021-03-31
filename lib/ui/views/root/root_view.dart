@@ -9,10 +9,18 @@ import 'root_view_model.dart';
 class RootView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(isDarkMode() ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode() ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
     return ViewModelBuilder<RootViewModel>.reactive(
       viewModelBuilder: () => RootViewModel(),
-      onModelReady: (model) => model.checkAuthState(),
+      onModelReady: (model) {
+        try {
+          print('GGGGGGGGGGGGGGGG');
+          model.checkAuthState();
+        } catch (e) {
+          //model.checkAuthState();
+        }
+      },
       builder: (context, model, child) => Scaffold(
         backgroundColor: Colors.white,
         body: Container(

@@ -10,23 +10,29 @@ class RootViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   UserDataService _userDataService = locator<UserDataService>();
   NavigationService _navigationService = locator<NavigationService>();
-  FirebaseMessagingService _firebaseMessagingService = locator<FirebaseMessagingService>();
+  FirebaseMessagingService _firebaseMessagingService =
+      locator<FirebaseMessagingService>();
 
   ///CHECKS IF USER IS LOGGED IN
   Future checkAuthState() async {
+    print(
+        'eufhwefuqhweofiuqwhefoiquwehfoiquwehfoiqwuefhqoiweufhqoiweufhqowieufhqweoifuhqweofiuqwhefoiquwehfoiqwuefhqowieufhqw');
     bool isLoggedIn = await _authService.isLoggedIn();
     if (isLoggedIn) {
       ///CHECK IF USER HAS BEEN ONBOARDED
       String uid = await _authService.getCurrentUserID();
       _firebaseMessagingService.updateFirebaseMessageToken(uid);
-      bool userOnboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+      bool userOnboarded =
+          await _userDataService.checkIfUserHasBeenOnboarded(uid);
       if (userOnboarded) {
-        _navigationService.replaceWith(Routes.HomeNavViewRoute);
+        print(
+        'LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+        _navigationService.navigateTo(Routes.HomeNavViewRoute);
       } else {
-        _navigationService.replaceWith(Routes.OnboardingViewRoute);
+        _navigationService.navigateTo(Routes.OnboardingViewRoute);
       }
     } else {
-      _navigationService.replaceWith(Routes.SignInViewRoute);
+      _navigationService.navigateTo(Routes.SignInViewRoute);
     }
   }
 }

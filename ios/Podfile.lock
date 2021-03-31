@@ -623,7 +623,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
   FirebaseStorage: 15e0f15ef3c7fec3d1899d68623e47d4447066b4
-  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_facebook_auth: bad08a3d465e7b7ba9d8468a9dc7df3f69c136b8
   flutter_image_compress: 082f8daaf6c1b0c9fe798251c750ef0ecd98d7ae
   flutter_inappwebview: 69dfbac46157b336ffbec19ca6dfd4638c7bf189

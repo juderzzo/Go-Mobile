@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
@@ -85,10 +83,12 @@ class OnboardingView extends StatelessWidget {
             elevation: 2,
             isBusy: false,
           ),
-
-        FlatButton(
-              onPressed: OnboardingViewModel.signOut, 
-              child: Text("Logout", style: TextStyle(color: Colors.red),))
+          FlatButton(
+              onPressed: OnboardingViewModel.signOut,
+              child: Text(
+                "Logout",
+                style: TextStyle(color: Colors.red),
+              ))
         ],
       ),
     );
@@ -160,6 +160,325 @@ class OnboardingView extends StatelessWidget {
     );
   }
 
+  PageViewModel newPage(OnboardingViewModel model, BuildContext context) {
+    PageDecoration pageDecoration = PageDecoration(
+      contentPadding: EdgeInsets.all(8.0),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+      imageFlex: 5,
+      bodyFlex: 2,
+      pageColor: appBackgroundColor(),
+    );
+    return PageViewModel(
+      decoration: pageDecoration,
+      
+      image: Center(
+        
+          child: Image.asset(
+        'assets/images/flutter_01.png',
+        width: MediaQuery.of(context).size.width * 29 / 40,
+      )),
+      titleWidget: Column(
+        children: [
+          CustomText(
+            text: "Home page",
+            textAlign: TextAlign.center,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ],
+      ),
+      bodyWidget: Column(
+        children: [
+          CustomText(
+            text:
+                """When you log in, youll be taken to your home page, a place for you to easily access all of the causes you follow. Causes are the backbone of Go!, and you'll learn more about them in a bit. You'll also notice four icons in your bottom bar. These will guide you through the app.""",
+            textAlign: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+
+    PageViewModel newPage2(OnboardingViewModel model, BuildContext context) {
+    PageDecoration pageDecoration = PageDecoration(
+      contentPadding: EdgeInsets.all(8.0),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+      imageFlex: 5,
+      bodyFlex: 2,
+      pageColor: appBackgroundColor(),
+    );
+    return PageViewModel(
+      decoration: pageDecoration,
+      image: Center(
+        
+          child: Image.asset(
+        'assets/images/flutter_04.png',
+        width: MediaQuery.of(context).size.width * 29 / 40,
+      )),
+      titleWidget: Column(
+        children: [
+          CustomText(
+            text: "Explore page",
+            textAlign: TextAlign.center,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ],
+      ),
+      bodyWidget: Column(
+        children: [
+          CustomText(
+            text:
+                """The explore page is where you can search through all the changemakers (our term for fellow users) and causes. Click on a cause block to see what that cause is about. 
+                """,
+            textAlign: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+
+    PageViewModel newPage3(OnboardingViewModel model, BuildContext context) {
+    PageDecoration pageDecoration = PageDecoration(
+      contentPadding: EdgeInsets.all(8.0),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+      imageFlex: 5,
+      bodyFlex: 2,
+      pageColor: appBackgroundColor(),
+    );
+    return PageViewModel(
+      decoration: pageDecoration,
+      image: Center(
+        
+          child: Image.asset(
+        'assets/images/flutter_07.png',
+        width: MediaQuery.of(context).size.width * 29 / 40,
+      )),
+      titleWidget: Column(
+        children: [
+          CustomText(
+            text: "Cause interface",
+            textAlign: TextAlign.center,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ],
+      ),
+      bodyWidget: Column(
+        children: [
+          CustomText(
+            text:
+                """When you click on a cause, you will be taken to it's about page. This is where you can learn all about it, as well as see the founders. However, the causes core purpose lies within the other 2 tabs on this page.
+                """,
+            textAlign: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+
+  PageViewModel newPage4(OnboardingViewModel model, BuildContext context) {
+    PageDecoration pageDecoration = PageDecoration(
+      contentPadding: EdgeInsets.all(8.0),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+      imageFlex: 5,
+      bodyFlex: 2,
+      pageColor: appBackgroundColor(),
+    );
+    return PageViewModel(
+      decoration: pageDecoration,
+      image: Center(
+        
+          child: Image.asset(
+        'assets/images/flutter_08.png',
+        width: MediaQuery.of(context).size.width * 29 / 40,
+      )),
+      titleWidget: Column(
+        children: [
+          CustomText(
+            text: "Cause interface",
+            textAlign: TextAlign.center,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ],
+      ),
+      bodyWidget: Column(
+        children: [
+          CustomText(
+            text:
+                """Each cause has an action list. This list is core to Go!, and is how we convert online engagement into real action. Cause admins publish a check for changemakers to complete and earn credits. Additionally, monitized causes allow users the option to watch an ad for Go! credits, raising money for the cause per view."
+                """,
+            textAlign: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+    PageViewModel newPage5(OnboardingViewModel model, BuildContext context) {
+    PageDecoration pageDecoration = PageDecoration(
+      contentPadding: EdgeInsets.all(8.0),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+      imageFlex: 5,
+      bodyFlex: 2,
+      pageColor: appBackgroundColor(),
+    );
+    return PageViewModel(
+      decoration: pageDecoration,
+      image: Center(
+        
+          child: Image.asset(
+        'assets/images/flutter_09.png',
+        width: MediaQuery.of(context).size.width * 29 / 40,
+      )),
+      titleWidget: Column(
+        children: [
+          CustomText(
+            text: "Cause interface",
+            textAlign: TextAlign.center,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ],
+      ),
+      bodyWidget: Column(
+        children: [
+          CustomText(
+            text:
+                """Each cause also has an forum, where you can interact with friends and colleagues with like minded goals."
+                """,
+            textAlign: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+
+    PageViewModel newPage6(OnboardingViewModel model, BuildContext context) {
+    PageDecoration pageDecoration = PageDecoration(
+      contentPadding: EdgeInsets.all(8.0),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+      imageFlex: 5,
+      bodyFlex: 2,
+      pageColor: appBackgroundColor(),
+    );
+    return PageViewModel(
+      decoration: pageDecoration,
+      image: Center(
+        
+          child: Image.asset(
+        'assets/images/flutter_03.png',
+        width: MediaQuery.of(context).size.width * 29 / 40,
+      )),
+      titleWidget: Column(
+        children: [
+          CustomText(
+            text: "Profile",
+            textAlign: TextAlign.center,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ],
+      ),
+      bodyWidget: Column(
+        children: [
+          CustomText(
+            text:
+                """Back to the original bottom bar, your profile is where you can edit your personal details, as well as see your posts and causes. Use the ... and settings icon to edit details about yourself and your apps layout.
+                """,
+            textAlign: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+
+  
+
+      PageViewModel newPage7(OnboardingViewModel model, BuildContext context) {
+    PageDecoration pageDecoration = PageDecoration(
+      contentPadding: EdgeInsets.all(8.0),
+      titlePadding:
+          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+      imageFlex: 5,
+      bodyFlex: 2,
+      pageColor: appBackgroundColor(),
+    );
+    return PageViewModel(
+      decoration: pageDecoration,
+      image: Center(
+        
+          child: Image.asset(
+        'assets/images/flutter_11.png',
+        width: MediaQuery.of(context).size.width * 29 / 40,
+      )),
+      titleWidget: Column(
+        children: [
+          CustomText(
+            text: "Feed",
+            textAlign: TextAlign.center,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ],
+      ),
+      bodyWidget: Column(
+        children: [
+          CustomText(
+            text:
+                """Lastly, your feed is a place where you can interact with posts from all the cause forums you follow. Be sure to check it daily!
+                """,
+            textAlign: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+
   PageViewModel bioPage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
       contentPadding: EdgeInsets.all(0),
@@ -187,14 +506,12 @@ class OnboardingView extends StatelessWidget {
             textAlign: TextAlign.center,
             fontSize: 14,
             fontWeight: FontWeight.w400,
-          
             color: Colors.black,
           ),
           verticalSpaceMedium,
           MultiLineTextField(
               controller: model.bioTextController,
               hintText: "Who are you?",
-              
               maxLines: 7),
           verticalSpaceMedium,
           CustomButton(
@@ -396,12 +713,19 @@ class OnboardingView extends StatelessWidget {
           body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: IntroductionScreen(
-          freeze: true,
+          freeze: false,
           key: introKey,
           pages: [
             initialPage(),
             profilePicUsernamePage(model, context),
-            bioPage(model),
+            newPage(model, context),
+            newPage2(model, context),
+            newPage3(model, context),
+            newPage4(model, context),
+            newPage5(model, context),
+            newPage6(model, context),
+            newPage7(model, context),
+            //bioPage(model),
             // interestsPage(model),
             notificationPermissionPage(model),
             finalPage(model),
@@ -412,8 +736,8 @@ class OnboardingView extends StatelessWidget {
             }
           },
           //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
-          showSkipButton: false,
-          showNextButton: false,
+          showSkipButton: true,
+          showNextButton: true,
           skipFlex: 0,
           nextFlex: 0,
           skip: const Text('Skip'),
@@ -431,7 +755,7 @@ class OnboardingView extends StatelessWidget {
                   color: Colors.black,
                 ),
           dotsDecorator: const DotsDecorator(
-            size: Size(10.0, 10.0),
+            size: Size(5.0, 5.0),
             color: Color(0xFFBDBDBD),
             activeColor: CustomColors.goGreen,
             activeSize: Size(22.0, 10.0),

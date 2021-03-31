@@ -82,8 +82,8 @@ class ForumPostViewModel extends BaseViewModel {
     print(res);
     if (res is String) {
     } else {
-      //post = res;
-      //print(post);
+      post = res;
+      print(post);
       cause = await _causeDataService.getCauseByID(post.causeID);
     }
     author = await _userDataService.getGoUserByID(post.authorID);

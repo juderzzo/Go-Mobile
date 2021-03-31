@@ -96,7 +96,7 @@ class EditProfileViewModel extends BaseViewModel {
       GoUser user = await _userDataService.getGoUserByID(id);
       //have to display
       await _dialogService.showDialog(
-          title: "Confirmation", description: "Your profile has been updated");
+          title: "Confirmation", description: "Your profile has been updated, but it may take a minute to reflect updated results");
       replaceWithNormal();
     }
   }
@@ -104,7 +104,7 @@ class EditProfileViewModel extends BaseViewModel {
   ///NAVIGATION
   ///
   replaceWithNormal() {
-    _navigationService.navigateTo(Routes.HomeNavViewRoute);
+    _navigationService.back();
   }
 // replaceWithPage() {
 //   _navigationService.replaceWith(PageRouteName);

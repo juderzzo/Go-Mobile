@@ -7,6 +7,7 @@ import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/utils/go_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,6 +24,8 @@ class OnboardingViewModel extends BaseViewModel {
   SnackbarService _snackbarService = locator<SnackbarService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   ThemeService _themeService = locator<ThemeService>();
+  FirebaseMessagingService _firebaseMessagingService =
+      locator<FirebaseMessagingService>();
 
   ///HELPERS
   TextEditingController usernameTextController = TextEditingController();
@@ -147,6 +150,7 @@ class OnboardingViewModel extends BaseViewModel {
       }
     } else if (permissionStatus.isGranted) {
       notificationsEnabled = true;
+      _firebaseMessagingService.configFirebaseMessaging();
       notifyListeners();
     } else if (permissionStatus.isDenied) {
       DialogResponse response = await _dialogService.showConfirmationDialog(
@@ -165,6 +169,7 @@ class OnboardingViewModel extends BaseViewModel {
   completeOnboarding() async {
     setBusy(true);
     var res = await _userDataService.updateUserOnboardStatus(uid);
+    await _userDataService.setGoUserPoints(uid, 0);
     setBusy(false);
     if (res is String) {
       _snackbarService.showSnackbar(
@@ -182,18 +187,15 @@ class OnboardingViewModel extends BaseViewModel {
     _navigationService.replaceWith(Routes.HomeNavViewRoute);
   }
 
-  static  signOut() async {
+  static signOut() async {
     AuthService _authService = locator<AuthService>();
     ThemeService _themeService = locator<ThemeService>();
     NavigationService _navigationService = locator<NavigationService>();
-  
-      
 
-        await _authService.signOut();
-        if (_themeService.selectedThemeMode != ThemeManagerMode.light) {
-          _themeService.setThemeMode(ThemeManagerMode.light);
-        }
-        _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
-      }
-    
+    await _authService.signOut();
+    if (_themeService.selectedThemeMode != ThemeManagerMode.light) {
+      _themeService.setThemeMode(ThemeManagerMode.light);
+    }
+    _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
+  }
 }
