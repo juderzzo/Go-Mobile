@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/views/settings/settings_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
@@ -29,17 +30,28 @@ class SettingsView extends StatelessWidget {
                 showBottomBorder: true,
               ),
               CustomFlatButton(
-                onTap: model.enableNotifications,
-                fontColor: appFontColor(),
+                onTap: model.notificationsEnabled ? model.disableNotifications : model.enableNotifications,
+                fontColor: Colors.blue,
                 fontSize: 16,
-                text: "Enable Notifications",
+                text: model.notificationsEnabled ? "Disable Notifications" : "Enable Notifications",
+                showBottomBorder: true,
+              ),
+
+              CustomFlatButton(
+                onTap: () {
+                 
+                  model.navigateToOnboarding();
+                },
+                fontColor: CustomColors.goGreen,
+                fontSize: 16,
+                text: "View Tutorial",
                 showBottomBorder: true,
               ),
 
               
               CustomFlatButton(
                 onTap: () {
-                  print("tapped");
+                  
                   model.signOut(context);
                 },
                 fontColor: Colors.red,

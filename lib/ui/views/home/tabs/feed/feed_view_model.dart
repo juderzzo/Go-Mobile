@@ -39,6 +39,7 @@ class FeedViewModel extends BaseViewModel {
   List newActions = [];
   //for later
   List recCauses;
+  bool initialized = false;
 
   initialize({GoUser currentUser}) async {
     user = currentUser;
@@ -56,6 +57,7 @@ class FeedViewModel extends BaseViewModel {
     //print(causesFollowingResults);
     //print(loadPosts());
     setBusy(false);
+    initialized = true;
   }
 
   // Future<void> refreshPosts() async {

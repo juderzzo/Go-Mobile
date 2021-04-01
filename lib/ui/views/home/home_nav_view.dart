@@ -28,11 +28,14 @@ class HomeNavView extends StatelessWidget {
         return ExploreView(user: model.user);
       case 2:
         return ProfileView(user: model.user);
-      case 3: 
-        return FeedView(user: model.user, navigateToExplorePage: () => model.setNavBarIndex(1),);
+      case 3:
+        return FeedView(
+          user: model.user,
+          navigateToExplorePage: () => model.setNavBarIndex(1),
+        );
       default:
         return HomeView(
-          user: model.user, 
+          user: model.user,
         );
     }
   }
@@ -40,7 +43,12 @@ class HomeNavView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeNavViewModel>.reactive(
-      onModelReady: (model) => model.initialize(),
+      onModelReady: (model) {
+        if (!model.initialized) {
+          model.initialize();
+        }
+        
+      },
       viewModelBuilder: () => locator<HomeNavViewModel>(),
       builder: (context, model, child) => ChangeNotifierProvider.value(
         value: model,

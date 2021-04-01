@@ -11,6 +11,7 @@ import 'package:go/ui/widgets/common/text_field/multi_line_text_field.dart';
 import 'package:go/ui/widgets/common/text_field/single_line_text_field.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class OnboardingView extends StatelessWidget {
@@ -709,62 +710,79 @@ class OnboardingView extends StatelessWidget {
     return ViewModelBuilder<OnboardingViewModel>.reactive(
       onModelReady: (model) => model.initialize(),
       viewModelBuilder: () => OnboardingViewModel(),
-      builder: (context, model, child) => Scaffold(
-          body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: IntroductionScreen(
-          freeze: false,
-          key: introKey,
-          pages: [
-            initialPage(),
-            profilePicUsernamePage(model, context),
-            newPage(model, context),
-            newPage2(model, context),
-            newPage3(model, context),
-            newPage4(model, context),
-            newPage5(model, context),
-            newPage6(model, context),
-            newPage7(model, context),
-            //bioPage(model),
-            // interestsPage(model),
-            notificationPermissionPage(model),
-            finalPage(model),
-          ],
-          onDone: () {
-            if (!model.isBusy) {
-              model.completeOnboarding();
-            }
-          },
-          //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
-          showSkipButton: true,
-          showNextButton: true,
-          skipFlex: 0,
-          nextFlex: 0,
-          skip: const Text('Skip'),
-          next: const Icon(Icons.arrow_forward),
-          done: model.isBusy
-              ? CustomCircleProgressIndicator(
-                  size: 10,
-                  color: appActiveColor(),
-                )
-              : CustomText(
-                  text: "Done",
-                  textAlign: TextAlign.center,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-          dotsDecorator: const DotsDecorator(
-            size: Size(5.0, 5.0),
-            color: Color(0xFFBDBDBD),
-            activeColor: CustomColors.goGreen,
-            activeSize: Size(22.0, 10.0),
-            activeShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0)),
+      builder: (context, model, child) => ChangeNotifierProvider.value(
+        value: model,
+        child: Scaffold(
+            body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: IntroductionScreen(
+            freeze: false,
+            key: introKey,
+            pages: !model.tutorial ? [
+              initialPage(),
+              profilePicUsernamePage(model, context),
+              newPage(model, context),
+              newPage2(model, context),
+              newPage3(model, context),
+              newPage4(model, context),
+              newPage5(model, context),
+              newPage6(model, context),
+              newPage7(model, context),
+              //bioPage(model),
+              // interestsPage(model),
+              notificationPermissionPage(model),
+              finalPage(model),
+            ] : [
+              initialPage(),
+              //profilePicUsernamePage(model, context),
+              newPage(model, context),
+              newPage2(model, context),
+              newPage3(model, context),
+              newPage4(model, context),
+              newPage5(model, context),
+              newPage6(model, context),
+              newPage7(model, context),
+              //bioPage(model),
+              // interestsPage(model),
+              notificationPermissionPage(model),
+              finalPage(model),
+            ],
+            onDone: () {
+              if (!model.isBusy) {
+                model.completeOnboarding();
+              }
+            },
+            //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+            showSkipButton: true,
+            showNextButton: true,
+            skipFlex: 0,
+            nextFlex: 0,
+            skip: const Text('Skip'),
+            next: const Icon(Icons.arrow_forward),
+            done: model.isBusy
+                ? CustomCircleProgressIndicator(
+                    size: 10,
+                    color: appActiveColor(),
+                  )
+                : CustomText(
+                    text: "Done",
+                    textAlign: TextAlign.center,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+            dotsDecorator: const DotsDecorator(
+              size: Size(5.0, 5.0),
+              color: Color(0xFFBDBDBD),
+              activeColor: CustomColors.goGreen,
+              activeSize: Size(22.0, 10.0),
+              activeShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+              ),
             ),
           ),
-        ),
-      )),
+        )),
+      ),
     );
   }
 }

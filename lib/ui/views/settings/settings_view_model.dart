@@ -63,6 +63,34 @@ class SettingsViewModel extends BaseViewModel {
     }
   }
 
+
+  disableNotifications() async {
+    PermissionStatus permissionStatus = await Permission.notification.status;
+    if (permissionStatus.isUndetermined) {
+      permissionStatus = await Permission.notification.request();
+      if (permissionStatus.isGranted) {
+        notificationsEnabled = false;
+        notifyListeners();
+      }
+    } else if (permissionStatus.isGranted) {
+      notificationsEnabled = false;
+      _firebaseMessagingService.configFirebaseMessaging();
+      notifyListeners();
+    } else if (permissionStatus.isDenied) {
+      DialogResponse response = await _dialogService.showConfirmationDialog(
+        title: "Disable Notifications?",
+        description: "Open app settings to enable notifications",
+        cancelTitle: "Cancel",
+        confirmationTitle: "Open App Settings",
+        barrierDismissible: true,
+      );
+      if (response.confirmed) {
+        AppSettings.openNotificationSettings();
+      }
+    }
+  }
+  
+
   // disableNotifications(){
   //   notificationsEnabled = false;
   // }
@@ -86,9 +114,9 @@ class SettingsViewModel extends BaseViewModel {
   }
 
   ///NAVIGATION
-// replaceWithPage() {
-//   _navigationService.replaceWith(PageRouteName);
-// }
+navigateToOnboarding() {
+  _navigationService.replaceWith(Routes.OnboardingViewRoute);
+}
 //
 // navigateToPage() {
 //   _navigationService.navigateTo(PageRouteName);

@@ -38,10 +38,13 @@ class OnboardingViewModel extends BaseViewModel {
   String uid;
   File imgFile;
   bool notificationsEnabled = false;
+  bool tutorial = false;
+  
 
   initialize() async {
     setBusy(true);
     uid = await _authService.getCurrentUserID();
+    tutorial = await _userDataService.checkIfUserHasBeenOnboarded(uid);
     notifyListeners();
     setBusy(false);
   }
@@ -167,6 +170,10 @@ class OnboardingViewModel extends BaseViewModel {
   }
 
   completeOnboarding() async {
+    if(tutorial){
+      _navigationService.back();
+      return;
+    }
     setBusy(true);
     var res = await _userDataService.updateUserOnboardStatus(uid);
     await _userDataService.setGoUserPoints(uid, 0);
@@ -184,7 +191,7 @@ class OnboardingViewModel extends BaseViewModel {
 
   ///NAVIGATION
   replaceWithHomeNavView() {
-    _navigationService.replaceWith(Routes.HomeNavViewRoute);
+    _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
   }
 
   static signOut() async {
@@ -198,4 +205,6 @@ class OnboardingViewModel extends BaseViewModel {
     }
     _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
   }
+
+
 }

@@ -77,16 +77,13 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG');
+    
     return ViewModelBuilder<HomeViewModel>.reactive(
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
-      onModelReady: (model) => model.initialize(currentUser: user),
+      onModelReady: (model){if (!model.initialized){model.initialize(currentUser: user);} },
       viewModelBuilder: () => locator<HomeViewModel>(),
-      builder: (context, model, child) => ChangeNotifierProvider.value(
-        value: model,
-        child: Container(
+      builder: (context, model, child) =>  Container(
           height: screenHeight(context),
           color: appBackgroundColor(),
           child: SafeArea(
@@ -100,7 +97,7 @@ class HomeView extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      
     );
   }
 }

@@ -29,6 +29,7 @@ class HomeViewModel extends BaseViewModel {
   bool isReloading = false;
 
   int resultsLimit = 15;
+  bool initialized = false;
 
   initialize({GoUser currentUser}) async {
     user = currentUser;
@@ -45,6 +46,7 @@ class HomeViewModel extends BaseViewModel {
     //print(isReloading);
     await loadCausesFollowing();
     setBusy(false);
+    initialized = true;
   }
 
   Future<void> refreshCausesFollowing() async {
@@ -53,7 +55,6 @@ class HomeViewModel extends BaseViewModel {
     await loadCausesFollowing();
     isReloading = false;
     notifyListeners();
-    
   }
 
   loadCausesFollowing() async {

@@ -12,7 +12,6 @@ import 'package:stacked_services/stacked_services.dart';
 
 @singleton
 class HomeNavViewModel extends StreamViewModel<GoUser> {
-
   ///SERVICES
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
@@ -21,7 +20,8 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
   SnackbarService _snackbarService = locator<SnackbarService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
-  FirebaseMessagingService _firebaseMessagingService = locator<FirebaseMessagingService>();
+  FirebaseMessagingService _firebaseMessagingService =
+      locator<FirebaseMessagingService>();
 
   ///INITIAL DATA
   InitErrorStatus initErrorStatus = InitErrorStatus.network;
@@ -40,6 +40,8 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
     _navBarIndex = index;
     notifyListeners();
   }
+
+  bool initialized = false;
 
   initialize() async {
     setBusy(true);
@@ -60,6 +62,7 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
       // _firebaseMessagingService.updateFirebaseMessageToken(user.id);
       notifyListeners();
     }
+    initialized = true;
   }
 
   Future<bool> isConnectedToNetwork() async {
@@ -71,12 +74,12 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
   void onData(GoUser data) {
     if (data != null) {
       user = data;
-      if(!configuredFirebaseMessaging){
+      if (!configuredFirebaseMessaging) {
         _firebaseMessagingService.configFirebaseMessaging();
-      _firebaseMessagingService.updateFirebaseMessageToken(user.id);
-      configuredFirebaseMessaging = true;
+        _firebaseMessagingService.updateFirebaseMessageToken(user.id);
+        configuredFirebaseMessaging = true;
       }
-      
+
       notifyListeners();
       setBusy(false);
     }
@@ -98,8 +101,7 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
     }
   }
 
-
-  @override 
+  @override
   void dispose() {
     // TODO: implement dispose
     //super.dispose();

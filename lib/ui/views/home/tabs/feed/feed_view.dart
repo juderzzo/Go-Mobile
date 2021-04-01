@@ -12,15 +12,13 @@ import 'package:stacked/stacked.dart';
 import 'feed_view_model.dart';
 
 class FeedView extends StatelessWidget {
-
   final GoUser user;
   final VoidCallback navigateToExplorePage;
   ScrollController _scrollController = new ScrollController();
-  
-  FeedView({this.user, this.navigateToExplorePage});
-  
 
-    Widget head(FeedViewModel model) {
+  FeedView({this.user, this.navigateToExplorePage});
+
+  Widget head(FeedViewModel model) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
       color: appBackgroundColor(),
@@ -40,7 +38,6 @@ class FeedView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 NotificationBellView(uid: user.id),
-                
               ],
             ),
           ),
@@ -49,33 +46,30 @@ class FeedView extends StatelessWidget {
     );
   }
 
-
-  Widget bodyEmpty(FeedViewModel model){
+  Widget bodyEmpty(FeedViewModel model) {
     //print(model.causesFollowingResults);
     return SafeArea(
-
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-                  child: ZeroStateView(
-                    imageAssetName: 'coding',
-                    header: "You're Not Following Any Causes or Changemakers",
-                    subHeader: "Follow the causes and changemakers that youre interested in",
-                    mainActionButtonTitle: "Explore Causes",
-                    mainAction: navigateToExplorePage,
-                    secondaryActionButtonTitle: 'Refresh Page',
-                    secondaryAction: () => model.refreshCausesFollowing(),
-
-                  ),
-                ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: ZeroStateView(
+            imageAssetName: 'coding',
+            header: "You're Not Following Any Causes or Changemakers",
+            subHeader:
+                "Follow the causes and changemakers that youre interested in",
+            mainActionButtonTitle: "Explore Causes",
+            mainAction: navigateToExplorePage,
+            secondaryActionButtonTitle: 'Refresh Page',
+            secondaryAction: () => model.refreshCausesFollowing(),
           ),
+        ),
+      ),
     );
   }
 
-  Widget bodyFull(FeedViewModel model, BuildContext context ){
-    return 
-    Container(
-      height: MediaQuery.of(context).size.height*3/4,
+  Widget bodyFull(FeedViewModel model, BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 3 / 4,
       child: ListPosts(
         postResults: model.newPosts,
         scrollController: _scrollController,
@@ -85,37 +79,31 @@ class FeedView extends StatelessWidget {
     );
   }
 
-  
-  
-
-
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<FeedViewModel>.reactive(
-     onModelReady: (model) => model.initialize(currentUser: user),
-      viewModelBuilder: () => FeedViewModel(),
-            builder: (context, model, child) => Scaffold(
-              body: 
-              Container(
+        onModelReady: (model) {
+         if(!model.initialized){ model.initialize(currentUser: user);
+  }},
+        viewModelBuilder: () => FeedViewModel(),
+        builder: (context, model, child) => Scaffold(
+              body: Container(
                 color: appBackgroundColor(),
                 child: SafeArea(
-            
                   child: Column(
-                      children: [
-                        head(model),
-                        SizedBox(height: 10,),
-                        model.newPosts == null ? bodyEmpty(model) : bodyFull(model, context),
-                        Container(),
-                      ],
+                    children: [
+                      head(model),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      model.newPosts == null
+                          ? bodyEmpty(model)
+                          : bodyFull(model, context),
+                      Container(),
+                    ],
                   ),
                 ),
               ),
-            )
-          );
-        }
-
-
-        
+            ));
+  }
 }
-      
-      
