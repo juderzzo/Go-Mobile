@@ -9,9 +9,10 @@ import 'package:go/ui/widgets/busy_button.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/check_list_item/check_list_item/check_list_item_view.dart';
 import 'package:go/ui/widgets/common/text_field/text_field_header.dart';
+import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:stacked/stacked.dart';
 
-class CheckListView extends StatelessWidget {
+class CheckListView extends StatefulWidget {
   final List<GoCheckListItem> checkListItems;
   final bool isCauseAdmin;
   final String causeID;
@@ -28,6 +29,48 @@ class CheckListView extends StatelessWidget {
     @required this.refreshData,
   });
 
+  @override
+  _CheckListViewState createState() => _CheckListViewState(
+      checkListItems: checkListItems,
+      isCauseAdmin: isCauseAdmin,
+      causeID: causeID,
+      currentUID: currentUID,
+      checkOffItem: checkOffItem,
+      refreshData: refreshData);
+}
+
+class _CheckListViewState extends State<CheckListView>
+    with SingleTickerProviderStateMixin {
+  final List<GoCheckListItem> checkListItems;
+  final bool isCauseAdmin;
+  final String causeID;
+  final String currentUID;
+  final Function(GoCheckListItem) checkOffItem;
+  final VoidCallback refreshData;
+  TabController _tabController;
+  Widget announcementList;
+  Widget eventList;
+
+  //TabController controller = TabController(length: 3, vsync: this);
+
+  _CheckListViewState({
+    @required this.checkListItems,
+    @required this.isCauseAdmin,
+    @required this.causeID,
+    @required this.currentUID,
+    @required this.checkOffItem,
+    @required this.refreshData,
+  });
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+    );
+  }
+
   Widget monetization(model) {
     return Column(
       // ans.add(Text("Monitize"));
@@ -39,12 +82,12 @@ class CheckListView extends StatelessWidget {
       children: model.monetizer
           ? [
               textFieldHeader(
-                "Monetization",
-                "This cause has been monitized. Each time you choose to watch an ad, a large portion of the precedings are donated to supporting that cause directly. Click on the button below to raise money.",
+                "Monetization (Point per View)",
+                "This cause has been monitized. Each time you choose to watch an ad, a large portion of the precedings are donated to supporting that cause directly. Click on the button below to raise money. You may only watch an ad once every 2 minutes",
               ),
               verticalSpaceSmall,
               BusyButton(
-                  busy: model.bus,
+                  busy: model.bus || !model.canWatchVideo,
                   title: "Watch Ad",
                   onPressed: () async {
                     model.playAd(causeID);
@@ -54,16 +97,54 @@ class CheckListView extends StatelessWidget {
     );
   }
 
-  listCheckListItems(CheckListViewModel model) {
+  Widget listCheckListItems(CheckListViewModel model) {
+
+    List announcements = [];
+    checkListItems.forEach((element) {
+      if (element.lat == null) {
+        announcements.add(element);
+      }
+    });
+
     return RefreshIndicator(
       child: ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: checkListItems.length,
+        itemCount: announcements.length,
         itemBuilder: (context, index) {
+          if (announcements[index].lat == null) {
+            return CheckListItemView(
+              item: announcements[index],
+              isChecked:
+                  announcements[index].checkedOffBy.contains(currentUID),
+              checkOffItem: (item) => checkOffItem(item),
+            );
+          }
+        },
+      ),
+      onRefresh: refreshData,
+    );
+  }
+
+  Widget listEvents(CheckListViewModel model) {
+    List events = [];
+    checkListItems.forEach((element) {
+      if (element.lat != null) {
+        events.add(element);
+      }
+    });
+
+    return RefreshIndicator(
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: events.length,
+        itemBuilder: (context, index) {
+          //print(events[index].header);
+          //print(events[index].lat);
           return CheckListItemView(
-            item: checkListItems[index],
-            isChecked: checkListItems[index].checkedOffBy.contains(currentUID),
+            item: events[index],
+            isChecked: events[index].checkedOffBy.contains(currentUID),
             checkOffItem: (item) => checkOffItem(item),
           );
         },
@@ -72,291 +153,87 @@ class CheckListView extends StatelessWidget {
     );
   }
 
+  Widget tabBar(CheckListViewModel model) {
+    return GoChecklistTabBar(
+      tabController: _tabController,
+    );
+  }
+
   //only initizlize once
-  bool init = false;
 
   @override
   Widget build(BuildContext context) {
+    print(checkListItems.length);
     return ViewModelBuilder<CheckListViewModel>.reactive(
-      viewModelBuilder: () => CheckListViewModel(),
-      //onModelReady: model.initialize(causeID),
-      builder: (context, model, child){
-        if(!init){
+        viewModelBuilder: () => CheckListViewModel(),
+        onModelReady: (model) {
           model.initialize(causeID);
-          init = true;
-        }
-        
-        return Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        color: appBackgroundColor(),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            isCauseAdmin
-                ? CustomButton(
-                    text: checkListItems.length > 0 ? "Update Action List" : "Create Action List",
-                    textSize: 16,
-                    textColor: appFontColor(),
-                    height: 40,
-                    width: 320,
-                    backgroundColor: appButtonColor(),
-                    elevation: 2,
-                    isBusy: false,
-                    onPressed: () {
-                      model.navigateToEdit(causeID);
-                    },
-                  )
-                : Container(),
-            verticalSpaceSmall,
-            listCheckListItems(model),
-            monetization(model),
-          ],
-        ),
-      );
-      }
-    );
+          eventList = listEvents(model);
+          announcementList = listCheckListItems(model);
+        },
+        builder: (context, model, child) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            color: appBackgroundColor(),
+            child: Column(
+              children: [
+                ListView(
+                  shrinkWrap: true,
+                  children: _tabController.index == 0
+                      ? [
+                          isCauseAdmin
+                              ? CustomButton(
+                                  text: checkListItems.length > 0
+                                      ? "Update Action List"
+                                      : "Create Action List",
+                                  textSize: 16,
+                                  textColor: appFontColor(),
+                                  height: 40,
+                                  width: 320,
+                                  backgroundColor: appButtonColor(),
+                                  elevation: 2,
+                                  isBusy: false,
+                                  onPressed: () {
+                                    model.navigateToEdit(causeID);
+                                  },
+                                )
+                              : Container(),
+
+                          verticalSpaceSmall,
+                          eventList
+                          //monetization(model),
+                        ]
+                      : _tabController.index == 1
+                          ? [
+                              isCauseAdmin
+                                  ? CustomButton(
+                                      text: checkListItems.length > 0
+                                          ? "Update Action List"
+                                          : "Create Action List",
+                                      textSize: 16,
+                                      textColor: appFontColor(),
+                                      height: 40,
+                                      width: 320,
+                                      backgroundColor: appButtonColor(),
+                                      elevation: 2,
+                                      isBusy: false,
+                                      onPressed: () {
+                                        model.navigateToEdit(causeID);
+                                      },
+                                    )
+                                  : Container(),
+                              verticalSpaceSmall,
+                              announcementList
+                            ]
+                          : [
+                              monetization(model),
+                            ],
+                ),
+                Spacer(),
+                tabBar(model),
+              ],
+            ),
+          );
+        });
   }
 }
-
-// class CheckListView extends StatefulWidget {
-//   final List<GoCheckListItem> checkListItems;
-//   final String creatorId;
-//   final String currentUID;
-//   final String name;
-//   final String causeID;
-//
-//   //for futurebuilders
-//
-//   CheckListView({
-//     this.checkListItems,
-//     //this.descriptors,
-//     this.creatorId,
-//     this.currentUID,
-//     this.name,
-//     this.causeID,
-//   });
-//
-//   @override
-//   _CheckListViewState createState() => _CheckListViewState(
-//       actions: actions,
-//       creatorId: creatorId,
-//       currentUID: currentUID,
-//       name: name,
-//       causeID: causeID);
-// }
-//
-// class _CheckListViewState extends State<CheckListView> {
-//   final List actions;
-//   //final List descriptors;
-//   final String creatorId;
-//   final String currentUID;
-//   final String name;
-//   final String causeID;
-//   final List actionFutures = [];
-//   final List checks = [];
-//   List<String> headers = [];
-//   List<String> subHeaders = [];
-//
-//   //for futurebuilders
-//
-//   _CheckListViewState({
-//     this.actions,
-//     //this.descriptors,
-//     this.creatorId,
-//     this.currentUID,
-//     this.name,
-//     this.causeID,
-//   });
-//
-//   bool parseBool(string) {
-//     return string.toLowerCase() == 'true';
-//   }
-
-//
-//
-//   List<Widget> generateChecklist(model, fut) {
-//     List<Widget> ans = [];
-//     //print(fut);
-//     //print(fut.length);
-//     if (fut.length == 0) {
-//       if (creatorId == currentUID) {
-//         return [
-//           verticalSpaceMedium,
-//           monetization(model),
-//           verticalSpaceLarge,
-//           CustomButton(
-//             text: "Add Checklist",
-//             textSize: 16,
-//             textColor: appFontColor(),
-//             height: 40,
-//             width: 320,
-//             backgroundColor: appButtonColor(),
-//             elevation: 2,
-//             isBusy: false,
-//             onPressed: () {
-//               print(causeID);
-//               model.navigateToEdit(actions, creatorId, currentUID, name,
-//                   causeID, headers, subHeaders);
-//             },
-//           )
-//         ];
-//       } else {
-//         return [
-//           verticalSpaceMedium,
-//           monetization(model),
-//           verticalSpaceLarge,
-//           Center(
-//               child: Text(
-//             "There are no actions to check off for this cause",
-//             style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
-//           ))
-//         ];
-//       }
-//     }
-//     for (var i = 0; i < fut.length; i++) {
-//       ans.add(
-//         FutureBuilder(
-//             future: fut[i],
-//             builder: (context, snapshot) {
-//               //print(fut[i].runtimeType);
-//               if (snapshot.connectionState == ConnectionState.done) {
-//                 //print(fut);
-//
-//                 //print(snapshot.data);
-//                 if (headers.length < fut.length) {
-//                   //print(snapshot.data[1]);
-//                   //print(headers);
-//                   headers.insert(0, snapshot.data[1]);
-//                   subHeaders.insert(0, snapshot.data[2]);
-//
-//                   //these get sent in in correct order
-//                 }
-//
-//                 return GestureDetector(
-//                   onTap: () {
-//                     if (!parseBool(snapshot.data[3])) {
-//                       showDialog(
-//                         context: context,
-//                         barrierDismissible: true,
-//                         builder: (_) => AlertDialog(
-//                           title: Text("Confirmation"),
-//                           content: Text(
-//                               "Once you check off an item, it cannot be unchecked. Are you sure you completed this item?"),
-//                           actions: [
-//                             TextButton(
-//                                 onPressed: () {
-//                                   Navigator.pop(context, true);
-//                                 },
-//                                 child: Text(
-//                                   "No",
-//                                 )),
-//                             TextButton(
-//                                 onPressed: () {
-//                                   model.addCheck(snapshot.data[0], currentUID);
-//                                   //print("tapped");
-//                                   Navigator.pop(context, true);
-//                                   snapshot.data[3] = "true";
-//                                   setState(() {});
-//                                   model.notifyListeners();
-//                                 },
-//                                 child: Text(
-//                                   "Yes",
-//                                 )),
-//                           ],
-//                         ),
-//                       );
-//                     }
-//                   },
-//                   child: CauseCheckListItem(
-//                     id: snapshot.data[0],
-//                     isChecked: parseBool(snapshot.data[3]),
-//                     header: snapshot.data[1],
-//                     subHeader: snapshot.data[2],
-//                   ),
-//                 );
-//               } else {
-//                 return Container(
-//                   width: 100,
-//                 );
-//               }
-//             }),
-//       );
-//
-//       ans.add(verticalSpaceMedium);
-//     }
-//
-//     ans.add(verticalSpaceMedium);
-//     ans.add(verticalSpaceLarge);
-//     ans.add(monetization(model));
-//
-//     // ans.add(Text("Monitize"));
-//     // ans.add(FlatButton(
-//     //     onPressed: () {
-//     //       model.adInstance.show();
-//     //     },
-//     //     child: Text("Ad")));
-//
-//     ans.add(verticalSpaceLarge);
-//
-//     creatorId == currentUID
-//         ? ans.add(CustomButton(
-//             text: "Edit Checklist",
-//             textSize: 16,
-//             textColor: appFontColor(),
-//             height: 40,
-//             width: 320,
-//             backgroundColor: appButtonColor(),
-//             elevation: 2,
-//             isBusy: false,
-//             onPressed: () {
-//               print(causeID);
-//               model.navigateToEdit(actions, creatorId, currentUID, name,
-//                   causeID, headers, subHeaders);
-//             },
-//           ))
-//         : ans.add(SizedBox(
-//
-//             ///child: Text(model.userID()),
-//             ));
-//
-//     return ans;
-//   }
-//
-//   Widget checkListItems(model, List fut) {
-//     //print(fut);
-//     //print(creatorId);
-//     return Container(
-//       padding: EdgeInsets.symmetric(vertical: 8),
-//       margin: EdgeInsets.symmetric(horizontal: 16),
-//       child: ListView(
-//         shrinkWrap: true,
-//         children: generateChecklist(model, fut),
-//       ),
-//     );
-//   }
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//
-//     for (var i = 0; i < actions.length; i++) {
-//       actionFutures.add(
-//         CheckListViewModel.generateItem(actions[i], currentUID),
-//       );
-//     }
-//
-//     //print(actionFutures);
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ViewModelBuilder<CheckListViewModel>.nonReactive(
-//       viewModelBuilder: () => CheckListViewModel(),
-//       onModelReady: (model) => model.initialize(causeID),
-//       createNewModelOnInsert: true,
-//       builder: (context, model, child) => Container(
-//         child: checkListItems(model, actionFutures),
-//       ),
-//     );
-//   }
-// }

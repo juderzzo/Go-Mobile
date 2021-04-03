@@ -88,7 +88,7 @@ class CheckListItemView extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 11 / 16,
+                          width: MediaQuery.of(context).size.width * 9 / 16,
                           child: Text(
                             item.subHeader,
                             style: TextStyle(
@@ -98,15 +98,15 @@ class CheckListItemView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        verticalSpaceTiny,
-                        Text(
-                          item.address,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: appFontColorAlt(),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        verticalSpaceSmall,
+                        // Text(
+                        //   item.address,
+                        //   style: TextStyle(
+                        //     fontSize: 12,
+                        //     color: appFontColorAlt(),
+                        //     fontWeight: FontWeight.w500,
+                        //   ),
+                        // ),
                       ],
                     ),
 

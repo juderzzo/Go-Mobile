@@ -286,6 +286,85 @@ class GoProfileTabBar extends StatelessWidget {
 
 
 
+class GoChecklistTabBar extends StatelessWidget {
+  final TabController tabController;
+  GoChecklistTabBar({this.tabController});
+
+  @override
+  Widget build(BuildContext context) {
+    FontWeight fontWeight = FontWeight.w600;
+    return Container(
+      height: 35,
+      padding: EdgeInsets.only(bottom: 8),
+      child: TabBar(
+        controller: tabController,
+        isScrollable: true,
+        labelPadding: EdgeInsets.symmetric(horizontal: 8),
+        indicatorColor: appActiveColor(),
+        labelColor: Colors.white,
+        unselectedLabelColor: appInActiveColorAlt(),
+        indicatorSize: TabBarIndicatorSize.label,
+        indicator: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: appActiveColor(),
+        ),
+        tabs: [
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Events",
+                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController.index == 0 ? 16 : 12),
+                ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 35,
+              width: 170,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Announcements",
+                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController.index == 1 ? 16 : 12),
+                ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Donate!",
+                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController.index == 2 ? 16 : 12),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
 class GoProfilePageTabBar extends StatelessWidget {
   final TabController tabController;
   GoProfilePageTabBar({this.tabController});

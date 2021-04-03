@@ -39,11 +39,14 @@ class NotificationBlockViewModel extends BaseViewModel {
         notifType == NotificationType.postCommentReply.toString()) {
       navigateToPostView(data['postID']);
     }
+    if (notifType == NotificationType.checkList.toString()) {
+      navigateToCauseView(data['causeID'], data['tab']);
+    }
   }
 
   ///NAVIGATION
-  navigateToCauseView(String id) {
-    _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id});
+  navigateToCauseView(String id, int tab) {
+    _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id, 'tab': tab});
   }
 
   navigateToPostView(String id) {

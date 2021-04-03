@@ -779,6 +779,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  notifications_enabled:
+    dependency: "direct main"
+    description:
+      name: notifications_enabled
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   observable_ish:
     dependency: transitive
     description:

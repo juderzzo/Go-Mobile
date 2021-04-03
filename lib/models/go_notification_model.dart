@@ -112,6 +112,26 @@ class GoNotification {
     return notif;
   }
 
+  GoNotification generateGoChecklistNotification({
+    @required String receiverUID,
+    @required String senderUID,
+    @required String causeName,
+    @required String causeID,
+  }) {
+    GoNotification notif = GoNotification(
+      receiverUID: receiverUID,
+      senderUID: senderUID,
+      type: NotificationType.checkList.toString(),
+      header: '$causeName updated the checklist!',
+      subHeader: "",
+      additionalData: {'causeID': causeID, 'tab': 1},
+      timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+      expDateInMilliseconds: DateTime.now().millisecondsSinceEpoch + 7884000000, //Expiration Date Set 3 Months from Now
+      read: false,
+    );
+    return notif;
+  }
+
   GoNotification generateGoFollowUserNotification({
     @required String uid,
     @required String senderUID,

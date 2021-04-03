@@ -67,7 +67,7 @@ class CheckListItemFormView extends StatelessWidget {
       viewModelBuilder: () => CheckListItemFormViewModel(),
       builder: (context, model, child) => Container(
         padding: EdgeInsets.fromLTRB(32.0, 10.0, 0.0, 0.0),
-        height: 250,
+        height: 300,
         width: MediaQuery.of(context).size.width,
         child: Row(
           children: [

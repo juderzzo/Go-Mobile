@@ -1,7 +1,7 @@
 name: go
 description: Go Mobile App
 publish_to: 'none'
-version: 1.0.0+3
+version: 1.0.0+4
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -70,6 +70,9 @@ dependencies:
   font_awesome_flutter: 8.5.0
   shimmer: ^1.0.1
   adaptive_dialog: ^0.9.3
+
+  #Notifications
+  notifications_enabled: ^0.0.2
 
   #OTHER
   algolia: ^0.1.7

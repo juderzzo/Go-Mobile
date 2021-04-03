@@ -13,11 +13,13 @@ class CheckListViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
   UserDataService _userService = locator<UserDataService>();
+
   RewardedVideoAd adInstance = RewardedVideoAd.instance;
 
   bool monetizer = false;
   bool bus = false;
   bool working;
+  bool canWatchVideo = true;
 
   initialize(id) async {
     working = false;
@@ -37,11 +39,17 @@ class CheckListViewModel extends BaseViewModel {
       //print(monetizer);
     });
 
-    RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
+    RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event,
+        {String rewardType, int rewardAmount}) async {
       if (event == RewardedVideoAdEvent.rewarded) {
         {
           //print("rewarded");
           // Here, apps should update state to reflect the reward.
+          String uid = await _authService.getCurrentUserID().then((value) {
+            _userService.updateGoUserPoints(value, 2);
+            resetVideo();
+          });
+
           _causeDataService.addView(id);
           adInstance.load(
             adUnitId: 'ca-app-pub-9312496461922231/3137448396',
@@ -50,6 +58,13 @@ class CheckListViewModel extends BaseViewModel {
         ;
       }
     };
+  }
+
+  Future resetVideo() {
+    canWatchVideo = false;
+    Future.delayed(Duration(minutes: 2)).then((value) {
+      canWatchVideo = true;
+    });
   }
 
   Future<bool> monetized(id) async {
@@ -114,7 +129,8 @@ class CheckListViewModel extends BaseViewModel {
   }
 
   navigateToEdit(String causeID) {
-    _navigationService.navigateTo(Routes.EditCheckListView, arguments: {'id': causeID});
+    _navigationService
+        .navigateTo(Routes.EditCheckListView, arguments: {'id': causeID});
     // _navigationService.navigateTo(Routes.EditChecklistView,
     //     arguments: EditChecklistViewArguments(arguments: [actions, creatorID, currentUID, name, causeID, headers, subheaders]));
   }

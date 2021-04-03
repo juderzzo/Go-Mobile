@@ -4,8 +4,12 @@ import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
+import 'package:go/models/go_notification_model.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/notification_data_service.dart';
+import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -15,8 +19,13 @@ class EditCheckListViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
+  UserDataService _userDataService = locator<UserDataService>();
+  NotificationDataService _notificationDataService =
+      locator<NotificationDataService>();
 
   GoCause cause;
+  String currentUID;
+  bool send = false;
   List<GoCheckListItem> checkListItems = [];
 
   initialize(BuildContext context) async {
@@ -26,7 +35,7 @@ class EditCheckListViewModel extends BaseViewModel {
     cause = await _causeDataService.getCauseByID(causeID);
     print(cause);
     checkListItems = await _causeDataService.getCheckListItems(causeID);
-
+    currentUID = await _authService.getCurrentUserID();
     notifyListeners();
     setBusy(false);
   }
@@ -39,6 +48,7 @@ class EditCheckListViewModel extends BaseViewModel {
         dateTimePublished: DateTime.now().millisecondsSinceEpoch,
         points: 0);
     checkListItems.add(item);
+    send = true;
     notifyListeners();
   }
 
@@ -85,6 +95,7 @@ class EditCheckListViewModel extends BaseViewModel {
 
   deleteCheckListItem({@required String id}) {
     checkListItems.removeWhere((item) => item.id == id);
+    send = true;
     notifyListeners();
   }
 
@@ -110,9 +121,12 @@ class EditCheckListViewModel extends BaseViewModel {
       updatedCheckList = await _causeDataService.updateCheckListItems(
           causeID: cause.id, items: checkListItems);
       if (updatedCheckList) {
+        if (send) {
+          sendChecklistNotifications();
+        }
         _navigationService.popRepeated(2);
         _navigationService.navigateTo(Routes.CauseViewRoute,
-            arguments: {"id": cause.id, "tab": 1});
+            arguments: {"id": cause.id, "tab": 1, 'items':checkListItems});
       }
     } else {
       _snackbarService.showSnackbar(
@@ -121,5 +135,28 @@ class EditCheckListViewModel extends BaseViewModel {
         duration: Duration(seconds: 5),
       );
     }
+  }
+
+  sendChecklistNotifications() async {
+    ///print("chog");
+    //get all the cause followers
+    _notificationDataService
+        .getCauseFollowers(cause.id)
+        .then((mentionedUsernames) {
+      print(mentionedUsernames);
+      mentionedUsernames.forEach((username) async {
+        
+         // print("chog");
+          GoNotification notification = GoNotification()
+              .generateGoChecklistNotification(
+                  causeName: cause.name.toString(),
+                  senderUID: currentUID,
+                  receiverUID: username,
+                  causeID: cause.id);
+          //print(notification.toMap());
+          _notificationDataService.sendNotification(notif: notification);
+
+      });
+    });
   }
 }

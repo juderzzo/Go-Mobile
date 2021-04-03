@@ -4,4 +4,5 @@ enum NotificationType {
   newPost,
   postComment,
   postCommentReply,
+  checkList,
 }

@@ -56,6 +56,10 @@ class CauseViewModel extends StreamViewModel<GoCause> {
       tab = args['tab'];
     }
 
+    if (args['items'] != null) {
+      checkListItems = args['items'];
+    }
+
     cause = await _causeDataService.getCauseByID(causeID);
     String causeCreatorID = cause.creatorID;
     isAdmin =
@@ -131,7 +135,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
         await _causeDataService.checkOffCheckListItem(
             id: item.id, checkedOffBy: checkedOffBy);
-        await _userDataService.updateGoUserPoints(currentUID, item.points); 
+        await _userDataService.updateGoUserPoints(currentUID, item.points);
       }
     }
   }
