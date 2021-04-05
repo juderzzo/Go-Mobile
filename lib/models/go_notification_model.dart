@@ -117,12 +117,13 @@ class GoNotification {
     @required String senderUID,
     @required String causeName,
     @required String causeID,
+    @required bool isEvent
   }) {
     GoNotification notif = GoNotification(
       receiverUID: receiverUID,
       senderUID: senderUID,
       type: NotificationType.checkList.toString(),
-      header: '$causeName updated the checklist!',
+      header: isEvent ? '$causeName updated the events!' : '$causeName updated the announcements',
       subHeader: "",
       additionalData: {'causeID': causeID, 'tab': 1},
       timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,

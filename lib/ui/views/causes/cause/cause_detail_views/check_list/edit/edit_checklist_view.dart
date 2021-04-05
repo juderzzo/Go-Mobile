@@ -11,6 +11,8 @@ import 'package:stacked/stacked.dart';
 
 
 class EditCheckListView extends StatelessWidget {
+
+  PageStorageKey key = PageStorageKey('value');
   Widget listCheckListItems(
       EditCheckListViewModel model, BuildContext context) {
     return Expanded(
@@ -30,7 +32,7 @@ class EditCheckListView extends StatelessWidget {
               refreshData: () {
               },
               items: model.checkListItems,
-              pageStorageKey: null,
+              pageStorageKey: UniqueKey(),
               scrollController: null,
               onChangedHeader: (val) =>
                   model.updateItemHeader(id: val['id'], header: val['header']),

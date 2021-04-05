@@ -8,7 +8,7 @@ import 'package:image/image.dart';
 class ListCheckListItemsForEditing extends StatelessWidget {
   final List<GoCheckListItem> items;
   final VoidCallback refreshData;
-  final PageStorageKey pageStorageKey;
+  final Key pageStorageKey;
   final ScrollController scrollController;
   final Function(Map<String, dynamic>) onChangedHeader;
   final Function(Map<String, dynamic>) onChangedSubHeader;
