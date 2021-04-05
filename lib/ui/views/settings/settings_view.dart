@@ -11,6 +11,7 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SettingsViewModel>.reactive(
       viewModelBuilder: () => SettingsViewModel(),
+      onModelReady: (model) => model.initialize(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar().basicAppBar(
           title: "Settings",
@@ -29,20 +30,20 @@ class SettingsView extends StatelessWidget {
                 isActive: model.isDarkMode(),
                 showBottomBorder: true,
               ),
-              CustomFlatButton(
+              !model.notificationsEnabled ? CustomFlatButton(
                 onTap: model.notificationsEnabled ? model.disableNotifications : model.enableNotifications,
-                fontColor: Colors.blue,
+                fontColor: appFontColor(),
                 fontSize: 16,
-                text: model.notificationsEnabled ? "Disable Notifications" : "Enable Notifications",
+                text: "Enable Notifications",
                 showBottomBorder: true,
-              ),
+              ) : Container(),
 
               CustomFlatButton(
                 onTap: () {
                  
                   model.navigateToOnboarding();
                 },
-                fontColor: CustomColors.goGreen,
+                fontColor: appFontColor(),
                 fontSize: 16,
                 text: "View Tutorial",
                 showBottomBorder: true,

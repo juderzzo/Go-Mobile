@@ -5,19 +5,47 @@ import 'package:go/app/locator.dart';
 import 'package:go/app/router.gr.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
+import 'package:notifications_enabled/notifications_enabled.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:notifications_enabled/notifications_enabled.dart';
 
 class SettingsViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   ThemeService _themeService = locator<ThemeService>();
-  FirebaseMessagingService _firebaseMessagingService = locator<FirebaseMessagingService>();
+  FirebaseMessagingService _firebaseMessagingService =
+      locator<FirebaseMessagingService>();
 
   bool notificationsEnabled = false;
+
+  initialize() async {
+    //print('chog');
+    try {
+      final areNotificationsEnabled =
+          await NotificationsEnabled.notificationsEnabled;
+      if (areNotificationsEnabled.isNotPresent) {
+        //notificationsEnabledText = 'Notification permission still not requested';
+      } else if (areNotificationsEnabled.value) {
+        notificationsEnabled = true;
+        //print('chog2111122');
+        notifyListeners();
+      } else {
+        notificationsEnabled = false;
+        //print('chog222');
+        notifyListeners();
+      }
+    } on PlatformException {
+      print('Error');
+    }
+  }
 
   toggleDarkMode() {
     if (_themeService.selectedThemeMode == ThemeManagerMode.light) {
@@ -35,9 +63,7 @@ class SettingsViewModel extends BaseViewModel {
     }
   }
 
-
   enableNotifications() async {
-    
     PermissionStatus permissionStatus = await Permission.notification.status;
     if (permissionStatus.isUndetermined) {
       permissionStatus = await Permission.notification.request();
@@ -62,7 +88,6 @@ class SettingsViewModel extends BaseViewModel {
       }
     }
   }
-
 
   disableNotifications() async {
     PermissionStatus permissionStatus = await Permission.notification.status;
@@ -89,7 +114,6 @@ class SettingsViewModel extends BaseViewModel {
       }
     }
   }
-  
 
   // disableNotifications(){
   //   notificationsEnabled = false;
@@ -97,13 +121,16 @@ class SettingsViewModel extends BaseViewModel {
 
   signOut(BuildContext context) async {
     String action = await showModalActionSheet(
-      message: "Are You Sure You Want to Log Out?",
-      context: context,
-      actions: [
-        SheetAction(label: "Log Out", key: 'logout', icon: Icons.logout, isDestructiveAction: true),
-      ],
-      title: "Logout"
-    );
+        message: "Are You Sure You Want to Log Out?",
+        context: context,
+        actions: [
+          SheetAction(
+              label: "Log Out",
+              key: 'logout',
+              icon: Icons.logout,
+              isDestructiveAction: true),
+        ],
+        title: "Logout");
     if (action == "logout") {
       await _authService.signOut();
       if (_themeService.selectedThemeMode != ThemeManagerMode.light) {
@@ -114,9 +141,9 @@ class SettingsViewModel extends BaseViewModel {
   }
 
   ///NAVIGATION
-navigateToOnboarding() {
-  _navigationService.replaceWith(Routes.OnboardingViewRoute);
-}
+  navigateToOnboarding() {
+    _navigationService.replaceWith(Routes.OnboardingViewRoute);
+  }
 //
 // navigateToPage() {
 //   _navigationService.navigateTo(PageRouteName);
