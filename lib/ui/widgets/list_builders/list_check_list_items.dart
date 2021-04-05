@@ -29,6 +29,15 @@ class ListCheckListItemsForEditing extends StatelessWidget {
       @required this.onRemoveLocation,
       @required this.onSetPoints});
 
+  void printItems() {
+    String ans = "";
+    items.forEach((element) {
+      ans += " ,";
+      ans += " ${element.header}";
+    });
+    print(ans);
+  }
+
   Widget listCauses() {
     return RefreshIndicator(
       onRefresh: refreshData,
@@ -45,17 +54,20 @@ class ListCheckListItemsForEditing extends StatelessWidget {
         ),
         itemCount: items.length,
         itemBuilder: (context, index) {
-           
-            return CheckListItemFormView(
-              item: items[index],
-              onChangedHeader: (val) => onChangedHeader(val),
-              onChangedSubHeader: (val) => onChangedSubHeader(val),
-              onSetLocation: (val) => onSetLocation(val),
-              onDelete: (val) => onDelete(val),
-              onRemoveLocation: (val) => onRemoveLocation(val),
-              onSetPoints: (val) => onSetPoints(val),
-            );
-          
+          //print(items[index].id);
+          //print(items[index].header);
+
+          return CheckListItemFormView(
+            item: items[index],
+            onChangedHeader: (val) => onChangedHeader(val),
+            onChangedSubHeader: (val) => onChangedSubHeader(val),
+            onSetLocation: (val) => onSetLocation(val),
+            onDelete: (val) {
+              onDelete(val);
+            },
+            onRemoveLocation: (val) => onRemoveLocation(val),
+            onSetPoints: (val) => onSetPoints(val),
+          );
         },
       ),
     );

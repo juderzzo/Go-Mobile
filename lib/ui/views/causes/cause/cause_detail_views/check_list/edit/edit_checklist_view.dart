@@ -8,8 +8,11 @@ import 'package:go/ui/widgets/list_builders/list_check_list_items.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 
+
+
 class EditCheckListView extends StatelessWidget {
-  Widget listCheckListItems(EditCheckListViewModel model) {
+  Widget listCheckListItems(
+      EditCheckListViewModel model, BuildContext context) {
     return Expanded(
       child: model.checkListItems.isEmpty && !model.isBusy
           ? Center(
@@ -24,16 +27,28 @@ class EditCheckListView extends StatelessWidget {
               ),
             )
           : ListCheckListItemsForEditing(
-              refreshData: () {},
+              refreshData: () {
+              },
               items: model.checkListItems,
               pageStorageKey: null,
               scrollController: null,
-              onChangedHeader: (val) => model.updateItemHeader(id: val['id'], header: val['header']),
-              onChangedSubHeader: (val) => model.updateItemSubHeader(id: val['id'], subHeader: val['subHeader']),
-              onSetLocation: (val) => model.updateItemLocationDetails(id: val['id'], lat: val['lat'], lon: val['lon'], address: val['address']),
-              onDelete: (val) => model.deleteCheckListItem(id: val),
-              onRemoveLocation: (val) => model.deleteItemLocationDetails(id: val),
-              onSetPoints: (val) => model.updateItemPoints(id: val['id'], points: val['points']),
+              onChangedHeader: (val) =>
+                  model.updateItemHeader(id: val['id'], header: val['header']),
+              onChangedSubHeader: (val) => model.updateItemSubHeader(
+                  id: val['id'], subHeader: val['subHeader']),
+              onSetLocation: (val) => model.updateItemLocationDetails(
+                  id: val['id'],
+                  lat: val['lat'],
+                  lon: val['lon'],
+                  address: val['address']),
+              onDelete: (val) {
+                model.deleteCheckListItem(id: val);
+                // model.initialize(context);
+              },
+              onRemoveLocation: (val) =>
+                  model.deleteItemLocationDetails(id: val),
+              onSetPoints: (val) =>
+                  model.updateItemPoints(id: val['id'], points: val['points']),
             ),
     );
   }
@@ -72,7 +87,7 @@ class EditCheckListView extends StatelessWidget {
           color: appBackgroundColor(),
           child: Column(
             children: [
-              listCheckListItems(model),
+              listCheckListItems(model, context),
             ],
           ),
         ),

@@ -14,7 +14,8 @@ class SignUpViewModel extends BaseViewModel {
   UserDataService _userDataService = locator<UserDataService>();
 
   ///Sign Up Via Email
-  Future signUpWithEmail({@required email, @required password, @required confirmPassword}) async {
+  Future signUpWithEmail(
+      {@required email, @required password, @required confirmPassword}) async {
     //Validate Data
     bool isValid = await credentialsAreValid(email, password, confirmPassword);
     if (!isValid) {
@@ -35,13 +36,16 @@ class SignUpViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         await _dialogService.showConfirmationDialog(
-            title: "By continuing, you agree to our terms of service and privacy policy",
+            title:
+                "By continuing, you agree to our terms of service and privacy policy",
             description: "The policy is linked on the bottom of this page",
             barrierDismissible: true);
         await _dialogService.showDialog(
           title: "Email Confirmation Sent",
           description: "A Confirmation Email Was Sent to:\n$email",
         );
+
+        replaceWithSignInPage();
       } else {
         await _dialogService.showDialog(
           title: "Sign Up Error",
@@ -57,7 +61,8 @@ class SignUpViewModel extends BaseViewModel {
   }
 
   ///DATA VALIDATION
-  Future<bool> credentialsAreValid(String email, String password, String confirmPassword) async {
+  Future<bool> credentialsAreValid(
+      String email, String password, String confirmPassword) async {
     bool isValid = true;
     if (!isValidEmail(email)) {
       await _dialogService.showDialog(
@@ -100,12 +105,14 @@ class SignUpViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String uid = await _authService.getCurrentUserID();
-        bool onboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+        bool onboarded =
+            await _userDataService.checkIfUserHasBeenOnboarded(uid);
         if (onboarded) {
           _navigationService.replaceWith(Routes.HomeNavViewRoute);
         } else {
           await _dialogService.showConfirmationDialog(
-              title: "By continuing, you agree to our terms of service and privacy policy",
+              title:
+                  "By continuing, you agree to our terms of service and privacy policy",
               description: "The policy is linked on the bottom of this page",
               barrierDismissible: true);
           _navigationService.replaceWith(Routes.OnboardingViewRoute);
@@ -124,12 +131,14 @@ class SignUpViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String uid = await _authService.getCurrentUserID();
-        bool onboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+        bool onboarded =
+            await _userDataService.checkIfUserHasBeenOnboarded(uid);
         if (onboarded) {
           _navigationService.replaceWith(Routes.HomeNavViewRoute);
         } else {
           await _dialogService.showConfirmationDialog(
-              title: "By continuing, you agree to our terms of service and privacy policy",
+              title:
+                  "By continuing, you agree to our terms of service and privacy policy",
               description: "The policy is linked on the bottom of this page",
               barrierDismissible: true);
           _navigationService.replaceWith(Routes.OnboardingViewRoute);
@@ -148,12 +157,14 @@ class SignUpViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String uid = await _authService.getCurrentUserID();
-        bool onboarded = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+        bool onboarded =
+            await _userDataService.checkIfUserHasBeenOnboarded(uid);
         if (onboarded) {
           _navigationService.replaceWith(Routes.HomeNavViewRoute);
         } else {
           await _dialogService.showConfirmationDialog(
-              title: "By continuing, you agree to our terms of service and privacy policy",
+              title:
+                  "By continuing, you agree to our terms of service and privacy policy",
               description: "The policy is linked on the bottom of this page",
               barrierDismissible: true);
           _navigationService.replaceWith(Routes.OnboardingViewRoute);

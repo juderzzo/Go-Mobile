@@ -16,6 +16,8 @@ class CheckListItemFormViewModel extends BaseViewModel {
   GooglePlacesService googlePlacesService = locator<GooglePlacesService>();
 
   TextEditingController locationTextController = TextEditingController();
+  TextEditingController headerController = TextEditingController();
+  TextEditingController subHeaderController = TextEditingController();
   bool requiresLocationVerification = false;
 
   Map<String, dynamic> placeSearchResults = {};
@@ -28,8 +30,27 @@ class CheckListItemFormViewModel extends BaseViewModel {
       requiresLocationVerification = true;
       notifyListeners();
     }
+
     setBusy(false);
     points = item.points;
+  }
+
+  rebuild(GoCheckListItem item, Function onChangedHeader,
+      Function onChangedSubheader) async {
+    setBusy(true);
+    if (item.lat != null && item.lon != null && item.address != null) {
+      locationTextController.text = item.address;
+      requiresLocationVerification = true;
+      notifyListeners();
+    }
+
+    setBusy(false);
+    points = item.points;
+    print(item.header);
+    onChangedHeader({'id': item.id, 'header': item.header});
+
+    //   print(item.subHeader);
+    //   onChangedSubheader({'id': item.id, 'header': item.subHeader});
   }
 
   setPlacesSearchResults(Map<String, dynamic> val) {

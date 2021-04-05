@@ -33,7 +33,7 @@ class EditCheckListViewModel extends BaseViewModel {
     Map<String, dynamic> args = RouteData.of(context).arguments;
     String causeID = args['id'];
     cause = await _causeDataService.getCauseByID(causeID);
-    print(cause);
+    // print(cause);
     checkListItems = await _causeDataService.getCheckListItems(causeID);
     currentUID = await _authService.getCurrentUserID();
     notifyListeners();
@@ -94,8 +94,16 @@ class EditCheckListViewModel extends BaseViewModel {
   }
 
   deleteCheckListItem({@required String id}) {
-    checkListItems.removeWhere((item) => item.id == id);
+    for (int i = 0; i < checkListItems.length; i++) {
+      if (checkListItems[i].id == id) {
+        checkListItems.removeAt(i);
+        //i--;
+      }
+    }
     send = true;
+    checkListItems.forEach((element) {
+      
+    });
     notifyListeners();
   }
 
@@ -126,7 +134,7 @@ class EditCheckListViewModel extends BaseViewModel {
         }
         _navigationService.popRepeated(2);
         _navigationService.navigateTo(Routes.CauseViewRoute,
-            arguments: {"id": cause.id, "tab": 1, 'items':checkListItems});
+            arguments: {"id": cause.id, "tab": 1, 'items': checkListItems});
       }
     } else {
       _snackbarService.showSnackbar(
@@ -143,19 +151,17 @@ class EditCheckListViewModel extends BaseViewModel {
     _notificationDataService
         .getCauseFollowers(cause.id)
         .then((mentionedUsernames) {
-      print(mentionedUsernames);
+      //print(mentionedUsernames);
       mentionedUsernames.forEach((username) async {
-        
-         // print("chog");
-          GoNotification notification = GoNotification()
-              .generateGoChecklistNotification(
-                  causeName: cause.name.toString(),
-                  senderUID: currentUID,
-                  receiverUID: username,
-                  causeID: cause.id);
-          //print(notification.toMap());
-          _notificationDataService.sendNotification(notif: notification);
-
+        // print("chog");
+        GoNotification notification = GoNotification()
+            .generateGoChecklistNotification(
+                causeName: cause.name.toString(),
+                senderUID: currentUID,
+                receiverUID: username,
+                causeID: cause.id);
+        //print(notification.toMap());
+        _notificationDataService.sendNotification(notif: notification);
       });
     });
   }

@@ -53,6 +53,7 @@ dependencies:
   flutter_google_places:
   flutter_google_places_api:
   google_maps_webservice:
+  google_maps_flutter:
 
   #IMAGES
   cached_network_image: ^2.5.0

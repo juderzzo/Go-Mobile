@@ -163,7 +163,7 @@ class _CheckListViewState extends State<CheckListView>
 
   @override
   Widget build(BuildContext context) {
-    print(checkListItems.length);
+    //print(checkListItems.length);
     return ViewModelBuilder<CheckListViewModel>.reactive(
         viewModelBuilder: () => CheckListViewModel(),
         onModelReady: (model) {
