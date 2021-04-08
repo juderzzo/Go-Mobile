@@ -60,10 +60,17 @@ class CauseViewModel extends StreamViewModel<GoCause> {
       checkListItems = args['items'];
     }
 
+    await _causeDataService.getCauseByID(causeID).then((cause) {
+      String causeCreatorID = cause.creatorID;
+      bool admins;
+      if (cause.admins != null) {
+        admins = cause.admins.contains(currentUID);
+      } else {
+        admins = false;
+      }
+      isAdmin = (causeCreatorID == currentUID || admins);
+    });
     cause = await _causeDataService.getCauseByID(causeID);
-    String causeCreatorID = cause.creatorID;
-    isAdmin =
-        (causeCreatorID == currentUID || cause.admins.contains(currentUID));
 
     //eventually add the admins feature
 

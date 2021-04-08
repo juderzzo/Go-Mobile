@@ -27,7 +27,7 @@ class CheckListItemView extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: item.lon == null
             ? BoxDecoration(
-                color: appTextFieldContainerColor(),
+                color: appBackgroundColor(),
                 border: Border.all(width: 1.0, color: appBorderColorAlt()),
                 borderRadius: BorderRadius.all(
                   Radius.circular(8.0),
@@ -59,17 +59,18 @@ class CheckListItemView extends StatelessWidget {
                     width: 43, child: Icon(Icons.check_box_outline_blank)),
             item.address == null
                 ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       
                       Text(
                         item.header,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 22,
                           color: appFontColor(),
-                          fontWeight: FontWeight.bold,
+                          //fontWeight: FontWeight.bold,
                         ),
                       ),
+                      //SizedBox(height: 20,),
                       Container(
                         width: MediaQuery.of(context).size.width * 11 / 16,
                         child: Text(
@@ -77,7 +78,7 @@ class CheckListItemView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             color: appFontColor(),
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                       ),

@@ -20,11 +20,16 @@ class CheckListViewModel extends BaseViewModel {
   bool bus = false;
   bool working;
   bool canWatchVideo = true;
+  String link = "";
 
   initialize(id) async {
     working = false;
     //print(busy("f"));
+    GoCause cause = await _causeDataService.getCauseByID(id);
+    link = cause.charityURL;
+
     monetizer = await monetized(id);
+
     //GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = @[kGADSimulatorID];
     setBusy(true);
     notifyListeners();

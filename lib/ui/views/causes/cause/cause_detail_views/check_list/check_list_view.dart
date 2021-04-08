@@ -73,27 +73,57 @@ class _CheckListViewState extends State<CheckListView>
 
   Widget monetization(model) {
     return Column(
-      // ans.add(Text("Monitize"));
-      // ans.add(FlatButton(
-      //     onPressed: () {
-      //       model.adInstance.show();
-      //     },
-      //     child: Text("Ad")));
+      
       children: model.monetizer
           ? [
+              Text("Donate!", 
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              //textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              //Spacer(),
               textFieldHeader(
-                "Monetization (Point per View)",
+                "Donate with your time",
                 "This cause has been monitized. Each time you choose to watch an ad, a large portion of the precedings are donated to supporting that cause directly. Click on the button below to raise money. You may only watch an ad once every 2 minutes",
               ),
+
               verticalSpaceSmall,
               BusyButton(
                   busy: model.bus || !model.canWatchVideo,
                   title: "Watch Ad",
                   onPressed: () async {
                     model.playAd(causeID);
-                  })
+                  }),
+              //Spacer(),
+              //model.link != null && model.link.length > 5 ? Text("Donate Directly") : Container()
+              
             ]
-          : [],
+          : [
+            
+              Text("Donate!", 
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              //textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              //Spacer(),
+              textFieldHeader(
+                "This Cause Is Not Monetized",
+                "This cause has not been monetized. To Donate, please visit the cause about page and donate directly to their website."
+              ),
+
+              verticalSpaceSmall,
+              BusyButton(
+                  busy: model.bus || !model.canWatchVideo,
+                  title: "Watch Ad",
+                  onPressed: () async {
+                    model.playAd(causeID);
+                  }),
+              //Spacer(),
+              //model.link != null && model.link.length > 5 ? Text("Donate Directly") : Container()
+              
+            
+
+          ],
     );
   }
 

@@ -3,9 +3,10 @@ import 'package:go/constants/app_colors.dart';
 
 class GoExplorePageTabBar extends StatelessWidget {
   final TabController tabController;
-  
-  
-  GoExplorePageTabBar({this.tabController,});
+
+  GoExplorePageTabBar({
+    this.tabController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +66,13 @@ class GoExplorePageTabBar extends StatelessWidget {
 
 class GoCauseViewTabBar extends StatelessWidget {
   final TabController tabController;
-  bool isAdmin = false;
-  GoCauseViewTabBar({this.tabController,  this.isAdmin});
+  final bool isAdmin;
+  GoCauseViewTabBar({this.tabController, this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
+    print("tabcontroller");
+    print(tabController);
     return Container(
       height: 35,
       padding: EdgeInsets.only(bottom: 8),
@@ -85,130 +88,130 @@ class GoCauseViewTabBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: appActiveColor(),
         ),
-        tabs: isAdmin ? 
-        [
-          Tab(
-            child: Container(
-              height: 30,
-              width: 75,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "About",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+        tabs: isAdmin
+            ? [
+                Tab(
+                  child: Container(
+                    height: 30,
+                    width: 75,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "About",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Tab(
-            child: Container(
-              height: 30,
-              width: 75,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Actions",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Tab(
+                  child: Container(
+                    height: 30,
+                    width: 75,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Actions",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Tab(
-            child: Container(
-              height: 30,
-              width: 75,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Forum",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Tab(
+                  child: Container(
+                    height: 30,
+                    width: 75,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Forum",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-           Tab(
-            child: Container(
-              height: 30,
-              width: 75,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Admin",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Tab(
+                  child: Container(
+                    height: 30,
+                    width: 75,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Admin",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ] : 
-        [
-          Tab(
-            child: Container(
-              height: 30,
-              width: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "About",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+              ]
+            : [
+                Tab(
+                  child: Container(
+                    height: 30,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "About",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Tab(
-            child: Container(
-              height: 30,
-              width: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Actions",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Tab(
+                  child: Container(
+                    height: 30,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Actions",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Tab(
-            child: Container(
-              height: 30,
-              width: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Forum",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Tab(
+                  child: Container(
+                    height: 30,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Forum",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ],
+              ],
       ),
     );
   }
 }
 
 class GoProfileTabBar extends StatelessWidget {
-  final TabController tabController;
+  final  tabController;
   GoProfileTabBar({this.tabController});
 
   @override
@@ -284,8 +287,6 @@ class GoProfileTabBar extends StatelessWidget {
   }
 }
 
-
-
 class GoChecklistTabBar extends StatelessWidget {
   final TabController tabController;
   GoChecklistTabBar({this.tabController});
@@ -320,7 +321,9 @@ class GoChecklistTabBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   "Events",
-                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController.index == 0 ? 16 : 12),
+                  style: TextStyle(
+                      fontWeight: fontWeight,
+                      fontSize: tabController.index == 0 ? 16 : 12),
                 ),
               ),
             ),
@@ -336,7 +339,9 @@ class GoChecklistTabBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   "Announcements",
-                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController.index == 1 ? 16 : 12),
+                  style: TextStyle(
+                      fontWeight: fontWeight,
+                      fontSize: tabController.index == 1 ? 16 : 12),
                 ),
               ),
             ),
@@ -352,7 +357,9 @@ class GoChecklistTabBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   "Donate!",
-                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController.index == 2 ? 16 : 12),
+                  style: TextStyle(
+                      fontWeight: fontWeight,
+                      fontSize: tabController.index == 2 ? 16 : 12),
                 ),
               ),
             ),
@@ -362,8 +369,6 @@ class GoChecklistTabBar extends StatelessWidget {
     );
   }
 }
-
-
 
 class GoProfilePageTabBar extends StatelessWidget {
   final TabController tabController;
@@ -441,4 +446,3 @@ class GoProfilePageTabBar extends StatelessWidget {
     );
   }
 }
-

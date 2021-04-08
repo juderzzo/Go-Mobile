@@ -19,7 +19,8 @@ class CauseView extends StatefulWidget {
   _CauseViewState createState() => _CauseViewState();
 }
 
-class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMixin {
+class _CauseViewState extends State<CauseView>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
   bool openAdmins = false;
 
@@ -32,7 +33,8 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
             children: [
               IconButton(
                 onPressed: () => model.navigateBack(),
-                icon: Icon(FontAwesomeIcons.angleLeft, color: appFontColor(), size: 24),
+                icon: Icon(FontAwesomeIcons.angleLeft,
+                    color: appFontColor(), size: 24),
               ),
               Container(
                 height: 50,
@@ -62,6 +64,9 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
   }
 
   Widget tabBar(model) {
+    // _tabController = TabController(length: model.isAdmin ? 4 : 3,
+    // vsync: this,
+    // initialIndex: model.tab > -1 ? model.tab : 0);
     return GoCauseViewTabBar(
       tabController: _tabController,
       isAdmin: model.isAdmin,
@@ -70,71 +75,69 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
 
   Widget body(CauseViewModel model) {
     return Expanded(
-      child: DefaultTabController(
-        length: !model.isAdmin ? 3 : 4,
-        child: 
-        TabBarView(
-          controller: _tabController,
-          children: !model.isAdmin ? [
-            model.causeCreator == null
-                ? Container()
-                : AboutView(
-                    cause: model.cause,
-                    images: model.images,
-                    creatorUsername: "@${model.causeCreator.username}",
-                    creatorProfilePicURL: model.causeCreator.profilePicURL,
-                    viewCreator: null,
-                    isFollowing: model.isFollowingCause,
-                    followUnfollowCause: () => model.followUnfollowCause(),
-                  ),
-            CheckListView(
-                checkListItems: model.checkListItems,
-                isCauseAdmin: model.currentUID == model.cause.creatorID ? true : false,
-                causeID: model.cause.id,
-                currentUID: model.currentUID,
-                checkOffItem: (item) => model.checkOffItem(item),
-                refreshData: () {}),
-            ListPosts(
-              refreshingData: model.refreshingPosts,
-              refreshData: () => model.refreshPosts(),
-              postResults: model.postResults,
-              scrollController: model.postsScrollController,
-            ),
-
-          ] : [
-            model.causeCreator == null
-                ? Container()
-                : AboutView(
-                    cause: model.cause,
-                    images: model.images,
-                    creatorUsername: "@${model.causeCreator.username}",
-                    creatorProfilePicURL: model.causeCreator.profilePicURL,
-                    viewCreator: null,
-                    isFollowing: model.isFollowingCause,
-                    followUnfollowCause: () => model.followUnfollowCause(),
-                  ),
-            CheckListView(
-                checkListItems: model.checkListItems,
-                isCauseAdmin: model.currentUID == model.cause.creatorID ? true : false,
-                causeID: model.cause.id,
-                currentUID: model.currentUID,
-                checkOffItem: (item) => model.checkOffItem(item),
-                refreshData: () {}),
-            ListPosts(
-              refreshingData: model.refreshingPosts,
-              refreshData: () => model.refreshPosts(),
-              postResults: model.postResults,
-              scrollController: model.postsScrollController,
-            ),
-
-            AdminView(
-              cause: model.cause,
-              admin: openAdmins,
-            )
-
-          ]
-          ,
-        ),
+      child: TabBarView(
+        controller: _tabController,
+        children: !model.isAdmin
+            ? [
+                model.causeCreator == null
+                    ? Container()
+                    : AboutView(
+                        cause: model.cause,
+                        images: model.images,
+                        creatorUsername: "@${model.causeCreator.username}",
+                        creatorProfilePicURL: model.causeCreator.profilePicURL,
+                        viewCreator: null,
+                        isFollowing: model.isFollowingCause,
+                        followUnfollowCause: () => model.followUnfollowCause(),
+                      ),
+                CheckListView(
+                    checkListItems: model.checkListItems,
+                    isCauseAdmin: model.currentUID == model.cause.creatorID
+                        ? true
+                        : false,
+                    causeID: model.cause.id,
+                    currentUID: model.currentUID,
+                    checkOffItem: (item) => model.checkOffItem(item),
+                    refreshData: () {}),
+                ListPosts(
+                  refreshingData: model.refreshingPosts,
+                  refreshData: () => model.refreshPosts(),
+                  postResults: model.postResults,
+                  scrollController: model.postsScrollController,
+                ),
+              ]
+            : [
+                model.causeCreator == null
+                    ? Container()
+                    : AboutView(
+                        cause: model.cause,
+                        images: model.images,
+                        creatorUsername: "@${model.causeCreator.username}",
+                        creatorProfilePicURL: model.causeCreator.profilePicURL,
+                        viewCreator: null,
+                        isFollowing: model.isFollowingCause,
+                        followUnfollowCause: () => model.followUnfollowCause(),
+                      ),
+                CheckListView(
+                    checkListItems: model.checkListItems,
+                    isCauseAdmin: model.currentUID == model.cause.creatorID
+                        ? true
+                        : false,
+                    causeID: model.cause.id,
+                    currentUID: model.currentUID,
+                    checkOffItem: (item) => model.checkOffItem(item),
+                    refreshData: () {}),
+                ListPosts(
+                  refreshingData: model.refreshingPosts,
+                  refreshData: () => model.refreshPosts(),
+                  postResults: model.postResults,
+                  scrollController: model.postsScrollController,
+                ),
+                AdminView(
+                  cause: model.cause,
+                  admin: openAdmins,
+                )
+              ],
       ),
     );
   }
@@ -142,40 +145,32 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    
   }
 
   //this is for reloading the amdin page after you add a cause
-  
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CauseViewModel>.reactive(
-        onModelReady: (model){
-          
-          model.initialize(context).then((v){
+        onModelReady: (model) {
+          model.initialize(context).then((v) {
             print("Is admin: ${model.isAdmin}");
-          _tabController = TabController(
-            length: model.isAdmin ? 4 : 3,
-            vsync: this,
-            initialIndex: model.tab > -1 ? model.tab : 0
-            //initialIndex: model.tab > -1 ? model.tab : 0
-          );
-          if(model.tab == 3) {
-            
-            openAdmins = true;
-          }
-
+            _tabController = TabController(
+                length: model.isAdmin ? 4 : 3,
+                vsync: this,
+                initialIndex: model.tab > -1 ? model.tab : 0);
+            if (model.tab == 3) {
+              openAdmins = true;
+            }
+            print("tabbbbsss");
+            print(_tabController);
           });
-          
-        
-
-          
         },
         viewModelBuilder: () => CauseViewModel(),
         builder: (context, model, child) => OrientationBuilder(
               builder: (context, orientation) {
-                if (orientation == Orientation.landscape && _tabController.index == 0) {
+                if (orientation == Orientation.landscape &&
+                    _tabController.index == 0) {
                   return body(model);
                 } else {
                   return Scaffold(
@@ -186,7 +181,8 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                           ? Container()
                           : IconButton(
                               onPressed: () => model.navigateToCreatePostView(),
-                              icon: Icon(FontAwesomeIcons.edit, color: appFontColor(), size: 18),
+                              icon: Icon(FontAwesomeIcons.edit,
+                                  color: appFontColor(), size: 18),
                             ),
                     ),
                     body: Container(
@@ -194,7 +190,9 @@ class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMix
                       child: SafeArea(
                         child: Container(
                           child: model.isBusy
-                              ? Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48))
+                              ? Center(
+                                  child: CustomCircleProgressIndicator(
+                                      color: appActiveColor(), size: 48))
                               : Column(
                                   children: [
                                     verticalSpaceSmall,
