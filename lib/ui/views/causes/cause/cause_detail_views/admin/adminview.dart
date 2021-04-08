@@ -92,12 +92,11 @@ bool initialized = false;
         //  });
         return Scaffold(
         backgroundColor: appBackgroundColor(),
-        body: Center(
+        body: Container(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: 
-            Column(
-              children: [
+            
+            child:
                 ListView(
                   shrinkWrap: true,
                   children: 
@@ -218,8 +217,7 @@ bool initialized = false;
                     ) : Container(),
                   ],
                 ),
-              ],
-            ),
+              
           ),)
         );
       }
