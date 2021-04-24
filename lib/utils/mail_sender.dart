@@ -2,7 +2,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
 mail({
-  String id,
+  String? id,
 }) async {
   String username = 'verifiercause7@gmail.com';
   String password = 'TakeoffVerifier';

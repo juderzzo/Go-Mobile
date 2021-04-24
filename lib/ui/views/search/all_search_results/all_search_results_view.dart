@@ -11,14 +11,14 @@ import 'package:go/ui/widgets/search/search_field.dart';
 import 'package:stacked/stacked.dart';
 
 class AllSearchResultsView extends StatefulWidget {
-  final String searchTerm;
+  final String? searchTerm;
   AllSearchResultsView({this.searchTerm});
   @override
   _AllSearchResultsViewState createState() => _AllSearchResultsViewState();
 }
 
 class _AllSearchResultsViewState extends State<AllSearchResultsView> with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
 
   Widget noResultsFound() {
     return Container(
@@ -44,6 +44,8 @@ class _AllSearchResultsViewState extends State<AllSearchResultsView> with Single
             onTap: () => model.navigateToPreviousPage(),
             enabled: false,
             textEditingController: model.searchTextController,
+            onFieldSubmitted: (String val) {},
+            onChanged: (String val) {},
           ),
           SizedBox(width: 8),
           GestureDetector(

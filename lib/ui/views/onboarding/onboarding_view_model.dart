@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
@@ -17,15 +17,14 @@ import 'package:stacked_themes/stacked_themes.dart';
 
 class OnboardingViewModel extends BaseViewModel {
   ///SERVICES
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  UserDataService _userDataService = locator<UserDataService>();
-  SnackbarService _snackbarService = locator<SnackbarService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  ThemeService _themeService = locator<ThemeService>();
-  FirebaseMessagingService _firebaseMessagingService =
-      locator<FirebaseMessagingService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  UserDataService? _userDataService = locator<UserDataService>();
+  SnackbarService? _snackbarService = locator<SnackbarService>();
+  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
+  ThemeService? _themeService = locator<ThemeService>();
+  FirebaseMessagingService? _firebaseMessagingService = locator<FirebaseMessagingService>();
 
   ///HELPERS
   TextEditingController usernameTextController = TextEditingController();
@@ -35,39 +34,35 @@ class OnboardingViewModel extends BaseViewModel {
       "https://www.qualitysleepstore.com/pub/static/version1597711649/frontend/Pearl/weltpixel_custom/en_US/Magento_Catalog/images/product/placeholder/image.jpg";
 
   ///DATA
-  String uid;
-  File imgFile;
+  String? uid;
+  File? imgFile;
   bool notificationsEnabled = false;
-  bool tutorial = false;
-  
+  bool? tutorial = false;
 
   initialize() async {
     setBusy(true);
-    uid = await _authService.getCurrentUserID();
-    tutorial = await _userDataService.checkIfUserHasBeenOnboarded(uid);
+    uid = await _authService!.getCurrentUserID();
+    tutorial = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool?>);
     notifyListeners();
     setBusy(false);
   }
 
   selectImage(context) async {
     FocusScope.of(context).requestFocus(FocusNode());
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    var sheetResponse = await _bottomSheetService!.showCustomSheet(
       variant: BottomSheetType.imagePicker,
     );
     if (sheetResponse != null) {
-      String res = sheetResponse.responseData;
+      String? res = sheetResponse.responseData;
       if (res == "camera") {
-        imgFile =
-            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
       } else if (res == "gallery") {
-        imgFile = await GoImagePicker()
-            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
       notifyListeners();
-      var uploadImgStatus =
-          await _userDataService.updateProfilePic(uid, imgFile);
+      var uploadImgStatus = await _userDataService!.updateProfilePic(uid!, imgFile!);
       if (uploadImgStatus is String) {
-        _snackbarService.showSnackbar(
+        _snackbarService!.showSnackbar(
           title: 'Photo Upload Error',
           message: uploadImgStatus,
           duration: Duration(seconds: 5),
@@ -80,7 +75,7 @@ class OnboardingViewModel extends BaseViewModel {
     bool complete = false;
     setBusy(true);
     if (imgFile == null) {
-      _snackbarService.showSnackbar(
+      _snackbarService!.showSnackbar(
         title: 'Photo Missing',
         message: 'Please Select an Image for Your Profile',
         duration: Duration(seconds: 5),
@@ -88,24 +83,23 @@ class OnboardingViewModel extends BaseViewModel {
     } else {
       String username = usernameTextController.text.trim().toLowerCase();
       if (username.isEmpty) {
-        _snackbarService.showSnackbar(
+        _snackbarService!.showSnackbar(
           title: 'Username Missing',
           message: 'Please add a username',
           duration: Duration(seconds: 5),
         );
       } else {
-        bool usernameExists =
-            await _userDataService.checkIfUsernameExists(uid, username);
+        bool usernameExists = await (_userDataService!.checkIfUsernameExists(uid, username) as FutureOr<bool>);
         if (usernameExists) {
-          _snackbarService.showSnackbar(
+          _snackbarService!.showSnackbar(
             title: 'Username Taken',
             message: 'This username has already been taken',
             duration: Duration(seconds: 5),
           );
         } else {
-          var res = await _userDataService.updateGoUserName(uid, username);
+          var res = await _userDataService!.updateGoUserName(uid, username);
           if (res is String) {
-            _snackbarService.showSnackbar(
+            _snackbarService!.showSnackbar(
               title: 'Uh-Oh...',
               message: res,
               duration: Duration(seconds: 5),
@@ -122,7 +116,7 @@ class OnboardingViewModel extends BaseViewModel {
   Future<bool> completeBio() async {
     String bio = bioTextController.text.trim();
     if (bio.isEmpty) {
-      _snackbarService.showSnackbar(
+      _snackbarService!.showSnackbar(
         title: 'Bio Error',
         message: 'Bio cannot be empty',
         duration: Duration(seconds: 5),
@@ -130,10 +124,10 @@ class OnboardingViewModel extends BaseViewModel {
       return false;
     }
     setBusy(true);
-    var res = await _userDataService.updateBio(uid, bio);
+    var res = await _userDataService!.updateBio(uid, bio);
     setBusy(false);
     if (res is String) {
-      _snackbarService.showSnackbar(
+      _snackbarService!.showSnackbar(
         title: 'Uh-Oh...',
         message: res,
         duration: Duration(seconds: 5),
@@ -145,7 +139,7 @@ class OnboardingViewModel extends BaseViewModel {
 
   enableNotifications() async {
     PermissionStatus permissionStatus = await Permission.notification.status;
-    if (permissionStatus.isUndetermined) {
+    if (permissionStatus == null) {
       permissionStatus = await Permission.notification.request();
       if (permissionStatus.isGranted) {
         notificationsEnabled = true;
@@ -153,16 +147,16 @@ class OnboardingViewModel extends BaseViewModel {
       }
     } else if (permissionStatus.isGranted) {
       notificationsEnabled = true;
-      _firebaseMessagingService.configFirebaseMessaging();
+      _firebaseMessagingService!.configFirebaseMessaging();
       notifyListeners();
     } else if (permissionStatus.isDenied) {
-      DialogResponse response = await _dialogService.showConfirmationDialog(
+      DialogResponse response = await (_dialogService!.showConfirmationDialog(
         title: "Enable Notifications?",
         description: "Open app settings to enable notifications",
         cancelTitle: "Cancel",
         confirmationTitle: "Open App Settings",
         barrierDismissible: true,
-      );
+      ) as FutureOr<DialogResponse>);
       if (response.confirmed) {
         AppSettings.openNotificationSettings();
       }
@@ -170,16 +164,16 @@ class OnboardingViewModel extends BaseViewModel {
   }
 
   completeOnboarding() async {
-    if(tutorial){
-      _navigationService.back();
+    if (tutorial!) {
+      _navigationService!.back();
       return;
     }
     setBusy(true);
-    var res = await _userDataService.updateUserOnboardStatus(uid);
-    await _userDataService.setGoUserPoints(uid, 0);
+    var res = await _userDataService!.updateUserOnboardStatus(uid);
+    await _userDataService!.setGoUserPoints(uid, 0);
     setBusy(false);
     if (res is String) {
-      _snackbarService.showSnackbar(
+      _snackbarService!.showSnackbar(
         title: 'Uh-Oh...',
         message: res,
         duration: Duration(seconds: 5),
@@ -191,7 +185,7 @@ class OnboardingViewModel extends BaseViewModel {
 
   ///NAVIGATION
   replaceWithHomeNavView() {
-    _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
+    _navigationService!.pushNamedAndRemoveUntil(Routes.RootViewRoute);
   }
 
   static signOut() async {
@@ -205,6 +199,4 @@ class OnboardingViewModel extends BaseViewModel {
     }
     _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
   }
-
-
 }

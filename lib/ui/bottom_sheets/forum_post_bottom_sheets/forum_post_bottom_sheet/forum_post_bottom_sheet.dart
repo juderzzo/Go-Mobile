@@ -7,11 +7,11 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class ForumPostBottomSheet extends StatelessWidget {
-  final SheetRequest request;
-  final Function(SheetResponse) completer;
+  final SheetRequest? request;
+  final Function(SheetResponse)? completer;
 
   const ForumPostBottomSheet({
-    Key key,
+    Key? key,
     this.request,
     this.completer,
   }) : super(key: key);
@@ -29,7 +29,7 @@ class ForumPostBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "share")),
+              onPressed: () => completer!(SheetResponse(responseData: "share")),
               text: "Share",
               textSize: 16,
               textColor: appFontColor(),
@@ -41,7 +41,7 @@ class ForumPostBottomSheet extends StatelessWidget {
             ),
             verticalSpaceSmall,
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "report")),
+              onPressed: () => completer!(SheetResponse(responseData: "report")),
               text: "Report (disabled)",
               textSize: 16,
               textColor: appDestructiveColor(),

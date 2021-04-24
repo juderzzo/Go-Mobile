@@ -5,12 +5,12 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/search/search_result_view.dart';
 
 class ListCausesSearchResults extends StatelessWidget {
-  final Function(String) onSearchTermSelected;
+  final Function(String?) onSearchTermSelected;
   final List<SearchResult> results;
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   final bool isScrollable;
 
-  ListCausesSearchResults({@required this.onSearchTermSelected, @required this.results, @required this.isScrollable, @required this.scrollController});
+  ListCausesSearchResults({required this.onSearchTermSelected, required this.results, required this.isScrollable, required this.scrollController});
 
   Widget listResults() {
     return ListView.builder(

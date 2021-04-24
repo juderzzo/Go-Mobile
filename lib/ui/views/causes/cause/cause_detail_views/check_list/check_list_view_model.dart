@@ -1,6 +1,7 @@
-import 'package:firebase_admob/firebase_admob.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'dart:async';
+
+import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
@@ -9,23 +10,23 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CheckListViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  CauseDataService _causeDataService = locator<CauseDataService>();
-  UserDataService _userService = locator<UserDataService>();
+  AuthService? _authService = locator<AuthService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  CauseDataService? _causeDataService = locator<CauseDataService>();
+  UserDataService? _userService = locator<UserDataService>();
 
-  RewardedVideoAd adInstance = RewardedVideoAd.instance;
+  late var adInstance; //RewardedVideoAd.instance;
 
-  bool monetizer = false;
+  bool? monetizer = false;
   bool bus = false;
-  bool working;
+  bool? working;
   bool canWatchVideo = true;
-  String link = "";
+  String? link = "";
 
   initialize(id) async {
     working = false;
     //print(busy("f"));
-    GoCause cause = await _causeDataService.getCauseByID(id);
+    GoCause cause = await (_causeDataService!.getCauseByID(id) as FutureOr<GoCause>);
     link = cause.charityURL;
 
     monetizer = await monetized(id);
@@ -44,46 +45,46 @@ class CheckListViewModel extends BaseViewModel {
       //print(monetizer);
     });
 
-    RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event,
-        {String rewardType, int rewardAmount}) async {
-      if (event == RewardedVideoAdEvent.rewarded) {
-        {
-          //print("rewarded");
-          // Here, apps should update state to reflect the reward.
-          String uid = await _authService.getCurrentUserID().then((value) {
-            _userService.updateGoUserPoints(value, 2);
-            resetVideo();
-          });
-
-          _causeDataService.addView(id);
-          adInstance.load(
-            adUnitId: 'ca-app-pub-9312496461922231/3137448396',
-          );
-        }
-        ;
-      }
-    };
+    // RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event,
+    //     {String rewardType, int rewardAmount}) async {
+    //   if (event == RewardedVideoAdEvent.rewarded) {
+    //     {
+    //       //print("rewarded");
+    //       // Here, apps should update state to reflect the reward.
+    //       String uid = await _authService.getCurrentUserID().then((value) {
+    //         _userService.updateGoUserPoints(value, 2);
+    //         resetVideo();
+    //       });
+    //
+    //       _causeDataService.addView(id);
+    //       adInstance.load(
+    //         adUnitId: 'ca-app-pub-9312496461922231/3137448396',
+    //       );
+    //     }
+    //     ;
+    //   }
+    // };
   }
 
-  Future resetVideo() {
+  Future resetVideo() async {
     canWatchVideo = false;
     Future.delayed(Duration(minutes: 2)).then((value) {
       canWatchVideo = true;
     });
   }
 
-  Future<bool> monetized(id) async {
-    GoCause cause = await _causeDataService.getCauseByID(id);
+  Future<bool?> monetized(id) async {
+    GoCause cause = await (_causeDataService!.getCauseByID(id) as FutureOr<GoCause>);
     return cause.monetized;
   }
 
-  Future<String> userID() async {
-    return await _authService.getCurrentUserID();
+  Future<String?> userID() async {
+    return await _authService!.getCurrentUserID();
   }
 
   Future<bool> addCheck(id, uid) async {
     print(id);
-    return await _userService.updateCheckedItems(id, uid);
+    return await _userService!.updateCheckedItems(id, uid);
   }
 
   static Future<bool> isChecked(id, uid) async {
@@ -92,7 +93,7 @@ class CheckListViewModel extends BaseViewModel {
   }
 
   static Future<List> generateItem(id, uid) async {
-    CauseDataService _causeDataService = locator<CauseDataService>();
+    CauseDataService? _causeDataService = locator<CauseDataService>();
     List strings = []; //await _causeDataService.getItem(id);
     if (await isChecked(id, uid)) {
       strings.add('true');
@@ -133,9 +134,8 @@ class CheckListViewModel extends BaseViewModel {
     );
   }
 
-  navigateToEdit(String causeID) {
-    _navigationService
-        .navigateTo(Routes.EditCheckListView, arguments: {'id': causeID});
+  navigateToEdit(String? id) {
+    _navigationService!.navigateTo(Routes.EditCheckListViewRoute(id: id));
     // _navigationService.navigateTo(Routes.EditChecklistView,
     //     arguments: EditChecklistViewArguments(arguments: [actions, creatorID, currentUID, name, causeID, headers, subheaders]));
   }

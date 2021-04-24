@@ -150,7 +150,7 @@ class CreateForumPostView extends StatelessWidget {
       viewModelBuilder: () => CreateForumPostViewModel(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar()
-            .basicAppBar(title: "Create Post", showBackButton: true),
+            .basicAppBar(title: "Create Post", showBackButton: true) as PreferredSizeWidget?,
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/models/go_forum_post_comment_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
@@ -10,24 +10,24 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CommentBlockViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  UserDataService _userDataService = locator<UserDataService>();
-  CommentDataService _commentDataService = locator<CommentDataService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  UserDataService? _userDataService = locator<UserDataService>();
+  CommentDataService? _commentDataService = locator<CommentDataService>();
 
-  GoUser user;
+  GoUser? user;
   bool showingReplies = false;
-  String currentUID = "";
+  String? currentUID = "";
 
-  initialize(String uid) async {
+  initialize(String? uid) async {
     setBusy(true);
-    var res = await _userDataService.getGoUserByID(uid);
+    var res = await _userDataService!.getGoUserByID(uid);
     if (res is String) {
     } else {
       user = res;
     }
-    currentUID = await _authService.getCurrentUserID();
+    currentUID = await _authService!.getCurrentUserID();
     notifyListeners();
     setBusy(false);
   }
@@ -43,9 +43,8 @@ class CommentBlockViewModel extends BaseViewModel {
 
   delete(GoForumPostComment comment) async {
     print("chungus");
-    _commentDataService.deleteComment(
-        comment.postID, comment.timePostedInMilliseconds.toString());
-    _navigationService.back();
+    _commentDataService!.deleteComment(comment.postID, comment.timePostedInMilliseconds.toString());
+    _navigationService!.back();
     navigateToPostView(comment.postID);
   }
 
@@ -60,9 +59,8 @@ class CommentBlockViewModel extends BaseViewModel {
         });
   }
 
-  navigateToPostView(String postID) {
-    _navigationService
-        .navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': postID});
+  navigateToPostView(String? id) {
+    _navigationService!.navigateTo(Routes.ForumPostViewRoute(id: id));
   }
 
   ///NAVIGATION

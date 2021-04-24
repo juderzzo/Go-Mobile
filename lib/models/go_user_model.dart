@@ -1,76 +1,74 @@
 import 'package:flutter/material.dart';
 
 class GoUser {
-  String id;
-  String fbID;
-  String googleID;
-  String email;
-  String phoneNo;
-  String username;
-  String profilePicURL;
-  String bio;
-  String personalSite;
-  List checks;
-  List inspirations;
-  int followerCount;
-  int followingCount;
-  List following;
-  List followers;
-  List liked;
-  List blockedUsers;
-  List posts;
-  int appOpenTimeInMilliseconds;
-  String messageToken;
-  int points;
+  String? id;
+  String? fbID;
+  String? googleID;
+  String? email;
+  String? phoneNo;
+  String? username;
+  String? profilePicURL;
+  String? bio;
+  String? personalSite;
+  List? checks;
+  List? inspirations;
+  int? followerCount;
+  int? followingCount;
+  List? following;
+  List? followers;
+  List? liked;
+  List? blockedUsers;
+  List? posts;
+  int? appOpenTimeInMilliseconds;
+  String? messageToken;
+  int? points;
 
-  GoUser({
-    this.id,
-    this.fbID,
-    this.googleID,
-    this.email,
-    this.phoneNo,
-    this.username,
-    this.profilePicURL,
-    this.bio,
-    this.personalSite,
-    this.checks,
-    this.inspirations,
-    this.followerCount,
-    this.followingCount,
-    this.following,
-    this.followers,
-    this.liked,
-    this.blockedUsers,
-    this.appOpenTimeInMilliseconds,
-    this.messageToken,
-    this.posts,
-    this.points
-  });
+  GoUser(
+      {this.id,
+      this.fbID,
+      this.googleID,
+      this.email,
+      this.phoneNo,
+      this.username,
+      this.profilePicURL,
+      this.bio,
+      this.personalSite,
+      this.checks,
+      this.inspirations,
+      this.followerCount,
+      this.followingCount,
+      this.following,
+      this.followers,
+      this.liked,
+      this.blockedUsers,
+      this.appOpenTimeInMilliseconds,
+      this.messageToken,
+      this.posts,
+      this.points});
 
   GoUser.fromMap(Map<String, dynamic> data)
       : this(
-          id: data['id'],
-          fbID: data['fbID'],
-          googleID: data['googleID'],
-          email: data['email'],
-          phoneNo: data['phoneNo'],
-          username: data['username'],
-          profilePicURL: data['profilePicURL'],
-          bio: data['bio'],
-          personalSite: data['personalSite'],
-          checks: data['checks'],
-          inspirations: data['inspirations'],
-          followerCount: data['followerCount'],
-          followingCount: data['followingCount'],
-          following: data['following'],
-          followers: data['followers'],
-          liked: data['liked'],
-          blockedUsers: data['blockedUsers'],
-          appOpenTimeInMilliseconds: data['appOpenTimeInMilliseconds'],
-          messageToken: data['messageToken'],
-          posts: data['posts'],
-          points: data['points']
-        );
+            id: data['id'],
+            fbID: data['fbID'],
+            googleID: data['googleID'],
+            email: data['email'],
+            phoneNo: data['phoneNo'],
+            username: data['username'],
+            profilePicURL: data['profilePicURL'],
+            bio: data['bio'],
+            personalSite: data['personalSite'],
+            checks: data['checks'],
+            inspirations: data['inspirations'],
+            followerCount: data['followerCount'],
+            followingCount: data['followingCount'],
+            following: data['following'],
+            followers: data['followers'],
+            liked: data['liked'],
+            blockedUsers: data['blockedUsers'],
+            appOpenTimeInMilliseconds: data['appOpenTimeInMilliseconds'],
+            messageToken: data['messageToken'],
+            posts: data['posts'],
+            points: data['points']);
 
   Map<String, dynamic> toMap() => {
         'id': this.id,
@@ -97,11 +95,11 @@ class GoUser {
       };
 
   GoUser generateNewUser({
-    @required String id,
-    @required String fbID,
-    @required String googleID,
-    @required String email,
-    @required String phoneNo,
+    required String id,
+    required String? fbID,
+    required String? googleID,
+    required String email,
+    required String? phoneNo,
   }) {
     GoUser user = GoUser(
       id: id,
@@ -154,5 +152,14 @@ class GoUser {
       messageToken: null,
     );
     return user;
+  }
+
+  //checks if obj is valid
+  bool isValid() {
+    bool isValid = true;
+    if (id == null) {
+      isValid = false;
+    }
+    return isValid;
   }
 }

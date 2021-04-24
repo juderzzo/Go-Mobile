@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_user_model.dart';
@@ -18,18 +18,17 @@ import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class ProfileView extends StatefulWidget {
-  final GoUser user;
+  final GoUser? user;
   ProfileView({this.user});
 
   @override
   _ProfileViewState createState() => _ProfileViewState(user: this.user);
 }
 
-class _ProfileViewState extends State<ProfileView>
-    with SingleTickerProviderStateMixin {
-  final GoUser user;
+class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStateMixin {
+  final GoUser? user;
   _ProfileViewState({this.user});
-  TabController _tabController;
+  TabController? _tabController;
   List postFutures = [];
   List<Widget> posts = [];
   bool loading = true;
@@ -79,13 +78,13 @@ class _ProfileViewState extends State<ProfileView>
         children: [
           SizedBox(height: 16),
           UserProfilePic(
-            userPicUrl: widget.user.profilePicURL,
+            userPicUrl: widget.user!.profilePicURL,
             size: 60,
             isBusy: false,
           ),
           SizedBox(height: 8),
           Text(
-            "@${widget.user.username}",
+            "@${widget.user!.username}",
             style: TextStyle(
               color: appFontColor(),
               fontWeight: FontWeight.bold,
@@ -94,11 +93,11 @@ class _ProfileViewState extends State<ProfileView>
           ),
           SizedBox(height: 8),
           FollowStatsRow(
-            followersLength: widget.user.followers.length,
-            followingLength: widget.user.following.length,
+            followersLength: widget.user!.followers!.length,
+            followingLength: widget.user!.following!.length,
             viewFollowersAction: null,
             viewFollowingAction: null,
-            points: widget.user.points,
+            points: widget.user!.points,
           ),
           Container(
             //height: MediaQuery.of(context).size.height * 4/10,
@@ -160,15 +159,10 @@ class _ProfileViewState extends State<ProfileView>
 
   Widget body(ProfileViewModel model) {
     List<Widget> loader = [];
-    loader.add(
-      Padding(
-        padding: const EdgeInsets.all(138.0),
-        child: Container(
-          height: 100,
-          width: 100,
-          child: CircularProgressIndicator()),
-      )
-      );
+    loader.add(Padding(
+      padding: const EdgeInsets.all(138.0),
+      child: Container(height: 100, width: 100, child: CircularProgressIndicator()),
+    ));
 
     return TabBarView(
       controller: _tabController,
@@ -178,10 +172,9 @@ class _ProfileViewState extends State<ProfileView>
               onRefresh: () async {
                 posts = [];
                 makeList();
-                await model.notifyListeners();
+                //await model.notifyListeners();
               },
-              child: ListView(
-                  shrinkWrap: true, children: loading ? loader : posts)),
+              child: ListView(shrinkWrap: true, children: loading ? loader : posts)),
         ),
         ListCauses(
           refreshData: model.refreshCausesFollowing,
@@ -192,12 +185,10 @@ class _ProfileViewState extends State<ProfileView>
         RefreshIndicator(
           onRefresh: () async {
             model.initialize(_tabController, user);
-            await model.notifyListeners();
+            //await model.notifyListeners();
           },
           child: ListView(
-            children: model.loadPosts().runtimeType == Null
-                ? loader
-                : model.loadPosts(),
+            children: model.loadPosts().runtimeType == Null ? loader : model.loadPosts(),
           ),
         ),
       ],
@@ -216,26 +207,26 @@ class _ProfileViewState extends State<ProfileView>
 
   void makeList() async {
     //have to optimize this
-    for (int i = 0; i < user.liked.length; i++) {
-      dynamic u = await ProfileViewModel.generatePost(i, user.id);
+    for (int i = 0; i < user!.liked!.length; i++) {
+      dynamic u = await ProfileViewModel.generatePost(i, user!.id);
       //await u;
       print(i);
       if (u.runtimeType != Future) {
         if (u == null) {
           print("nullify");
-          user.liked.removeAt(i);
-          ProfileViewModel.updateLiked(user.id, user.liked);
+          user!.liked!.removeAt(i);
+          ProfileViewModel.updateLiked(user!.id!, user!.liked!);
         } else if (u.runtimeType == GoForumPost && u != null) {
           posts.add(ForumPostBlockView(
             post: u,
-            displayBottomBorder: (i != user.liked.length),
+            displayBottomBorder: (i != user!.liked!.length),
           ));
         }
       }
     }
     //print(posts.length);
     //print(posts.toString());
-    if (posts.length == user.liked.length) {
+    if (posts.length == user!.liked!.length) {
       loading = false;
       setState(() {});
     }
@@ -246,7 +237,7 @@ class _ProfileViewState extends State<ProfileView>
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _tabController.dispose();
+    _tabController!.dispose();
   }
 
   @override
@@ -280,15 +271,13 @@ class _ProfileViewState extends State<ProfileView>
                               pinned: true,
                               floating: true,
                               forceElevated: innerBoxIsScrolled,
-                              expandedHeight: MediaQuery.of(context).size.height * 7/13,
+                              expandedHeight: MediaQuery.of(context).size.height * 7 / 13,
                               backgroundColor: appBackgroundColor(),
                               flexibleSpace: FlexibleSpaceBar(
                                 background: Container(
                                   child: Column(
                                     children: [
-                                      widget.user == null
-                                          ? Container()
-                                          : userDetails(model),
+                                      widget.user == null ? Container() : userDetails(model),
                                     ],
                                   ),
                                 ),

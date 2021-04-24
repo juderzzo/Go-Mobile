@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/views/search/all_search_results/all_search_results_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/list_builders/list_causes.dart';
@@ -13,14 +12,14 @@ import 'package:stacked/stacked.dart';
 import 'admins_search_results_view_model.dart';
 
 class AdminSearchResultsView extends StatefulWidget {
-  final String searchTerm;
+  final String? searchTerm;
   AdminSearchResultsView({this.searchTerm});
   @override
   _AdminSearchResultsViewState createState() => _AdminSearchResultsViewState();
 }
 
 class _AdminSearchResultsViewState extends State<AdminSearchResultsView> with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
 
   Widget noResultsFound() {
     return Container(
@@ -46,6 +45,8 @@ class _AdminSearchResultsViewState extends State<AdminSearchResultsView> with Si
             onTap: () => model.navigateToPreviousPage(),
             enabled: false,
             textEditingController: model.searchTextController,
+            onChanged: (String val) {},
+            onFieldSubmitted: (String val) {},
           ),
           SizedBox(width: 8),
           GestureDetector(

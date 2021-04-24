@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go/enums/notifcation_type.dart';
 
 class GoNotification {
-  String receiverUID;
-  String senderUID;
-  String type;
-  String header;
-  String subHeader;
-  Map<dynamic, dynamic> additionalData;
-  int timePostedInMilliseconds;
-  int expDateInMilliseconds;
-  bool read;
+  String? receiverUID;
+  String? senderUID;
+  String? type;
+  String? header;
+  String? subHeader;
+  Map<dynamic, dynamic>? additionalData;
+  int? timePostedInMilliseconds;
+  int? expDateInMilliseconds;
+  bool? read;
 
   GoNotification({
     this.receiverUID,
@@ -50,11 +50,11 @@ class GoNotification {
       };
 
   GoNotification generateGoCommentNotification({
-    @required String postID,
-    @required String receiverUID,
-    @required String senderUID,
-    @required String commenterUsername,
-    @required String comment,
+    required String? postID,
+    required String? receiverUID,
+    required String? senderUID,
+    required String commenterUsername,
+    required String comment,
   }) {
     GoNotification notif = GoNotification(
       receiverUID: receiverUID,
@@ -71,11 +71,11 @@ class GoNotification {
   }
 
   GoNotification generateCommmentReplyNotification({
-    @required String postID,
-    @required String receiverUID,
-    @required String senderUID,
-    @required String commenterUsername,
-    @required String comment,
+    required String? postID,
+    required String? receiverUID,
+    required String? senderUID,
+    required String commenterUsername,
+    required String comment,
   }) {
     GoNotification notif = GoNotification(
       receiverUID: receiverUID,
@@ -92,11 +92,11 @@ class GoNotification {
   }
 
   GoNotification generateGoCommentMentionNotification({
-    @required String postID,
-    @required String receiverUID,
-    @required String senderUID,
-    @required String commenterUsername,
-    @required String comment,
+    required String? postID,
+    required String? receiverUID,
+    required String? senderUID,
+    required String commenterUsername,
+    required String comment,
   }) {
     GoNotification notif = GoNotification(
       receiverUID: receiverUID,
@@ -113,11 +113,11 @@ class GoNotification {
   }
 
   GoNotification generateGoChecklistNotification({
-    @required String receiverUID,
-    @required String senderUID,
-    @required String causeName,
-    @required String causeID,
-    @required bool isEvent
+    required String receiverUID,
+    required String? senderUID,
+    required String causeName,
+    required String? causeID,
+    required bool isEvent
   }) {
     GoNotification notif = GoNotification(
       receiverUID: receiverUID,
@@ -134,9 +134,9 @@ class GoNotification {
   }
 
   GoNotification generateGoFollowUserNotification({
-    @required String uid,
-    @required String senderUID,
-    @required String followerUsername,
+    required String uid,
+    required String senderUID,
+    required String followerUsername,
   }) {
     GoNotification notif = GoNotification(
       receiverUID: receiverUID,
@@ -153,11 +153,11 @@ class GoNotification {
   }
 
   GoNotification generateGoFollowCauseNotification({
-    @required String causeID,
-    @required String receiverUID,
-    @required String senderUID,
-    @required String followerUsername,
-    @required String causeName,
+    required String causeID,
+    required String receiverUID,
+    required String senderUID,
+    required String followerUsername,
+    required String causeName,
   }) {
     GoNotification notif = GoNotification(
       receiverUID: receiverUID,

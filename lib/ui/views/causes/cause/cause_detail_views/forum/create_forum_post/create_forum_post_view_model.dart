@@ -1,9 +1,7 @@
-import 'dart:io';
+import 'dart:async';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/services/auth/auth_service.dart';
@@ -14,35 +12,35 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CreateForumPostViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  PostDataService _postDataService = locator<PostDataService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  SnackbarService _snackbarService = locator<SnackbarService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  PostDataService? _postDataService = locator<PostDataService>();
+  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
+  SnackbarService? _snackbarService = locator<SnackbarService>();
 
   ///HELPERS
   TextEditingController postTextController = TextEditingController();
 
   ///DATA
   bool isEditing = false;
-  GoForumPost originalPost;
+  GoForumPost? originalPost;
   dynamic imgFile;
 
-  String causeID;
-  String postID;
+  String? causeID;
+  String? postID;
   dynamic img;
   bool imgChanged = false;
 
   initialize(BuildContext context) async {
-    Map<String, dynamic> args = RouteData.of(context).arguments;
+    Map<String, dynamic> args = {}; //RouteData.of(context).arguments;
     causeID = args['causeID'];
     postID = args['postID'];
     if (postID != null) {
       isEditing = true;
-      originalPost = await _postDataService.getPostByID(postID);
-      if (originalPost.imageID != null) {
-        img = originalPost.imageID;
+      originalPost = await (_postDataService!.getPostByID(postID) as FutureOr<GoForumPost?>);
+      if (originalPost!.imageID != null) {
+        img = originalPost!.imageID;
       }
       if (img.length < 3) {
         //this will make sure if the img id is a blank string it gets turned back to null
@@ -50,14 +48,14 @@ class CreateForumPostViewModel extends BaseViewModel {
         img = null;
       }
 
-      postTextController.text = originalPost.body;
+      postTextController.text = originalPost!.body!;
       notifyListeners();
     }
   }
 
   Future<bool> validateAndSubmitForm() async {
-    String id;
-    String formError;
+    String? id;
+    String? formError;
     String body = postTextController.text.trim();
     setBusy(true);
     if (!isValidString(body)) {
@@ -65,32 +63,32 @@ class CreateForumPostViewModel extends BaseViewModel {
     }
     if (formError != null) {
       setBusy(false);
-      _snackbarService.showSnackbar(
+      _snackbarService!.showSnackbar(
         title: 'Post Submission Error',
         message: formError,
         duration: Duration(seconds: 5),
       );
       return false;
     } else {
-      String authorID = await _authService.getCurrentUserID();
+      String? authorID = await _authService!.getCurrentUserID();
       var res;
 
       if (isEditing) {
-        res = await _postDataService.updatePost(
-          id: originalPost.id,
-          causeID: originalPost.causeID,
+        res = await _postDataService!.updatePost(
+          id: originalPost!.id,
+          causeID: originalPost!.causeID,
           authorID: authorID,
           body: body,
           image: img,
-          dateCreatedInMilliseconds: originalPost.dateCreatedInMilliseconds,
-          commentCount: originalPost.commentCount,
+          dateCreatedInMilliseconds: originalPost!.dateCreatedInMilliseconds,
+          commentCount: originalPost!.commentCount,
         );
       } else {
         //first upload the images
         id = getRandomString(35);
         print("view model");
         print(id);
-        res = await _postDataService.createPost(
+        res = await _postDataService!.createPost(
           id: id,
           causeID: causeID,
           authorID: authorID,
@@ -103,7 +101,7 @@ class CreateForumPostViewModel extends BaseViewModel {
       print("chungus");
       setBusy(false);
       if (res is String) {
-        _snackbarService.showSnackbar(
+        _snackbarService!.showSnackbar(
           title: 'Form Submission Error',
           message: res,
           duration: Duration(seconds: 5),
@@ -119,17 +117,15 @@ class CreateForumPostViewModel extends BaseViewModel {
   void selectImage(context) async {
     FocusScope.of(context).requestFocus(FocusNode());
     imgChanged = true;
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    var sheetResponse = await _bottomSheetService!.showCustomSheet(
       variant: BottomSheetType.imagePicker,
     );
     if (sheetResponse != null) {
-      String res = sheetResponse.responseData;
+      String? res = sheetResponse.responseData;
       if (res == "camera") {
-        imgFile =
-            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
       } else if (res == "gallery") {
-        imgFile = await GoImagePicker()
-            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
       img = imgFile;
       notifyListeners();
@@ -137,8 +133,8 @@ class CreateForumPostViewModel extends BaseViewModel {
   }
 
   ///BOTTOM SHEETS
-  displayPostUploadSuccessBottomSheet(String postID) async {
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+  displayPostUploadSuccessBottomSheet(String? postID) async {
+    var sheetResponse = await _bottomSheetService!.showCustomSheet(
       variant: BottomSheetType.postPublished,
       takesInput: false,
       barrierDismissible: true,
@@ -147,7 +143,7 @@ class CreateForumPostViewModel extends BaseViewModel {
       },
     );
     if (sheetResponse == null || sheetResponse.responseData == "return") {
-      _navigationService.back(result: "newPostCreated");
+      _navigationService!.back(result: "newPostCreated");
       // _navigationService.back();
     }
   }
@@ -155,7 +151,7 @@ class CreateForumPostViewModel extends BaseViewModel {
   ///NAVIGATION
 
   pushAndReplaceUntilHomeNavView() {
-    _navigationService.pushNamedAndRemoveUntil(Routes.HomeNavViewRoute);
+    //_navigationService.pushNamedAndRemoveUntil(Routes.AppBaseViewRoute);
   }
 
 // replaceWithPage() {

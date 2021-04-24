@@ -1,19 +1,17 @@
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/utils/mail_sender.dart';
 import 'package:stacked/stacked.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'cause_block_view_model.dart';
 
 class CauseBlockView extends StatelessWidget {
-  final GoCause cause;
-  final bool displayBottomBorder;
+  final GoCause? cause;
+  final bool? displayBottomBorder;
 
   CauseBlockView({this.cause, this.displayBottomBorder});
 
@@ -26,19 +24,17 @@ class CauseBlockView extends StatelessWidget {
         children: <Widget>[
           Container(
             height: 20,
-            width: MediaQuery.of(context).size.width * 3/4,
+            width: MediaQuery.of(context).size.width * 3 / 4,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
                 Text(
-            cause.name,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: appFontColor()),
-          ),
+                  cause!.name!,
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: appFontColor()),
+                ),
               ],
-              
             ),
           ),
-          
           IconButton(
             icon: Icon(
               Icons.more_horiz,
@@ -46,7 +42,7 @@ class CauseBlockView extends StatelessWidget {
             ),
             onPressed: () {
               //mail();
-              model.showOptions(context, cause.id, cause);
+              model.showOptions(context, cause!.id, cause);
             },
           ),
         ],
@@ -61,11 +57,9 @@ class CauseBlockView extends StatelessWidget {
     //print(model.orgLength);
     //print(model.videoLink);
     YoutubePlayerController _controller;
-    if ((cause.videoLink != null) &&
-        cause.videoLink.length > 5 &&
-        images.length == model.orgLength) {
+    if ((cause!.videoLink != null) && cause!.videoLink!.length > 5 && images.length == model.orgLength) {
       //print(cause.videoLink);
-      String videoID = YoutubePlayer.convertUrlToId(cause.videoLink);
+      String? videoID = YoutubePlayer.convertUrlToId(cause!.videoLink!);
       //print(videoID);
       if (videoID != null) {
         _controller = YoutubePlayerController(
@@ -94,23 +88,23 @@ class CauseBlockView extends StatelessWidget {
       }
     }
 
-    return model.isLoading
-        ? Container()
-        : SizedBox(
-            width: MediaQuery.of(context).size.width * 23 / 24,
-            height: 250,
-            child: Carousel(
-              autoplay: false,
-              indicatorBgPadding: 6,
-              dotSpacing: 20,
-              dotBgColor: appBackgroundColor(),
-              dotColor: appFontColorAlt(),
-              dotIncreaseSize: 1.01,
-              dotIncreasedColor: appFontColor(),
-              //showIndicator: model.images.length > 1 ? true : false,
-              images: images,
-            ),
-          );
+    return Container(); //model.isLoading
+    // ? Container()
+    // : SizedBox(
+    //     width: MediaQuery.of(context).size.width * 23 / 24,
+    //     height: 250,
+    //     child: Carousel(
+    //       autoplay: false,
+    //       indicatorBgPadding: 6,
+    //       dotSpacing: 20,
+    //       dotBgColor: appBackgroundColor(),
+    //       dotColor: appFontColorAlt(),
+    //       dotIncreaseSize: 1.01,
+    //       dotIncreasedColor: appFontColor(),
+    //       //showIndicator: model.images.length > 1 ? true : false,
+    //       images: images,
+    //     ),
+    //   );
   }
 
   Widget causeDetails(CauseBlockViewModel model, context) {
@@ -134,9 +128,7 @@ class CauseBlockView extends StatelessWidget {
             ),
           ),
           Text(
-            (cause.why.length < 95)
-                ? cause.why
-                : cause.why.substring(0, 85) + "... See More",
+            (cause!.why!.length < 95) ? cause!.why! : cause!.why!.substring(0, 85) + "... See More",
             style: TextStyle(
               fontSize: 14,
               color: appFontColor(),
@@ -153,9 +145,7 @@ class CauseBlockView extends StatelessWidget {
             ),
           ),
           Text(
-            (cause.goal.length < 95)
-                ? cause.goal
-                : cause.goal.substring(0, 85) + "... See More",
+            (cause!.goal!.length < 95) ? cause!.goal! : cause!.goal!.substring(0, 85) + "... See More",
             style: TextStyle(
               fontSize: 14,
               color: appFontColor(),
@@ -183,8 +173,7 @@ class CauseBlockView extends StatelessWidget {
             TextSpan(
               text: model.creatorUsername,
               style: TextStyle(color: appTextButtonColor()),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => model.navigateToUserView(cause.creatorID),
+              recognizer: TapGestureRecognizer()..onTap = () => model.navigateToUserView(cause!.creatorID),
             ),
           ],
         ),
@@ -198,49 +187,48 @@ class CauseBlockView extends StatelessWidget {
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
       fireOnModelReadyOnce: true,
-      onModelReady: (model) =>
-          model.initialize(cause.creatorID, cause.imageURLs),
+      onModelReady: (model) => model.initialize(cause!.creatorID, cause!.imageURLs!),
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
-        onTap: () => model.navigateToCauseView(cause.id),
-        child: //cause.approved ? 
-        Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 23 / 24,
-              decoration: BoxDecoration(
-                color: appBackgroundColor(),
-                borderRadius: BorderRadius.circular(10.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 2.0,
-                    spreadRadius: 2.0,
-                    // shadow direction: bottom right
-                  )
-                ],
+          onTap: () => model.navigateToCauseView(cause!.id),
+          child: //cause.approved ?
+              Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 23 / 24,
+                decoration: BoxDecoration(
+                  color: appBackgroundColor(),
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 2.0,
+                      spreadRadius: 2.0,
+                      // shadow direction: bottom right
+                    )
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    causeHead(model, context),
+                    causeImages(model, context),
+                    causeDetails(model, context),
+                    causeOrganizer(model, context),
+                    SizedBox(height: 16.0),
+                    Container(),
+                  ],
+                ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  causeHead(model, context),
-                  causeImages(model, context),
-                  causeDetails(model, context),
-                  causeOrganizer(model, context),
-                  SizedBox(height: 16.0),
-                  Container(),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            )
-          ],
-        ) 
-        //: Container(height: 1),
-      ),
+              SizedBox(
+                height: 30,
+              )
+            ],
+          )
+          //: Container(height: 1),
+          ),
     );
   }
 }

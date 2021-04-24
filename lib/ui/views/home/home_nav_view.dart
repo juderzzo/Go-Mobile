@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/enums/init_error_status.dart';
+import 'package:go/ui/views/base/init_error_views/network_error/network_error_view.dart';
 import 'package:go/ui/views/home/home_nav_view_model.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view.dart';
 import 'package:go/ui/views/home/tabs/feed/feed_view.dart';
@@ -13,8 +14,6 @@ import 'package:go/ui/widgets/navigation/nav_bar/custom_nav_bar.dart';
 import 'package:go/ui/widgets/navigation/nav_bar/custom_nav_bar_item.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
-
-import 'init_error_views/network_error/network_error_view.dart';
 
 class HomeNavView extends StatelessWidget {
   Widget getViewForIndex(int index, HomeNavViewModel model) {
@@ -47,7 +46,6 @@ class HomeNavView extends StatelessWidget {
         if (!model.initialized) {
           model.initialize();
         }
-        
       },
       viewModelBuilder: () => locator<HomeNavViewModel>(),
       builder: (context, model, child) => ChangeNotifierProvider.value(
@@ -64,10 +62,10 @@ class HomeNavView extends StatelessWidget {
                   ),
                 )
               : model.initErrorStatus == InitErrorStatus.network
-                  ? NetworkErrorView(
-                      tryAgainAction: () => model.initialize(),
-                    )
-                  : getViewForIndex(model.navBarIndex, model),
+              ? NetworkErrorView(
+                  tryAgainAction: () => model.initialize(),
+                )
+              : getViewForIndex(model.navBarIndex, model),
           bottomNavigationBar: CustomNavBar(
             navBarItems: [
               CustomNavBarItem(

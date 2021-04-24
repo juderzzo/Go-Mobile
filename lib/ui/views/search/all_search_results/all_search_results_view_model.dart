@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/algolia/algolia_search_service.dart';
@@ -7,8 +7,8 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class AllSearchResultsViewModel extends BaseViewModel {
-  NavigationService _navigationService = locator<NavigationService>();
-  AlgoliaSearchService _algoliaSearchService = locator<AlgoliaSearchService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  AlgoliaSearchService? _algoliaSearchService = locator<AlgoliaSearchService>();
 
   ///HELPERS
   TextEditingController searchTextController = TextEditingController();
@@ -16,7 +16,7 @@ class AllSearchResultsViewModel extends BaseViewModel {
   ScrollController userScrollController = ScrollController();
 
   ///DATA RESULTS
-  String searchTerm;
+  String? searchTerm;
   List<GoCause> causeResults = [];
   bool loadingAdditionalCauses = false;
   bool moreCausesAvailable = true;
@@ -29,9 +29,9 @@ class AllSearchResultsViewModel extends BaseViewModel {
 
   int resultsLimit = 15;
 
-  initialize(BuildContext context, String searchTermVal) async {
+  initialize(BuildContext context, String? searchTermVal) async {
     searchTerm = searchTermVal;
-    searchTextController.text = searchTerm;
+    searchTextController.text = searchTerm!;
     notifyListeners();
     causeScrollController.addListener(() {
       double triggerFetchMoreSize = 0.9 * causeScrollController.position.maxScrollExtent;
@@ -59,7 +59,7 @@ class AllSearchResultsViewModel extends BaseViewModel {
   }
 
   loadCauses() async {
-    causeResults = await _algoliaSearchService.queryCauses(searchTerm: searchTerm, resultsLimit: resultsLimit);
+    causeResults = await _algoliaSearchService!.queryCauses(searchTerm: searchTerm, resultsLimit: resultsLimit);
     causeResultsPageNum += 1;
     notifyListeners();
   }
@@ -70,7 +70,7 @@ class AllSearchResultsViewModel extends BaseViewModel {
     }
     loadingAdditionalCauses = true;
     notifyListeners();
-    List<GoCause> newResults = await _algoliaSearchService.queryAdditionalCauses(
+    List<GoCause> newResults = await _algoliaSearchService!.queryAdditionalCauses(
       searchTerm: searchTerm,
       resultsLimit: resultsLimit,
       pageNum: causeResultsPageNum,
@@ -93,7 +93,7 @@ class AllSearchResultsViewModel extends BaseViewModel {
   }
 
   loadUsers() async {
-    userResults = await _algoliaSearchService.queryUsers(searchTerm: searchTerm, resultsLimit: resultsLimit);
+    userResults = await _algoliaSearchService!.queryUsers(searchTerm: searchTerm, resultsLimit: resultsLimit);
     userResultsPageNum += 1;
     notifyListeners();
   }
@@ -104,7 +104,7 @@ class AllSearchResultsViewModel extends BaseViewModel {
     }
     loadingAdditionalUsers = true;
     notifyListeners();
-    List<GoUser> newResults = await _algoliaSearchService.queryAdditionalUsers(
+    List<GoUser> newResults = await _algoliaSearchService!.queryAdditionalUsers(
       searchTerm: searchTerm,
       resultsLimit: resultsLimit,
       pageNum: userResultsPageNum,
@@ -121,11 +121,11 @@ class AllSearchResultsViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToPreviousPage() {
-    _navigationService.back();
+    _navigationService!.back();
   }
 
   navigateToHomePage() {
-    _navigationService.popRepeated(2);
+    _navigationService!.popRepeated(2);
   }
 //
 // navigateToPage() {

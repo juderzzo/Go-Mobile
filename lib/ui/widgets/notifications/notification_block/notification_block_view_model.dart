@@ -1,5 +1,4 @@
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/enums/notifcation_type.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
@@ -7,10 +6,10 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class NotificationBlockViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  UserDataService _userDataService = locator<UserDataService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  AuthService? _authService = locator<AuthService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  UserDataService? _userDataService = locator<UserDataService>();
+  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
 
   initialize() async {}
 
@@ -33,30 +32,28 @@ class NotificationBlockViewModel extends BaseViewModel {
     // }
   }
 
-  onTap({String notifType, Map<dynamic, dynamic> data}) {
+  onTap({String? notifType, Map<dynamic, dynamic>? data}) {
     if (notifType == NotificationType.newPost.toString() ||
         notifType == NotificationType.postComment.toString() ||
         notifType == NotificationType.postCommentReply.toString()) {
-      navigateToPostView(data['postID']);
+      navigateToPostView(data!['postID']);
     }
     if (notifType == NotificationType.checkList.toString()) {
-      navigateToCauseView(data['causeID'], data['tab']);
+      navigateToCauseView(data!['causeID'], data['tab']);
     }
   }
 
   ///NAVIGATION
-  navigateToCauseView(String id, int tab) {
-    _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id, 'tab': tab});
+  navigateToCauseView(String? id, int? tab) {
+    // _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id, 'tab': tab});
   }
 
-  navigateToPostView(String id) {
+  navigateToPostView(String? id) {
     print(id);
-    _navigationService
-        .navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': id});
+    //.navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': id});
   }
 
   navigateToUserView(String uid) {
-    _navigationService
-        .navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
+    //_navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
   }
 }

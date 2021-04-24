@@ -1,41 +1,39 @@
-import 'package:auto_route/auto_route.dart';
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
-import 'package:http/http.dart';
-import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-@singleton
 class UserViewModel extends BaseViewModel {
   ///SERVICES
-  NavigationService _navigationService = locator<NavigationService>();
-  SnackbarService _snackbarService = locator<SnackbarService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  CauseDataService _causeDataService = locator<CauseDataService>();
-  UserDataService _userDataService = locator<UserDataService>();
-  PostDataService _postDataService = locator<PostDataService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  SnackbarService? _snackbarService = locator<SnackbarService>();
+  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
+  CauseDataService? _causeDataService = locator<CauseDataService>();
+  UserDataService? _userDataService = locator<UserDataService>();
+  PostDataService? _postDataService = locator<PostDataService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
 
   ///CURRENT USER
-  GoUser user;
+  GoUser? user;
 
   ///DATA RESULTS
   List<DocumentSnapshot> causesFollowingResults = [];
   List<Widget> posts = [];
   bool loadingAdditionalCausesFollowing = false;
   bool moreCausesFollowingAvailable = true;
-  bool isFollowing = false;
+  bool? isFollowing = false;
 
   List<DocumentSnapshot> causesCreatedResults = [];
   bool loadingAdditionalCausesCreated = false;
@@ -44,19 +42,18 @@ class UserViewModel extends BaseViewModel {
 
   int resultsLimit = 15;
 
-  initialize(TabController tabController, BuildContext context) async {
+  initialize(TabController? tabController, BuildContext context) async {
     //print("1");
     setBusy(true);
-    Map<String, dynamic> args = RouteData.of(context).arguments;
-    String uid = args['uid'];
-    user = await _userDataService.getGoUserByID(uid);
-    isFollowing = await _userDataService.isFollowing(uid);
+    Map<String, dynamic> args = {}; //RouteData.of(context).arguments;
+    String? uid = args['uid'];
+    user = await (_userDataService!.getGoUserByID(uid) as FutureOr<GoUser?>);
+    isFollowing = await _userDataService!.isFollowing(uid);
     notifyListeners();
     scrollController.addListener(() {
-      double triggerFetchMoreSize =
-          0.9 * scrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
       if (scrollController.position.pixels > triggerFetchMoreSize) {
-        if (tabController.index == 1) {
+        if (tabController!.index == 1) {
           loadAdditionalCausesFollowing();
         } else if (tabController.index == 2) {
           loadAdditionalCausesCreated();
@@ -72,7 +69,7 @@ class UserViewModel extends BaseViewModel {
   }
 
   followUnfollowUser() {
-    _userDataService.followUnfollowUser(user.id);
+    _userDataService!.followUnfollowUser(user!.id);
     notifyListeners();
   }
 
@@ -98,16 +95,16 @@ class UserViewModel extends BaseViewModel {
 
   ///LOAD CAUSES FOLLOWING
   loadCausesFollowing() async {
-    causesFollowingResults = await _causeDataService.loadCausesFollowing(
+    causesFollowingResults = await _causeDataService!.loadCausesFollowing(
       resultsLimit: resultsLimit,
-      uid: user.id,
+      uid: user!.id,
     );
     notifyListeners();
   }
 
   loadPostsInitial() async {
-    List p = await _postDataService.loadPostsByUser(user.id);
-    for (GoForumPost i in p) {
+    List p = await _postDataService!.loadPostsByUser(user!.id);
+    for (GoForumPost i in p as Iterable<GoForumPost>) {
       posts.add(new ForumPostBlockView(
         post: i,
         displayBottomBorder: true,
@@ -122,9 +119,9 @@ class UserViewModel extends BaseViewModel {
 
   ///LOAD CAUSES CREATED
   loadCausesCreated() async {
-    causesCreatedResults = await _causeDataService.loadCausesCreated(
+    causesCreatedResults = await _causeDataService!.loadCausesCreated(
       resultsLimit: resultsLimit,
-      uid: user.id,
+      uid: user!.id,
     );
     notifyListeners();
   }
@@ -136,11 +133,10 @@ class UserViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesFollowing = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults =
-        await _causeDataService.loadAdditionalCausesFollowing(
+    List<DocumentSnapshot> newResults = await _causeDataService!.loadAdditionalCausesFollowing(
       lastDocSnap: causesFollowingResults[causesFollowingResults.length - 1],
       resultsLimit: resultsLimit,
-      uid: user.id,
+      uid: user!.id,
     );
     if (newResults.length == 0) {
       moreCausesFollowingAvailable = false;
@@ -158,11 +154,10 @@ class UserViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesCreated = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults =
-        await _causeDataService.loadAdditionalCausesCreated(
+    List<DocumentSnapshot> newResults = await _causeDataService!.loadAdditionalCausesCreated(
       lastDocSnap: causesCreatedResults[causesCreatedResults.length - 1],
       resultsLimit: resultsLimit,
-      uid: user.id,
+      uid: user!.id,
     );
     if (newResults.length == 0) {
       moreCausesCreatedAvailable = false;
@@ -179,12 +174,12 @@ class UserViewModel extends BaseViewModel {
 // }
 //
   navigateToEditProfilePage() {
-    _navigationService.navigateTo(Routes.EditProfileViewRoute, arguments: {
-      'id': user.id,
-    });
+    // _navigationService.navigateTo(Routes.EditProfileViewRoute, arguments: {
+    //   'id': user.id,
+    // });
   }
 
   navigateToPreviousPage() {
-    _navigationService.back();
+    _navigationService!.back();
   }
 }

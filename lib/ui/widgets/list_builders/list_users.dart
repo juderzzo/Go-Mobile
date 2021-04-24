@@ -10,11 +10,11 @@ class ListUsers extends StatelessWidget {
   final VoidCallback refreshData;
   final PageStorageKey pageStorageKey;
   final ScrollController scrollController;
-  ListUsers({@required this.refreshData, @required this.userResults, @required this.pageStorageKey, @required this.scrollController});
+  ListUsers({required this.refreshData, required this.userResults, required this.pageStorageKey, required this.scrollController});
 
   Widget listUsers() {
     return RefreshIndicator(
-      onRefresh: refreshData,
+      onRefresh: refreshData as Future<void> Function(),
       backgroundColor: appBackgroundColor(),
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),

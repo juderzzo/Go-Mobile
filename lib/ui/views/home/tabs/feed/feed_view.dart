@@ -12,8 +12,8 @@ import 'package:stacked/stacked.dart';
 import 'feed_view_model.dart';
 
 class FeedView extends StatelessWidget {
-  final GoUser user;
-  final VoidCallback navigateToExplorePage;
+  final GoUser? user;
+  final VoidCallback? navigateToExplorePage;
   ScrollController _scrollController = new ScrollController();
 
   FeedView({this.user, this.navigateToExplorePage});
@@ -37,7 +37,7 @@ class FeedView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                NotificationBellView(uid: user.id),
+                NotificationBellView(uid: user!.id),
               ],
             ),
           ),

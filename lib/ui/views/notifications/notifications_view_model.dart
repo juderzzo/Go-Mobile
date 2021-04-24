@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/notification_data_service.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -9,20 +11,20 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class NotificationsViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  SnackbarService _snackbarService = locator<SnackbarService>();
-  NotificationDataService _notificationDataService = locator<NotificationDataService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  SnackbarService? _snackbarService = locator<SnackbarService>();
+  NotificationDataService? _notificationDataService = locator<NotificationDataService>();
 
   ///HELPER
   ScrollController notificationsScrollController = ScrollController();
 
-  String uid;
+  String? uid;
 
   ///DATA RESULTS
   List<DocumentSnapshot> notifResults = [];
-  DocumentSnapshot lastNotifDocSnap;
+  DocumentSnapshot? lastNotifDocSnap;
 
   bool loadingAdditionalNotifications = false;
   bool moreNotificationsAvailable = true;
@@ -32,7 +34,7 @@ class NotificationsViewModel extends BaseViewModel {
 
   initialize() async {
     setBusy(true);
-    uid = await _authService.getCurrentUserID();
+    uid = await _authService!.getCurrentUserID();
     notificationsScrollController.addListener(() {
       double triggerFetchMoreSize = 0.9 * notificationsScrollController.position.maxScrollExtent;
       if (notificationsScrollController.position.pixels > triggerFetchMoreSize) {
@@ -40,7 +42,7 @@ class NotificationsViewModel extends BaseViewModel {
       }
     });
     notifyListeners();
-    _notificationDataService.changeUnreadNotificationStatus(uid);
+    _notificationDataService!.changeUnreadNotificationStatus(uid);
     await loadNotifications();
     setBusy(false);
     await Future.delayed(Duration(seconds: 2));
@@ -55,7 +57,7 @@ class NotificationsViewModel extends BaseViewModel {
   }
 
   loadNotifications() async {
-    notifResults = await _notificationDataService.loadNotifications(
+    notifResults = await _notificationDataService!.loadNotifications(
       uid: uid,
       resultsLimit: resultsLimit,
     );
@@ -69,7 +71,7 @@ class NotificationsViewModel extends BaseViewModel {
     }
     loadingAdditionalNotifications = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _notificationDataService.loadAdditionalNotifications(
+    List<DocumentSnapshot> newResults = await _notificationDataService!.loadAdditionalNotifications(
       lastDocSnap: notifResults[notifResults.length - 1],
       resultsLimit: resultsLimit,
       uid: uid,
@@ -85,16 +87,16 @@ class NotificationsViewModel extends BaseViewModel {
 
   askForNotificationsPermission() async {
     PermissionStatus permissionStatus = await Permission.notification.status;
-    if (permissionStatus.isUndetermined) {
+    if (permissionStatus == null) {
       permissionStatus = await Permission.notification.request();
     } else if (permissionStatus.isDenied) {
-      DialogResponse response = await _dialogService.showConfirmationDialog(
+      DialogResponse response = await (_dialogService!.showConfirmationDialog(
         title: "Notifications are Disabled",
         description: "Open app settings to enable notifications",
         cancelTitle: "Cancel",
         confirmationTitle: "Open App Settings",
         barrierDismissible: true,
-      );
+      ) as FutureOr<DialogResponse>);
       if (response.confirmed) {
         AppSettings.openNotificationSettings();
       }
@@ -103,6 +105,6 @@ class NotificationsViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateBack() {
-    _navigationService.back();
+    _navigationService!.back();
   }
 }

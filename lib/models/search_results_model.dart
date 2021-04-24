@@ -1,8 +1,8 @@
 class SearchResult {
-  String id;
-  String type;
-  String name;
-  String additionalData;
+  String? id;
+  String? type;
+  String? name;
+  String? additionalData;
 
   SearchResult({
     this.id,
@@ -29,13 +29,13 @@ class SearchResult {
   String toString(){
     String ans = '';
     ans += "Id: ";
-    ans += this.id;
+    ans += this.id!;
     ans += " Type: ";
-    ans += this.type;
+    ans += this.type!;
     ans += " Name: ";
-    ans += this.name;
+    ans += this.name!;
     ans += " Additional Data: ";
-    ans += this.additionalData;
+    ans += this.additionalData!;
     return ans;
   }
 }

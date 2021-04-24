@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/location/google_places_service.dart';
@@ -9,11 +9,11 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CheckListItemFormViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  LocationService _locationService = locator<LocationService>();
-  GooglePlacesService googlePlacesService = locator<GooglePlacesService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  LocationService? _locationService = locator<LocationService>();
+  GooglePlacesService? googlePlacesService = locator<GooglePlacesService>();
 
   TextEditingController locationTextController = TextEditingController();
   TextEditingController headerController = TextEditingController();
@@ -21,12 +21,12 @@ class CheckListItemFormViewModel extends BaseViewModel {
   bool requiresLocationVerification = false;
 
   Map<String, dynamic> placeSearchResults = {};
-  int points = 0;
+  int? points = 0;
 
   initialize(GoCheckListItem item) async {
     setBusy(true);
     if (item.lat != null && item.lon != null && item.address != null) {
-      locationTextController.text = item.address;
+      locationTextController.text = item.address!;
       requiresLocationVerification = true;
       notifyListeners();
     }
@@ -35,11 +35,10 @@ class CheckListItemFormViewModel extends BaseViewModel {
     points = item.points;
   }
 
-  rebuild(GoCheckListItem item, Function onChangedHeader,
-      Function onChangedSubheader) async {
+  rebuild(GoCheckListItem item, Function onChangedHeader, Function onChangedSubheader) async {
     setBusy(true);
     if (item.lat != null && item.lon != null && item.address != null) {
-      locationTextController.text = item.address;
+      locationTextController.text = item.address!;
       requiresLocationVerification = true;
       notifyListeners();
     }
@@ -65,9 +64,8 @@ class CheckListItemFormViewModel extends BaseViewModel {
     notifyListeners();
 
     //get place ID for LAT & LON
-    String placeID = placeSearchResults[place];
-    Map<String, dynamic> coordinates =
-        await googlePlacesService.getLatLonFromPlaceID(placeID: placeID);
+    String? placeID = placeSearchResults[place];
+    Map<String, dynamic> coordinates = await googlePlacesService!.getLatLonFromPlaceID(placeID: placeID);
 
     //set place details
     details = {

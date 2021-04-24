@@ -1,12 +1,11 @@
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/ui/bottom_sheets/setup_bottom_sheet_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
 
-import 'app/locator.dart';
 import 'app/theme_config.dart';
 
 void main() async {
@@ -14,7 +13,7 @@ void main() async {
   await ThemeManager.initialise();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-9312496461922231~5212290852');
+  //FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-9312496461922231~5212290852');
 
   setupLocator();
   setupBottomSheetUI();
@@ -39,16 +38,15 @@ class GoApp extends StatelessWidget {
     return ThemeBuilder(
       lightTheme: regularTheme,
       darkTheme: darkTheme,
-      builder: (context, regularTheme, darkTheme, themeMode) => 
-      MaterialApp(
+      builder: (context, regularTheme, darkTheme, themeMode) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Go App',
         theme: regularTheme,
         darkTheme: darkTheme,
         themeMode: themeMode,
         initialRoute: Routes.RootViewRoute,
-        onGenerateRoute: GoRouter().onGenerateRoute,
-        navigatorKey: locator<NavigationService>().navigatorKey,
+        onGenerateRoute: StackedRouter().onGenerateRoute,
+        navigatorKey: StackedService.navigatorKey,
       ),
     );
   }

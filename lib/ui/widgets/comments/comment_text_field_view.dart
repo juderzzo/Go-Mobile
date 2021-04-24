@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/algolia/algolia_search_service.dart';
@@ -16,22 +16,22 @@ import 'comment_text_field_view_model.dart';
 class CommentTextFieldView extends StatelessWidget {
   final FocusNode focusNode;
   final bool isReplying;
-  final String replyReceiverUsername;
+  final String? replyReceiverUsername;
   final TextEditingController commentTextController;
   final Function(String) onSubmitted;
   final Function() selectImage;
 
   CommentTextFieldView(
-      {@required this.focusNode,
-      @required this.commentTextController,
-      @required this.isReplying,
-      @required this.replyReceiverUsername,
-      @required this.onSubmitted,
-      @required this.selectImage});
+      {required this.focusNode,
+      required this.commentTextController,
+      required this.isReplying,
+      required this.replyReceiverUsername,
+      required this.onSubmitted,
+      required this.selectImage});
 
   bool imgChanged = false;
 
-  final AlgoliaSearchService _algoliaSearchService = locator<AlgoliaSearchService>();
+  final AlgoliaSearchService? _algoliaSearchService = locator<AlgoliaSearchService>();
 
   Widget replyContainer() {
     return Container(
@@ -56,8 +56,7 @@ class CommentTextFieldView extends StatelessWidget {
 
 //setting up the images in comments
 
-  Widget commentTextField(
-      BuildContext context, CommentTextFieldViewModel model) {
+  Widget commentTextField(BuildContext context, CommentTextFieldViewModel model) {
     return Container(
       padding: EdgeInsets.only(
         top: 16,
@@ -135,57 +134,61 @@ class CommentTextFieldView extends StatelessWidget {
                       String cursorString = searchTerm.substring(0, cursorPosition);
                       String lastWord = getLastWordInString(cursorString);
                       if (lastWord.startsWith("@") && lastWord.length > 1) {
-                        return await _algoliaSearchService.queryUsers(searchTerm: lastWord.substring(1, lastWord.length - 1), resultsLimit: 3);
+                        return await _algoliaSearchService!.queryUsers(searchTerm: lastWord.substring(1, lastWord.length - 1), resultsLimit: 3);
                       }
-                      return null;
+                      return [];
                     },
-                    itemBuilder: (context, GoUser user) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        height: 50,
-                        child: Row(
-                          children: [
-                            UserProfilePic(
-                              userPicUrl: user.profilePicURL,
-                              size: 35,
-                              isBusy: false,
-                            ),
-                            horizontalSpaceTiny,
-                            CustomText(
-                              text: "@${user.username}",
-                              fontSize: 16,
-                              textAlign: TextAlign.left,
-                              fontWeight: FontWeight.bold,
-                              color: appFontColor(),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    onSuggestionSelected: (GoUser user) {
-                      focusNode.requestFocus();
-                      int cursorPosition = commentTextController.selection.baseOffset;
-                      String startOfString = commentTextController.text.substring(0, cursorPosition - 1);
-
-                      String endOfString = commentTextController.text.substring(cursorPosition - 1, commentTextController.text.length - 1);
-                      if (endOfString.length == 1) {
-                        endOfString = "";
-                      } else if (endOfString.length > 1) {
-                        endOfString = endOfString.substring(2, endOfString.length - 1);
+                    itemBuilder: (context, user) {
+                      if (user is GoUser) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          height: 50,
+                          child: Row(
+                            children: [
+                              UserProfilePic(
+                                userPicUrl: user.profilePicURL,
+                                size: 35,
+                                isBusy: false,
+                              ),
+                              horizontalSpaceTiny,
+                              CustomText(
+                                text: "@${user.username}",
+                                fontSize: 16,
+                                textAlign: TextAlign.left,
+                                fontWeight: FontWeight.bold,
+                                color: appFontColor(),
+                              ),
+                            ],
+                          ),
+                        );
                       }
-                      String modifiedStartOfString = replaceLastWordInString(startOfString, "@${user.username} ");
+                      return Container();
+                    },
+                    onSuggestionSelected: (user) {
+                      if (user is GoUser) {
+                        //model.addUserToMentions(user);
+                        focusNode.requestFocus();
+                        int cursorPosition = commentTextController.selection.baseOffset;
+                        String startOfString = commentTextController.text.substring(0, cursorPosition - 1);
+                        String endOfString = commentTextController.text.substring(cursorPosition - 1, commentTextController.text.length - 1);
+                        if (endOfString.length == 1) {
+                          endOfString = "";
+                        } else if (endOfString.length > 1) {
+                          endOfString = endOfString.substring(2, endOfString.length - 1);
+                        }
+                        String modifiedStartOfString = replaceLastWordInString(startOfString, "@${user.username} ");
 
-                      commentTextController.text = modifiedStartOfString + " " + endOfString;
+                        commentTextController.text = modifiedStartOfString + " " + endOfString;
 
-                      commentTextController.selection = TextSelection.fromPosition(TextPosition(offset: modifiedStartOfString.length));
+                        commentTextController.selection = TextSelection.fromPosition(TextPosition(offset: modifiedStartOfString.length));
+                      }
                     },
                   ),
                 ),
               ],
             ),
           ),
-          IconButton(
-              icon: Icon(Icons.filter_rounded), onPressed: selectImage)
+          IconButton(icon: Icon(Icons.filter_rounded), onPressed: selectImage)
         ],
       ),
     );
@@ -196,10 +199,7 @@ class CommentTextFieldView extends StatelessWidget {
     return ViewModelBuilder<CommentTextFieldViewModel>.reactive(
       onModelReady: (model) => model.initialize(),
       viewModelBuilder: () => CommentTextFieldViewModel(),
-      builder: (context, model, child) =>
-          model.isBusy || model.errorDetails != null
-              ? Container()
-              : commentTextField(context, model),
+      builder: (context, model, child) => model.isBusy || model.errorDetails != null ? Container() : commentTextField(context, model),
     );
   }
 }

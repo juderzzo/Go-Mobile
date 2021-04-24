@@ -10,11 +10,11 @@ import 'package:stacked_services/stacked_services.dart';
 import 'forum_post_publish_successful_bottom_sheet_model.dart';
 
 class ForumPostSuccessfulBottomSheet extends StatelessWidget {
-  final SheetRequest request;
-  final Function(SheetResponse) completer;
+  final SheetRequest? request;
+  final Function(SheetResponse)? completer;
 
   const ForumPostSuccessfulBottomSheet({
-    Key key,
+    Key? key,
     this.request,
     this.completer,
   }) : super(key: key);
@@ -50,7 +50,7 @@ class ForumPostSuccessfulBottomSheet extends StatelessWidget {
             ),
             verticalSpaceMedium,
             CustomTextButton(
-              onTap: () => model.sharePostLink(request.customData),
+              onTap: () => model.sharePostLink(request!.customData),
               text: "Share",
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -58,7 +58,7 @@ class ForumPostSuccessfulBottomSheet extends StatelessWidget {
             ),
             verticalSpaceMedium,
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "return")),
+              onPressed: () => completer!(SheetResponse(responseData: "return")),
               text: "Done",
               textSize: 16,
               textColor: appFontColor(),

@@ -9,12 +9,12 @@ class ListCauses extends StatelessWidget {
   final List causesResults;
   final VoidCallback refreshData;
   final PageStorageKey pageStorageKey;
-  final ScrollController scrollController;
-  ListCauses({@required this.refreshData, @required this.causesResults, @required this.pageStorageKey, @required this.scrollController});
+  final ScrollController? scrollController;
+  ListCauses({required this.refreshData, required this.causesResults, required this.pageStorageKey, required this.scrollController});
 
   Widget listCauses() {
     return RefreshIndicator(
-      onRefresh: refreshData,
+      onRefresh: refreshData as Future<void> Function(),
       backgroundColor: appBackgroundColor(),
       child: ListView.builder(
           physics: AlwaysScrollableScrollPhysics(),
@@ -43,7 +43,7 @@ class ListCauses extends StatelessWidget {
               displayBottomBorder = false;
             }
 
-          if (cause.approved) {
+          if (cause.approved!) {
             return CauseBlockView(
               cause: cause,
               displayBottomBorder: displayBottomBorder,

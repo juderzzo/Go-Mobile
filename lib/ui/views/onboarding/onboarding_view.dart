@@ -38,7 +38,7 @@ class OnboardingView extends StatelessWidget {
 
   PageViewModel initialPage() {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(0),
+      contentMargin: EdgeInsets.all(0),
       titleTextStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
       bodyTextStyle: TextStyle(fontSize: 16.0),
       titlePadding: EdgeInsets.only(top: 0.0, bottom: 8.0, left: 16, right: 16),
@@ -74,7 +74,7 @@ class OnboardingView extends StatelessWidget {
           ),
           verticalSpaceMedium,
           CustomButton(
-            onPressed: () => introKey.currentState.next(),
+            onPressed: () => introKey.currentState!.next(),
             text: "Next",
             textSize: 16,
             textColor: Colors.black,
@@ -97,7 +97,7 @@ class OnboardingView extends StatelessWidget {
 
   PageViewModel profilePicUsernamePage(OnboardingViewModel model, context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(0),
+      contentMargin: EdgeInsets.all(0),
       titlePadding: EdgeInsets.only(top: 0.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 1,
@@ -133,10 +133,13 @@ class OnboardingView extends StatelessWidget {
         children: [
           verticalSpaceMedium,
           SingleLineTextField(
-              controller: model.usernameTextController,
-              hintText: "Username",
-              textLimit: 50,
-              isPassword: false),
+            controller: model.usernameTextController,
+            hintText: "Username",
+            textLimit: 50,
+            isPassword: false,
+            onChanged: (String val) {},
+            onSubmitted: (String val) {},
+          ),
           verticalSpaceMedium,
           verticalSpaceMedium,
           verticalSpaceMedium,
@@ -144,7 +147,7 @@ class OnboardingView extends StatelessWidget {
             onPressed: () async {
               bool complete = await model.completeProfilePicUsernamePage();
               if (complete) {
-                introKey.currentState.next();
+                introKey.currentState!.next();
               }
             },
             text: "Next",
@@ -163,9 +166,8 @@ class OnboardingView extends StatelessWidget {
 
   PageViewModel newPage(OnboardingViewModel model, BuildContext context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(8.0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
       imageFlex: 5,
       bodyFlex: 2,
@@ -173,9 +175,7 @@ class OnboardingView extends StatelessWidget {
     );
     return PageViewModel(
       decoration: pageDecoration,
-      
       image: Center(
-        
           child: Image.asset(
         'assets/images/flutter_01.png',
         width: MediaQuery.of(context).size.width * 29 / 40,
@@ -206,11 +206,10 @@ class OnboardingView extends StatelessWidget {
     );
   }
 
-    PageViewModel newPage2(OnboardingViewModel model, BuildContext context) {
+  PageViewModel newPage2(OnboardingViewModel model, BuildContext context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(8.0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
       imageFlex: 5,
       bodyFlex: 2,
@@ -219,7 +218,6 @@ class OnboardingView extends StatelessWidget {
     return PageViewModel(
       decoration: pageDecoration,
       image: Center(
-        
           child: Image.asset(
         'assets/images/flutter_04.png',
         width: MediaQuery.of(context).size.width * 29 / 40,
@@ -251,11 +249,10 @@ class OnboardingView extends StatelessWidget {
     );
   }
 
-    PageViewModel newPage3(OnboardingViewModel model, BuildContext context) {
+  PageViewModel newPage3(OnboardingViewModel model, BuildContext context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(8.0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
       imageFlex: 5,
       bodyFlex: 2,
@@ -264,7 +261,6 @@ class OnboardingView extends StatelessWidget {
     return PageViewModel(
       decoration: pageDecoration,
       image: Center(
-        
           child: Image.asset(
         'assets/images/flutter_07.png',
         width: MediaQuery.of(context).size.width * 29 / 40,
@@ -298,9 +294,8 @@ class OnboardingView extends StatelessWidget {
 
   PageViewModel newPage4(OnboardingViewModel model, BuildContext context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(8.0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
       imageFlex: 5,
       bodyFlex: 2,
@@ -309,7 +304,6 @@ class OnboardingView extends StatelessWidget {
     return PageViewModel(
       decoration: pageDecoration,
       image: Center(
-        
           child: Image.asset(
         'assets/images/flutter_08.png',
         width: MediaQuery.of(context).size.width * 29 / 40,
@@ -341,13 +335,10 @@ class OnboardingView extends StatelessWidget {
     );
   }
 
-
-
-    PageViewModel newPage5(OnboardingViewModel model, BuildContext context) {
+  PageViewModel newPage5(OnboardingViewModel model, BuildContext context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(8.0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
       imageFlex: 5,
       bodyFlex: 2,
@@ -356,7 +347,6 @@ class OnboardingView extends StatelessWidget {
     return PageViewModel(
       decoration: pageDecoration,
       image: Center(
-        
           child: Image.asset(
         'assets/images/flutter_09.png',
         width: MediaQuery.of(context).size.width * 29 / 40,
@@ -375,8 +365,7 @@ class OnboardingView extends StatelessWidget {
       bodyWidget: Column(
         children: [
           CustomText(
-            text:
-                """Each cause also has an forum, where you can interact with friends and colleagues with like minded goals."
+            text: """Each cause also has an forum, where you can interact with friends and colleagues with like minded goals."
                 """,
             textAlign: TextAlign.center,
             fontSize: 14,
@@ -388,11 +377,10 @@ class OnboardingView extends StatelessWidget {
     );
   }
 
-    PageViewModel newPage6(OnboardingViewModel model, BuildContext context) {
+  PageViewModel newPage6(OnboardingViewModel model, BuildContext context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(8.0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
       imageFlex: 5,
       bodyFlex: 2,
@@ -401,7 +389,6 @@ class OnboardingView extends StatelessWidget {
     return PageViewModel(
       decoration: pageDecoration,
       image: Center(
-        
           child: Image.asset(
         'assets/images/flutter_03.png',
         width: MediaQuery.of(context).size.width * 29 / 40,
@@ -433,13 +420,10 @@ class OnboardingView extends StatelessWidget {
     );
   }
 
-  
-
-      PageViewModel newPage7(OnboardingViewModel model, BuildContext context) {
+  PageViewModel newPage7(OnboardingViewModel model, BuildContext context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(8.0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
       imageFlex: 5,
       bodyFlex: 2,
@@ -448,7 +432,6 @@ class OnboardingView extends StatelessWidget {
     return PageViewModel(
       decoration: pageDecoration,
       image: Center(
-        
           child: Image.asset(
         'assets/images/flutter_11.png',
         width: MediaQuery.of(context).size.width * 29 / 40,
@@ -467,8 +450,7 @@ class OnboardingView extends StatelessWidget {
       bodyWidget: Column(
         children: [
           CustomText(
-            text:
-                """Lastly, your feed is a place where you can interact with posts from all the cause forums you follow. Be sure to check it daily!
+            text: """Lastly, your feed is a place where you can interact with posts from all the cause forums you follow. Be sure to check it daily!
                 """,
             textAlign: TextAlign.center,
             fontSize: 14,
@@ -482,9 +464,8 @@ class OnboardingView extends StatelessWidget {
 
   PageViewModel bioPage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 2,
       bodyFlex: 3,
@@ -511,15 +492,18 @@ class OnboardingView extends StatelessWidget {
           ),
           verticalSpaceMedium,
           MultiLineTextField(
-              controller: model.bioTextController,
-              hintText: "Who are you?",
-              maxLines: 7),
+            controller: model.bioTextController,
+            hintText: "Who are you?",
+            maxLines: 7,
+            onSubmitted: (String val) {},
+            onChanged: (String val) {},
+          ),
           verticalSpaceMedium,
           CustomButton(
             onPressed: () async {
               bool complete = await model.completeBio();
               if (complete) {
-                introKey.currentState.next();
+                introKey.currentState!.next();
               }
             },
             text: "Next",
@@ -538,9 +522,8 @@ class OnboardingView extends StatelessWidget {
 
   PageViewModel interestsPage(OnboardingViewModel model, context) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 1,
       bodyFlex: 3,
@@ -575,16 +558,19 @@ class OnboardingView extends StatelessWidget {
         children: [
           verticalSpaceMedium,
           SingleLineTextField(
-              controller: model.usernameTextController,
-              hintText: "username",
-              textLimit: 50,
-              isPassword: false),
+            controller: model.usernameTextController,
+            hintText: "username",
+            textLimit: 50,
+            isPassword: false,
+            onChanged: (String val) {},
+            onSubmitted: (String val) {},
+          ),
           verticalSpaceMedium,
           CustomButton(
             onPressed: () async {
               bool complete = await model.completeProfilePicUsernamePage();
               if (complete) {
-                introKey.currentState.next();
+                introKey.currentState!.next();
               }
             },
             text: "Next",
@@ -603,9 +589,8 @@ class OnboardingView extends StatelessWidget {
 
   PageViewModel notificationPermissionPage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 2,
       bodyFlex: 3,
@@ -628,8 +613,7 @@ class OnboardingView extends StatelessWidget {
       bodyWidget: Column(
         children: [
           CustomText(
-            text:
-                "Enable notifications to be alerted about the latest news & causes",
+            text: "Enable notifications to be alerted about the latest news & causes",
             textAlign: TextAlign.center,
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -637,12 +621,8 @@ class OnboardingView extends StatelessWidget {
           ),
           verticalSpaceMedium,
           CustomButton(
-            onPressed: model.notificationsEnabled
-                ? () => introKey.currentState.next()
-                : () => model.enableNotifications(),
-            text: model.notificationsEnabled
-                ? "Continue"
-                : "Enable Notifications",
+            onPressed: model.notificationsEnabled ? () => introKey.currentState!.next() : () => model.enableNotifications(),
+            text: model.notificationsEnabled ? "Continue" : "Enable Notifications",
             textSize: 16,
             textColor: Colors.black,
             height: 40,
@@ -655,7 +635,7 @@ class OnboardingView extends StatelessWidget {
           model.notificationsEnabled
               ? Container()
               : CustomTextButton(
-                  onTap: () => introKey.currentState.next(),
+                  onTap: () => introKey.currentState!.next(),
                   text: "Skip",
                   textAlign: TextAlign.center,
                   color: appFontColorAlt(),
@@ -669,9 +649,8 @@ class OnboardingView extends StatelessWidget {
 
   PageViewModel finalPage(OnboardingViewModel model) {
     PageDecoration pageDecoration = PageDecoration(
-      contentPadding: EdgeInsets.all(0),
-      titlePadding:
-          EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
+      contentMargin: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.only(top: 16.0, bottom: 8.0, left: 16, right: 16),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imageFlex: 3,
       bodyFlex: 3,
@@ -718,35 +697,37 @@ class OnboardingView extends StatelessWidget {
           child: IntroductionScreen(
             freeze: false,
             key: introKey,
-            pages: !model.tutorial ? [
-              initialPage(),
-              profilePicUsernamePage(model, context),
-              newPage(model, context),
-              newPage2(model, context),
-              newPage3(model, context),
-              newPage4(model, context),
-              newPage5(model, context),
-              newPage6(model, context),
-              newPage7(model, context),
-              //bioPage(model),
-              // interestsPage(model),
-              notificationPermissionPage(model),
-              finalPage(model),
-            ] : [
-              initialPage(),
-              //profilePicUsernamePage(model, context),
-              newPage(model, context),
-              newPage2(model, context),
-              newPage3(model, context),
-              newPage4(model, context),
-              newPage5(model, context),
-              newPage6(model, context),
-              newPage7(model, context),
-              //bioPage(model),
-              // interestsPage(model),
-              notificationPermissionPage(model),
-              finalPage(model),
-            ],
+            pages: !model.tutorial!
+                ? [
+                    initialPage(),
+                    profilePicUsernamePage(model, context),
+                    newPage(model, context),
+                    newPage2(model, context),
+                    newPage3(model, context),
+                    newPage4(model, context),
+                    newPage5(model, context),
+                    newPage6(model, context),
+                    newPage7(model, context),
+                    //bioPage(model),
+                    // interestsPage(model),
+                    notificationPermissionPage(model),
+                    finalPage(model),
+                  ]
+                : [
+                    initialPage(),
+                    //profilePicUsernamePage(model, context),
+                    newPage(model, context),
+                    newPage2(model, context),
+                    newPage3(model, context),
+                    newPage4(model, context),
+                    newPage5(model, context),
+                    newPage6(model, context),
+                    newPage7(model, context),
+                    //bioPage(model),
+                    // interestsPage(model),
+                    notificationPermissionPage(model),
+                    finalPage(model),
+                  ],
             onDone: () {
               if (!model.isBusy) {
                 model.completeOnboarding();

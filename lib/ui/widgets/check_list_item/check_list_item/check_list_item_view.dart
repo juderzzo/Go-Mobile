@@ -9,14 +9,14 @@ import 'package:image/image.dart';
 import 'package:stacked/stacked.dart';
 
 class CheckListItemView extends StatelessWidget {
-  final bool isChecked;
+  final bool? isChecked;
   final GoCheckListItem item;
   final Function(GoCheckListItem) checkOffItem;
 
   CheckListItemView({
-    @required this.isChecked,
-    @required this.item,
-    @required this.checkOffItem,
+    required this.isChecked,
+    required this.item,
+    required this.checkOffItem,
   });
 
   Widget checker(BuildContext context) {
@@ -44,11 +44,11 @@ class CheckListItemView extends StatelessWidget {
             : null,
         child: Row(
           children: [
-            isChecked
+            isChecked!
                 ? Checkbox(
                     activeColor: CustomColors.goGreen,
                     onChanged: (bol) {
-                      if(!isChecked){
+                      if(!isChecked!){
                         checkOffItem(item);
                       }
                       
@@ -63,7 +63,7 @@ class CheckListItemView extends StatelessWidget {
                     children: [
                       
                       Text(
-                        item.header,
+                        item.header!,
                         style: TextStyle(
                           fontSize: 22,
                           color: appFontColor(),
@@ -74,7 +74,7 @@ class CheckListItemView extends StatelessWidget {
                       Container(
                         width: MediaQuery.of(context).size.width * 11 / 16,
                         child: Text(
-                          item.subHeader,
+                          item.subHeader!,
                           style: TextStyle(
                             fontSize: 14,
                             color: appFontColor(),
@@ -89,7 +89,7 @@ class CheckListItemView extends StatelessWidget {
                     children: [
                       
                       Text(
-                        item.header,
+                        item.header!,
                         style: TextStyle(
                           fontSize: 16,
                           color: appFontColor(),
@@ -99,7 +99,7 @@ class CheckListItemView extends StatelessWidget {
                       Container(
                         width: MediaQuery.of(context).size.width * 9 / 16,
                         child: Text(
-                          item.subHeader,
+                          item.subHeader!,
                           style: TextStyle(
                             fontSize: 14,
                             color: appFontColor(),
@@ -152,10 +152,10 @@ class CheckListItemView extends StatelessWidget {
                         width: MediaQuery.of(context).size.height * 3 / 4,
                         child: GoogleMap(
                             initialCameraPosition: CameraPosition(
-                                target: LatLng(item.lat, item.lon), zoom: 12))),
+                                target: LatLng(item.lat!, item.lon!), zoom: 12))),
                         SizedBox(height: 10,),
                         Text(
-                        item.address,
+                        item.address!,
                         style: TextStyle(
                           fontSize: 12,
                           color: appFontColorAlt(),

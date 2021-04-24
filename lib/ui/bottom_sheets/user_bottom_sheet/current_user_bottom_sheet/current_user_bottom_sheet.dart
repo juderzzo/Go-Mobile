@@ -8,11 +8,11 @@ import 'package:stacked_services/stacked_services.dart';
 import 'current_user_bottom_sheet_model.dart';
 
 class CurrentUserBottomSheet extends StatelessWidget {
-  final SheetRequest request;
-  final Function(SheetResponse) completer;
+  final SheetRequest? request;
+  final Function(SheetResponse)? completer;
 
   const CurrentUserBottomSheet({
-    Key key,
+    Key? key,
     this.request,
     this.completer,
   }) : super(key: key);
@@ -30,7 +30,7 @@ class CurrentUserBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "edit")),
+              onPressed: () => completer!(SheetResponse(responseData: "edit")),
               text: "Edit Profile",
               textSize: 16,
               textColor: appFontColor(),
@@ -42,7 +42,7 @@ class CurrentUserBottomSheet extends StatelessWidget {
             ),
             verticalSpaceSmall,
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "share")),
+              onPressed: () => completer!(SheetResponse(responseData: "share")),
               text: "Share (disabled)",
               textSize: 16,
               textColor: appInActiveColorAlt(),
@@ -54,7 +54,7 @@ class CurrentUserBottomSheet extends StatelessWidget {
             ),
             verticalSpaceSmall,
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "report")),
+              onPressed: () => completer!(SheetResponse(responseData: "report")),
               text: "Report (disabled)",
               textSize: 16,
               textColor: appDestructiveColor(),

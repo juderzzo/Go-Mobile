@@ -1,14 +1,14 @@
 class GoCheckListItem {
-  String id;
-  String causeID;
-  String header;
-  String subHeader;
-  double lat;
-  double lon;
-  String address;
-  List checkedOffBy;
-  int dateTimePublished;
-  int points;
+  String? id;
+  String? causeID;
+  String? header;
+  String? subHeader;
+  double? lat;
+  double? lon;
+  String? address;
+  List? checkedOffBy;
+  int? dateTimePublished;
+  int? points;
 
   GoCheckListItem(
       {this.id,

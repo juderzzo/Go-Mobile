@@ -11,21 +11,21 @@ class InputField extends StatefulWidget {
   final bool password;
   final bool isReadOnly;
   final String placeholder;
-  final String validationMessage;
-  final Function enterPressed;
+  final String? validationMessage;
+  final Function? enterPressed;
   final bool smallVersion;
-  final FocusNode fieldFocusNode;
-  final FocusNode nextFocusNode;
+  final FocusNode? fieldFocusNode;
+  final FocusNode? nextFocusNode;
   final TextInputAction textInputAction;
-  final String additionalNote;
-  final Function(String) onChanged;
-  final TextInputFormatter formatter;
-  final IconButton icon;
-  final Color fillColor;
+  final String? additionalNote;
+  final Function(String)? onChanged;
+  final TextInputFormatter? formatter;
+  final IconButton? icon;
+  final Color? fillColor;
 
   InputField({
-    @required this.controller,
-    @required this.placeholder,
+    required this.controller,
+    required this.placeholder,
     this.enterPressed,
     this.fieldFocusNode,
     this.nextFocusNode,
@@ -47,7 +47,7 @@ class InputField extends StatefulWidget {
 }
 
 class _InputFieldState extends State<InputField> {
-  bool isPassword;
+  late bool isPassword;
   double fieldHeight = 55;
 
   @override
@@ -75,16 +75,16 @@ class _InputFieldState extends State<InputField> {
                   focusNode: widget.fieldFocusNode,
                   textInputAction: widget.textInputAction,
                   onChanged: widget.onChanged,
-                  inputFormatters: widget.formatter != null ? [widget.formatter] : null,
+                  inputFormatters: widget.formatter != null ? [widget.formatter!] : null,
                   onEditingComplete: () {
                     if (widget.enterPressed != null) {
                       FocusScope.of(context).requestFocus(FocusNode());
-                      widget.enterPressed();
+                      widget.enterPressed!();
                     }
                   },
                   onFieldSubmitted: (value) {
                     if (widget.nextFocusNode != null) {
-                      widget.nextFocusNode.requestFocus();
+                      widget.nextFocusNode!.requestFocus();
                     }
                   },
                   obscureText: isPassword,

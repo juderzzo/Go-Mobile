@@ -1,37 +1,35 @@
 //import 'dart:html';
 
-import 'package:go/app/locator.dart';
-import 'package:go/enums/bottom_sheet_type.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
-import 'package:go/utils/go_image_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CommentTextFieldViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  UserDataService _userDataService = locator<UserDataService>();
-  SnackbarService _snackbarService = locator<SnackbarService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  UserDataService? _userDataService = locator<UserDataService>();
+  SnackbarService? _snackbarService = locator<SnackbarService>();
+  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
 
-  String errorDetails;
-  String currentUserProfilePicURL;
-  String currentUsername;
+  String? errorDetails;
+  String? currentUserProfilePicURL;
+  String? currentUsername;
   dynamic imgFile;
   dynamic img;
   bool imgChanged = false;
 
   initialize() async {
     setBusy(true);
-    String uid = await _authService.getCurrentUserID();
-    var res = await _userDataService.getGoUserByID(uid);
+    String? uid = await _authService!.getCurrentUserID();
+    var res = await _userDataService!.getGoUserByID(uid);
     if (res is String) {
       errorDetails = res;
-      _snackbarService.showSnackbar(
+      _snackbarService!.showSnackbar(
         title: 'Error',
-        message: errorDetails,
+        message: errorDetails!,
         duration: Duration(seconds: 5),
       );
     } else {
@@ -41,8 +39,6 @@ class CommentTextFieldViewModel extends BaseViewModel {
     notifyListeners();
     setBusy(false);
   }
-
-  
 
   ///NAVIGATION
 // replaceWithPage() {

@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 class NotificationBlockView extends StatelessWidget {
   final GoNotification notification;
   NotificationBlockView({
-    @required this.notification,
+    required this.notification,
   });
 
   Widget notifIcon() {
@@ -57,7 +57,7 @@ class NotificationBlockView extends StatelessWidget {
                   children: [
                     FittedBox(
                       child: Text(
-                        notification.header,
+                        notification.header!,
                         style: TextStyle(
                           fontSize: 14,
                           color: appFontColor(),
@@ -67,7 +67,7 @@ class NotificationBlockView extends StatelessWidget {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      notification.subHeader == null || notification.subHeader.isEmpty ? "View" : notification.subHeader,
+                      notification.subHeader == null || notification.subHeader!.isEmpty ? "View" : notification.subHeader!,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,

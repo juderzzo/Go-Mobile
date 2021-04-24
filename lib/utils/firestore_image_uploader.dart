@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class FirestoreImageUploader {
   final Reference storageReference = FirebaseStorage.instance.ref();
 
-  Future<String> uploadImage({File img, String storageBucket, String folderName, String fileName}) async {
+  Future<String> uploadImage({required File img, required String storageBucket, required String folderName, required String fileName}) async {
     Reference storageReference = FirebaseStorage.instance.ref();
     Reference ref = storageReference.child(storageBucket).child(folderName).child(fileName);
     UploadTask uploadTask = ref.putFile(img);

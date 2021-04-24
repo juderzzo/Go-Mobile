@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UrlHandler {
-  DialogService _dialogService = locator<DialogService>();
+  DialogService? _dialogService = locator<DialogService>();
 
   bool isValidUrl(String url) {
     bool isValid = true;
@@ -22,7 +22,7 @@ class UrlHandler {
         //statusBarBrightness: Brightness.light,
       );
     } else {
-      _dialogService.showDialog(
+      _dialogService!.showDialog(
         title: "URL Error",
         description: "There was an issue launching this url",
         buttonTitle: "Ok",

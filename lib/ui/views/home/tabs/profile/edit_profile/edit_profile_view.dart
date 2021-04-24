@@ -42,7 +42,7 @@ class EditProfileView extends StatelessWidget {
                       ),
                     ),
                   ),
-          ),
+          ) as PreferredSizeWidget?,
           body: Container(
             height: screenHeight(context),
             color: appBackgroundColor(),
@@ -85,20 +85,21 @@ class EditProfileView extends StatelessWidget {
                 ),
                 verticalSpaceMedium,
                 CustomText(
-                  text: "Username", fontSize: 16, 
-                fontWeight: FontWeight.bold, 
-                color: appFontColor(),),
-
+                  text: "Username",
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: appFontColor(),
+                ),
                 verticalSpaceSmall,
                 SingleLineTextField(
                   controller: model.usernameTextController,
                   hintText: "Username",
                   textLimit: 30,
                   isPassword: false,
-                  
+                  onChanged: (String val) {},
+                  onSubmitted: (String val) {},
                 ),
                 verticalSpaceMedium,
-
                 CustomText(
                   text: "Bio",
                   fontSize: 16,
@@ -106,12 +107,12 @@ class EditProfileView extends StatelessWidget {
                   color: appFontColor(),
                 ),
                 verticalSpaceSmall,
-
                 MultiLineTextField(
                   controller: model.bioTextController,
                   hintText: "Tell Us About Yourself",
                   maxLines: 7,
-                  
+                  onSubmitted: (String val) {},
+                  onChanged: (String val) {},
                 ),
               ],
             ),

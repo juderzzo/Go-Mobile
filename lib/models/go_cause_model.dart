@@ -1,45 +1,44 @@
 class GoCause {
-  String id;
-  String creatorID;
-  int dateCreatedInMilliseconds;
-  String name;
-  String goal;
-  String why;
-  String who;
-  String resources;
-  String charityURL;
-  List imageURLs;
-  List actions;
-  List followers;
-  List admins;
-  int followerCount;
-  int forumPostCount;
-  String videoLink;
-  bool monetized;
-  int revenue;
-  bool approved;
+  String? id;
+  String? creatorID;
+  int? dateCreatedInMilliseconds;
+  String? name;
+  String? goal;
+  String? why;
+  String? who;
+  String? resources;
+  String? charityURL;
+  List? imageURLs;
+  List? actions;
+  List? followers;
+  List? admins;
+  int? followerCount;
+  int? forumPostCount;
+  String? videoLink;
+  bool? monetized;
+  int? revenue;
+  bool? approved;
 
-  GoCause({
-    this.id,
-    this.creatorID,
-    this.dateCreatedInMilliseconds,
-    this.name,
-    this.goal,
-    this.why,
-    this.who,
-    this.resources,
-    this.charityURL,
-    this.imageURLs,
-    this.actions,
-    this.followers,
-    this.admins,
-    this.followerCount,
-    this.forumPostCount,
-    this.videoLink,
-    this.monetized,
-    this.revenue,
-    this.approved
-  });
+  GoCause(
+      {this.id,
+      this.creatorID,
+      this.dateCreatedInMilliseconds,
+      this.name,
+      this.goal,
+      this.why,
+      this.who,
+      this.resources,
+      this.charityURL,
+      this.imageURLs,
+      this.actions,
+      this.followers,
+      this.admins,
+      this.followerCount,
+      this.forumPostCount,
+      this.videoLink,
+      this.monetized,
+      this.revenue,
+      this.approved});
 
   GoCause.fromMap(Map<String, dynamic> data)
       : this(
@@ -61,8 +60,7 @@ class GoCause {
             videoLink: data['videoLink'],
             monetized: data['monetized'],
             revenue: data['revenue'],
-            approved: data['approved']
-            );
+            approved: data['approved']);
 
   Map<String, dynamic> toMap() => {
         'id': this.id,
@@ -89,5 +87,14 @@ class GoCause {
   GoCause generateDummyCause(String id) {
     GoCause cause = GoCause();
     return cause;
+  }
+
+  //checks if obj is valid
+  bool isValid() {
+    bool isValid = true;
+    if (id == null) {
+      isValid = false;
+    }
+    return isValid;
   }
 }

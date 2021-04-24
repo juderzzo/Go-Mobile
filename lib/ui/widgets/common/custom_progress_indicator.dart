@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 
 class CustomCircleProgressIndicator extends StatelessWidget {
-  final double size;
-  final Color color;
+  final double? size;
+  final Color? color;
 
   const CustomCircleProgressIndicator({this.size, this.color});
 
@@ -16,7 +16,7 @@ class CustomCircleProgressIndicator extends StatelessWidget {
         height: size == null ? 20 : size,
         width: size == null ? 20 : size,
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
+          valueColor: AlwaysStoppedAnimation<Color?>(
             color == null ? Colors.black38 : color,
           ),
         ),
@@ -26,7 +26,7 @@ class CustomCircleProgressIndicator extends StatelessWidget {
 }
 
 class CustomLinearProgressIndicator extends StatelessWidget {
-  final Color color;
+  final Color? color;
 
   const CustomLinearProgressIndicator({this.color});
 
@@ -39,7 +39,7 @@ class CustomLinearProgressIndicator extends StatelessWidget {
         height: 1,
         width: screenWidth(context),
         child: LinearProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
+          valueColor: AlwaysStoppedAnimation<Color?>(
             color == null ? Colors.black38 : color,
           ),
         ),

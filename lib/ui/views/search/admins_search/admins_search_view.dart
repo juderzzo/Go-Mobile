@@ -3,23 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
-import 'package:go/ui/widgets/list_builders/list_causes_search_results.dart';
-import 'package:go/ui/widgets/list_builders/list_recent_search_results.dart';
 import 'package:go/ui/widgets/list_builders/list_user_search_results.dart';
 import 'package:go/ui/widgets/search/search_field.dart';
-import 'package:go/ui/widgets/search/search_result_view.dart';
 import 'package:stacked/stacked.dart';
 
 import 'admins_search_view_model.dart';
 
 class AdminSearchView extends StatelessWidget {
-
-
-  final Function addAdmin;
-  final GoCause cause;
+  final Function? addAdmin;
+  final GoCause? cause;
   AdminSearchView({this.addAdmin, this.cause});
 
   Widget head(BuildContext context, AdminSearchViewModel model) {
@@ -33,14 +27,14 @@ class AdminSearchView extends StatelessWidget {
             onTap: null,
             enabled: true,
             textEditingController: model.searchTextController,
-            onChanged: (val) => model.querySearchResults(val),
-             //(val) => model.viewAllResultsForSearchTerm(context: context, searchTerm: val),
+            onChanged: (val) => model.querySearchResults(val), onFieldSubmitted: (String val) {},
+            //(val) => model.viewAllResultsForSearchTerm(context: context, searchTerm: val),
           ),
           SizedBox(width: 8),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               model.searchTextController.text = '';
-              },
+            },
             child: CustomText(
               text: "Cancel",
               textAlign: TextAlign.right,
@@ -107,9 +101,6 @@ class AdminSearchView extends StatelessWidget {
     );
   }
 
-
-
-
   // Widget listRecentResults(BuildContext context, AdminSearchViewModel model) {
   //   return ListRecentSearchResults(
   //     searchTerms: model.recentSearchTerms,
@@ -118,8 +109,6 @@ class AdminSearchView extends StatelessWidget {
   //     onSearchTermSelected: (val) => model.viewAllResultsForSearchTerm(context: context, searchTerm: val),
   //   );
   // }
-
-  
 
   Widget listUserResults(AdminSearchViewModel model) {
     //print(model.userResults[0].type);
@@ -131,13 +120,11 @@ class AdminSearchView extends StatelessWidget {
           results: model.userResults,
           scrollController: null,
           isScrollable: false,
-          addAdmin: (){
-
-          },
+          addAdmin: () {},
           cause: cause,
-
-          onSearchTermSelected: (val){
-            model.navigateToUserView(val);},
+          onSearchTermSelected: (val) {
+            model.navigateToUserView(val!);
+          },
         ),
       ],
     );

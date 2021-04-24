@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:go/constants/app_colors.dart';
@@ -17,18 +19,18 @@ class CheckListItemFormView extends StatelessWidget {
   final Function(Map<String, dynamic>) onChangedHeader;
   final Function(Map<String, dynamic>) onChangedSubHeader;
   final Function(Map<String, dynamic>) onSetLocation;
-  final Function(Map<String, dynamic>) onSetPoints;
-  final Function(String) onDelete;
-  final Function(String) onRemoveLocation;
+  final Function(Map<String, dynamic>)? onSetPoints;
+  final Function(String?) onDelete;
+  final Function(String?) onRemoveLocation;
   //int points;
 
   CheckListItemFormView(
-      {@required this.item,
-      @required this.onChangedHeader,
-      @required this.onChangedSubHeader,
-      @required this.onSetLocation,
-      @required this.onDelete,
-      @required this.onRemoveLocation,
+      {required this.item,
+      required this.onChangedHeader,
+      required this.onChangedSubHeader,
+      required this.onSetLocation,
+      required this.onDelete,
+      required this.onRemoveLocation,
       this.onSetPoints});
 
   Widget dropdown(BuildContext context, CheckListItemFormViewModel model) {
@@ -45,16 +47,15 @@ class CheckListItemFormView extends StatelessWidget {
         height: 2,
         color: appBackgroundColor(),
       ),
-      onChanged: (int newValue) {
+      onChanged: (int? newValue) {
         //dropdownValue = newValue;
         model.points = newValue;
         print(item.id);
         print(newValue);
-        onSetPoints({'id': item.id, 'points': newValue});
+        onSetPoints!({'id': item.id, 'points': newValue});
         model.notifyListeners();
       },
-      items: <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-          .map<DropdownMenuItem<int>>((int value) {
+      items: <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map<DropdownMenuItem<int>>((int value) {
         return DropdownMenuItem<int>(
           value: value,
           child: Text(value.toString()),
@@ -86,7 +87,6 @@ class CheckListItemFormView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: SingleLineTextField(
-                          initialValue: item.header,
                           //controller: model.headerController,
                           hintText: "Action",
                           textLimit: 20,
@@ -105,7 +105,6 @@ class CheckListItemFormView extends StatelessWidget {
                       ),
                       width: MediaQuery.of(context).size.width * 3 / 4,
                       child: MultiLineTextField(
-                        initialValue: item.subHeader,
                         //controller: model.subHeaderController,
                         hintText: "Description",
                         maxLines: 2,
@@ -139,27 +138,21 @@ class CheckListItemFormView extends StatelessWidget {
                                   autofocus: false,
                                 ),
                                 suggestionsCallback: (searchTerm) async {
-                                  Map<String, dynamic> res = await model
-                                      .googlePlacesService
-                                      .googleSearchAutoComplete(
-                                          input: searchTerm);
+                                  Map<String, dynamic> res =
+                                      await (model.googlePlacesService!.googleSearchAutoComplete(input: searchTerm) as FutureOr<Map<String, dynamic>>);
                                   model.setPlacesSearchResults(res);
                                   return model.placeSearchResults.keys.toList();
                                 },
-                                itemBuilder: (context, place) {
+                                itemBuilder: (context, dynamic place) {
                                   return ListTile(
                                     title: Text(
                                       place,
-                                      style: TextStyle(
-                                          color: appFontColor(),
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w500),
+                                      style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w500),
                                     ),
                                   );
                                 },
-                                onSuggestionSelected: (val) async {
-                                  Map<String, dynamic> details =
-                                      await model.getPlaceDetails(val);
+                                onSuggestionSelected: (dynamic val) async {
+                                  Map<String, dynamic> details = await model.getPlaceDetails(val);
                                   onSetLocation({
                                     'id': item.id,
                                     'lat': details['lat'],
@@ -202,6 +195,7 @@ class CheckListItemFormView extends StatelessWidget {
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: CustomColors.goGreen,
+                          onTap: () {},
                         ),
                         SizedBox(
                           width: 10,
@@ -215,8 +209,7 @@ class CheckListItemFormView extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 75.0),
                   child: Container(
                     height: 40,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.red),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                     child: GestureDetector(
                       onTap: () {
                         onDelete(item.id);

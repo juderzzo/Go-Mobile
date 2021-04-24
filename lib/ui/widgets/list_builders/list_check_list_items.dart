@@ -3,13 +3,12 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/check_list_item/check_list_item_form/check_list_item_form_view.dart';
-import 'package:image/image.dart';
 
 class ListCheckListItemsForEditing extends StatelessWidget {
   final List<GoCheckListItem> items;
   final VoidCallback refreshData;
   final Key pageStorageKey;
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   final Function(Map<String, dynamic>) onChangedHeader;
   final Function(Map<String, dynamic>) onChangedSubHeader;
   final Function(Map<String, dynamic>) onSetLocation;
@@ -17,17 +16,18 @@ class ListCheckListItemsForEditing extends StatelessWidget {
   final Function(String) onDelete;
   final Function(String) onRemoveLocation;
 
-  ListCheckListItemsForEditing(
-      {@required this.refreshData,
-      @required this.items,
-      @required this.pageStorageKey,
-      @required this.scrollController,
-      @required this.onChangedHeader,
-      @required this.onChangedSubHeader,
-      @required this.onSetLocation,
-      @required this.onDelete,
-      @required this.onRemoveLocation,
-      @required this.onSetPoints});
+  ListCheckListItemsForEditing({
+    required this.refreshData,
+    required this.items,
+    required this.pageStorageKey,
+    required this.scrollController,
+    required this.onChangedHeader,
+    required this.onChangedSubHeader,
+    required this.onSetLocation,
+    required this.onDelete,
+    required this.onRemoveLocation,
+    required this.onSetPoints,
+  });
 
   void printItems() {
     String ans = "";
@@ -40,7 +40,7 @@ class ListCheckListItemsForEditing extends StatelessWidget {
 
   Widget listCauses() {
     return RefreshIndicator(
-      onRefresh: refreshData,
+      onRefresh: refreshData as Future<void> Function(),
       backgroundColor: appBackgroundColor(),
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
@@ -63,9 +63,9 @@ class ListCheckListItemsForEditing extends StatelessWidget {
             onChangedSubHeader: (val) => onChangedSubHeader(val),
             onSetLocation: (val) => onSetLocation(val),
             onDelete: (val) {
-              onDelete(val);
+              onDelete(val!);
             },
-            onRemoveLocation: (val) => onRemoveLocation(val),
+            onRemoveLocation: (val) => onRemoveLocation(val!),
             onSetPoints: (val) => onSetPoints(val),
           );
         },

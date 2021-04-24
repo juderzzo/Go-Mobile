@@ -8,4 +8,5 @@ enum BottomSheetType {
   postOptions,
   currentUserOptions,
   userOptions,
+  destructiveConfirmation,
 }

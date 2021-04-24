@@ -11,7 +11,7 @@ class ListPosts extends StatelessWidget {
   final VoidCallback refreshData;
   final ScrollController scrollController;
   final bool refreshingData;
-  ListPosts({@required this.refreshData, @required this.postResults, @required this.scrollController, @required this.refreshingData});
+  ListPosts({required this.refreshData, required this.postResults, required this.scrollController, required this.refreshingData});
 
   Widget noResults() {
     return ListView(
@@ -31,7 +31,7 @@ class ListPosts extends StatelessWidget {
 
   Widget listPosts() {
     return RefreshIndicator(
-      onRefresh: refreshData,
+      onRefresh: refreshData as Future<void> Function(),
       backgroundColor: appBackgroundColor(),
       child: postResults.isEmpty && !refreshingData
           ? noResults()

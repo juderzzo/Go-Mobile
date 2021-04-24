@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/auth/auth_service.dart';
@@ -15,24 +15,24 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class CreateCauseViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  CauseDataService _causeDataService = locator<CauseDataService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  CauseDataService? _causeDataService = locator<CauseDataService>();
+  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
 
   bool isEditing = false;
-  File img1;
-  File img2;
-  File img3;
+  File? img1;
+  File? img2;
+  File? img3;
 
-  GoCause cause;
+  GoCause? cause;
 
   Future<bool> validateAndSubmitForm(
-      {String name, String goal, String why, String who, String resources, String charityURL, String videoLink, bool monetized}) async {
-    String formError;
+      {String? name, String? goal, String? why, String? who, String? resources, String? charityURL, required String videoLink, bool? monetized}) async {
+    String? formError;
     if (videoLink.length < 2) {
-      videoLink = null;
+      videoLink = "";
     }
     setBusy(true);
     if (!isValidString(name)) {
@@ -43,9 +43,9 @@ class CreateCauseViewModel extends BaseViewModel {
       formError = "Please describe why your cause is important";
     } else if (!isValidString(who)) {
       formError = "Please describe who you are in regards to this cause";
-    } else if (isValidString(charityURL) && !UrlHandler().isValidUrl(charityURL)) {
+    } else if (isValidString(charityURL) && !UrlHandler().isValidUrl(charityURL!)) {
       formError = "Please provide a valid URL your cause";
-    } else if (videoLink != null && !(videoLink.length < 2)) {
+    } else if (!(videoLink.length < 2)) {
       print(videoLink.length);
       if (YoutubePlayer.convertUrlToId(videoLink) == null) {
         formError = "Please provide a valid youtube link or leave the field blank";
@@ -53,18 +53,18 @@ class CreateCauseViewModel extends BaseViewModel {
     }
     if (formError != null) {
       setBusy(false);
-      _dialogService.showDialog(
+      _dialogService!.showDialog(
         title: "Form Error",
         description: formError,
         barrierDismissible: true,
       );
       return false;
     } else {
-      String creatorID = await _authService.getCurrentUserID();
+      String? creatorID = await _authService!.getCurrentUserID();
 
       //create the initial 3 actions
 
-      var res = await _causeDataService.createCause(
+      var res = await _causeDataService!.createCause(
           creatorID: creatorID,
           name: name,
           goal: goal,
@@ -80,10 +80,9 @@ class CreateCauseViewModel extends BaseViewModel {
           img3: img3,
           videoLink: videoLink);
 
-
       setBusy(false);
       if (res != null) {
-        _dialogService.showDialog(
+        _dialogService!.showDialog(
           title: "Form Submission Error",
           description: res,
           barrierDismissible: true,
@@ -91,7 +90,7 @@ class CreateCauseViewModel extends BaseViewModel {
         return false;
       } else {
         pushAndReplaceUntilHomeNavView();
-        _dialogService.showConfirmationDialog(
+        _dialogService!.showConfirmationDialog(
             title: 'Approval',
             description:
                 'Your cause will be submitted for review. Upon acceptance, it will be visible in your homepage. Review times typically take less than 24 hours');
@@ -101,55 +100,50 @@ class CreateCauseViewModel extends BaseViewModel {
   }
 
   ///BOTTOM SHEETS
-  selectImage({BuildContext context, int imgNum, double ratioX, double ratioY}) async {
-    File imgFile;
+  selectImage({required BuildContext context, int? imgNum, double? ratioX, double? ratioY}) async {
+    File? imgFile;
     FocusScope.of(context).requestFocus(FocusNode());
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    var sheetResponse = await _bottomSheetService!.showCustomSheet(
       variant: BottomSheetType.imagePicker,
     );
     if (sheetResponse != null) {
-      String res = sheetResponse.responseData;
+      String? res = sheetResponse.responseData;
       if (res == "camera") {
-        imgFile =
-            await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
       } else if (res == "gallery") {
-        imgFile = await GoImagePicker()
-            .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
       notifyListeners();
     }
-      //print(img2.runtimeType);
+    //print(img2.runtimeType);
 
-      if (imgNum == 1) {
-        img1 = imgFile;
-        
-      } else if (imgNum == 2) {
-        img2 = imgFile;
-        
-      } else {
-        img3 = imgFile;
-        
-      }
-      //print(img.runtimeType);
-      //notifyListeners();
-      return imgFile;
+    if (imgNum == 1) {
+      img1 = imgFile;
+    } else if (imgNum == 2) {
+      img2 = imgFile;
+    } else {
+      img3 = imgFile;
+    }
+    //print(img.runtimeType);
+    //notifyListeners();
+    return imgFile;
   }
 
   displayCauseUploadSuccessBottomSheet() async {
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    var sheetResponse = await _bottomSheetService!.showCustomSheet(
       variant: BottomSheetType.causePublished,
       takesInput: false,
       barrierDismissible: true,
       customData: cause,
     );
     if (sheetResponse == null || sheetResponse.responseData != "return") {
-      _navigationService.pushNamedAndRemoveUntil(Routes.HomeNavViewRoute);
+      _navigationService!.pushNamedAndRemoveUntil(Routes.AppBaseViewRoute);
     }
   }
 
   ///NAVIGATION
   pushAndReplaceUntilHomeNavView() {
-    _navigationService.pushNamedAndRemoveUntil(Routes.HomeNavViewRoute);
+    _navigationService!.pushNamedAndRemoveUntil(Routes.AppBaseViewRoute);
   }
 
 // replaceWithPage() {

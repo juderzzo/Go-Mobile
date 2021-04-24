@@ -8,19 +8,19 @@ import 'package:go/ui/widgets/comments/comment_block/comment_block_view.dart';
 class ListComments extends StatelessWidget {
   final List results;
   final bool showingReplies;
-  final VoidCallback refreshData;
-  final PageStorageKey pageStorageKey;
-  final ScrollController scrollController;
-  final bool refreshingData;
+  final VoidCallback? refreshData;
+  final PageStorageKey? pageStorageKey;
+  final ScrollController? scrollController;
+  final bool? refreshingData;
   final Function(GoForumPostComment) replyToComment;
   ListComments({
-    @required this.refreshData,
-    @required this.results,
-    @required this.showingReplies,
-    @required this.pageStorageKey,
-    @required this.scrollController,
-    @required this.refreshingData,
-    @required this.replyToComment,
+    required this.refreshData,
+    required this.results,
+    required this.showingReplies,
+    required this.pageStorageKey,
+    required this.scrollController,
+    required this.refreshingData,
+    required this.replyToComment,
   });
 
   Widget listReplies(BuildContext context) {
@@ -51,7 +51,7 @@ class ListComments extends StatelessWidget {
                   displayBottomBorder = false;
                 }
                 return CommentBlockView(
-                  replyToComment: replyToComment == null ? null : (val) => replyToComment(val),
+                  replyToComment: replyToComment == null ? (val) {} : (val) => replyToComment(val),
                   comment: comment,
                 );
               },
@@ -62,7 +62,7 @@ class ListComments extends StatelessWidget {
 
   Widget listResults() {
     return RefreshIndicator(
-      onRefresh: refreshData,
+      onRefresh: refreshData as Future<void> Function(),
       backgroundColor: appBackgroundColor(),
       child: ListView.builder(
         physics: ScrollPhysics(),

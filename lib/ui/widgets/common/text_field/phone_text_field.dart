@@ -7,9 +7,9 @@ class PhoneTextField extends StatelessWidget {
   final String hintText;
   final ValueChanged<String> onChanged;
   PhoneTextField(
-      {@required this.controller,
-      @required this.hintText,
-      @required this.onChanged});
+      {required this.controller,
+      required this.hintText,
+      required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

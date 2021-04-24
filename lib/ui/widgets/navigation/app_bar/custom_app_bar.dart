@@ -3,7 +3,7 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 
 class CustomAppBar {
-  Widget basicAppBar({@required String title, @required bool showBackButton}) {
+  Widget basicAppBar({required String title, required bool showBackButton}) {
     return AppBar(
       elevation: 0,
       backgroundColor: appBackgroundColor(),
@@ -26,7 +26,7 @@ class CustomAppBar {
     );
   }
 
-  Widget basicActionAppBar({@required String title, @required bool showBackButton, @required actionWidget}) {
+  Widget basicActionAppBar({required String title, required bool showBackButton, required actionWidget}) {
     return AppBar(
       elevation: 0,
       backgroundColor: appBackgroundColor(),

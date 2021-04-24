@@ -32,17 +32,17 @@ class ForumPostView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 GestureDetector(
-                  onTap: () => model.navigateToUserView(model.author.id),
+                  onTap: () => model.navigateToUserView(model.author!.id),
                   child: Row(
                     children: <Widget>[
                       UserProfilePic(
                         isBusy: false,
-                        userPicUrl: model.author.profilePicURL,
+                        userPicUrl: model.author!.profilePicURL,
                         size: 35,
                       ),
                       horizontalSpaceSmall,
                       Text(
-                        "@${model.author.username}",
+                        "@${model.author!.username}",
                         style: TextStyle(
                             color: appFontColor(),
                             fontSize: 16.0,
@@ -57,19 +57,19 @@ class ForumPostView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(16.0),
             child: CustomText(
-              text: model.post.body,
+              text: model.post!.body,
               textAlign: TextAlign.left,
               color: appFontColor(),
               fontWeight: FontWeight.w400,
               fontSize: 18,
             ),
           ),
-          model.post.imageID != null && model.post.imageID.length > 5
+          model.post!.imageID != null && model.post!.imageID!.length > 5
               ? Container(
                   //height: 200,
                   width: MediaQuery.of(context).size.width,
                   child: Image.network(
-                    model.post.imageID,
+                    model.post!.imageID!,
                     //height: 200,
 
                     //fit: BoxFit.fitWidth,
@@ -87,7 +87,7 @@ class ForumPostView extends StatelessWidget {
                     model.likedPost
                         ? IconButton(
                             onPressed: () {
-                              model.likeUnlikePost(model.post.id);
+                              model.likeUnlikePost(model.post!.id);
 
                               model.notifyListeners();
                             },
@@ -98,7 +98,7 @@ class ForumPostView extends StatelessWidget {
                             ))
                         : IconButton(
                             onPressed: () {
-                              model.likeUnlikePost(model.post.id);
+                              model.likeUnlikePost(model.post!.id);
                             },
                             icon: Icon(
                               Icons.favorite_border,
@@ -111,7 +111,7 @@ class ForumPostView extends StatelessWidget {
                 ),
                 Text(
                   TimeCalc().getPastTimeFromMilliseconds(
-                      model.post.dateCreatedInMilliseconds),
+                      model.post!.dateCreatedInMilliseconds!),
                   style: TextStyle(
                     color: appFontColorAlt(),
                   ),
@@ -160,7 +160,7 @@ class ForumPostView extends StatelessWidget {
               color: appIconColor(),
             ),
           ),
-        ),
+        ) as PreferredSizeWidget?,
         body: GestureDetector(
           onTap: () => model.clearState(context),
           child: Container(
@@ -236,7 +236,7 @@ class ForumPostView extends StatelessWidget {
                                         model.commentTextController,
                                     isReplying: model.isReplying,
                                     replyReceiverUsername: model.isReplying
-                                        ? model.commentToReplyTo.username
+                                        ? model.commentToReplyTo!.username
                                         : null,
                                   ),
                                   model.img != null

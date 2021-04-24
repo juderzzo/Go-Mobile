@@ -10,11 +10,11 @@ import 'package:stacked_services/stacked_services.dart';
 import 'cause_publish_successful_bottom_sheet_model.dart';
 
 class CausePublishSuccessfulBottomSheet extends StatelessWidget {
-  final SheetRequest request;
-  final Function(SheetResponse) completer;
+  final SheetRequest? request;
+  final Function(SheetResponse)? completer;
 
   const CausePublishSuccessfulBottomSheet({
-    Key key,
+    Key? key,
     this.request,
     this.completer,
   }) : super(key: key);
@@ -50,7 +50,7 @@ class CausePublishSuccessfulBottomSheet extends StatelessWidget {
             ),
             verticalSpaceMedium,
             CustomTextButton(
-              onTap: () => model.copyPostLink(request.customData),
+              onTap: () => model.copyPostLink(request!.customData),
               text: "Share",
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -59,7 +59,7 @@ class CausePublishSuccessfulBottomSheet extends StatelessWidget {
             verticalSpaceMedium,
             verticalSpaceMedium,
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "return")),
+              onPressed: () => completer!(SheetResponse(responseData: "return")),
               text: "Done",
               textSize: 16,
               textColor: appFontColor(),

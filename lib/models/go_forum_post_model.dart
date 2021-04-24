@@ -1,11 +1,11 @@
 class GoForumPost {
-  String id;
-  String causeID;
-  String authorID;
-  String imageID;
-  int dateCreatedInMilliseconds;
-  String body;
-  int commentCount;
+  String? id;
+  String? causeID;
+  String? authorID;
+  String? imageID;
+  int? dateCreatedInMilliseconds;
+  String? body;
+  int? commentCount;
 
   GoForumPost({
     this.id,

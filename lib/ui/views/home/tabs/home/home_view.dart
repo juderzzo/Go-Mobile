@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
@@ -8,12 +8,11 @@ import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/list_builders/list_causes.dart';
 import 'package:go/ui/widgets/notifications/notification_bell/notification_bell_view.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
-  final GoUser user;
-  final VoidCallback navigateToExplorePage;
+  final GoUser? user;
+  final VoidCallback? navigateToExplorePage;
   HomeView({this.user, this.navigateToExplorePage});
 
   Widget head(HomeViewModel model) {
@@ -34,7 +33,7 @@ class HomeView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                NotificationBellView(uid: user.id),
+                NotificationBellView(uid: user!.id),
                 IconButton(
                   onPressed: () => model.navigateToCreateCauseView(),
                   icon: Icon(
@@ -77,27 +76,29 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return ViewModelBuilder<HomeViewModel>.reactive(
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
-      onModelReady: (model){if (!model.initialized){model.initialize(currentUser: user);} },
+      onModelReady: (model) {
+        if (!model.initialized) {
+          model.initialize(currentUser: user);
+        }
+      },
       viewModelBuilder: () => locator<HomeViewModel>(),
-      builder: (context, model, child) =>  Container(
-          height: screenHeight(context),
-          color: appBackgroundColor(),
-          child: SafeArea(
-            child: Container(
-              child: Column(
-                children: [
-                  head(model),
-                  listCauses(model),
-                ],
-              ),
+      builder: (context, model, child) => Container(
+        height: screenHeight(context),
+        color: appBackgroundColor(),
+        child: SafeArea(
+          child: Container(
+            child: Column(
+              children: [
+                head(model),
+                listCauses(model),
+              ],
             ),
           ),
         ),
-      
+      ),
     );
   }
 }

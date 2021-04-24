@@ -1,8 +1,8 @@
-import 'package:auto_route/auto_route.dart';
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/models/go_user_model.dart';
@@ -15,42 +15,42 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CauseViewModel extends StreamViewModel<GoCause> {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  CauseDataService _causeDataService = locator<CauseDataService>();
-  PostDataService _postDataService = locator<PostDataService>();
-  UserDataService _userDataService = locator<UserDataService>();
-  LocationService _locationService = locator<LocationService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  CauseDataService? _causeDataService = locator<CauseDataService>();
+  PostDataService? _postDataService = locator<PostDataService>();
+  UserDataService? _userDataService = locator<UserDataService>();
+  LocationService? _locationService = locator<LocationService>();
 
   ///HELPERS
   ScrollController postsScrollController = ScrollController();
 
   ///DATA
-  String currentUID;
-  GoUser user;
-  String causeID;
-  GoCause cause;
-  GoUser causeCreator;
+  String? currentUID;
+  GoUser? user;
+  String? causeID;
+  GoCause? cause;
+  GoUser? causeCreator;
   List images = [];
-  bool isFollowingCause;
+  bool? isFollowingCause;
   bool loadedImages = false;
   bool refreshingPosts = false;
   bool isAdmin = false;
 
   ///DATA RESULTS
-  List<GoCheckListItem> checkListItems = [];
+  List<GoCheckListItem>? checkListItems = [];
   List<DocumentSnapshot> postResults = [];
   bool loadingAdditionalPosts = false;
   bool morePostsAvailable = true;
-  int tab = -1;
+  int? tab = -1;
 
   int resultsLimit = 15;
 
   initialize(BuildContext context) async {
     setBusy(true);
-    currentUID = await _authService.getCurrentUserID();
-    Map<String, dynamic> args = RouteData.of(context).arguments;
+    currentUID = await _authService!.getCurrentUserID();
+    Map<String, dynamic> args = {}; //RouteData.of(context).arguments;
     causeID = args['id'];
     if (args['tab'] != null) {
       tab = args['tab'];
@@ -60,17 +60,17 @@ class CauseViewModel extends StreamViewModel<GoCause> {
       checkListItems = args['items'];
     }
 
-    await _causeDataService.getCauseByID(causeID).then((cause) {
-      String causeCreatorID = cause.creatorID;
-      bool admins;
+    await _causeDataService!.getCauseByID(causeID).then((cause) {
+      String? causeCreatorID = cause.creatorID;
+      bool? admins;
       if (cause.admins != null) {
         admins = cause.admins.contains(currentUID);
       } else {
         admins = false;
       }
-      isAdmin = (causeCreatorID == currentUID || admins);
+      isAdmin = (causeCreatorID == currentUID || admins!);
     });
-    cause = await _causeDataService.getCauseByID(causeID);
+    cause = await (_causeDataService!.getCauseByID(causeID) as FutureOr<GoCause?>);
 
     //eventually add the admins feature
 
@@ -78,8 +78,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
     ///SET SCROLL CONTROLLER
     postsScrollController.addListener(() {
-      double triggerFetchMoreSize =
-          0.9 * postsScrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize = 0.9 * postsScrollController.position.maxScrollExtent;
       if (postsScrollController.position.pixels > triggerFetchMoreSize) {
         loadAdditionalPosts();
       }
@@ -87,13 +86,12 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     notifyListeners();
   }
 
-  getCauseCreator(String id) async {
-    var res = await _userDataService.getGoUserByID(id);
+  getCauseCreator(String? id) async {
+    var res = await _userDataService!.getGoUserByID(id);
     if (res is String) {
-      _dialogService.showDialog(
+      _dialogService!.showDialog(
         title: "Cause Creator Error",
-        description:
-            "There was an issue loading the details of the creator of this cause",
+        description: "There was an issue loading the details of the creator of this cause",
         barrierDismissible: true,
       );
     } else {
@@ -103,35 +101,33 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   }
 
   followUnfollowCause() {
-    _causeDataService.followUnfollowCause(causeID, currentUID);
+    _causeDataService!.followUnfollowCause(causeID, currentUID);
   }
 
   ///CHECK LIST ITEMS
   loadCheckListItems() async {
-    checkListItems = await _causeDataService.getCheckListItems(cause.id);
+    checkListItems = await _causeDataService!.getCheckListItems(cause!.id);
     notifyListeners();
   }
 
   checkOffItem(GoCheckListItem item) async {
-    List checkedOffBy = item.checkedOffBy.toList(growable: true);
+    List checkedOffBy = item.checkedOffBy!.toList(growable: true);
     if (!checkedOffBy.contains(currentUID)) {
-      DialogResponse response = await _dialogService.showConfirmationDialog(
+      DialogResponse response = await (_dialogService!.showConfirmationDialog(
         title: "Are You Sure You've Completed this Task?",
         description: "Checking off this task is irreversible",
         cancelTitle: "Cancel",
         confirmationTitle: "Confirm",
         barrierDismissible: true,
-      );
+      ) as FutureOr<DialogResponse>);
       if (response.confirmed) {
         //validate location if required
         if (item.lat != null && item.lon != null && item.address != null) {
-          bool isNearbyLocation = await _locationService.isNearbyLocation(
-              lat: item.lat, lon: item.lon);
+          bool isNearbyLocation = await _locationService!.isNearbyLocation(lat: item.lat!, lon: item.lon!);
           if (!isNearbyLocation) {
-            _dialogService.showDialog(
+            _dialogService!.showDialog(
               title: "Location Error",
-              description:
-                  "You are not near the required location to check off this item.",
+              description: "You are not near the required location to check off this item.",
               buttonTitle: "Ok",
             );
             return;
@@ -140,9 +136,8 @@ class CauseViewModel extends StreamViewModel<GoCause> {
         //check off item
         checkedOffBy.add(currentUID);
 
-        await _causeDataService.checkOffCheckListItem(
-            id: item.id, checkedOffBy: checkedOffBy);
-        await _userDataService.updateGoUserPoints(currentUID, item.points);
+        await _causeDataService!.checkOffCheckListItem(id: item.id, checkedOffBy: checkedOffBy);
+        await _userDataService!.updateGoUserPoints(currentUID, item.points!);
       }
     }
   }
@@ -156,9 +151,9 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   }
 
   loadPosts() async {
-    postResults = await _postDataService.loadPosts(
+    postResults = await _postDataService!.loadPosts(
       resultsLimit: resultsLimit,
-      causeID: cause.id,
+      causeID: cause!.id,
     );
     refreshingPosts = false;
     notifyListeners();
@@ -170,11 +165,10 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     }
     loadingAdditionalPosts = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults =
-        await _postDataService.loadAdditionalPosts(
+    List<DocumentSnapshot> newResults = await _postDataService!.loadAdditionalPosts(
       lastDocSnap: postResults[postResults.length - 1],
       resultsLimit: resultsLimit,
-      causeID: cause.id,
+      causeID: cause!.id,
     );
     if (newResults.length == 0) {
       morePostsAvailable = false;
@@ -187,23 +181,23 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
   ///STREAM CAUSE DATA
   @override
-  void onData(GoCause data) {
+  void onData(GoCause? data) {
     if (data != null) {
       cause = data;
-      if (cause.followers.contains(currentUID)) {
+      if (cause!.followers!.contains(currentUID)) {
         isFollowingCause = true;
       } else {
         isFollowingCause = false;
       }
       if (!loadedImages) {
-        cause.imageURLs.forEach((url) {
+        cause!.imageURLs!.forEach((url) {
           images.add(
             NetworkImage(url),
           );
         });
         loadedImages = true;
       }
-      getCauseCreator(cause.creatorID);
+      getCauseCreator(cause!.creatorID);
       loadCheckListItems();
       loadPosts();
       notifyListeners();
@@ -216,30 +210,25 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
   Stream<GoCause> streamCause() async* {
     while (true) {
+      GoCause cause = GoCause();
       if (causeID == null) {
-        yield null;
+        yield cause;
       }
       await Future.delayed(Duration(seconds: 1));
-      var res = await _causeDataService.getCauseByID(causeID);
-      if (res is String) {
-        yield null;
-      } else {
-        yield res;
-      }
+      cause = await _causeDataService!.getCauseByID(causeID);
+      yield cause;
     }
   }
 
   ///NAVIGATION
   navigateToCreatePostView() async {
-    String data = await _navigationService.navigateTo(
-        Routes.CreateForumPostViewRoute,
-        arguments: {'causeID': cause.id});
-    if (data == 'newPostCreated') {
-      refreshPosts();
-    }
+    // String data = await _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {'causeID': cause.id});
+    // if (data == 'newPostCreated') {
+    //   refreshPosts();
+    // }
   }
 
   navigateBack() {
-    _navigationService.back();
+    _navigationService!.back();
   }
 }

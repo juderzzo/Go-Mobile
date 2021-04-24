@@ -4,11 +4,11 @@ import 'package:go/ui/shared/shared_styles.dart';
 /// A button that shows a busy indicator in place of title
 class BusyButton extends StatefulWidget {
   final bool busy;
-  final double width;
+  final double? width;
   final String title;
   final Function onPressed;
   final bool enabled;
-  const BusyButton({@required this.title, this.busy = false, @required this.onPressed, this.width, this.enabled = true});
+  const BusyButton({required this.title, this.busy = false, required this.onPressed, this.width, this.enabled = true});
 
   @override
   _BusyButtonState createState() => _BusyButtonState();
@@ -18,7 +18,7 @@ class _BusyButtonState extends State<BusyButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onPressed,
+      onTap: widget.onPressed as void Function()?,
       child: InkWell(
         child: AnimatedContainer(
           height: widget.busy ? 40 : null,

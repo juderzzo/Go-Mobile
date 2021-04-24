@@ -4,29 +4,26 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
 
 class SingleLineTextField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String hintText;
-  final String initialValue;
   final int textLimit;
   final bool isPassword;
   final Function(String) onChanged;
-  final Function(String) onSubmitted;
+  final Function(String)? onSubmitted;
 
   SingleLineTextField({
-    @required this.controller,
-    @required this.hintText,
-    @required this.initialValue,
-    @required this.textLimit,
-    @required this.isPassword,
-    @required this.onChanged,
-    @required this.onSubmitted,
+    this.controller,
+    required this.hintText,
+    required this.textLimit,
+    required this.isPassword,
+    required this.onChanged,
+    required this.onSubmitted,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextFormField(
-        initialValue: initialValue,
         controller: controller,
         cursorColor: appFontColor(),
         obscureText: isPassword,
@@ -37,7 +34,7 @@ class SingleLineTextField extends StatelessWidget {
           border: InputBorder.none,
         ),
         enableInteractiveSelection: true,
-        onFieldSubmitted: onSubmitted == null ? null : (val) => onSubmitted(val),
+        onFieldSubmitted: onSubmitted == null ? null : (val) => onSubmitted!(val),
         onChanged: onChanged == null ? null : (val) => onChanged(val),
       ),
     );

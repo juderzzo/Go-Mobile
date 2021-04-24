@@ -8,11 +8,11 @@ import 'package:stacked_services/stacked_services.dart';
 import 'cause_creator_bottom_sheet_model.dart';
 
 class CauseCreatorBottomSheet extends StatelessWidget {
-  final SheetRequest request;
-  final Function(SheetResponse) completer;
+  final SheetRequest? request;
+  final Function(SheetResponse)? completer;
 
   const CauseCreatorBottomSheet({
-    Key key,
+    Key? key,
     this.request,
     this.completer,
   }) : super(key: key);
@@ -30,7 +30,7 @@ class CauseCreatorBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "Edit")),
+              onPressed: () => completer!(SheetResponse(responseData: "Edit")),
               text: "Edit",
               textSize: 16,
               textColor: appFontColor(),
@@ -42,7 +42,7 @@ class CauseCreatorBottomSheet extends StatelessWidget {
             ),
             verticalSpaceSmall,
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "share")),
+              onPressed: () => completer!(SheetResponse(responseData: "share")),
               text: "Share",
               textSize: 16,
               textColor: appFontColor(),
@@ -54,7 +54,7 @@ class CauseCreatorBottomSheet extends StatelessWidget {
             ),
             verticalSpaceSmall,
             CustomButton(
-              onPressed: () => completer(SheetResponse(responseData: "report")),
+              onPressed: () => completer!(SheetResponse(responseData: "report")),
               text: "Delete",
               textSize: 16,
               textColor: appDestructiveColor(),

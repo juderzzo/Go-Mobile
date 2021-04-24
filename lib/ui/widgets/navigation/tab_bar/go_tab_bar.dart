@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 
 class GoExplorePageTabBar extends StatelessWidget {
-  final TabController tabController;
+  final TabController? tabController;
 
   GoExplorePageTabBar({
     this.tabController,
@@ -65,8 +65,8 @@ class GoExplorePageTabBar extends StatelessWidget {
 }
 
 class GoCauseViewTabBar extends StatelessWidget {
-  final TabController tabController;
-  final bool isAdmin;
+  final TabController? tabController;
+  final bool? isAdmin;
   GoCauseViewTabBar({this.tabController, this.isAdmin});
 
   @override
@@ -88,7 +88,7 @@ class GoCauseViewTabBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: appActiveColor(),
         ),
-        tabs: isAdmin
+        tabs: isAdmin!
             ? [
                 Tab(
                   child: Container(
@@ -288,7 +288,7 @@ class GoProfileTabBar extends StatelessWidget {
 }
 
 class GoChecklistTabBar extends StatelessWidget {
-  final TabController tabController;
+  final TabController? tabController;
   GoChecklistTabBar({this.tabController});
 
   @override
@@ -323,7 +323,7 @@ class GoChecklistTabBar extends StatelessWidget {
                   "Events",
                   style: TextStyle(
                       fontWeight: fontWeight,
-                      fontSize: tabController.index == 0 ? 16 : 12),
+                      fontSize: tabController!.index == 0 ? 16 : 12),
                 ),
               ),
             ),
@@ -341,7 +341,7 @@ class GoChecklistTabBar extends StatelessWidget {
                   "Announcements",
                   style: TextStyle(
                       fontWeight: fontWeight,
-                      fontSize: tabController.index == 1 ? 16 : 12),
+                      fontSize: tabController!.index == 1 ? 16 : 12),
                 ),
               ),
             ),
@@ -359,7 +359,7 @@ class GoChecklistTabBar extends StatelessWidget {
                   "Donate!",
                   style: TextStyle(
                       fontWeight: fontWeight,
-                      fontSize: tabController.index == 2 ? 16 : 12),
+                      fontSize: tabController!.index == 2 ? 16 : 12),
                 ),
               ),
             ),
@@ -371,7 +371,7 @@ class GoChecklistTabBar extends StatelessWidget {
 }
 
 class GoProfilePageTabBar extends StatelessWidget {
-  final TabController tabController;
+  final TabController? tabController;
   GoProfilePageTabBar({this.tabController});
 
   @override

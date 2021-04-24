@@ -11,16 +11,14 @@ import 'package:go/ui/widgets/user/follow_stats_row.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
-import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
 
 class UserView extends StatefulWidget {
   @override
   _UserViewState createState() => _UserViewState();
 }
 
-class _UserViewState extends State<UserView>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
+class _UserViewState extends State<UserView> with SingleTickerProviderStateMixin {
+  TabController? _tabController;
   List postFutures = [];
   List<Widget> posts = [];
   bool loading = true;
@@ -43,7 +41,7 @@ class _UserViewState extends State<UserView>
                 ),
               ),
               CustomFittedText(
-                text: model.user == null ? "" : "${model.user.username}",
+                text: model.user == null ? "" : "${model.user!.username}",
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: appFontColor(),
@@ -72,13 +70,13 @@ class _UserViewState extends State<UserView>
         children: [
           SizedBox(height: 16),
           UserProfilePic(
-            userPicUrl: model.user.profilePicURL,
+            userPicUrl: model.user!.profilePicURL,
             size: 60,
             isBusy: false,
           ),
           SizedBox(height: 8),
           Text(
-            "@${model.user.username}",
+            "@${model.user!.username}",
             style: TextStyle(
               color: appFontColor(),
               fontWeight: FontWeight.bold,
@@ -87,11 +85,11 @@ class _UserViewState extends State<UserView>
           ),
           SizedBox(height: 8),
           FollowStatsRow(
-            followersLength: model.user.followers.length,
-            followingLength: model.user.following.length,
+            followersLength: model.user!.followers!.length,
+            followingLength: model.user!.following!.length,
             viewFollowersAction: null,
             viewFollowingAction: null,
-            points: model.user.points,
+            points: model.user!.points,
           ),
           SizedBox(height: 28),
           model.isFollowing == null || model.isFollowing == false
@@ -103,7 +101,7 @@ class _UserViewState extends State<UserView>
                   height: 30.0,
                   width: 100,
                   onPressed: () {
-                    model.isFollowing = !model.isFollowing;
+                    model.isFollowing = !model.isFollowing!;
                     model.followUnfollowUser();
                   })
               : CustomButton(
@@ -115,7 +113,7 @@ class _UserViewState extends State<UserView>
                   height: 30.0,
                   width: 100,
                   onPressed: () {
-                    model.isFollowing = !model.isFollowing;
+                    model.isFollowing = !model.isFollowing!;
                     model.followUnfollowUser();
                   }),
         ],
@@ -140,9 +138,9 @@ class _UserViewState extends State<UserView>
             children: [
               verticalSpaceLarge,
               UserBio(
-                username: model.user.username,
-                profilePicURL: model.user.profilePicURL,
-                bio: model.user.bio,
+                username: model.user!.username,
+                profilePicURL: model.user!.profilePicURL,
+                bio: model.user!.bio,
               ),
             ],
           ),
@@ -157,7 +155,7 @@ class _UserViewState extends State<UserView>
           onRefresh: () async {
             posts = [];
             model.initialize(_tabController, context);
-            await model.notifyListeners();
+            //await model.notifyListeners();
           },
           child: ListView(
             children: model.loadPosts().runtimeType == Null
@@ -186,7 +184,7 @@ class _UserViewState extends State<UserView>
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _tabController.dispose();
+    _tabController!.dispose();
   }
 
   @override
@@ -226,9 +224,7 @@ class _UserViewState extends State<UserView>
                                 background: Container(
                                   child: Column(
                                     children: [
-                                      model.user == null
-                                          ? Container()
-                                          : userDetails(model),
+                                      model.user == null ? Container() : userDetails(model),
                                     ],
                                   ),
                                 ),

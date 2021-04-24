@@ -49,7 +49,7 @@ class CreateCauseView extends StatelessWidget {
   }
 
   Widget singleLineTextField(
-      {TextEditingController controller, String hintText, int textLimit}) {
+      {TextEditingController? controller, String? hintText, int? textLimit}) {
     return TextFieldContainer(
       child: TextFormField(
         controller: controller,
@@ -67,7 +67,7 @@ class CreateCauseView extends StatelessWidget {
   }
 
   Widget multiLineTextField(
-      {TextEditingController controller, String hintText}) {
+      {TextEditingController? controller, String? hintText}) {
     return TextFieldContainer(
       child: TextFormField(
         controller: controller,
@@ -311,7 +311,7 @@ class CreateCauseView extends StatelessWidget {
       viewModelBuilder: () => CreateCauseViewModel(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar()
-            .basicAppBar(title: "Create Cause", showBackButton: true),
+            .basicAppBar(title: "Create Cause", showBackButton: true) as PreferredSizeWidget?,
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(

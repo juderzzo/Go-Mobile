@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class FollowStatsRow extends StatelessWidget {
-  final int followersLength;
-  final int followingLength;
-  final VoidCallback viewFollowersAction;
-  final VoidCallback viewFollowingAction;
-  final int points;
+  final int? followersLength;
+  final int? followingLength;
+  final VoidCallback? viewFollowersAction;
+  final VoidCallback? viewFollowingAction;
+  final int? points;
 
   FollowStatsRow({
     this.followersLength,

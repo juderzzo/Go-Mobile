@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
@@ -13,14 +13,14 @@ import 'package:go/ui/widgets/search/search_field.dart';
 import 'package:stacked/stacked.dart';
 
 class ExploreView extends StatefulWidget {
-  final GoUser user;
+  final GoUser? user;
   ExploreView({this.user});
   @override
   _ExploreViewState createState() => _ExploreViewState();
 }
 
 class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
 
   Widget noDataFound(String dataType) {
     return Container(
@@ -46,6 +46,8 @@ class _ExploreViewState extends State<ExploreView> with SingleTickerProviderStat
             onTap: () => model.navigateToSearchView(),
             enabled: false,
             textEditingController: null,
+            onChanged: (String val) {},
+            onFieldSubmitted: (String val) {},
           ),
           IconButton(
             onPressed: () => model.navigateToCreateCauseView(),

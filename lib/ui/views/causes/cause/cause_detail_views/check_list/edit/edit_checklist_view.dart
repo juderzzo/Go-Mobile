@@ -84,7 +84,7 @@ class EditCheckListView extends StatelessWidget {
                     ),
                   ),
                 ),
-        ),
+        ) as PreferredSizeWidget?,
         body: Container(
           color: appBackgroundColor(),
           child: Column(

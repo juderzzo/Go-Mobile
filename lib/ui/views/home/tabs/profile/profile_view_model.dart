@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_user_model.dart';
@@ -9,23 +11,21 @@ import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/post_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
-import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-@singleton
 class ProfileViewModel extends BaseViewModel {
   ///SERVICES
-  NavigationService _navigationService = locator<NavigationService>();
-  SnackbarService _snackbarService = locator<SnackbarService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  CauseDataService _causeDataService = locator<CauseDataService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  SnackbarService? _snackbarService = locator<SnackbarService>();
+  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
+  CauseDataService? _causeDataService = locator<CauseDataService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
 
   ///CURRENT USER
-  GoUser user;
+  GoUser? user;
 
   ///DATA RESULTS
   List<DocumentSnapshot> causesFollowingResults = [];
@@ -36,18 +36,17 @@ class ProfileViewModel extends BaseViewModel {
   bool loadingAdditionalCausesCreated = false;
   bool moreCausesCreatedAvailable = true;
   List<Widget> posts = [];
-  PostDataService _postDataService = locator<PostDataService>();
+  PostDataService? _postDataService = locator<PostDataService>();
 
   int resultsLimit = 15;
 
-  initialize(TabController tabController, GoUser currentUser) async {
+  initialize(TabController? tabController, GoUser? currentUser) async {
     user = currentUser;
     //notifyListeners();
     scrollController.addListener(() {
-      double triggerFetchMoreSize =
-          0.9 * scrollController.position.maxScrollExtent;
+      double triggerFetchMoreSize = 0.9 * scrollController.position.maxScrollExtent;
       if (scrollController.position.pixels > triggerFetchMoreSize) {
-        if (tabController.index == 1) {
+        if (tabController!.index == 1) {
           loadAdditionalCausesFollowing();
         } else if (tabController.index == 2) {
           loadAdditionalCausesCreated();
@@ -68,8 +67,8 @@ class ProfileViewModel extends BaseViewModel {
   }
 
   loadPostsInitial() async {
-    List p = await _postDataService.loadPostsByUser(user.id);
-    for (GoForumPost i in p) {
+    List p = await _postDataService!.loadPostsByUser(user!.id);
+    for (GoForumPost i in p as Iterable<GoForumPost>) {
       posts.add(new ForumPostBlockView(
         post: i,
         displayBottomBorder: true,
@@ -98,18 +97,18 @@ class ProfileViewModel extends BaseViewModel {
 
   ///LOAD CAUSES FOLLOWING
   loadCausesFollowing() async {
-    causesFollowingResults = await _causeDataService.loadCausesFollowing(
+    causesFollowingResults = await _causeDataService!.loadCausesFollowing(
       resultsLimit: resultsLimit,
-      uid: user.id,
+      uid: user!.id,
     );
     notifyListeners();
   }
 
   ///LOAD CAUSES CREATED
   loadCausesCreated() async {
-    causesCreatedResults = await _causeDataService.loadCausesCreated(
+    causesCreatedResults = await _causeDataService!.loadCausesCreated(
       resultsLimit: resultsLimit,
-      uid: user.id,
+      uid: user!.id,
     );
     notifyListeners();
   }
@@ -121,11 +120,10 @@ class ProfileViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesFollowing = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults =
-        await _causeDataService.loadAdditionalCausesFollowing(
+    List<DocumentSnapshot> newResults = await _causeDataService!.loadAdditionalCausesFollowing(
       lastDocSnap: causesFollowingResults[causesFollowingResults.length - 1],
       resultsLimit: resultsLimit,
-      uid: user.id,
+      uid: user!.id,
     );
     if (newResults.length == 0) {
       moreCausesFollowingAvailable = false;
@@ -143,11 +141,10 @@ class ProfileViewModel extends BaseViewModel {
     }
     loadingAdditionalCausesCreated = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults =
-        await _causeDataService.loadAdditionalCausesCreated(
+    List<DocumentSnapshot> newResults = await _causeDataService!.loadAdditionalCausesCreated(
       lastDocSnap: causesCreatedResults[causesCreatedResults.length - 1],
       resultsLimit: resultsLimit,
-      uid: user.id,
+      uid: user!.id,
     );
     if (newResults.length == 0) {
       moreCausesCreatedAvailable = false;
@@ -160,11 +157,11 @@ class ProfileViewModel extends BaseViewModel {
 
   ///SHOW OPTIONS
   showOptions() async {
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    var sheetResponse = await _bottomSheetService!.showCustomSheet(
       variant: BottomSheetType.currentUserOptions,
     );
     if (sheetResponse != null) {
-      String res = sheetResponse.responseData;
+      String? res = sheetResponse.responseData;
       if (res == "edit") {
         navigateToEditProfilePage();
       } else if (res == "share") {
@@ -187,11 +184,11 @@ class ProfileViewModel extends BaseViewModel {
     PostDataService _postDataService = locator<PostDataService>();
     UserDataService _userDataService = locator<UserDataService>();
     //generate the liked list and remove a reference if it doesnt exist
-    GoUser user = await _userDataService.getGoUserByID(uid);
-    String id = user.liked[index];
+    GoUser user = await (_userDataService.getGoUserByID(uid) as FutureOr<GoUser>);
+    String id = user.liked![index];
     bool likedPostDeleted = false;
-    if (await _postDataService.checkIfPostExists(id)) {
-      GoForumPost val = await _postDataService.getPostByID(id);
+    if (await (_postDataService.checkIfPostExists(id) as FutureOr<bool>)) {
+      GoForumPost? val = await (_postDataService.getPostByID(id) as FutureOr<GoForumPost?>);
       print(val.runtimeType);
       return val;
     }
@@ -203,13 +200,12 @@ class ProfileViewModel extends BaseViewModel {
   }
 
   navigateToEditProfilePage() {
-    _navigationService.navigateTo(Routes.EditProfileViewRoute, arguments: {
-      'id': user.id,
-    });
+    // _navigationService.navigateTo(Routes.EditProfileViewRoute, arguments: {
+    //   'id': user.id,
+    // });
   }
 
   navigateToSettingsPage() {
-    _navigationService
-        .navigateTo(Routes.SettingsViewRoute, arguments: {'data': 'example'});
+    _navigationService!.navigateTo(Routes.SettingsViewRoute, arguments: {'data': 'example'});
   }
 }

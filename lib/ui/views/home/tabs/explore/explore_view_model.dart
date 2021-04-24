@@ -1,29 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:go/app/locator.dart';
-import 'package:go/app/router.gr.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/cause_data_service.dart';
 import 'package:go/services/firestore/user_data_service.dart';
 import 'package:go/ui/views/search/search_view.dart';
-import 'package:injectable/injectable.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-@singleton
 class ExploreViewModel extends BaseViewModel {
-  AuthService _authService = locator<AuthService>();
-  DialogService _dialogService = locator<DialogService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  CauseDataService _causeDataService = locator<CauseDataService>();
-  UserDataService _userDataService = locator<UserDataService>();
+  AuthService? _authService = locator<AuthService>();
+  DialogService? _dialogService = locator<DialogService>();
+  NavigationService? _navigationService = locator<NavigationService>();
+  CauseDataService? _causeDataService = locator<CauseDataService>();
+  UserDataService? _userDataService = locator<UserDataService>();
 
   ///HELPERS
   ScrollController causeScrollController = ScrollController();
   ScrollController userScrollController = ScrollController();
 
   ///DATA RESULTS
-  String searchTerm;
+  String? searchTerm;
   List<DocumentSnapshot> causeResults = [];
   bool loadingAdditionalCauses = false;
   bool moreCausesAvailable = true;
@@ -66,7 +63,7 @@ class ExploreViewModel extends BaseViewModel {
   }
 
   loadCauses() async {
-    causeResults = await _causeDataService.loadCauses(resultsLimit: resultsLimit);
+    causeResults = await _causeDataService!.loadCauses(resultsLimit: resultsLimit);
     refreshingCauses = false;
     notifyListeners();
   }
@@ -77,7 +74,7 @@ class ExploreViewModel extends BaseViewModel {
     }
     loadingAdditionalCauses = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCauses(
+    List<DocumentSnapshot> newResults = await _causeDataService!.loadAdditionalCauses(
       resultsLimit: resultsLimit,
       lastDocSnap: causeResults[causeResults.length - 1],
     );
@@ -99,7 +96,7 @@ class ExploreViewModel extends BaseViewModel {
   }
 
   loadUsers() async {
-    userResults = await _userDataService.loadUsers(resultsLimit: resultsLimit);
+    userResults = await _userDataService!.loadUsers(resultsLimit: resultsLimit);
     refreshingUsers = false;
     notifyListeners();
   }
@@ -110,7 +107,7 @@ class ExploreViewModel extends BaseViewModel {
     }
     loadingAdditionalUsers = true;
     notifyListeners();
-    List<DocumentSnapshot> newResults = await _userDataService.loadAdditionalUsers(
+    List<DocumentSnapshot> newResults = await _userDataService!.loadAdditionalUsers(
       resultsLimit: resultsLimit,
       lastDocSnap: userResults[userResults.length - 1],
     );
@@ -130,10 +127,10 @@ class ExploreViewModel extends BaseViewModel {
 //
 
   navigateToSearchView() {
-    _navigationService.navigateWithTransition(SearchView(), transition: 'fade', opaque: true);
+    _navigationService!.navigateWithTransition(SearchView(), transition: 'fade', opaque: true);
   }
 
   navigateToCreateCauseView() {
-    _navigationService.navigateTo(Routes.CreateCauseViewRoute);
+    // _navigationService.navigateTo(Routes.CreateCauseViewRoute);
   }
 }

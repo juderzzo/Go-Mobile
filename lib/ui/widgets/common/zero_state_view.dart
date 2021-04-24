@@ -9,19 +9,19 @@ class ZeroStateView extends StatelessWidget {
   final String imageAssetName;
   final String header;
   final String subHeader;
-  final String mainActionButtonTitle;
-  final VoidCallback mainAction;
-  final String secondaryActionButtonTitle;
-  final VoidCallback secondaryAction;
+  final String? mainActionButtonTitle;
+  final VoidCallback? mainAction;
+  final String? secondaryActionButtonTitle;
+  final VoidCallback? secondaryAction;
 
   ZeroStateView({
-    @required this.imageAssetName,
-    @required this.header,
-    @required this.subHeader,
-    @required this.mainActionButtonTitle,
-    @required this.mainAction,
-    @required this.secondaryActionButtonTitle,
-    @required this.secondaryAction,
+    required this.imageAssetName,
+    required this.header,
+    required this.subHeader,
+    this.mainActionButtonTitle,
+    this.mainAction,
+    this.secondaryActionButtonTitle,
+    this.secondaryAction,
   });
 
   Widget customImage() {

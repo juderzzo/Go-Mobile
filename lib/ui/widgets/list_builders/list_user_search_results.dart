@@ -6,15 +6,15 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/search/search_result_view.dart';
 
 class ListUsersSearchResults extends StatelessWidget {
-  final Function(String) onSearchTermSelected;
+  final Function(String?) onSearchTermSelected;
   final List<SearchResult> results;
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   final bool isScrollable;
-  Function addAdmin;
-  Function removeAdmin;
-  GoCause cause;
+  Function? addAdmin;
+  Function? removeAdmin;
+  GoCause? cause;
 
-  ListUsersSearchResults({@required this.onSearchTermSelected, @required this.results, @required this.isScrollable, @required this.scrollController, this.addAdmin, this.cause, this.removeAdmin});
+  ListUsersSearchResults({required this.onSearchTermSelected, required this.results, required this.isScrollable, required this.scrollController, this.addAdmin, this.cause, this.removeAdmin});
 
   Widget listResults() {
     return ListView.builder(

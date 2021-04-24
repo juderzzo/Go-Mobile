@@ -13,20 +13,20 @@ import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:stacked/stacked.dart';
 
 class CheckListView extends StatefulWidget {
-  final List<GoCheckListItem> checkListItems;
+  final List<GoCheckListItem>? checkListItems;
   final bool isCauseAdmin;
-  final String causeID;
-  final String currentUID;
+  final String? causeID;
+  final String? currentUID;
   final Function(GoCheckListItem) checkOffItem;
   final VoidCallback refreshData;
 
   CheckListView({
-    @required this.checkListItems,
-    @required this.isCauseAdmin,
-    @required this.causeID,
-    @required this.currentUID,
-    @required this.checkOffItem,
-    @required this.refreshData,
+    required this.checkListItems,
+    required this.isCauseAdmin,
+    required this.causeID,
+    required this.currentUID,
+    required this.checkOffItem,
+    required this.refreshData,
   });
 
   @override
@@ -39,27 +39,26 @@ class CheckListView extends StatefulWidget {
       refreshData: refreshData);
 }
 
-class _CheckListViewState extends State<CheckListView>
-    with SingleTickerProviderStateMixin {
-  final List<GoCheckListItem> checkListItems;
+class _CheckListViewState extends State<CheckListView> with SingleTickerProviderStateMixin {
+  final List<GoCheckListItem>? checkListItems;
   final bool isCauseAdmin;
-  final String causeID;
-  final String currentUID;
+  final String? causeID;
+  final String? currentUID;
   final Function(GoCheckListItem) checkOffItem;
   final VoidCallback refreshData;
-  TabController _tabController;
-  Widget announcementList;
-  Widget eventList;
+  TabController? _tabController;
+  Widget? announcementList;
+  Widget? eventList;
 
   //TabController controller = TabController(length: 3, vsync: this);
 
   _CheckListViewState({
-    @required this.checkListItems,
-    @required this.isCauseAdmin,
-    @required this.causeID,
-    @required this.currentUID,
-    @required this.checkOffItem,
-    @required this.refreshData,
+    required this.checkListItems,
+    required this.isCauseAdmin,
+    required this.causeID,
+    required this.currentUID,
+    required this.checkOffItem,
+    required this.refreshData,
   });
 
   @override
@@ -73,12 +72,12 @@ class _CheckListViewState extends State<CheckListView>
 
   Widget monetization(model) {
     return Column(
-      
       children: model.monetizer
           ? [
-              Text("Donate!", 
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              //textAlign: TextAlign.left,
+              Text(
+                "Donate!",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                //textAlign: TextAlign.left,
               ),
               SizedBox(height: 20),
               //Spacer(),
@@ -96,20 +95,17 @@ class _CheckListViewState extends State<CheckListView>
                   }),
               //Spacer(),
               //model.link != null && model.link.length > 5 ? Text("Donate Directly") : Container()
-              
             ]
           : [
-            
-              Text("Donate!", 
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              //textAlign: TextAlign.left,
+              Text(
+                "Donate!",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                //textAlign: TextAlign.left,
               ),
               SizedBox(height: 20),
               //Spacer(),
-              textFieldHeader(
-                "This Cause Is Not Monetized",
-                "This cause has not been monetized. To Donate, please visit the cause about page and donate directly to their website."
-              ),
+              textFieldHeader("This Cause Is Not Monetized",
+                  "This cause has not been monetized. To Donate, please visit the cause about page and donate directly to their website."),
 
               verticalSpaceSmall,
               BusyButton(
@@ -120,17 +116,13 @@ class _CheckListViewState extends State<CheckListView>
                   }),
               //Spacer(),
               //model.link != null && model.link.length > 5 ? Text("Donate Directly") : Container()
-              
-            
-
-          ],
+            ],
     );
   }
 
   Widget listCheckListItems(CheckListViewModel model) {
-
     List announcements = [];
-    checkListItems.forEach((element) {
+    checkListItems!.forEach((element) {
       if (element.lat == null) {
         announcements.add(element);
       }
@@ -145,20 +137,20 @@ class _CheckListViewState extends State<CheckListView>
           if (announcements[index].lat == null) {
             return CheckListItemView(
               item: announcements[index],
-              isChecked:
-                  announcements[index].checkedOffBy.contains(currentUID),
+              isChecked: announcements[index].checkedOffBy.contains(currentUID),
               checkOffItem: (item) => checkOffItem(item),
             );
           }
+          return Container();
         },
       ),
-      onRefresh: refreshData,
+      onRefresh: refreshData as Future<void> Function(),
     );
   }
 
   Widget listEvents(CheckListViewModel model) {
     List events = [];
-    checkListItems.forEach((element) {
+    checkListItems!.forEach((element) {
       if (element.lat != null) {
         events.add(element);
       }
@@ -179,7 +171,7 @@ class _CheckListViewState extends State<CheckListView>
           );
         },
       ),
-      onRefresh: refreshData,
+      onRefresh: refreshData as Future<void> Function(),
     );
   }
 
@@ -209,13 +201,11 @@ class _CheckListViewState extends State<CheckListView>
               children: [
                 ListView(
                   shrinkWrap: true,
-                  children: _tabController.index == 0
+                  children: _tabController!.index == 0
                       ? [
                           isCauseAdmin
                               ? CustomButton(
-                                  text: checkListItems.length > 0
-                                      ? "Update Action List"
-                                      : "Create Action List",
+                                  text: checkListItems!.length > 0 ? "Update Action List" : "Create Action List",
                                   textSize: 16,
                                   textColor: appFontColor(),
                                   height: 40,
@@ -230,34 +220,32 @@ class _CheckListViewState extends State<CheckListView>
                               : Container(),
 
                           verticalSpaceSmall,
-                          eventList
+                          eventList!
                           //monetization(model),
                         ]
-                      : _tabController.index == 1
-                          ? [
-                              isCauseAdmin
-                                  ? CustomButton(
-                                      text: checkListItems.length > 0
-                                          ? "Update Action List"
-                                          : "Create Action List",
-                                      textSize: 16,
-                                      textColor: appFontColor(),
-                                      height: 40,
-                                      width: 320,
-                                      backgroundColor: appButtonColor(),
-                                      elevation: 2,
-                                      isBusy: false,
-                                      onPressed: () {
-                                        model.navigateToEdit(causeID);
-                                      },
-                                    )
-                                  : Container(),
-                              verticalSpaceSmall,
-                              announcementList
-                            ]
-                          : [
-                              monetization(model),
-                            ],
+                      : _tabController!.index == 1
+                      ? [
+                          isCauseAdmin
+                              ? CustomButton(
+                                  text: checkListItems!.length > 0 ? "Update Action List" : "Create Action List",
+                                  textSize: 16,
+                                  textColor: appFontColor(),
+                                  height: 40,
+                                  width: 320,
+                                  backgroundColor: appButtonColor(),
+                                  elevation: 2,
+                                  isBusy: false,
+                                  onPressed: () {
+                                    model.navigateToEdit(causeID);
+                                  },
+                                )
+                              : Container(),
+                          verticalSpaceSmall,
+                          announcementList!
+                        ]
+                      : [
+                          monetization(model),
+                        ],
                 ),
                 Spacer(),
                 tabBar(model),

@@ -1,29 +1,28 @@
 class GoForumPostComment {
-  String postID;
-  String senderUID;
-  String username;
-  String message;
-  bool isReply;
-  String replyReceiverUsername;
-  String originalReplyCommentID;
-  List replies;
-  int replyCount;
-  int timePostedInMilliseconds;
+  String? postID;
+  String? senderUID;
+  String? username;
+  String? message;
+  bool? isReply;
+  String? replyReceiverUsername;
+  String? originalReplyCommentID;
+  List? replies;
+  int? replyCount;
+  int? timePostedInMilliseconds;
   dynamic image;
 
-  GoForumPostComment({
-    this.postID,
-    this.senderUID,
-    this.username,
-    this.message,
-    this.isReply,
-    this.replyReceiverUsername,
-    this.originalReplyCommentID,
-    this.replies,
-    this.replyCount,
-    this.timePostedInMilliseconds,
-    this.image
-  });
+  GoForumPostComment(
+      {this.postID,
+      this.senderUID,
+      this.username,
+      this.message,
+      this.isReply,
+      this.replyReceiverUsername,
+      this.originalReplyCommentID,
+      this.replies,
+      this.replyCount,
+      this.timePostedInMilliseconds,
+      this.image});
 
   GoForumPostComment.fromMap(Map<String, dynamic> data)
       : this(

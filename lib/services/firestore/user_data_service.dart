@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
@@ -11,10 +11,10 @@ import 'package:stacked_services/stacked_services.dart';
 
 class UserDataService {
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
-  SnackbarService _snackbarService = locator<SnackbarService>();
+  SnackbarService? _snackbarService = locator<SnackbarService>();
   //AuthService _authService = locator<AuthService>();
 
-  Future checkIfUserExists(String id) async {
+  Future checkIfUserExists(String? id) async {
     bool exists = false;
     DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
       return e.message;
@@ -25,23 +25,20 @@ class UserDataService {
     return exists;
   }
 
-  Future checkIfUserHasBeenOnboarded(String id) async {
-    bool onboarded = false;
+  Future checkIfUserHasBeenOnboarded(String? id) async {
+    bool? onboarded = false;
     DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
       return e.message;
     });
     if (snapshot.exists) {
-      onboarded = snapshot.data()['onboarded'] == null
-          ? false
-          : snapshot.data()['onboarded'];
+      onboarded = snapshot.data()!['onboarded'] == null ? false : snapshot.data()!['onboarded'];
     }
     return onboarded;
   }
 
-  Future checkIfUsernameExists(String uid, String username) async {
+  Future checkIfUsernameExists(String? uid, String username) async {
     bool exists = false;
-    QuerySnapshot snapshot =
-        await userRef.where('username', isEqualTo: username).get();
+    QuerySnapshot snapshot = await userRef.where('username', isEqualTo: username).get();
     if (snapshot.docs.isNotEmpty) {
       snapshot.docs.forEach((doc) {
         if (doc.id != uid) {
@@ -53,11 +50,11 @@ class UserDataService {
   }
 
   Future createGoUser({
-    @required String id,
-    @required String fbID,
-    @required String googleID,
-    @required String email,
-    @required String phoneNo,
+    required String id,
+    required String? fbID,
+    required String? googleID,
+    required String email,
+    required String? phoneNo,
   }) async {
     GoUser newUser = GoUser().generateNewUser(
       id: id,
@@ -73,42 +70,41 @@ class UserDataService {
     await userRef.doc(id).update({"onboarded": false});
   }
 
-  Future getGoUserByID(String id) async {
-    GoUser user;
+  Future getGoUserByID(String? id) async {
+    GoUser? user;
     DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
       return e.message;
     });
     if (snapshot.exists) {
-      Map<String, dynamic> snapshotData = snapshot.data();
+      Map<String, dynamic> snapshotData = snapshot.data()!;
       user = GoUser.fromMap(snapshotData);
     }
     return user;
   }
 
   Future getGoUserByUsername(String username) async {
-    GoUser user;
-    QuerySnapshot querySnapshot =
-        await userRef.where("username", isEqualTo: username).get();
+    GoUser? user;
+    QuerySnapshot querySnapshot = await userRef.where("username", isEqualTo: username).get();
     if (querySnapshot.docs.isNotEmpty) {
       DocumentSnapshot doc = querySnapshot.docs.first;
-      Map<String, dynamic> docData = doc.data();
+      Map<String, dynamic> docData = doc.data()!;
       user = GoUser.fromMap(docData);
     }
     return user;
   }
 
-  Future addPost(String id, String postID) async {
-    GoUser user = await getGoUserByID(id);
+  Future addPost(String? id, String? postID) async {
+    GoUser user = await (getGoUserByID(id) as FutureOr<GoUser>);
     if (user.posts == null) {
       user.posts = [];
     }
-    user.posts.add(postID);
+    user.posts!.add(postID);
     updateGoUser(user);
   }
 
-  Future removePost(String id, String postID) async {
-    GoUser user = await getGoUserByID(id);
-    user.posts.remove(postID);
+  Future removePost(String? id, String? postID) async {
+    GoUser user = await (getGoUserByID(id) as FutureOr<GoUser>);
+    user.posts!.remove(postID);
     updateGoUser(user);
   }
 
@@ -118,7 +114,7 @@ class UserDataService {
     });
   }
 
-  Future updateUserOnboardStatus(String id) async {
+  Future updateUserOnboardStatus(String? id) async {
     await userRef.doc(id).update({
       "onboarded": true,
     }).catchError((e) {
@@ -127,20 +123,20 @@ class UserDataService {
   }
 
   Future<bool> updateCheckedItems(String id, String uid) async {
-    GoUser user;
+    late GoUser user;
     DocumentSnapshot snapshot = await userRef.doc(uid).get().catchError((e) {
       return e.message;
     });
     if (snapshot.exists) {
-      Map<String, dynamic> snapshotData = snapshot.data();
+      Map<String, dynamic> snapshotData = snapshot.data()!;
       user = GoUser.fromMap(snapshotData);
     }
-    if (user.checks.length == null) {
+    if (user.checks!.length == null) {
       user.checks = [];
     }
 
-    if (!user.checks.contains(id)) {
-      user.checks.add(id);
+    if (!user.checks!.contains(id)) {
+      user.checks!.add(id);
       print(user.checks);
       updateGoUser(user);
     }
@@ -149,22 +145,22 @@ class UserDataService {
   }
 
   Future<bool> isChecked(String id, String uid) async {
-    GoUser user;
+    late GoUser user;
     DocumentSnapshot snapshot = await userRef.doc(uid).get().catchError((e) {
       return e.message;
     });
     if (snapshot.exists) {
-      Map<String, dynamic> snapshotData = snapshot.data();
+      Map<String, dynamic> snapshotData = snapshot.data()!;
       user = GoUser.fromMap(snapshotData);
     }
-    if (user.checks.length == null) {
+    if (user.checks!.length == null) {
       return false;
     }
-    return user.checks.contains(id);
+    return user.checks!.contains(id);
   }
 
-  Future updateGoUserName(String id, String username) async {
-    bool exists = await checkIfUserExists(id);
+  Future updateGoUserName(String? id, String username) async {
+    bool exists = await (checkIfUserExists(id) as FutureOr<bool>);
     if (exists) {
       await userRef.doc(id).update({
         "username": username,
@@ -192,16 +188,15 @@ class UserDataService {
     });
   }
 
-  Future updateGoUserPoints(String id, int number) async {
-    GoUser user = await getGoUserByID(id);
-    await userRef.doc(id).update({"points": user.points + number}).catchError((e) {
+  Future updateGoUserPoints(String? id, int number) async {
+    GoUser user = await (getGoUserByID(id) as FutureOr<GoUser>);
+    await userRef.doc(id).update({"points": user.points! + number}).catchError((e) {
       return e.message;
     });
   }
 
-  Future setGoUserPoints(String id, int number) async {
-    
-    await userRef.doc(id).update({"points":  number}).catchError((e) {
+  Future setGoUserPoints(String? id, int number) async {
+    await userRef.doc(id).update({"points": number}).catchError((e) {
       return e.message;
     });
   }
@@ -226,7 +221,7 @@ class UserDataService {
     });
   }
 
-  Future updateBio(String id, String bio) async {
+  Future updateBio(String? id, String bio) async {
     await userRef.doc(id).update({
       "bio": bio,
     }).catchError((e) {
@@ -234,7 +229,7 @@ class UserDataService {
     });
   }
 
-  Future updateUserMessageToken(String id, String messageToken) async {
+  Future updateUserMessageToken(String? id, String? messageToken) async {
     await userRef.doc(id).update({
       "messageToken": messageToken,
     }).catchError((e) {
@@ -243,26 +238,24 @@ class UserDataService {
   }
 
   //is Follwing
-  Future<bool> isFollowing(String uid) async {
+  Future<bool?> isFollowing(String? uid) async {
     AuthService _authService = locator<AuthService>();
-    String id = await _authService.getCurrentUserID();
+    String? id = await _authService.getCurrentUserID();
     DocumentSnapshot user = await userRef.doc(id).get();
-    return user.data()['following'].contains(uid);
+    return user.data()!['following'].contains(uid);
   }
 
-  Future followUnfollowUser(String uid) async {
+  Future followUnfollowUser(String? uid) async {
     AuthService _authService = locator<AuthService>();
-    String id = await _authService.getCurrentUserID();
-    if (await isFollowing(uid)) {
+    String? id = await _authService.getCurrentUserID();
+    if (await (isFollowing(uid) as FutureOr<bool>)) {
       DocumentSnapshot user = await userRef.doc(id).get();
-      List following = user.data()['following'];
+      List following = user.data()!['following'];
       following.remove(uid);
-      userRef
-          .doc(id)
-          .update({'following': following, 'followingCount': following.length});
+      userRef.doc(id).update({'following': following, 'followingCount': following.length});
 
       DocumentSnapshot other = await userRef.doc(uid).get();
-      List followers = other.data()['followers'];
+      List followers = other.data()!['followers'];
       followers.remove(id);
       userRef.doc(uid).update({
         'followers': followers,
@@ -270,14 +263,12 @@ class UserDataService {
       });
     } else {
       DocumentSnapshot user = await userRef.doc(id).get();
-      List following = user.data()['following'];
+      List following = user.data()!['following'];
       following.add(uid);
-      userRef
-          .doc(id)
-          .update({'following': following, 'followingCount': following.length});
+      userRef.doc(id).update({'following': following, 'followingCount': following.length});
 
       DocumentSnapshot other = await userRef.doc(uid).get();
-      List followers = other.data()['followers'];
+      List followers = other.data()!['followers'];
       followers.add(id);
       userRef.doc(uid).update({
         'followers': followers,
@@ -289,13 +280,12 @@ class UserDataService {
   ///QUERIES
   //Load Users by Follower Count
   Future<List<DocumentSnapshot>> loadUsers({
-    @required int resultsLimit,
+    required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query =
-        userRef.orderBy('followerCount', descending: true).limit(resultsLimit);
+    Query query = userRef.orderBy('followerCount', descending: true).limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
-      _snackbarService.showSnackbar(
+      _snackbarService!.showSnackbar(
         title: 'Error',
         message: e.message,
         duration: Duration(seconds: 5),
@@ -310,18 +300,15 @@ class UserDataService {
 
   //Load Additional Users by Follower Count
   Future<List<DocumentSnapshot>> loadAdditionalUsers({
-    @required DocumentSnapshot lastDocSnap,
-    @required int resultsLimit,
+    required DocumentSnapshot lastDocSnap,
+    required int resultsLimit,
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = userRef
-        .orderBy('followerCount', descending: true)
-        .startAfterDocument(lastDocSnap)
-        .limit(resultsLimit);
+    query = userRef.orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
-      _snackbarService.showSnackbar(
+      _snackbarService!.showSnackbar(
         title: 'Error',
         message: e.message,
         duration: Duration(seconds: 5),
@@ -340,11 +327,11 @@ class UserDataService {
     //return res;
   }
 
-  Future likeUnlikePost(String id, String postID) async {
+  Future likeUnlikePost(String? id, String? postID) async {
     //if they dont have a like list you have to make one
 
     DocumentSnapshot user = await userRef.doc(id).get();
-    List liked = user.data()['liked'];
+    List liked = user.data()!['liked'];
 
     if (liked.contains(postID)) {
       liked.remove(postID);

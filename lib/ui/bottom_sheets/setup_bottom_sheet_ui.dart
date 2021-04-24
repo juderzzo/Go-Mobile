@@ -1,4 +1,4 @@
-import 'package:go/app/locator.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/ui/bottom_sheets/cause_bottom_sheets/cause_creator_bottom_sheet/cause_creator_bottom_sheet.dart';
 import 'package:go/ui/bottom_sheets/forum_post_bottom_sheets/forum_post_author_bottom_sheet/forum_post_author_bottom_sheet.dart';

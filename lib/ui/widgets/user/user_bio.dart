@@ -4,10 +4,10 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 
 class UserBio extends StatelessWidget {
-  final String username;
-  final String profilePicURL;
-  final String bio;
-  UserBio({@required this.username, @required this.profilePicURL, @required this.bio});
+  final String? username;
+  final String? profilePicURL;
+  final String? bio;
+  UserBio({required this.username, required this.profilePicURL, required this.bio});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class UserBio extends StatelessWidget {
           ),
           SizedBox(height: 6),
           Text(
-            bio,
+            bio!,
             style: TextStyle(
               fontSize: 14,
               color: appFontColor(),
@@ -49,10 +49,10 @@ class UserBio extends StatelessWidget {
 }
 
 class CauseAuthorBio extends StatelessWidget {
-  final String username;
-  final String profilePicURL;
-  final String bio;
-  CauseAuthorBio({@required this.username, @required this.profilePicURL, @required this.bio});
+  final String? username;
+  final String? profilePicURL;
+  final String? bio;
+  CauseAuthorBio({required this.username, required this.profilePicURL, required this.bio});
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class CauseAuthorBio extends StatelessWidget {
                   ),
                   SizedBox(height: 2),
                   Text(
-                    username,
+                    username!,
                     style: TextStyle(
                       fontSize: 14,
                       color: appFontColor(),
@@ -102,7 +102,7 @@ class CauseAuthorBio extends StatelessWidget {
                   ),
                   SizedBox(height: 2),
                   Text(
-                    bio,
+                    bio!,
                     style: TextStyle(
                       fontSize: 14,
                       color: appFontColor(),

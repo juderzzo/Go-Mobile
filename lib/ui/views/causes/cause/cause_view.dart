@@ -19,9 +19,8 @@ class CauseView extends StatefulWidget {
   _CauseViewState createState() => _CauseViewState();
 }
 
-class _CauseViewState extends State<CauseView>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
+class _CauseViewState extends State<CauseView> with SingleTickerProviderStateMixin {
+  TabController? _tabController;
   bool openAdmins = false;
 
   Widget head(CauseViewModel model) {
@@ -33,8 +32,7 @@ class _CauseViewState extends State<CauseView>
             children: [
               IconButton(
                 onPressed: () => model.navigateBack(),
-                icon: Icon(FontAwesomeIcons.angleLeft,
-                    color: appFontColor(), size: 24),
+                icon: Icon(FontAwesomeIcons.angleLeft, color: appFontColor(), size: 24),
               ),
               Container(
                 height: 50,
@@ -43,11 +41,13 @@ class _CauseViewState extends State<CauseView>
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
                     child: CustomFittedText(
-                      text: model.cause.name,
+                      text: model.cause!.name,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: appFontColor(),
                       textAlign: TextAlign.left,
+                      height: 16,
+                      width: 200,
                     ),
                   ),
                 ]),
@@ -84,18 +84,16 @@ class _CauseViewState extends State<CauseView>
                     : AboutView(
                         cause: model.cause,
                         images: model.images,
-                        creatorUsername: "@${model.causeCreator.username}",
-                        creatorProfilePicURL: model.causeCreator.profilePicURL,
+                        creatorUsername: "@${model.causeCreator!.username}",
+                        creatorProfilePicURL: model.causeCreator!.profilePicURL,
                         viewCreator: null,
                         isFollowing: model.isFollowingCause,
                         followUnfollowCause: () => model.followUnfollowCause(),
                       ),
                 CheckListView(
                     checkListItems: model.checkListItems,
-                    isCauseAdmin: model.currentUID == model.cause.creatorID
-                        ? true
-                        : false,
-                    causeID: model.cause.id,
+                    isCauseAdmin: model.currentUID == model.cause!.creatorID ? true : false,
+                    causeID: model.cause!.id,
                     currentUID: model.currentUID,
                     checkOffItem: (item) => model.checkOffItem(item),
                     refreshData: () {}),
@@ -112,18 +110,16 @@ class _CauseViewState extends State<CauseView>
                     : AboutView(
                         cause: model.cause,
                         images: model.images,
-                        creatorUsername: "@${model.causeCreator.username}",
-                        creatorProfilePicURL: model.causeCreator.profilePicURL,
+                        creatorUsername: "@${model.causeCreator!.username}",
+                        creatorProfilePicURL: model.causeCreator!.profilePicURL,
                         viewCreator: null,
                         isFollowing: model.isFollowingCause,
                         followUnfollowCause: () => model.followUnfollowCause(),
                       ),
                 CheckListView(
                     checkListItems: model.checkListItems,
-                    isCauseAdmin: model.currentUID == model.cause.creatorID
-                        ? true
-                        : false,
-                    causeID: model.cause.id,
+                    isCauseAdmin: model.currentUID == model.cause!.creatorID ? true : false,
+                    causeID: model.cause!.id,
                     currentUID: model.currentUID,
                     checkOffItem: (item) => model.checkOffItem(item),
                     refreshData: () {}),
@@ -155,10 +151,7 @@ class _CauseViewState extends State<CauseView>
         onModelReady: (model) {
           model.initialize(context).then((v) {
             print("Is admin: ${model.isAdmin}");
-            _tabController = TabController(
-                length: model.isAdmin ? 4 : 3,
-                vsync: this,
-                initialIndex: model.tab > -1 ? model.tab : 0);
+            _tabController = TabController(length: model.isAdmin ? 4 : 3, vsync: this, initialIndex: model.tab! > -1 ? model.tab! : 0);
             if (model.tab == 3) {
               openAdmins = true;
             }
@@ -169,30 +162,26 @@ class _CauseViewState extends State<CauseView>
         viewModelBuilder: () => CauseViewModel(),
         builder: (context, model, child) => OrientationBuilder(
               builder: (context, orientation) {
-                if (orientation == Orientation.landscape &&
-                    _tabController.index == 0) {
+                if (orientation == Orientation.landscape && _tabController!.index == 0) {
                   return body(model);
                 } else {
                   return Scaffold(
                     appBar: CustomAppBar().basicActionAppBar(
-                      title: model.isBusy ? "" : model.cause.name,
+                      title: model.isBusy ? "" : model.cause!.name!,
                       showBackButton: true,
                       actionWidget: model.isBusy
                           ? Container()
                           : IconButton(
                               onPressed: () => model.navigateToCreatePostView(),
-                              icon: Icon(FontAwesomeIcons.edit,
-                                  color: appFontColor(), size: 18),
+                              icon: Icon(FontAwesomeIcons.edit, color: appFontColor(), size: 18),
                             ),
-                    ),
+                    ) as PreferredSizeWidget?,
                     body: Container(
                       color: appBackgroundColor(),
                       child: SafeArea(
                         child: Container(
                           child: model.isBusy
-                              ? Center(
-                                  child: CustomCircleProgressIndicator(
-                                      color: appActiveColor(), size: 48))
+                              ? Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48))
                               : Column(
                                   children: [
                                     verticalSpaceSmall,
