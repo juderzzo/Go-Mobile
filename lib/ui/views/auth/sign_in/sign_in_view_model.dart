@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -26,13 +26,13 @@ class SignInViewModel extends BaseViewModel {
 
     if (result is bool) {
       if (result) {
-        bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(await _authService!.getCurrentUserID()) as FutureOr<bool>);
+        //bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(await _authService!.getCurrentUserID()) as FutureOr<bool>);
 
-        if (!onboarded) {
-          //_navigationService.replaceWith(Routes.OnboardingViewRoute);
-        } else {
-          _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        }
+        // if (!onboarded) {
+        //   //_navigationService.replaceWith(Routes.OnboardingViewRoute);
+        // } else {
+        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
+        // }
       } else {
         await _dialogService!.showDialog(
           title: "Login Error",
@@ -40,10 +40,10 @@ class SignInViewModel extends BaseViewModel {
         );
       }
     } else {
-      await _dialogService!.showDialog(
-        title: "Login Error",
-        description: result,
-      );
+      // await _dialogService!.showDialog(
+      //   title: "Login Error",
+      //   description: result,
+      // );
     }
   }
 
@@ -57,12 +57,12 @@ class SignInViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String? uid = await _authService!.getCurrentUserID();
-        bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        if (onboarded) {
-          _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        } else {
-          //_navigationService.replaceWith(Routes.OnboardingViewRoute);
-        }
+        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
+        // if (onboarded) {
+        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
+        // } else {
+        //   //_navigationService.replaceWith(Routes.OnboardingViewRoute);
+        // }
       }
     }
   }
@@ -77,12 +77,12 @@ class SignInViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String? uid = await _authService!.getCurrentUserID();
-        bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        if (onboarded) {
-          _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        } else {
-          // _navigationService.replaceWith(Routes.OnboardingViewRoute);
-        }
+        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
+        // if (onboarded) {
+        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
+        // } else {
+        //   // _navigationService.replaceWith(Routes.OnboardingViewRoute);
+        // }
       }
     }
   }
@@ -97,12 +97,12 @@ class SignInViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String? uid = await _authService!.getCurrentUserID();
-        bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        if (onboarded) {
-          _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        } else {
-          //_navigationService.replaceWith(Routes.OnboardingViewRoute);
-        }
+        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
+        // if (onboarded) {
+        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
+        // } else {
+        //   //_navigationService.replaceWith(Routes.OnboardingViewRoute);
+        // }
       }
     }
   }

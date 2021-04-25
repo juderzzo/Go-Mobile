@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:stacked_services/stacked_services.dart';
 

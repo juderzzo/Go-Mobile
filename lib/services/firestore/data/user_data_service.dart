@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -12,27 +13,43 @@ import 'package:stacked_services/stacked_services.dart';
 class UserDataService {
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
   SnackbarService? _snackbarService = locator<SnackbarService>();
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
   //AuthService _authService = locator<AuthService>();
 
-  Future checkIfUserExists(String? id) async {
+  Future<bool?> checkIfUserExists({required String id}) async {
     bool exists = false;
+    String? error;
     DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
-      return e.message;
+      error = e.message;
     });
+
+    if (error != null) {
+      _customDialogService.showErrorDialog(description: error!);
+      return null;
+    }
+
     if (snapshot.exists) {
       exists = true;
     }
     return exists;
   }
 
-  Future checkIfUserHasBeenOnboarded(String? id) async {
-    bool? onboarded = false;
+  Future<bool> checkIfUserHasBeenOnboarded({required String id}) async {
+    bool onboarded = false;
+    String? error;
     DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
-      return e.message;
+      error = e.message;
     });
+
+    if (error != null) {
+      _customDialogService.showErrorDialog(description: error!);
+      return onboarded;
+    }
+
     if (snapshot.exists) {
       onboarded = snapshot.data()!['onboarded'] == null ? false : snapshot.data()!['onboarded'];
     }
+
     return onboarded;
   }
 
@@ -49,36 +66,38 @@ class UserDataService {
     return exists;
   }
 
-  Future createGoUser({
-    required String id,
-    required String? fbID,
-    required String? googleID,
-    required String email,
-    required String? phoneNo,
-  }) async {
-    GoUser newUser = GoUser().generateNewUser(
-      id: id,
-      fbID: fbID,
-      googleID: googleID,
-      email: email,
-      phoneNo: phoneNo,
-    );
-    await userRef.doc(newUser.id).set(newUser.toMap()).catchError((e) {
-      return e.message;
+  Future<bool> createGoUser({required GoUser user}) async {
+    bool createdUser = true;
+    String? error;
+    await userRef.doc(user.id).set(user.toMap()).catchError((e) {
+      error = e.message;
+      createdUser = false;
     });
 
-    await userRef.doc(id).update({"onboarded": false});
+    if (error != null) {
+      _customDialogService.showErrorDialog(description: error!);
+    }
+
+    return createdUser;
   }
 
-  Future getGoUserByID(String? id) async {
-    GoUser? user;
+  Future<GoUser> getGoUserByID(String? id) async {
+    GoUser user = GoUser();
+    String? error;
     DocumentSnapshot snapshot = await userRef.doc(id).get().catchError((e) {
-      return e.message;
+      error = e.message;
     });
+
+    if (error != null) {
+      _customDialogService.showErrorDialog(description: error!);
+      return user;
+    }
+
     if (snapshot.exists) {
       Map<String, dynamic> snapshotData = snapshot.data()!;
       user = GoUser.fromMap(snapshotData);
     }
+
     return user;
   }
 
@@ -160,16 +179,16 @@ class UserDataService {
   }
 
   Future updateGoUserName(String? id, String username) async {
-    bool exists = await (checkIfUserExists(id) as FutureOr<bool>);
-    if (exists) {
-      await userRef.doc(id).update({
-        "username": username,
-      }).catchError((e) {
-        return e.message;
-      });
-    } else {
-      print("does not exist");
-    }
+    // bool exists = await (checkIfUserExists(id) as FutureOr<bool>);
+    // if (exists) {
+    //   await userRef.doc(id).update({
+    //     "username": username,
+    //   }).catchError((e) {
+    //     return e.message;
+    //   });
+    // } else {
+    //   print("does not exist");
+    // }
   }
 
   Future updateLikedPosts(String id, List likedPosts) async {

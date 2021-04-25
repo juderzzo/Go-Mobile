@@ -6,7 +6,7 @@ import 'package:go/app/app.router.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/search_results_model.dart';
-import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked_services/stacked_services.dart';

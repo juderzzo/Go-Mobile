@@ -2,7 +2,7 @@ import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:go/utils/copy_shareable_link.dart';
 import 'package:stacked/stacked.dart';

@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go/app/app.locator.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:go/services/dialogs/custom_dialog_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 
 class AuthService {
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  UserDataService? _userDataService = locator<UserDataService>();
-  CustomDialogService? _customDialogService = locator<CustomDialogService>();
+  UserDataService _userDataService = locator<UserDataService>();
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
 
   //AUTH STATE
   Future<bool> isLoggedIn() async {
@@ -34,39 +35,36 @@ class AuthService {
   }
 
   //SIGN IN & REGISTRATION
+  Future<bool> signUpWithEmail({required String email, required String password}) async {
+    bool res = true;
+    String? error;
 
-  Future signUpWithEmail({required String email, required String password}) async {
-    try {
-      UserCredential credential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      credential.user!.sendEmailVerification();
-      return credential.user != null;
-    } catch (e) {
-      //return e.message;
+    UserCredential credential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).catchError((e) {
+      error = e.message;
+      res = false;
+    });
+
+    if (error != null) {
+      _customDialogService.showErrorDialog(description: error!);
+      return res;
     }
+
+    credential.user!.sendEmailVerification();
+    GoUser user = GoUser().generateNewUser(id: credential.user!.uid);
+    user.email = email;
+    await _userDataService.createGoUser(user: user);
+
+    return res;
   }
 
-  Future signInWithEmail({required String email, required String password}) async {
-    try {
-      print("1");
-      UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-
-      if (credential.user != null) {
-        if (credential.user!.emailVerified) {
-          String? uid = await getCurrentUserID();
-          bool exists = await (_userDataService!.checkIfUserExists(uid) as FutureOr<bool>);
-          if (!exists) {
-            print("user doesnt exist");
-            _userDataService!.createGoUser(id: uid!, fbID: null, googleID: null, email: email, phoneNo: null);
-          }
-          return true;
-        } else {
-          return "Email Confirmation Required";
-        }
-      }
-    } catch (e) {
-      //print(e.message);
-      //return e.message;
-    }
+  Future<bool> signInWithEmail({required String email, required String password}) async {
+    bool signedIn = false;
+    await firebaseAuth.signInWithEmailAndPassword(email: email, password: password).then((value) {
+      signedIn = true;
+    }).catchError((error) {
+      _customDialogService.showErrorDialog(description: error.message);
+    });
+    return signedIn;
   }
 
   Future loginWithFacebook() async {

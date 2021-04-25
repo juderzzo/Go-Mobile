@@ -7,8 +7,8 @@ import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/firestore/utils/firebase_messaging_service.dart';
 import 'package:go/utils/go_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
@@ -42,7 +42,7 @@ class OnboardingViewModel extends BaseViewModel {
   initialize() async {
     setBusy(true);
     uid = await _authService!.getCurrentUserID();
-    tutorial = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool?>);
+    //tutorial = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool?>);
     notifyListeners();
     setBusy(false);
   }

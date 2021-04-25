@@ -4,8 +4,8 @@ import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/cause_data_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/cause_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 

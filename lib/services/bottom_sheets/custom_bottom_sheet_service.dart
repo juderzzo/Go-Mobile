@@ -1,18 +1,19 @@
 import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
-import 'package:go/services/firestore/post_data_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/post_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CustomBottomSheetService {
   BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
-  NavigationService? _navigationService = locator<NavigationService>();
+  NavigationService _navigationService = locator<NavigationService>();
   CustomDialogService? _customDialogService = locator<CustomDialogService>();
   AuthService? _authService = locator<AuthService>();
   ReactiveUserService? _reactiveUserService = locator<ReactiveUserService>();
@@ -75,7 +76,7 @@ class CustomBottomSheetService {
         await _authService!.signOut();
         _reactiveUserService!.updateUserLoggedIn(false);
         _reactiveUserService!.updateUser(GoUser());
-        //_navigationService.pushNamedAndRemoveUntil(Routes.AuthViewRoute);
+        _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
       }
     }
   }

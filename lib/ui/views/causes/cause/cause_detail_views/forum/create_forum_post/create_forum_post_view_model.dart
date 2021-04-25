@@ -5,7 +5,7 @@ import 'package:go/app/app.locator.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/post_data_service.dart';
+import 'package:go/services/firestore/data/post_data_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/go_image_picker.dart';
 import 'package:stacked/stacked.dart';

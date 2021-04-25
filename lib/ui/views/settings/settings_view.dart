@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/views/settings/settings_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
@@ -30,17 +29,17 @@ class SettingsView extends StatelessWidget {
                 isActive: model.isDarkMode(),
                 showBottomBorder: true,
               ),
-              !model.notificationsEnabled ? CustomFlatButton(
-                onTap: model.notificationsEnabled ? model.disableNotifications : model.enableNotifications,
-                fontColor: appFontColor(),
-                fontSize: 16,
-                text: "Enable Notifications",
-                showBottomBorder: true,
-              ) : Container(),
-
+              !model.notificationsEnabled
+                  ? CustomFlatButton(
+                      onTap: model.notificationsEnabled ? model.disableNotifications : model.enableNotifications,
+                      fontColor: appFontColor(),
+                      fontSize: 16,
+                      text: "Enable Notifications",
+                      showBottomBorder: true,
+                    )
+                  : Container(),
               CustomFlatButton(
                 onTap: () {
-                 
                   model.navigateToOnboarding();
                 },
                 fontColor: appFontColor(),
@@ -48,13 +47,8 @@ class SettingsView extends StatelessWidget {
                 text: "View Tutorial",
                 showBottomBorder: true,
               ),
-
-              
               CustomFlatButton(
-                onTap: () {
-                  
-                  model.signOut(context);
-                },
+                onTap: () => model.signOut()aa,
                 fontColor: Colors.red,
                 fontSize: 16,
                 text: "Log Out",

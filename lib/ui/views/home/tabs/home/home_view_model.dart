@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_user_model.dart';
-import 'package:go/services/firestore/cause_data_service.dart';
+import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 

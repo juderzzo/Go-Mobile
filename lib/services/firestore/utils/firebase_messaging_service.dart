@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 
 class FirebaseMessagingService {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;

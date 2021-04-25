@@ -1,7 +1,7 @@
 import 'package:go/app/app.locator.dart';
 import 'package:go/enums/notifcation_type.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 

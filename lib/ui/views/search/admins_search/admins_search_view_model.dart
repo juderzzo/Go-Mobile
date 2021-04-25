@@ -4,7 +4,7 @@ import 'package:go/app/app.router.dart';
 import 'package:go/models/search_results_model.dart';
 import 'package:go/services/algolia/algolia_search_service.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/ui/views/search/all_search_results/all_search_results_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';

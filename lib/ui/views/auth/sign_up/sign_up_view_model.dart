@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -53,10 +52,10 @@ class SignUpViewModel extends BaseViewModel {
         );
       }
     } else {
-      await _dialogService!.showDialog(
-        title: "Sign Up Error",
-        description: result,
-      );
+      // await _dialogService!.showDialog(
+      //   title: "Sign Up Error",
+      //   description: result,
+      // );
     }
   }
 
@@ -104,16 +103,16 @@ class SignUpViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String? uid = await _authService!.getCurrentUserID();
-        bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        if (onboarded) {
-          _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        } else {
-          await _dialogService!.showConfirmationDialog(
-              title: "By continuing, you agree to our terms of service and privacy policy",
-              description: "The policy is linked on the bottom of this page",
-              barrierDismissible: true);
-          // _navigationService.replaceWith(Routes.OnboardingViewRoute);
-        }
+        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
+        // if (onboarded) {
+        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
+        // } else {
+        //   await _dialogService!.showConfirmationDialog(
+        //       title: "By continuing, you agree to our terms of service and privacy policy",
+        //       description: "The policy is linked on the bottom of this page",
+        //       barrierDismissible: true);
+        //   // _navigationService.replaceWith(Routes.OnboardingViewRoute);
+        // }
       }
     }
   }
@@ -128,16 +127,16 @@ class SignUpViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String? uid = await _authService!.getCurrentUserID();
-        bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        if (onboarded) {
-          _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        } else {
-          await _dialogService!.showConfirmationDialog(
-              title: "By continuing, you agree to our terms of service and privacy policy",
-              description: "The policy is linked on the bottom of this page",
-              barrierDismissible: true);
-          //_navigationService.replaceWith(Routes.OnboardingViewRoute);
-        }
+        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
+        // if (onboarded) {
+        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
+        // } else {
+        //   await _dialogService!.showConfirmationDialog(
+        //       title: "By continuing, you agree to our terms of service and privacy policy",
+        //       description: "The policy is linked on the bottom of this page",
+        //       barrierDismissible: true);
+        //   //_navigationService.replaceWith(Routes.OnboardingViewRoute);
+        // }
       }
     }
   }
@@ -152,16 +151,16 @@ class SignUpViewModel extends BaseViewModel {
     if (result is bool) {
       if (result) {
         String? uid = await _authService!.getCurrentUserID();
-        bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        if (onboarded) {
-          _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        } else {
-          await _dialogService!.showConfirmationDialog(
-              title: "By continuing, you agree to our terms of service and privacy policy",
-              description: "The policy is linked on the bottom of this page",
-              barrierDismissible: true);
-          //navigationService.replaceWith(Routes.OnboardingViewRoute);
-        }
+        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
+        // if (onboarded) {
+        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
+        // } else {
+        //   await _dialogService!.showConfirmationDialog(
+        //       title: "By continuing, you agree to our terms of service and privacy policy",
+        //       description: "The policy is linked on the bottom of this page",
+        //       barrierDismissible: true);
+        //   //navigationService.replaceWith(Routes.OnboardingViewRoute);
+        // }
       }
     }
   }

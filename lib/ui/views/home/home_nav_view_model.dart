@@ -3,8 +3,8 @@ import 'package:go/enums/init_error_status.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
-import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/firestore/utils/firebase_messaging_service.dart';
 import 'package:go/utils/network_status.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -90,7 +90,7 @@ class HomeNavViewModel extends StreamViewModel<GoUser> {
       GoUser user = GoUser();
       await Future.delayed(Duration(seconds: 1));
       String? uid = await _authService!.getCurrentUserID();
-      user = await _userDataService!.getGoUserByID(uid);
+      user = (await _userDataService!.getGoUserByID(uid))!;
       yield user;
     }
   }

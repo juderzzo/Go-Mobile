@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firebase_messaging/firebase_messaging_service.dart';
+import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
+import 'package:go/services/firestore/utils/firebase_messaging_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -16,7 +16,7 @@ class SettingsViewModel extends BaseViewModel {
   NavigationService? _navigationService = locator<NavigationService>();
   ThemeService? _themeService = locator<ThemeService>();
   FirebaseMessagingService? _firebaseMessagingService = locator<FirebaseMessagingService>();
-
+  CustomBottomSheetService _customBottomSheetService = locator<CustomBottomSheetService>();
   bool notificationsEnabled = false;
 
   initialize() async {
@@ -112,25 +112,8 @@ class SettingsViewModel extends BaseViewModel {
   //   notificationsEnabled = false;
   // }
 
-  signOut(BuildContext context) async {
-    // String action = await showModalActionSheet(
-    //     message: "Are You Sure You Want to Log Out?",
-    //     context: context,
-    //     actions: [
-    //       SheetAction(
-    //           label: "Log Out",
-    //           key: 'logout',
-    //           icon: Icons.logout,
-    //           isDestructiveAction: true),
-    //     ],
-    //     title: "Logout");
-    // if (action == "logout") {
-    //   await _authService.signOut();
-    //   if (_themeService.selectedThemeMode != ThemeManagerMode.light) {
-    //     _themeService.setThemeMode(ThemeManagerMode.light);
-    //   }
-    //   _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
-    // }
+  signOut() async {
+    _customBottomSheetService.showLogoutBottomSheet();
   }
 
   ///NAVIGATION

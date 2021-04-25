@@ -3,12 +3,14 @@ import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
-import 'package:go/services/firestore/cause_data_service.dart';
-import 'package:go/services/firestore/comment_data_service.dart';
-import 'package:go/services/firestore/notification_data_service.dart';
-import 'package:go/services/firestore/platform_data_service.dart';
-import 'package:go/services/firestore/post_data_service.dart';
-import 'package:go/services/firestore/user_data_service.dart';
+import 'package:go/services/firestore/data/cause_data_service.dart';
+import 'package:go/services/firestore/data/comment_data_service.dart';
+import 'package:go/services/firestore/data/notification_data_service.dart';
+import 'package:go/services/firestore/data/platform_data_service.dart';
+import 'package:go/services/firestore/data/post_data_service.dart';
+import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/firestore/utils/firebase_messaging_service.dart';
+import 'package:go/services/firestore/utils/firebase_storage_service.dart';
 import 'package:go/services/location/google_places_service.dart';
 import 'package:go/services/location/location_service.dart';
 import 'package:go/services/reactive/file_uploader/reactive_file_uploader_service.dart';
@@ -22,7 +24,10 @@ import 'package:go/ui/views/base/app_base_view_model.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view.dart';
+import 'package:go/ui/views/home/home_nav_view_model.dart';
+import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
+import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
 import 'package:go/ui/views/notifications/notifications_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
@@ -125,7 +130,7 @@ import 'package:stacked_themes/stacked_themes.dart';
     ),
   ],
   dependencies: [
-//LAZY SINGLETONS
+    //LAZY SINGLETONS
     LazySingleton(
       classType: ThemeService,
       resolveUsing: ThemeService.getInstance,
@@ -137,7 +142,8 @@ import 'package:stacked_themes/stacked_themes.dart';
     LazySingleton(classType: CustomBottomSheetService),
     LazySingleton(classType: CustomDialogService),
     LazySingleton(classType: AuthService),
-//LazySingleton(classType: FirestoreStorageService),
+    LazySingleton(classType: FirebaseStorageService),
+    LazySingleton(classType: FirebaseMessagingService),
     LazySingleton(classType: PlatformDataService),
     LazySingleton(classType: NotificationDataService),
     LazySingleton(classType: UserDataService),
@@ -151,13 +157,16 @@ import 'package:stacked_themes/stacked_themes.dart';
     LazySingleton(classType: DynamicLinkService),
     LazySingleton(classType: ShareService),
 
-//REACTIVE LAZY SINGLETONS
+    //REACTIVE LAZY SINGLETONS
     LazySingleton(classType: ReactiveUserService),
     LazySingleton(classType: ReactiveFileUploaderService),
 
-//SINGLETONS
+    //SINGLETONS
     Singleton(classType: AppBaseViewModel),
+    Singleton(classType: HomeNavViewModel),
     Singleton(classType: HomeViewModel),
+    Singleton(classType: ExploreViewModel),
+    Singleton(classType: ProfileViewModel),
   ],
 )
 class AppSetup {

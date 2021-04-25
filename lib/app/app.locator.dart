@@ -15,19 +15,24 @@ import '../services/auth/auth_service.dart';
 import '../services/bottom_sheets/custom_bottom_sheet_service.dart';
 import '../services/dialogs/custom_dialog_service.dart';
 import '../services/dynamic_links/dynamic_link_service.dart';
-import '../services/firestore/cause_data_service.dart';
-import '../services/firestore/comment_data_service.dart';
-import '../services/firestore/notification_data_service.dart';
-import '../services/firestore/platform_data_service.dart';
-import '../services/firestore/post_data_service.dart';
-import '../services/firestore/user_data_service.dart';
+import '../services/firestore/data/cause_data_service.dart';
+import '../services/firestore/data/comment_data_service.dart';
+import '../services/firestore/data/notification_data_service.dart';
+import '../services/firestore/data/platform_data_service.dart';
+import '../services/firestore/data/post_data_service.dart';
+import '../services/firestore/data/user_data_service.dart';
+import '../services/firestore/utils/firebase_messaging_service.dart';
+import '../services/firestore/utils/firebase_storage_service.dart';
 import '../services/location/google_places_service.dart';
 import '../services/location/location_service.dart';
 import '../services/reactive/file_uploader/reactive_file_uploader_service.dart';
 import '../services/reactive/user/reactive_user_service.dart';
 import '../services/share/share_service.dart';
 import '../ui/views/base/app_base_view_model.dart';
+import '../ui/views/home/home_nav_view_model.dart';
+import '../ui/views/home/tabs/explore/explore_view_model.dart';
 import '../ui/views/home/tabs/home/home_view_model.dart';
+import '../ui/views/home/tabs/profile/profile_view_model.dart';
 
 final locator = StackedLocator.instance;
 
@@ -40,6 +45,8 @@ void setupLocator() {
   locator.registerLazySingleton(() => CustomBottomSheetService());
   locator.registerLazySingleton(() => CustomDialogService());
   locator.registerLazySingleton(() => AuthService());
+  locator.registerLazySingleton(() => FirebaseStorageService());
+  locator.registerLazySingleton(() => FirebaseMessagingService());
   locator.registerLazySingleton(() => PlatformDataService());
   locator.registerLazySingleton(() => NotificationDataService());
   locator.registerLazySingleton(() => UserDataService());
@@ -54,5 +61,8 @@ void setupLocator() {
   locator.registerLazySingleton(() => ReactiveUserService());
   locator.registerLazySingleton(() => ReactiveFileUploaderService());
   locator.registerSingleton(AppBaseViewModel());
+  locator.registerSingleton(HomeNavViewModel());
   locator.registerSingleton(HomeViewModel());
+  locator.registerSingleton(ExploreViewModel());
+  locator.registerSingleton(ProfileViewModel());
 }

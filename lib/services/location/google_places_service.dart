@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/services/firestore/platform_data_service.dart';
+import 'package:go/services/firestore/data/platform_data_service.dart';
 
 import 'location_service.dart';
 

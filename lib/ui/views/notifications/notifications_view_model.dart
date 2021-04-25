@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/notification_data_service.dart';
+import 'package:go/services/firestore/data/notification_data_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';

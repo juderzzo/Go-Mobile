@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class GoUser {
   String? id;
   String? fbID;
@@ -22,53 +20,58 @@ class GoUser {
   int? appOpenTimeInMilliseconds;
   String? messageToken;
   int? points;
+  bool? onboarded;
 
-  GoUser(
-      {this.id,
-      this.fbID,
-      this.googleID,
-      this.email,
-      this.phoneNo,
-      this.username,
-      this.profilePicURL,
-      this.bio,
-      this.personalSite,
-      this.checks,
-      this.inspirations,
-      this.followerCount,
-      this.followingCount,
-      this.following,
-      this.followers,
-      this.liked,
-      this.blockedUsers,
-      this.appOpenTimeInMilliseconds,
-      this.messageToken,
-      this.posts,
-      this.points});
+  GoUser({
+    this.id,
+    this.fbID,
+    this.googleID,
+    this.email,
+    this.phoneNo,
+    this.username,
+    this.profilePicURL,
+    this.bio,
+    this.personalSite,
+    this.checks,
+    this.inspirations,
+    this.followerCount,
+    this.followingCount,
+    this.following,
+    this.followers,
+    this.liked,
+    this.blockedUsers,
+    this.appOpenTimeInMilliseconds,
+    this.messageToken,
+    this.posts,
+    this.points,
+    this.onboarded,
+  });
 
   GoUser.fromMap(Map<String, dynamic> data)
       : this(
-            id: data['id'],
-            fbID: data['fbID'],
-            googleID: data['googleID'],
-            email: data['email'],
-            phoneNo: data['phoneNo'],
-            username: data['username'],
-            profilePicURL: data['profilePicURL'],
-            bio: data['bio'],
-            personalSite: data['personalSite'],
-            checks: data['checks'],
-            inspirations: data['inspirations'],
-            followerCount: data['followerCount'],
-            followingCount: data['followingCount'],
-            following: data['following'],
-            followers: data['followers'],
-            liked: data['liked'],
-            blockedUsers: data['blockedUsers'],
-            appOpenTimeInMilliseconds: data['appOpenTimeInMilliseconds'],
-            messageToken: data['messageToken'],
-            posts: data['posts'],
-            points: data['points']);
+          id: data['id'],
+          fbID: data['fbID'],
+          googleID: data['googleID'],
+          email: data['email'],
+          phoneNo: data['phoneNo'],
+          username: data['username'],
+          profilePicURL: data['profilePicURL'],
+          bio: data['bio'],
+          personalSite: data['personalSite'],
+          checks: data['checks'],
+          inspirations: data['inspirations'],
+          followerCount: data['followerCount'],
+          followingCount: data['followingCount'],
+          following: data['following'],
+          followers: data['followers'],
+          liked: data['liked'],
+          blockedUsers: data['blockedUsers'],
+          appOpenTimeInMilliseconds: data['appOpenTimeInMilliseconds'],
+          messageToken: data['messageToken'],
+          posts: data['posts'],
+          points: data['points'],
+          onboarded: data['onboarded'],
+        );
 
   Map<String, dynamic> toMap() => {
         'id': this.id,
@@ -91,22 +94,19 @@ class GoUser {
         'appOpenTimeInMilliseconds': this.appOpenTimeInMilliseconds,
         'messageToken': this.messageToken,
         'posts': this.posts,
-        'points': this.points
+        'points': this.points,
+        'onboarded': this.onboarded,
       };
 
   GoUser generateNewUser({
     required String id,
-    required String? fbID,
-    required String? googleID,
-    required String email,
-    required String? phoneNo,
   }) {
     GoUser user = GoUser(
       id: id,
-      fbID: fbID,
-      googleID: googleID,
-      email: email,
-      phoneNo: phoneNo,
+      fbID: null,
+      googleID: null,
+      email: null,
+      phoneNo: null,
       username: id.substring(0, 10),
       profilePicURL: "https://picsum.photos/200",
       bio: "",
@@ -121,6 +121,7 @@ class GoUser {
       blockedUsers: [],
       appOpenTimeInMilliseconds: null,
       messageToken: null,
+      onboarded: false,
     );
     return user;
   }

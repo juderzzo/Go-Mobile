@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/services/firestore/platform_data_service.dart';
 import 'package:location/location.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -11,7 +10,6 @@ class LocationService {
   Map<String, double>? currentLocation;
   Location currentUserLocation = Location();
   SnackbarService? _snackbarService = locator<SnackbarService>();
-  PlatformDataService? _platformDataService = locator<PlatformDataService>();
 
   Future<LocationData?> getCurrentLocation() async {
     LocationData? locationData;

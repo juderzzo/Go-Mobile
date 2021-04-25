@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/services/firestore/platform_data_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CustomDialogService {
   DialogService? _dialogService = locator<DialogService>();
   NavigationService? _navigationService = locator<NavigationService>();
-  PlatformDataService? _platformDataService = locator<PlatformDataService>();
+  // PlatformDataService? _platformDataService = locator<PlatformDataService>();
 
   showErrorDialog({required String description}) async {
     _dialogService!.showDialog(

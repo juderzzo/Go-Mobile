@@ -28,14 +28,14 @@ class Routes {
   static const String SignUpViewRoute = '/sign-up';
   static const String ForgotViewRoute = '/forgot-auth';
   static const String _CauseViewRoute = '/causes/:id';
-  static String CauseViewRoute({required dynamic id}) => '/causes/$id';
+  static String CauseViewRoute({@required dynamic id}) => '/causes/$id';
   static const String _EditCheckListViewRoute = '/causes/checklist/edit/:id';
-  static String EditCheckListViewRoute({required dynamic id}) =>
+  static String EditCheckListViewRoute({@required dynamic id}) =>
       '/causes/checklist/edit/$id';
   static const String _ForumPostViewRoute = '/forums/:id';
-  static String ForumPostViewRoute({required dynamic id}) => '/forums/$id';
+  static String ForumPostViewRoute({@required dynamic id}) => '/forums/$id';
   static const String _UserViewRoute = '/users/:id';
-  static String UserViewRoute({required dynamic id}) => '/users/$id';
+  static String UserViewRoute({@required dynamic id}) => '/users/$id';
   static const String SettingsViewRoute = '/settings';
   static const String NotificationsViewRoute = '/notifications';
   static const all = <String>{

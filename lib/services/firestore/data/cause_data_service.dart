@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
-import 'package:go/services/firestore/post_data_service.dart';
+import 'package:go/services/firestore/data/post_data_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:go/utils/mail_sender.dart';
