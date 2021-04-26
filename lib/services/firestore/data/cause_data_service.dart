@@ -341,7 +341,7 @@ class CauseDataService {
   }
 
   //Load Causes Following
-  Future<List<QueryDocumentSnapshot>> loadCausesFollowing({
+  Future<List<DocumentSnapshot>> loadCausesFollowing({
     required String? uid,
     required int resultsLimit,
   }) async {
@@ -354,12 +354,11 @@ class CauseDataService {
         message: e.message,
         duration: Duration(seconds: 5),
       );
-      return docs;
     });
     if (snapshot.docs.isNotEmpty) {
       docs = snapshot.docs;
     }
-    return docs as FutureOr<List<QueryDocumentSnapshot>>;
+    return docs;
   }
 
   //Load Causes Created

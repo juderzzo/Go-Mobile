@@ -9,6 +9,7 @@ class FirebaseMessagingService {
   UserDataService? _userDataService = locator<UserDataService>();
 //** FIREBASE MESSAGING  */
   configFirebaseMessaging() {
+    firebaseMessaging.getAPNSToken();
     // String messageTitle;
     // String messageBody;
     // String messageType;

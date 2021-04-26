@@ -10,8 +10,10 @@ import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 class CustomBottomSheetService {
+  ThemeService _themeService = locator<ThemeService>();
   BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
   NavigationService _navigationService = locator<NavigationService>();
   CustomDialogService? _customDialogService = locator<CustomDialogService>();

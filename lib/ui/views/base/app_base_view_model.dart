@@ -28,8 +28,8 @@ class AppBaseViewModel extends StreamViewModel<GoUser> with ReactiveServiceMixin
   InitErrorStatus initErrorStatus = InitErrorStatus.network;
 
   ///CURRENT USER
-  bool get isLoggedIn => _reactiveUserService!.userLoggedIn;
-  GoUser get user => _reactiveUserService!.user;
+  bool get isLoggedIn => _reactiveUserService.userLoggedIn;
+  GoUser get user => _reactiveUserService.user;
 
   ///TAB BAR STATE
   int _navBarIndex = 0;
@@ -103,7 +103,7 @@ class AppBaseViewModel extends StreamViewModel<GoUser> with ReactiveServiceMixin
         yield userData;
       } else {
         String? uid = await _authService!.getCurrentUserID();
-        userData = await (_userDataService!.getGoUserByID(uid) as FutureOr<GoUser>);
+        userData = await _userDataService!.getGoUserByID(uid);
         yield userData;
       }
     }

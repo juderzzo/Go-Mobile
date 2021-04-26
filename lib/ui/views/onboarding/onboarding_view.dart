@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
@@ -9,10 +10,12 @@ import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/common/text_field/multi_line_text_field.dart';
 import 'package:go/ui/widgets/common/text_field/single_line_text_field.dart';
+import 'package:go/ui/widgets/input_field.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_hooks/stacked_hooks.dart';
 
 class OnboardingView extends StatelessWidget {
   final introKey = GlobalKey<IntroductionScreenState>();
@@ -699,7 +702,7 @@ class OnboardingView extends StatelessWidget {
             key: introKey,
             pages: !model.tutorial!
                 ? [
-                    initialPage(),
+                    _OnboardingPageBuilder(model: model).buildInitialPage(),
                     profilePicUsernamePage(model, context),
                     newPage(model, context),
                     newPage2(model, context),
@@ -764,6 +767,87 @@ class OnboardingView extends StatelessWidget {
           ),
         )),
       ),
+    );
+  }
+}
+
+class _OnboardingImage extends StatelessWidget {
+  final String imageName;
+  _OnboardingImage({required this.imageName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Image.asset(
+          'assets/images/$imageName.png',
+          height: 150,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.low,
+        ),
+      ),
+    );
+  }
+}
+
+class _OnboardingPageBuilder {
+  final OnboardingViewModel model;
+  _OnboardingPageBuilder({required this.model});
+
+  PageViewModel buildInitialPage() {
+    PageDecoration pageDecoration = PageDecoration(
+      contentMargin: EdgeInsets.all(0),
+      titleTextStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+      bodyTextStyle: TextStyle(fontSize: 16.0),
+      titlePadding: EdgeInsets.only(top: 0.0, bottom: 8.0, left: 16, right: 16),
+      imageFlex: 3,
+      bodyFlex: 3,
+      descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      pageColor: appBackgroundColor(),
+    );
+
+    return PageViewModel(
+      decoration: pageDecoration,
+      image: _OnboardingImage(imageName: "go_logo_transparent"),
+      titleWidget: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              "Welcome to Go",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700),
+            )
+          ],
+        ),
+      ),
+      bodyWidget: Column(
+        children: [
+          CustomText(
+            text: "Let's answer a few questions to help get you going!",
+            textAlign: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.black,
+          ),
+          verticalSpaceMedium,
+        ],
+      ),
+    );
+  }
+}
+
+class _EmailField extends HookViewModelWidget<OnboardingViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, OnboardingViewModel model) {
+    TextEditingController _emailController = useTextEditingController();
+
+    return InputField(
+      controller: _emailController,
+      placeholder: "Email",
+      //onChanged: (val) => model.updateEmail(val),
     );
   }
 }

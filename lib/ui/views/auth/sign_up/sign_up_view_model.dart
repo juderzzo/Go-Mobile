@@ -9,7 +9,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SignUpViewModel extends BaseViewModel {
-  AuthService? _authService = locator<AuthService>();
+  AuthService _authService = locator<AuthService>();
   DialogService? _dialogService = locator<DialogService>();
   NavigationService? _navigationService = locator<NavigationService>();
   UserDataService? _userDataService = locator<UserDataService>();
@@ -93,76 +93,31 @@ class SignUpViewModel extends BaseViewModel {
     return isValid;
   }
 
-  Future loginWithFacebook() async {
+  signInWithFacebook() async {
     setBusy(true);
-
-    var result = await _authService!.loginWithFacebook();
-
-    setBusy(false);
-
-    if (result is bool) {
-      if (result) {
-        String? uid = await _authService!.getCurrentUserID();
-        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        // if (onboarded) {
-        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        // } else {
-        //   await _dialogService!.showConfirmationDialog(
-        //       title: "By continuing, you agree to our terms of service and privacy policy",
-        //       description: "The policy is linked on the bottom of this page",
-        //       barrierDismissible: true);
-        //   // _navigationService.replaceWith(Routes.OnboardingViewRoute);
-        // }
-      }
+    bool signedIn = await _authService.signInWithFacebook();
+    if (signedIn) {
+      await _authService.completeUserSignIn();
     }
+    setBusy(false);
   }
 
-  Future loginWithApple() async {
+  signInWithApple() async {
     setBusy(true);
-
-    var result = await _authService!.loginWithApple();
-
-    setBusy(false);
-
-    if (result is bool) {
-      if (result) {
-        String? uid = await _authService!.getCurrentUserID();
-        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        // if (onboarded) {
-        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        // } else {
-        //   await _dialogService!.showConfirmationDialog(
-        //       title: "By continuing, you agree to our terms of service and privacy policy",
-        //       description: "The policy is linked on the bottom of this page",
-        //       barrierDismissible: true);
-        //   //_navigationService.replaceWith(Routes.OnboardingViewRoute);
-        // }
-      }
+    bool signedIn = await _authService.signInWithApple();
+    if (signedIn) {
+      await _authService.completeUserSignIn();
     }
+    setBusy(false);
   }
 
-  Future loginWithGoogle() async {
+  signInWithGoogle() async {
     setBusy(true);
-
-    var result = await _authService!.loginWithGoogle();
-
-    setBusy(false);
-
-    if (result is bool) {
-      if (result) {
-        String? uid = await _authService!.getCurrentUserID();
-        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        // if (onboarded) {
-        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        // } else {
-        //   await _dialogService!.showConfirmationDialog(
-        //       title: "By continuing, you agree to our terms of service and privacy policy",
-        //       description: "The policy is linked on the bottom of this page",
-        //       barrierDismissible: true);
-        //   //navigationService.replaceWith(Routes.OnboardingViewRoute);
-        // }
-      }
+    bool signedIn = await _authService.signInWithGoogle();
+    if (signedIn) {
+      await _authService.completeUserSignIn();
     }
+    setBusy(false);
   }
 
   ///NAVIGATION

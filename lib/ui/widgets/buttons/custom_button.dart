@@ -13,18 +13,18 @@ class CustomButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? textColor;
   final double? elevation;
-  final bool? isBusy;
+  final bool isBusy;
 
   CustomButton({
-    this.text,
+    required this.text,
     this.textSize,
-    this.height,
+    required this.height,
     this.width,
-    this.onPressed,
-    this.backgroundColor,
-    this.textColor,
+    required this.onPressed,
+    required this.backgroundColor,
+    required this.textColor,
     this.elevation,
-    this.isBusy,
+    required this.isBusy,
   });
 
   @override
@@ -35,10 +35,10 @@ class CustomButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(14.0),
       child: InkWell(
         borderRadius: BorderRadius.circular(14.0),
-        onTap: isBusy! ? null : onPressed,
+        onTap: isBusy ? null : onPressed,
         child: Container(
           height: height,
-          width: width,
+          width: screenWidth(context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -48,7 +48,7 @@ class CustomButton extends StatelessWidget {
                   data: MediaQuery.of(context).copyWith(
                     textScaleFactor: 1.0,
                   ),
-                  child: isBusy!
+                  child: isBusy != null && isBusy!
                       ? CustomCircleProgressIndicator(size: height! / 2, color: textColor)
                       : FittedBox(
                           child: Text(
@@ -161,20 +161,23 @@ class CustomFlatButton extends StatelessWidget {
       child: Container(
         height: 48,
         width: screenWidth(context),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: Colors.transparent,
           border: Border(
             bottom: showBottomBorder ? BorderSide(width: 0.5, color: appBorderColorAlt()) : BorderSide.none,
           ),
         ),
-        child: Text(
-          text!,
-          textAlign: textAlign == null ? TextAlign.left : textAlign,
-          style: TextStyle(
-            fontSize: fontSize,
-            color: fontColor,
-            fontWeight: FontWeight.bold,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            text!,
+            textAlign: textAlign == null ? TextAlign.left : textAlign,
+            style: TextStyle(
+              fontSize: fontSize,
+              color: fontColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),

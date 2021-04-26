@@ -17,6 +17,7 @@ import '../ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checkli
 import '../ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import '../ui/views/causes/cause/cause_view.dart';
 import '../ui/views/notifications/notifications_view.dart';
+import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
 import '../ui/views/settings/settings_view.dart';
 import '../ui/views/user/user_view.dart';
@@ -27,6 +28,7 @@ class Routes {
   static const String SignInViewRoute = '/sign-in';
   static const String SignUpViewRoute = '/sign-up';
   static const String ForgotViewRoute = '/forgot-auth';
+  static const String OnboardingViewRoute = '/onboard';
   static const String _CauseViewRoute = '/causes/:id';
   static String CauseViewRoute({@required dynamic id}) => '/causes/$id';
   static const String _EditCheckListViewRoute = '/causes/checklist/edit/:id';
@@ -44,6 +46,7 @@ class Routes {
     SignInViewRoute,
     SignUpViewRoute,
     ForgotViewRoute,
+    OnboardingViewRoute,
     _CauseViewRoute,
     _EditCheckListViewRoute,
     _ForumPostViewRoute,
@@ -62,6 +65,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.SignInViewRoute, page: SignInView),
     RouteDef(Routes.SignUpViewRoute, page: SignUpView),
     RouteDef(Routes.ForgotViewRoute, page: ForgotView),
+    RouteDef(Routes.OnboardingViewRoute, page: OnboardingView),
     RouteDef(Routes._CauseViewRoute, page: CauseView),
     RouteDef(Routes._EditCheckListViewRoute, page: EditCheckListView),
     RouteDef(Routes._ForumPostViewRoute, page: ForumPostView),
@@ -103,6 +107,14 @@ class StackedRouter extends RouterBase {
     ForgotView: (data) {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) => ForgotView(),
+        settings: data,
+        transitionDuration: const Duration(milliseconds: 0),
+      );
+    },
+    OnboardingView: (data) {
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            OnboardingView(),
         settings: data,
         transitionDuration: const Duration(milliseconds: 0),
       );

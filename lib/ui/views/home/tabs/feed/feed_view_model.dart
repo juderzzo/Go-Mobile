@@ -30,7 +30,7 @@ class FeedViewModel extends BaseViewModel {
   GoUser? user;
 
   ///DATA RESULTS
-  List<QueryDocumentSnapshot> causesFollowingResults = [];
+  List<DocumentSnapshot> causesFollowingResults = [];
   bool loadingAdditionalCausesFollowing = false;
   bool moreCausesFollowingAvailable = true;
   bool refreshingPosts = false;

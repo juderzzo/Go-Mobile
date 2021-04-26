@@ -1,6 +1,7 @@
 import 'package:go/app/app.locator.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/ui/bottom_sheets/cause_bottom_sheets/cause_creator_bottom_sheet/cause_creator_bottom_sheet.dart';
+import 'package:go/ui/bottom_sheets/confirmation_bottom_sheets/destructive_confirmation_bottom_sheet/destructive_confirmation_bottom_sheet.dart';
 import 'package:go/ui/bottom_sheets/forum_post_bottom_sheets/forum_post_author_bottom_sheet/forum_post_author_bottom_sheet.dart';
 import 'package:go/ui/bottom_sheets/forum_post_bottom_sheets/forum_post_publish_successful_bottom_sheet/forum_post_publish_successful_bottom_sheet.dart';
 import 'package:go/ui/bottom_sheets/image_picker_bottom_sheet/image_picker_bottom_sheet.dart';
@@ -25,6 +26,8 @@ void setupBottomSheetUI() {
     BottomSheetType.postOptions: (context, sheetRequest, completer) => ForumPostBottomSheet(request: sheetRequest, completer: completer),
     BottomSheetType.currentUserOptions: (context, sheetRequest, completer) => CurrentUserBottomSheet(request: sheetRequest, completer: completer),
     BottomSheetType.userOptions: (context, sheetRequest, completer) => UserBottomSheet(request: sheetRequest, completer: completer),
+    BottomSheetType.destructiveConfirmation: (context, sheetRequest, completer) =>
+        DestructiveConfirmationBottomSheet(request: sheetRequest, completer: completer),
   };
   bottomSheetService.setCustomSheetBuilders(builders);
 }
