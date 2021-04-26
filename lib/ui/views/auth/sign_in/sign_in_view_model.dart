@@ -1,110 +1,79 @@
-import 'dart:async';
-
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SignInViewModel extends BaseViewModel {
-  AuthService? _authService = locator<AuthService>();
-  DialogService? _dialogService = locator<DialogService>();
-  NavigationService? _navigationService = locator<NavigationService>();
-  UserDataService? _userDataService = locator<UserDataService>();
+  AuthService _authService = locator<AuthService>();
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
+  NavigationService _navigationService = locator<NavigationService>();
+  UserDataService _userDataService = locator<UserDataService>();
 
-  ///Sign Up Via Email
-  Future signInWithEmail({required email, required password}) async {
-    setBusy(true);
+  String? email;
+  String? password;
 
-    var result = await _authService!.signInWithEmail(
-      email: email,
-      password: password,
-    );
-
-    setBusy(false);
-
-    if (result is bool) {
-      if (result) {
-        //bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(await _authService!.getCurrentUserID()) as FutureOr<bool>);
-
-        // if (!onboarded) {
-        //   //_navigationService.replaceWith(Routes.OnboardingViewRoute);
-        // } else {
-        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        // }
-      } else {
-        await _dialogService!.showDialog(
-          title: "Login Error",
-          description: "There Was an Issue Logging In. Please Try Again",
-        );
-      }
-    } else {
-      // await _dialogService!.showDialog(
-      //   title: "Login Error",
-      //   description: result,
-      // );
-    }
+  updateEmail(String val) {
+    email = val.trim();
+    notifyListeners();
   }
 
-  Future loginWithFacebook() async {
-    setBusy(true);
-
-    var result = await _authService!.loginWithFacebook();
-
-    setBusy(false);
-
-    if (result is bool) {
-      if (result) {
-        String? uid = await _authService!.getCurrentUserID();
-        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        // if (onboarded) {
-        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        // } else {
-        //   //_navigationService.replaceWith(Routes.OnboardingViewRoute);
-        // }
-      }
-    }
+  updatePassword(String val) {
+    password = val;
+    notifyListeners();
   }
 
-  Future loginWithApple() async {
-    setBusy(true);
-
-    var result = await _authService!.loginWithApple();
-
-    setBusy(false);
-
-    if (result is bool) {
-      if (result) {
-        String? uid = await _authService!.getCurrentUserID();
-        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        // if (onboarded) {
-        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        // } else {
-        //   // _navigationService.replaceWith(Routes.OnboardingViewRoute);
-        // }
-      }
+  bool formIsValid() {
+    bool isValid = true;
+    if (email == null || !isValidEmail(email!)) {
+      _customDialogService.showErrorDialog(description: "Email is invalid");
+      isValid = false;
+    } else if (password == null) {
+      _customDialogService.showErrorDialog(description: "Password is invalid");
+      isValid = false;
     }
+    return isValid;
   }
 
-  Future loginWithGoogle() async {
+  signInWithEmail() async {
     setBusy(true);
-
-    var result = await _authService!.loginWithGoogle();
-
-    setBusy(false);
-
-    if (result is bool) {
-      if (result) {
-        String? uid = await _authService!.getCurrentUserID();
-        // bool onboarded = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool>);
-        // if (onboarded) {
-        //   _navigationService!.replaceWith(Routes.AppBaseViewRoute);
-        // } else {
-        //   //_navigationService.replaceWith(Routes.OnboardingViewRoute);
-        // }
+    if (formIsValid()) {
+      bool signedIn = await _authService.signInWithEmail(email: email!, password: password!);
+      if (signedIn) {
+        await _authService.completeUserSignIn();
       }
     }
+    setBusy(false);
+  }
+
+  signInWithFacebook() async {
+    setBusy(true);
+    bool signedIn = await _authService.signInWithFacebook();
+    if (signedIn) {
+      await _authService.completeUserSignIn();
+    }
+    setBusy(false);
+  }
+
+  signInWithApple() async {
+    setBusy(true);
+    bool signedIn = await _authService.signInWithApple();
+    if (signedIn) {
+      await _authService.completeUserSignIn();
+    }
+    setBusy(false);
+  }
+
+  signInWithGoogle() async {
+    setBusy(true);
+    bool signedIn = await _authService.signInWithGoogle();
+    if (signedIn) {
+      await _authService.completeUserSignIn();
+    }
+    setBusy(false);
   }
 
   ///NAVIGATION

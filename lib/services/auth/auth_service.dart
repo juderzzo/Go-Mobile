@@ -1,16 +1,23 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class AuthService {
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   UserDataService _userDataService = locator<UserDataService>();
   CustomDialogService _customDialogService = locator<CustomDialogService>();
-
+  NavigationService _navigationService = locator<NavigationService>();
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
   //AUTH STATE
   Future<bool> isLoggedIn() async {
     User? user = firebaseAuth.currentUser;
@@ -57,6 +64,7 @@ class AuthService {
     return res;
   }
 
+  //Email
   Future<bool> signInWithEmail({required String email, required String password}) async {
     bool signedIn = false;
     await firebaseAuth.signInWithEmailAndPassword(email: email, password: password).then((value) {
@@ -67,188 +75,103 @@ class AuthService {
     return signedIn;
   }
 
-  Future loginWithFacebook() async {
-    // try {
-    //   //Acquire FB access token and data
-    //   final AccessToken accessToken = await FacebookAuth.instance.login(permissions: ['email']);
-    //   final Map<String, dynamic> fbUserData = await FacebookAuth.instance.getUserData();
-    //   final OAuthCredential oAuthCredential = FacebookAuthProvider.credential(accessToken.token);
-    //
-    //   //Authenticate token with Firebase
-    //   try {
-    //     UserCredential credential = await firebaseAuth.signInWithCredential(oAuthCredential);
-    //     if (credential.user != null) {
-    //       //Create New User or Find Existing One
-    //       bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
-    //
-    //       if (userExists) {
-    //         return true;
-    //       } else {
-    //         //Create New User
-    //         var res = await _userDataService.createGoUser(
-    //           id: credential.user.uid,
-    //           fbID: accessToken.userId,
-    //           googleID: null,
-    //           email: fbUserData['email'],
-    //           phoneNo: null,
-    //         );
-    //         if (res is String) {
-    //           _snackbarService.showSnackbar(
-    //             title: 'Login Error',
-    //             message: res,
-    //             duration: Duration(seconds: 5),
-    //           );
-    //           return false;
-    //         } else {
-    //           return true;
-    //         }
-    //       }
-    //     }
-    //   } catch (e) {
-    //     _snackbarService.showSnackbar(
-    //       title: 'Login Error',
-    //       message: e.message,
-    //       duration: Duration(seconds: 5),
-    //     );
-    //   }
-    // } on FacebookAuthException catch (e) {
-    //   String errorMessage = "";
-    //   switch (e.errorCode) {
-    //     case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:
-    //       errorMessage = "Login operation already in progress...";
-    //       break;
-    //     case FacebookAuthErrorCode.CANCELLED:
-    //       errorMessage = "Facebook login cancelled";
-    //       break;
-    //     case FacebookAuthErrorCode.FAILED:
-    //       errorMessage = "Facebook login failed";
-    //       break;
-    //   }
-    //   _snackbarService.showSnackbar(
-    //     title: 'Facebook Login Error',
-    //     message: errorMessage,
-    //     duration: Duration(seconds: 5),
-    //   );
-    // }
+  //Facebook
+  Future<bool> signInWithFacebook() async {
+    bool signedIn = false;
+    final FacebookAuth fbAuth = FacebookAuth.instance;
+    final LoginResult result = await fbAuth.login(permissions: ['email']);
+    switch (result.status) {
+      case LoginStatus.success:
+        final AuthCredential credential = FacebookAuthProvider.credential(result.accessToken!.token);
+        await FirebaseAuth.instance.signInWithCredential(credential).then((val) async {
+          signedIn = true;
+        }).catchError((e) {
+          _customDialogService.showErrorDialog(description: e.message);
+        });
+        break;
+      case LoginStatus.cancelled:
+        _customDialogService.showErrorDialog(description: "Cancelled Facebook Sign In");
+        break;
+      case LoginStatus.failed:
+        _customDialogService.showErrorDialog(description: "There was an Issue Signing Into Facebook");
+        break;
+      case LoginStatus.operationInProgress:
+        // TODO: Handle this case.
+        break;
+    }
+    return signedIn;
   }
 
-  Future loginWithApple() async {
-    // final AuthorizationResult result = await AppleSignIn.performRequests([
-    //   AppleIdRequest(requestedScopes: [Scope.email])
-    // ]);
-    // if (result.status == AuthorizationStatus.authorized) {
-    //   final AppleIdCredential appleIdCredential = result.credential;
-    //   OAuthProvider oAuthProvider = OAuthProvider("apple.com");
-    //   final AuthCredential appleIDCredential = oAuthProvider.credential(
-    //     idToken: String.fromCharCodes(appleIdCredential.identityToken),
-    //     accessToken: String.fromCharCodes(appleIdCredential.authorizationCode),
-    //   );
-    //   try {
-    //     UserCredential credential = await firebaseAuth.signInWithCredential(appleIDCredential);
-    //     if (credential.user != null) {
-    //       //Create New User or Find Existing One
-    //       bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
-    //
-    //       if (userExists) {
-    //         return true;
-    //       } else {
-    //         //Create New User
-    //         var res = await _userDataService.createGoUser(
-    //           id: credential.user.uid,
-    //           fbID: null,
-    //           googleID: null,
-    //           email: null,
-    //           phoneNo: null,
-    //         );
-    //         if (res is String) {
-    //           _snackbarService.showSnackbar(
-    //             title: 'Login Error',
-    //             message: res,
-    //             duration: Duration(seconds: 5),
-    //           );
-    //           return false;
-    //         } else {
-    //           return true;
-    //         }
-    //       }
-    //     }
-    //   } catch (e) {
-    //     _snackbarService.showSnackbar(
-    //       title: 'Login Error',
-    //       message: e.message,
-    //       duration: Duration(seconds: 5),
-    //     );
-    //     return false;
-    //   }
-    // } else if (result.status == AuthorizationStatus.cancelled) {
-    //   _snackbarService.showSnackbar(
-    //     title: 'Login Error',
-    //     message: "Apple Sign In Cancelled",
-    //     duration: Duration(seconds: 5),
-    //   );
-    //   return false;
-    // } else {
-    //   _snackbarService.showSnackbar(
-    //     title: 'Login Error',
-    //     message: "There was an issue signing in. Please try again.",
-    //     duration: Duration(seconds: 5),
-    //   );
-    //   return false;
-    // }
+  //Apple
+  Future<bool> signInWithApple() async {
+    bool signedIn = true;
+    await FirebaseAuthOAuth().openSignInFlow("apple.com", ["email"]).then((user) async {
+      print('apple sign in with user: ${user!.uid}');
+      print(user.email);
+    }).catchError((error) {
+      _customDialogService.showErrorDialog(description: error.message);
+      signedIn = false;
+    });
+    return signedIn;
   }
 
-  Future loginWithGoogle() async {
-    // GoogleSignIn googleSignIn = GoogleSignIn(
-    //   scopes: <String>[
-    //     'email',
-    //   ],
-    // );
-    // GoogleSignInAccount googleAccount = await googleSignIn.signIn();
-    // if (googleAccount == null) {
-    //   _snackbarService.showSnackbar(
-    //     title: 'Login Error',
-    //     message: 'Cancelled Google Sign In',
-    //     duration: Duration(seconds: 5),
-    //   );
-    //   return;
-    // }
-    // GoogleSignInAuthentication googleAuth = await googleAccount.authentication;
-    // AuthCredential authCredential = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-    // try {
-    //   UserCredential credential = await firebaseAuth.signInWithCredential(authCredential);
-    //   if (credential.user != null) {
-    //     //Create New User or Find Existing One
-    //     bool userExists = await _userDataService.checkIfUserExists(credential.user.uid);
-    //     if (userExists) {
-    //       return true;
-    //     } else {
-    //       //Create New User
-    //       var res = await _userDataService.createGoUser(
-    //         id: credential.user.uid,
-    //         fbID: null,
-    //         googleID: googleAuth.idToken,
-    //         email: null,
-    //         phoneNo: null,
-    //       );
-    //       if (res is String) {
-    //         _snackbarService.showSnackbar(
-    //           title: 'Login Error',
-    //           message: res,
-    //           duration: Duration(seconds: 5),
-    //         );
-    //         return false;
-    //       } else {
-    //         return true;
-    //       }
-    //     }
-    //   }
-    // } catch (e) {
-    //   _snackbarService.showSnackbar(
-    //     title: 'Login Error',
-    //     message: e.message,
-    //     duration: Duration(seconds: 5),
-    //   );
-    //   return false;
-    // }
+  Future<bool> signInWithGoogle() async {
+    bool signedIn = false;
+    GoogleSignIn _googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+      ],
+    );
+    await _googleSignIn.signIn().then((googleAccount) async {
+      await googleAccount!.authentication.then((googleAuth) async {
+        AuthCredential credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+        await FirebaseAuth.instance.signInWithCredential(credential).then((val) async {
+          signedIn = true;
+        }).catchError((e) {
+          _customDialogService.showErrorDialog(description: e.message);
+        });
+      });
+    }).catchError((e) {
+      _customDialogService.showErrorDialog(description: e.toString());
+      print(e.message);
+    });
+    return signedIn;
+  }
+
+  Future<bool> completeUserSignIn() async {
+    bool completedSignIn = true;
+    String? uid = await getCurrentUserID();
+    if (uid != null) {
+      bool? userExists = await _userDataService.checkIfUserExists(id: uid);
+      if (userExists == null) {
+        _customDialogService.showErrorDialog(description: "Unknown error logging in. Please try again.");
+        return false;
+      } else if (userExists) {
+        GoUser user = await _userDataService.getGoUserByID(uid);
+        _reactiveUserService.updateUser(user);
+        _reactiveUserService.updateUserLoggedIn(true);
+
+        ///CHECK IF USER ONBOARDED
+        if (user.onboarded == null || !user.onboarded!) {
+          _navigationService.replaceWith(Routes.OnboardingViewRoute);
+        } else {
+          _navigationService.replaceWith(Routes.AppBaseViewRoute);
+        }
+      } else {
+        ///CREATE NEW USER
+        GoUser user = GoUser().generateNewUser(id: uid);
+        bool createdUser = await _userDataService.createGoUser(user: user);
+        if (createdUser) {
+          _reactiveUserService.updateUser(user);
+          _reactiveUserService.updateUserLoggedIn(true);
+          _navigationService.replaceWith(Routes.OnboardingViewRoute);
+        } else {
+          _customDialogService.showErrorDialog(description: "Unknown error logging in. Please try again.");
+          return false;
+        }
+      }
+    }
+
+    return completedSignIn;
   }
 }

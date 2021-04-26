@@ -29,6 +29,7 @@ import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
 import 'package:go/ui/views/notifications/notifications_view.dart';
+import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
 import 'package:go/ui/views/user/user_view.dart';
@@ -78,6 +79,13 @@ import 'package:stacked_themes/stacked_themes.dart';
     ),
 
     //ONBOARDING
+    CustomRoute(
+      page: OnboardingView,
+      name: "OnboardingViewRoute",
+      path: "/onboard",
+      //transitionsBuilder: ,
+      durationInMilliseconds: 0,
+    ),
 
     //CAUSES
     CustomRoute(
