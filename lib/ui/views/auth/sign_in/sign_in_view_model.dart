@@ -2,7 +2,6 @@ import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/dialogs/custom_dialog_service.dart';
-import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -11,7 +10,6 @@ class SignInViewModel extends BaseViewModel {
   AuthService _authService = locator<AuthService>();
   CustomDialogService _customDialogService = locator<CustomDialogService>();
   NavigationService _navigationService = locator<NavigationService>();
-  UserDataService _userDataService = locator<UserDataService>();
 
   String? email;
   String? password;
@@ -78,14 +76,10 @@ class SignInViewModel extends BaseViewModel {
 
   ///NAVIGATION
   replaceWithSignUpPage() {
-    _navigationService!.replaceWith(Routes.SignUpViewRoute);
-  }
-
-  navigateToHomePage() {
-    _navigationService!.navigateTo(Routes.AppBaseViewRoute);
+    _navigationService.replaceWith(Routes.SignUpViewRoute);
   }
 
   navigateToForgot() {
-    _navigationService!.navigateTo(Routes.ForgotViewRoute);
+    _navigationService.navigateTo(Routes.ForgotViewRoute);
   }
 }
