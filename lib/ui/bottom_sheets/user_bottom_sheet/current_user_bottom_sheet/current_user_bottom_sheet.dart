@@ -43,7 +43,7 @@ class CurrentUserBottomSheet extends StatelessWidget {
             verticalSpaceSmall,
             CustomButton(
               onPressed: () => completer!(SheetResponse(responseData: "share")),
-              text: "Share (disabled)",
+              text: "Share Profile (disabled)",
               textSize: 16,
               textColor: appInActiveColorAlt(),
               height: 45,
@@ -54,10 +54,10 @@ class CurrentUserBottomSheet extends StatelessWidget {
             ),
             verticalSpaceSmall,
             CustomButton(
-              onPressed: () => completer!(SheetResponse(responseData: "report")),
-              text: "Report (disabled)",
+              onPressed: () => completer!(SheetResponse(responseData: "settings")),
+              text: "Settings",
               textSize: 16,
-              textColor: appDestructiveColor(),
+              textColor: appFontColor(),
               height: 45,
               width: screenWidth(context),
               backgroundColor: appBackgroundColor(),

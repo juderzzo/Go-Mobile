@@ -25,4 +25,8 @@ class CustomNavigationService {
   navigateToSearchView() {
     _navigationService.navigateWithTransition(SearchView(), transition: 'fade', opaque: true);
   }
+
+  navigateToSettingsView() {
+    _navigationService!.navigateTo(Routes.SettingsViewRoute);
+  }
 }

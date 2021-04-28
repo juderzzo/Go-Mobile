@@ -10,6 +10,7 @@ import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -27,25 +28,21 @@ class CustomBottomSheetService {
   ShareService _shareService = locator<ShareService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
   PostDataService _postDataService = locator<PostDataService>();
-
-  showCurrentUserOptions(GoUser user) async {
-    var sheetResponse = await _bottomSheetService!.showCustomSheet(
+  CustomNavigationService _customNavigationService = locator<CustomNavigationService>();
+  showCurrentUserOptions() async {
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
       barrierDismissible: true,
       variant: BottomSheetType.currentUserOptions,
     );
     if (sheetResponse != null) {
       String? res = sheetResponse.responseData;
-      if (res == "saved") {
+      if (res == "edit") {
         //saved
-      } else if (res == "edit profile") {
+      } else if (res == "share") {
         //edit profile
         //navigateToEditProfileView();
-      } else if (res == "share profile") {
-        //share profile
-        // String url = await _dynamicLinkService.createProfileLink(user: user);
-        // _shareService.copyContentLink(contentType: "profile", url: url);
-      } else if (res == "log out") {
-        showLogoutBottomSheet();
+      } else if (res == "settings") {
+        _customNavigationService.navigateToSettingsView();
       }
     }
   }

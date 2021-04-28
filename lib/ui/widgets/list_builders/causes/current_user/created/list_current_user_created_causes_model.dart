@@ -3,20 +3,26 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
-import 'package:go/ui/views/base/app_base_view_model.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 
-class ListExploreCausesModel extends BaseViewModel {
+class ListCurrentUserCreatedCausesModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
   CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
-  AppBaseViewModel appBaseViewModel = locator<AppBaseViewModel>();
+  CustomNavigationService customNavigationService = locator<CustomNavigationService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
-  String listKey = "initial-explore-causes-key";
+  String listKey = "initial-current-user-created-causes-key";
+
+  ///USER DATA
+  GoUser get user => _reactiveUserService.user;
 
   ///DATA
   List<DocumentSnapshot> dataResults = [];
@@ -47,7 +53,8 @@ class ListExploreCausesModel extends BaseViewModel {
     setBusy(true);
 
     //load data with params
-    dataResults = await _causeDataService.loadCauses(
+    dataResults = await _causeDataService.loadCausesCreated(
+      uid: user.id,
       resultsLimit: resultsLimit,
     );
 
@@ -67,7 +74,8 @@ class ListExploreCausesModel extends BaseViewModel {
     notifyListeners();
 
     //load additional data
-    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCauses(
+    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesCreated(
+      uid: user.id,
       lastDocSnap: dataResults[dataResults.length - 1],
       resultsLimit: resultsLimit,
     );
