@@ -19,12 +19,13 @@ import '../ui/views/causes/cause/cause_view.dart';
 import '../ui/views/notifications/notifications_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
+import '../ui/views/search/search_view.dart';
 import '../ui/views/settings/settings_view.dart';
 import '../ui/views/user/user_view.dart';
 
 class Routes {
-  static const String RootViewRoute = '/root';
-  static const String AppBaseViewRoute = '/';
+  static const String RootViewRoute = '/';
+  static const String AppBaseViewRoute = '/home';
   static const String SignInViewRoute = '/sign-in';
   static const String SignUpViewRoute = '/sign-up';
   static const String ForgotViewRoute = '/forgot-auth';
@@ -38,6 +39,7 @@ class Routes {
   static String ForumPostViewRoute({@required dynamic id}) => '/forums/$id';
   static const String _UserViewRoute = '/users/:id';
   static String UserViewRoute({@required dynamic id}) => '/users/$id';
+  static const String SearchViewRoute = '/search';
   static const String SettingsViewRoute = '/settings';
   static const String NotificationsViewRoute = '/notifications';
   static const all = <String>{
@@ -51,6 +53,7 @@ class Routes {
     _EditCheckListViewRoute,
     _ForumPostViewRoute,
     _UserViewRoute,
+    SearchViewRoute,
     SettingsViewRoute,
     NotificationsViewRoute,
   };
@@ -70,6 +73,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes._EditCheckListViewRoute, page: EditCheckListView),
     RouteDef(Routes._ForumPostViewRoute, page: ForumPostView),
     RouteDef(Routes._UserViewRoute, page: UserView),
+    RouteDef(Routes.SearchViewRoute, page: SearchView),
     RouteDef(Routes.SettingsViewRoute, page: SettingsView),
     RouteDef(Routes.NotificationsViewRoute, page: NotificationsView),
   ];
@@ -145,6 +149,13 @@ class StackedRouter extends RouterBase {
     UserView: (data) {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) => UserView(),
+        settings: data,
+        transitionDuration: const Duration(milliseconds: 0),
+      );
+    },
+    SearchView: (data) {
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) => SearchView(),
         settings: data,
         transitionDuration: const Duration(milliseconds: 0),
       );

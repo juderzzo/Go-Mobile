@@ -13,6 +13,7 @@ import 'package:go/services/firestore/utils/firebase_messaging_service.dart';
 import 'package:go/services/firestore/utils/firebase_storage_service.dart';
 import 'package:go/services/location/google_places_service.dart';
 import 'package:go/services/location/location_service.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/reactive/file_uploader/reactive_file_uploader_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
@@ -24,13 +25,13 @@ import 'package:go/ui/views/base/app_base_view_model.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view.dart';
-import 'package:go/ui/views/home/home_nav_view_model.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
 import 'package:go/ui/views/notifications/notifications_view.dart';
 import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
+import 'package:go/ui/views/search/search_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
 import 'package:go/ui/views/user/user_view.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -43,14 +44,14 @@ import 'package:stacked_themes/stacked_themes.dart';
     CustomRoute(
       page: RootView,
       name: "RootViewRoute",
-      path: "/root",
+      path: "/",
       //transitionsBuilder: ,
       durationInMilliseconds: 0,
     ),
     CustomRoute(
       page: AppBaseView,
       name: "AppBaseViewRoute",
-      path: "/",
+      path: "/home",
       //transitionsBuilder: ,
       durationInMilliseconds: 0,
     ),
@@ -121,6 +122,15 @@ import 'package:stacked_themes/stacked_themes.dart';
       durationInMilliseconds: 0,
     ),
 
+    //SEARCH
+    CustomRoute(
+      page: SearchView,
+      name: "SearchViewRoute",
+      path: "/search",
+      //transitionsBuilder: ,
+      durationInMilliseconds: 0,
+    ),
+
     //SETTINGS & NOTIFICATIONS
     CustomRoute(
       page: SettingsView,
@@ -149,6 +159,7 @@ import 'package:stacked_themes/stacked_themes.dart';
     LazySingleton(classType: SnackbarService),
     LazySingleton(classType: CustomBottomSheetService),
     LazySingleton(classType: CustomDialogService),
+    LazySingleton(classType: CustomNavigationService),
     LazySingleton(classType: AuthService),
     LazySingleton(classType: FirebaseStorageService),
     LazySingleton(classType: FirebaseMessagingService),
@@ -171,7 +182,6 @@ import 'package:stacked_themes/stacked_themes.dart';
 
     //SINGLETONS
     Singleton(classType: AppBaseViewModel),
-    Singleton(classType: HomeNavViewModel),
     Singleton(classType: HomeViewModel),
     Singleton(classType: ExploreViewModel),
     Singleton(classType: ProfileViewModel),

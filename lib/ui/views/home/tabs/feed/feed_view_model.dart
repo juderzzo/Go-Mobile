@@ -79,7 +79,7 @@ class FeedViewModel extends BaseViewModel {
     //print(user);
     causesFollowingResults = await _causeDataService!.loadCausesFollowing(
       resultsLimit: resultsLimit,
-      uid: user!.id,
+      uid: user!.id!,
     );
     refreshingPosts = false;
     notifyListeners();

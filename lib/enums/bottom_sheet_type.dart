@@ -9,4 +9,9 @@ enum BottomSheetType {
   currentUserOptions,
   userOptions,
   destructiveConfirmation,
+  addContent,
+  newContentConfirmation,
+  addContentSuccessful,
+  contentOptions,
+  contentAuthorOptions,
 }

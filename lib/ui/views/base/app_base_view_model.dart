@@ -14,14 +14,11 @@ import 'package:stacked_services/stacked_services.dart';
 
 class AppBaseViewModel extends StreamViewModel<GoUser> with ReactiveServiceMixin {
   ///SERVICES
-  AuthService? _authService = locator<AuthService>();
-  DialogService? _dialogService = locator<DialogService>();
-  NavigationService? _navigationService = locator<NavigationService>();
-  UserDataService? _userDataService = locator<UserDataService>();
-  SnackbarService? _snackbarService = locator<SnackbarService>();
-  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
-  DynamicLinkService? _dynamicLinkService = locator<DynamicLinkService>();
-  FirebaseMessagingService? _firebaseMessagingService = locator<FirebaseMessagingService>();
+  AuthService _authService = locator<AuthService>();
+  UserDataService _userDataService = locator<UserDataService>();
+  SnackbarService _snackbarService = locator<SnackbarService>();
+  DynamicLinkService _dynamicLinkService = locator<DynamicLinkService>();
+  FirebaseMessagingService _firebaseMessagingService = locator<FirebaseMessagingService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
 
   ///INITIAL DATA
@@ -59,7 +56,7 @@ class AppBaseViewModel extends StreamViewModel<GoUser> with ReactiveServiceMixin
       );
     } else {
       initErrorStatus = InitErrorStatus.none;
-      await _dynamicLinkService!.handleDynamicLinks();
+      await _dynamicLinkService.handleDynamicLinks();
       // _firebaseMessagingService.configFirebaseMessaging();
       // _firebaseMessagingService.updateFirebaseMessageToken(user.id);
       notifyListeners();
@@ -102,19 +99,10 @@ class AppBaseViewModel extends StreamViewModel<GoUser> with ReactiveServiceMixin
       if (!isLoggedIn) {
         yield userData;
       } else {
-        String? uid = await _authService!.getCurrentUserID();
-        userData = await _userDataService!.getGoUserByID(uid);
+        String? uid = await _authService.getCurrentUserID();
+        userData = await _userDataService.getGoUserByID(uid);
         yield userData;
       }
     }
   }
-
-  ///NAVIGATION
-// replaceWithPage() {
-//   _navigationService.replaceWith(PageRouteName);
-// }
-//
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
 }

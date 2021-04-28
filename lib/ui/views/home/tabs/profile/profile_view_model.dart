@@ -99,7 +99,7 @@ class ProfileViewModel extends BaseViewModel {
   loadCausesFollowing() async {
     causesFollowingResults = await _causeDataService!.loadCausesFollowing(
       resultsLimit: resultsLimit,
-      uid: user!.id,
+      uid: user!.id!,
     );
     notifyListeners();
   }

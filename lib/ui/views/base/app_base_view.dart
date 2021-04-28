@@ -19,23 +19,15 @@ class AppBaseView extends StatelessWidget {
   Widget getViewForIndex(int index, AppBaseViewModel model) {
     switch (index) {
       case 0:
-        return HomeView(
-          user: model.user,
-          navigateToExplorePage: () => model.setNavBarIndex(1),
-        );
+        return HomeView();
       case 1:
-        return ExploreView(user: model.user);
+        return ExploreView();
       case 2:
-        return ProfileView(user: model.user);
+        return ProfileView();
       case 3:
-        return FeedView(
-          user: model.user,
-          navigateToExplorePage: () => model.setNavBarIndex(1),
-        );
+        return FeedView();
       default:
-        return HomeView(
-          user: model.user,
-        );
+        return HomeView();
     }
   }
 

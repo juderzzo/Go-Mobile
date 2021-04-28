@@ -2,12 +2,12 @@ import 'package:go/app/app.locator.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CustomDialogService {
-  DialogService? _dialogService = locator<DialogService>();
-  NavigationService? _navigationService = locator<NavigationService>();
+  DialogService _dialogService = locator<DialogService>();
+  NavigationService _navigationService = locator<NavigationService>();
   // PlatformDataService? _platformDataService = locator<PlatformDataService>();
 
   showErrorDialog({required String description}) async {
-    _dialogService!.showDialog(
+    _dialogService.showDialog(
       barrierDismissible: true,
       title: "Error",
       description: description,
@@ -16,7 +16,7 @@ class CustomDialogService {
   }
 
   showSuccessDialog({required String title, required String description}) async {
-    _dialogService!.showDialog(
+    _dialogService.showDialog(
       barrierDismissible: true,
       title: title,
       description: description,
@@ -46,14 +46,23 @@ class CustomDialogService {
   //   }
   // }
   //
-  // showPostDeletedDialog() {
-  //   _dialogService.showDialog(
-  //     barrierDismissible: true,
-  //     title: "Post Deleted",
-  //     description: "Your post has been deleted",
-  //     buttonTitle: "Ok",
-  //   );
-  // }
+  showCauseDeletedDialog() {
+    _dialogService.showDialog(
+      barrierDismissible: true,
+      title: "Cause Deleted",
+      description: "Your cause has been deleted",
+      buttonTitle: "Ok",
+    );
+  }
+
+  showPostDeletedDialog() {
+    _dialogService.showDialog(
+      barrierDismissible: true,
+      title: "Post Deleted",
+      description: "Your post has been deleted",
+      buttonTitle: "Ok",
+    );
+  }
   //
   // showCancelContentDialog({required bool isEditing, required String contentType}) async {
   //   DialogResponse? response = await _dialogService.showDialog(

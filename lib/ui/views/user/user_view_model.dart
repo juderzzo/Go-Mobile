@@ -47,7 +47,7 @@ class UserViewModel extends BaseViewModel {
     setBusy(true);
     Map<String, dynamic> args = {}; //RouteData.of(context).arguments;
     String? uid = args['uid'];
-    user = await (_userDataService!.getGoUserByID(uid) as FutureOr<GoUser?>);
+    user = await _userDataService!.getGoUserByID(uid);
     isFollowing = await _userDataService!.isFollowing(uid);
     notifyListeners();
     scrollController.addListener(() {
@@ -97,7 +97,7 @@ class UserViewModel extends BaseViewModel {
   loadCausesFollowing() async {
     causesFollowingResults = await _causeDataService!.loadCausesFollowing(
       resultsLimit: resultsLimit,
-      uid: user!.id,
+      uid: user!.id!,
     );
     notifyListeners();
   }
