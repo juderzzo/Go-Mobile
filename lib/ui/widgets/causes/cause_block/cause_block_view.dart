@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
@@ -5,50 +6,17 @@ import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_hooks/stacked_hooks.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'cause_block_view_model.dart';
 
 class CauseBlockView extends StatelessWidget {
-  final GoCause? cause;
+  final GoCause cause;
   final bool? displayBottomBorder;
 
-  CauseBlockView({this.cause, this.displayBottomBorder});
-
-  Widget causeHead(CauseBlockViewModel model, BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 23 / 24,
-      padding: EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 0.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-            height: 20,
-            width: MediaQuery.of(context).size.width * 3 / 4,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                Text(
-                  cause!.name!,
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: appFontColor()),
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.more_horiz,
-              color: appIconColor(),
-            ),
-            onPressed: () {
-              //mail();
-              model.showOptions(context, cause!.id, cause);
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  CauseBlockView({required this.cause, this.displayBottomBorder});
 
   Widget causeImages(CauseBlockViewModel model, context) {
     List<dynamic> images = model.images;
@@ -190,45 +158,163 @@ class CauseBlockView extends StatelessWidget {
       onModelReady: (model) => model.initialize(cause!.creatorID, cause!.imageURLs!),
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
-          onTap: () => model.navigateToCauseView(cause!.id),
-          child: //cause.approved ?
-              Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 23 / 24,
-                decoration: BoxDecoration(
-                  color: appBackgroundColor(),
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 2.0,
-                      spreadRadius: 2.0,
-                      // shadow direction: bottom right
-                    )
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    causeHead(model, context),
-                    causeImages(model, context),
-                    causeDetails(model, context),
-                    causeOrganizer(model, context),
-                    SizedBox(height: 16.0),
-                    Container(),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 30,
+        onTap: () => model.navigateToCauseView(cause!.id),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          decoration: BoxDecoration(
+            color: appBackgroundColor(),
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 2.0,
+                spreadRadius: 2.0,
               )
             ],
-          )
-          //: Container(height: 1),
           ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              _Head(causeName: cause.name!, showOptions: () => model.showOptions(cause)),
+              cause.videoLink != null ? Container() : _CauseImages(imgURLs: cause.imageURLs!),
+              causeDetails(model, context),
+              causeOrganizer(model, context),
+              SizedBox(height: 16.0),
+              Container(),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+}
+
+class _Head extends HookViewModelWidget<CauseBlockViewModel> {
+  final String causeName;
+  final VoidCallback showOptions;
+  _Head({required this.causeName, required this.showOptions});
+
+  @override
+  Widget buildViewModelWidget(BuildContext context, CauseBlockViewModel model) {
+    return Container(
+      width: screenWidth(context),
+      padding: EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 0.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            height: 20,
+            width: MediaQuery.of(context).size.width * 3 / 4,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                Text(
+                  causeName,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: appFontColor(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.more_horiz,
+              color: appIconColor(),
+            ),
+            onPressed: showOptions,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CauseImages extends HookViewModelWidget<CauseBlockViewModel> {
+  final List imgURLs;
+  _CauseImages({required this.imgURLs});
+
+  @override
+  Widget buildViewModelWidget(BuildContext context, CauseBlockViewModel model) {
+    return Container(
+      child: Column(
+        children: [
+          CarouselSlider(
+            options: CarouselOptions(
+              height: screenWidth(context),
+              aspectRatio: 1,
+              viewportFraction: 1,
+              onPageChanged: (index, reason) => model.updateImageIndex(index),
+            ),
+            items: imgURLs.map((url) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    height: screenWidth(context),
+                    width: screenWidth(context),
+                    child: FadeInImage.memoryNetwork(
+                      image: url,
+                      fit: BoxFit.cover,
+                      placeholder: kTransparentImage,
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+          ),
+          _BulletIndicator(
+            current: model.currentImageIndex,
+            total: imgURLs.length,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BulletIndicator extends StatelessWidget {
+  final int current;
+  final int total;
+
+  const _BulletIndicator({
+    required this.current,
+    required this.total,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final items = new List<int>.generate(total, (i) => i + 1);
+
+    List<T> mapBullets<T>(List list, Function handler) {
+      List<T> result = [];
+
+      for (var i = 0; i < list.length; i++) {
+        result.add(handler(i, list[i]));
+      }
+
+      return result;
+    }
+
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 2.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: mapBullets<Widget>(items, (index, url) {
+            return Container(
+              width: current == index ? 7.0 : 5.0,
+              height: current == index ? 7.0 : 5.0,
+              margin: EdgeInsets.only(left: index == 0 ? 0 : 3.5, right: index + 1 == total ? 0 : 3.5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: current == index ? appFontColor() : appFontColorAlt(),
+              ),
+            );
+          }),
+        ));
   }
 }

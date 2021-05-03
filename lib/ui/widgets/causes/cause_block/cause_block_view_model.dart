@@ -31,6 +31,7 @@ class CauseBlockViewModel extends BaseViewModel {
   List images = [];
   String? videoLink;
   int orgLength = 0;
+  int currentImageIndex = 0;
 
   initialize(String? creatorID, List imageURLs) async {
     String? currentUID = await _authService!.getCurrentUserID();
@@ -55,7 +56,7 @@ class CauseBlockViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  showOptions(BuildContext context, id, GoCause? cause) async {
+  showOptions(GoCause cause) async {
     var sheetResponse = await _bottomSheetService!.showCustomSheet(
       variant: isCreator ? BottomSheetType.causeCreatorOptions : BottomSheetType.causeOptions,
     );
@@ -138,36 +139,41 @@ class CauseBlockViewModel extends BaseViewModel {
         _shareService!.shareLink(url);
       } else if (res == "report") {
         //report
-        if (isCreator) {
-          showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (_) => AlertDialog(
-                    content: Text("Are you sure you want to delete this cause?"),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                          child: Text(
-                            "No",
-                          )),
-                      TextButton(
-                          onPressed: () {
-                            _causeDataService!.deleteCause(id);
-                            Navigator.pop(context, true);
-                          },
-                          child: Text(
-                            "Yes",
-                          )),
-                    ],
-                  ));
-        }
+        // if (isCreator) {
+        //   showDialog(
+        //       context: context,
+        //       barrierDismissible: true,
+        //       builder: (_) => AlertDialog(
+        //             content: Text("Are you sure you want to delete this cause?"),
+        //             actions: [
+        //               TextButton(
+        //                   onPressed: () {
+        //                     Navigator.pop(context, true);
+        //                   },
+        //                   child: Text(
+        //                     "No",
+        //                   )),
+        //               TextButton(
+        //                   onPressed: () {
+        //                     _causeDataService!.deleteCause(id);
+        //                     Navigator.pop(context, true);
+        //                   },
+        //                   child: Text(
+        //                     "Yes",
+        //                   )),
+        //             ],
+        //           ));
+        // }
       } else if (res == "delete") {
         //delete
       }
       notifyListeners();
     }
+  }
+
+  updateImageIndex(int index) {
+    currentImageIndex = index;
+    notifyListeners();
   }
 
   ///NAVIGATION
