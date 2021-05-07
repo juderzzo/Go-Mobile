@@ -14,6 +14,7 @@ import 'package:go/services/firestore/utils/firebase_storage_service.dart';
 import 'package:go/services/location/google_places_service.dart';
 import 'package:go/services/location/location_service.dart';
 import 'package:go/services/navigation/custom_navigation_service.dart';
+import 'package:go/services/permission_handler/permission_handler_service.dart';
 import 'package:go/services/reactive/file_uploader/reactive_file_uploader_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
@@ -25,6 +26,7 @@ import 'package:go/ui/views/base/app_base_view_model.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view.dart';
+import 'package:go/ui/views/causes/create_cause/create_cause_view.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
@@ -93,6 +95,13 @@ import 'package:stacked_themes/stacked_themes.dart';
       page: CauseView,
       name: "CauseViewRoute",
       path: "/causes/:id",
+      //transitionsBuilder: ,
+      durationInMilliseconds: 0,
+    ),
+    CustomRoute(
+      page: CreateCauseView,
+      name: "CreateCauseViewRoute",
+      path: "/create_cause/:id",
       //transitionsBuilder: ,
       durationInMilliseconds: 0,
     ),
@@ -168,13 +177,13 @@ import 'package:stacked_themes/stacked_themes.dart';
     LazySingleton(classType: UserDataService),
     LazySingleton(classType: PostDataService),
     LazySingleton(classType: CauseDataService),
-
     LazySingleton(classType: CommentDataService),
     LazySingleton(classType: LocationService),
     LazySingleton(classType: GooglePlacesService),
     LazySingleton(classType: AlgoliaSearchService),
     LazySingleton(classType: DynamicLinkService),
     LazySingleton(classType: ShareService),
+    LazySingleton(classType: PermissionHandlerService),
 
     //REACTIVE LAZY SINGLETONS
     LazySingleton(classType: ReactiveUserService),

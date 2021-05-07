@@ -55,7 +55,7 @@ class _ExploreViewHead extends HookViewModelWidget<ExploreViewModel> {
             onFieldSubmitted: (String val) {},
           ),
           IconButton(
-            onPressed: () => model.customBottomSheetService.showAddContentOptions(),
+            onPressed: () => model.customBottomSheetService.showAddCauseBottomSheet(),
             icon: Icon(FontAwesomeIcons.plus, color: appIconColor(), size: 20),
           ),
         ],

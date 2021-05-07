@@ -1,3 +1,5 @@
+import 'package:go/utils/custom_string_methods.dart';
+
 class GoCause {
   String? id;
   String? creatorID;
@@ -14,6 +16,7 @@ class GoCause {
   List? admins;
   int? followerCount;
   int? forumPostCount;
+  String? website;
   String? videoLink;
   bool? monetized;
   int? revenue;
@@ -35,6 +38,7 @@ class GoCause {
       this.admins,
       this.followerCount,
       this.forumPostCount,
+      this.website,
       this.videoLink,
       this.monetized,
       this.revenue,
@@ -57,6 +61,7 @@ class GoCause {
             followerCount: data['followerCount'],
             forumPostCount: data['forumPostCount'],
             admins: data['admins'],
+            website: data['website'],
             videoLink: data['videoLink'],
             monetized: data['monetized'],
             revenue: data['revenue'],
@@ -78,14 +83,26 @@ class GoCause {
         'followerCount': this.followerCount,
         'forumPostCount': this.forumPostCount,
         'admins': this.admins,
+        'website': this.website,
         'videoLink': this.videoLink,
         'monetized': this.monetized,
         'revenue': this.revenue,
         'approved': this.approved
       };
 
-  GoCause generateDummyCause(String id) {
-    GoCause cause = GoCause();
+  GoCause generateNewCause({required String creatorID}) {
+    GoCause cause = GoCause(
+        id: getRandomString(35),
+        creatorID: creatorID,
+        dateCreatedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+        imageURLs: [],
+        admins: [creatorID],
+        followers: [creatorID],
+        followerCount: 1,
+        forumPostCount: 0,
+        revenue: 0,
+        monetized: false,
+        approved: false);
     return cause;
   }
 

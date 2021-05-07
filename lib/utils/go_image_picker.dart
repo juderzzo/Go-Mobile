@@ -22,10 +22,17 @@ class GoImagePicker {
   Future<File?> retrieveImageFromLibrary({double? ratioX, double? ratioY}) async {
     imageCache!.clear();
     File? croppedImageFile;
-    final pickedFile = await (_imagePicker.getImage(source: ImageSource.gallery, imageQuality: 50) as FutureOr<PickedFile>);
-    File img = File(pickedFile.path);
-    if (img != null) {
-      croppedImageFile = await cropImage(img: img, ratioX: ratioX!, ratioY: ratioY!);
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery).catchError((e) {
+      print(e);
+      return null;
+    });
+    if (pickedFile != null) {
+      File img = File(pickedFile.path);
+      try {
+        croppedImageFile = await cropAndCompressImage(img: img, ratioX: ratioX!, ratioY: ratioY!);
+      } catch (e) {
+        print('error cropping and compressing image');
+      }
     }
     return croppedImageFile;
   }
@@ -33,19 +40,19 @@ class GoImagePicker {
   Future<File?> retrieveImageFromCamera({double? ratioX, double? ratioY}) async {
     imageCache!.clear();
     File? croppedImageFile;
-    final pickedFile = await (_imagePicker.getImage(source: ImageSource.camera, imageQuality: 50) as FutureOr<PickedFile>);
-    File img = File(pickedFile.path);
-    if (img != null) {
-      croppedImageFile = await cropImage(
-        img: img,
-        ratioX: ratioX!,
-        ratioY: ratioY!,
-      );
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      File img = File(pickedFile.path);
+      try {
+        croppedImageFile = await cropAndCompressImage(img: img, ratioX: ratioX!, ratioY: ratioY!);
+      } catch (e) {
+        print('error cropping and compressing image');
+      }
     }
     return croppedImageFile;
   }
 
-  Future<File?> cropImage({required File img, required double ratioX, required double ratioY}) async {
+  Future<File?> cropAndCompressImage({required File img, required double ratioX, required double ratioY}) async {
     File? croppedImageFile;
     croppedImageFile = await ImageCropper.cropImage(
       sourcePath: img.path,

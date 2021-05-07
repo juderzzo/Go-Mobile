@@ -1,4 +1,5 @@
 import 'package:go/app/app.locator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CustomDialogService {
@@ -24,28 +25,14 @@ class CustomDialogService {
     );
   }
 
-  // showAuthDialog() async {
-  //   var response = await _dialogService.showCustomDialog(
-  //     barrierDismissible: false,
-  //     variant: DialogType.loginDialog,
-  //   );
-  // }
-  //
-  // showLoginRequiredDialog({required String description}) async {
-  //   DialogResponse? response = await _dialogService.showDialog(
-  //     title: "Login Required",
-  //     description: description,
-  //     barrierDismissible: true,
-  //     buttonTitle: "Log In",
-  //     cancelTitle: "Cancel",
-  //   );
-  //   if (response != null) {
-  //     if (response.confirmed) {
-  //       _navigationService.navigateTo(Routes.AuthViewRoute);
-  //     }
-  //   }
-  // }
-  //
+  showAppSettingsDialog({required String title, required String description}) async {
+    DialogResponse? response =
+        await _dialogService.showDialog(barrierDismissible: true, title: title, description: description, buttonTitle: "Open App Settings");
+    if (response != null && response.confirmed) {
+      openAppSettings();
+    }
+  }
+
   showCauseDeletedDialog() {
     _dialogService.showDialog(
       barrierDismissible: true,
@@ -63,21 +50,4 @@ class CustomDialogService {
       buttonTitle: "Ok",
     );
   }
-  //
-  // showCancelContentDialog({required bool isEditing, required String contentType}) async {
-  //   DialogResponse? response = await _dialogService.showDialog(
-  //     title: isEditing ? "Cancel Editing ${contentType}?" : "Cancel Creating ${contentType}?",
-  //     description:
-  //     isEditing ? "Changes to this ${contentType.toLowerCase()} will not be saved" : "The details for this  ${contentType.toLowerCase()} will not be saved",
-  //     cancelTitle: "Cancel",
-  //     cancelTitleColor: appDestructiveColor(),
-  //     buttonTitle: isEditing ? "Discard Changes" : "Discard Stream",
-  //     buttonTitleColor: appTextButtonColor(),
-  //     barrierDismissible: true,
-  //   );
-  //   if (response != null && !response.confirmed) {
-  //     _navigationService.back();
-  //   }
-  // }
-  //
 }

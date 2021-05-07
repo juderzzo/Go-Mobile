@@ -6,20 +6,19 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
+import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
-import 'package:go/utils/custom_string_methods.dart';
-import 'package:go/utils/firestore_image_uploader.dart';
+import 'package:go/services/firestore/utils/firebase_storage_service.dart';
 import 'package:go/utils/mail_sender.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CauseDataService {
   CollectionReference causeRef = FirebaseFirestore.instance.collection('causes');
-
   CollectionReference checkRef = FirebaseFirestore.instance.collection('checks');
-
   SnackbarService? _snackbarService = locator<SnackbarService>();
-
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
   PostDataService? _postDataService = locator<PostDataService>();
+  FirebaseStorageService _firebaseStorageService = locator<FirebaseStorageService>();
 
   Future checkIfCauseExists(String id) async {
     bool exists = false;
@@ -32,184 +31,109 @@ class CauseDataService {
     return exists;
   }
 
-  Future createCause({
-    String? creatorID,
-    String? name,
-    String? goal,
-    String? why,
-    String? who,
-    String? resources,
-    String? charityURL,
-    List? actions,
-    List? admins,
-    File? img1,
-    File? img2,
-    File? img3,
-    String? videoLink,
-    bool? monetized,
-  }) async {
+  Future<bool> createCause({required GoCause cause, required File? img1, required File? img2, required File? img3}) async {
+    bool created = true;
     mail();
-    String id = getRandomString(35);
-    print(id);
-    GoCause cause = GoCause(
-        id: id,
-        creatorID: creatorID,
-        dateCreatedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-        name: name,
-        goal: goal,
-        why: why,
-        who: who,
-        resources: resources,
-        charityURL: charityURL,
-        actions: actions,
-        admins: admins,
-        imageURLs: [],
-        followers: [creatorID],
-        followerCount: 1,
-        forumPostCount: 0,
-        videoLink: videoLink,
-        monetized: monetized,
-        revenue: 0,
-        approved: false);
+
+    cause.dateCreatedInMilliseconds = DateTime.now().millisecondsSinceEpoch;
 
     if (img1 != null) {
-      String imgURL = await FirestoreImageUploader().uploadImage(
+      String? imgURL = await _firebaseStorageService.uploadImage(
         img: img1,
-        storageBucket: 'causes',
-        folderName: cause.id!,
-        fileName: getRandomString(10) + ".png",
+        storageBucket: 'images',
+        folderName: 'causes',
+        fileName: cause.id! + "1",
       );
-      cause.imageURLs!.add(imgURL);
+      if (imgURL != null) {
+        cause.imageURLs!.add(imgURL);
+      }
     }
     if (img2 != null) {
-      String imgURL = await FirestoreImageUploader().uploadImage(
+      String? imgURL = await _firebaseStorageService.uploadImage(
         img: img2,
-        storageBucket: 'causes',
-        folderName: cause.id!,
-        fileName: getRandomString(10) + ".png",
+        storageBucket: 'images',
+        folderName: 'causes',
+        fileName: cause.id! + "2",
       );
-      cause.imageURLs!.add(imgURL);
+      if (imgURL != null) {
+        cause.imageURLs!.add(imgURL);
+      }
     }
     if (img3 != null) {
-      String imgURL = await FirestoreImageUploader().uploadImage(
+      String? imgURL = await _firebaseStorageService.uploadImage(
         img: img3,
-        storageBucket: 'causes',
-        folderName: cause.id!,
-        fileName: getRandomString(10) + ".png",
+        storageBucket: 'images',
+        folderName: 'causes',
+        fileName: cause.id! + "3",
       );
-      cause.imageURLs!.add(imgURL);
+      if (imgURL != null) {
+        cause.imageURLs!.add(imgURL);
+      }
     }
 
-    mail(id: id);
+    mail(id: cause.id);
 
     await causeRef.doc(cause.id).set(cause.toMap()).catchError((e) {
-      return e.message;
+      _customDialogService.showErrorDialog(description: e.message);
+      created = false;
     });
+    return created;
   }
 
-  Future editCause(
-      {String? causeID,
-      String? name,
-      String? goal,
-      String? why,
-      String? who,
-      String? resources,
-      String? charityURL,
-      String? videoLink,
-      dynamic img1,
-      dynamic img2,
-      dynamic img3,
-      bool? monetized,
-      required bool img1Changed,
-      required bool img2Changed,
-      required bool img3Changed}) async {
-    //print("1");
-    DocumentReference cause = causeRef.doc(causeID);
-    //print(cause);
+  Future<bool> updateCause({required GoCause cause, required File? img1, required File? img2, required File? img3}) async {
+    bool updated = true;
+    mail();
 
-    //delete all the previous images to save space
-    GoCause causeR = await (getCauseByID(causeID) as FutureOr<GoCause>);
-    //print(causeR);
-    List? imageURLs = (causeR.imageURLs != null) ? causeR.imageURLs : [];
-    List newImageURLs = [];
+    cause.dateCreatedInMilliseconds = DateTime.now().millisecondsSinceEpoch;
 
-    //deleting all of the image urls of changed images
-    if (img1Changed) {
-      FirebaseStorage.instance.refFromURL(imageURLs![0]).delete();
-    } else {
-      if (img1 != null) {
-        newImageURLs.add(imageURLs![0]);
-      }
-    }
-    if (img2Changed && imageURLs!.length > 1) {
-      FirebaseStorage.instance.refFromURL(imageURLs[1]).delete();
-    } else {
-      if (img2 != null && imageURLs!.length > 1) {
-        newImageURLs.add(imageURLs[1]);
-      }
-    }
-    if (img3Changed && imageURLs!.length > 2) {
-      FirebaseStorage.instance.refFromURL(imageURLs[2]).delete();
-    } else {
-      if (img3 != null && imageURLs!.length > 2) {
-        newImageURLs.add(imageURLs[2]);
-      }
-    }
-
-    //now upload the new images
-
-    if (img1Changed && img1 != null) {
-      String imgURL = await FirestoreImageUploader().uploadImage(
+    if (img1 != null) {
+      String? imgURL = await _firebaseStorageService.uploadImage(
         img: img1,
-        storageBucket: 'causes',
-        folderName: cause.id,
-        fileName: getRandomString(10) + ".png",
+        storageBucket: 'images',
+        folderName: 'causes',
+        fileName: cause.id! + "1",
       );
-      newImageURLs.add(imgURL);
-    }
-    if (img2Changed && img2 != null) {
-      String imgURL = await FirestoreImageUploader().uploadImage(
-        img: img2,
-        storageBucket: 'causes',
-        folderName: cause.id,
-        fileName: getRandomString(10) + ".png",
-      );
-      print(imgURL);
-      newImageURLs.add(imgURL);
-    }
-    if (img3Changed && img3 != null) {
-      String imgURL = await FirestoreImageUploader().uploadImage(
-        img: img3,
-        storageBucket: 'causes',
-        folderName: cause.id,
-        fileName: getRandomString(10) + ".png",
-      );
-      newImageURLs.add(imgURL);
+      if (imgURL != null) {
+        cause.imageURLs![0] = imgURL;
+      }
     }
 
-    if (img1 == null && img2 == null && img3 == null) {
-      print(newImageURLs);
-      cause.update({
-        "name": name,
-        "goal": goal,
-        "why": why,
-        "resources": resources,
-        "charityURL": charityURL,
-        "videoLink": videoLink,
-        "monetized": monetized,
-      });
-    } else {
-      cause.update({
-        "name": name,
-        "goal": goal,
-        "why": why,
-        "resources": resources,
-        "charityURL": charityURL,
-        "imageURLs": newImageURLs,
-        "videoLink": videoLink,
-        "monetized": monetized
-      });
+    if (img2 != null) {
+      String? imgURL = await _firebaseStorageService.uploadImage(
+        img: img2,
+        storageBucket: 'images',
+        folderName: 'causes',
+        fileName: cause.id! + "2",
+      );
+      if (cause.imageURLs!.length >= 2) {
+        if (imgURL != null) {
+          cause.imageURLs![1] = imgURL;
+        }
+      }
     }
+
+    if (img3 != null) {
+      String? imgURL = await _firebaseStorageService.uploadImage(
+        img: img3,
+        storageBucket: 'images',
+        folderName: 'causes',
+        fileName: cause.id! + "3",
+      );
+      if (cause.imageURLs!.length >= 3) {
+        if (imgURL != null) {
+          cause.imageURLs![2] = imgURL;
+        }
+      }
+    }
+
+    mail(id: cause.id);
+
+    await causeRef.doc(cause.id).set(cause.toMap()).catchError((e) {
+      _customDialogService.showErrorDialog(description: e.message);
+      updated = false;
+    });
+
+    return updated;
   }
 
   Future getCauseByID(String? id) async {

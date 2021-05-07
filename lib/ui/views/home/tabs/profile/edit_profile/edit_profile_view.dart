@@ -97,7 +97,6 @@ class EditProfileView extends StatelessWidget {
                   textLimit: 30,
                   isPassword: false,
                   onChanged: (String val) {},
-                  onSubmitted: (String val) {},
                 ),
                 verticalSpaceMedium,
                 CustomText(
@@ -111,8 +110,9 @@ class EditProfileView extends StatelessWidget {
                   controller: model.bioTextController,
                   hintText: "Tell Us About Yourself",
                   maxLines: 7,
-                  onSubmitted: (String val) {},
                   onChanged: (String val) {},
+                  initialValue: null,
+                  enabled: true,
                 ),
               ],
             ),

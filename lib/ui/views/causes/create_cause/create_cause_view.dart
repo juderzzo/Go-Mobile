@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
@@ -7,21 +7,187 @@ import 'package:go/ui/views/causes/create_cause/create_cause_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/causes/add_image_button.dart';
 import 'package:go/ui/widgets/causes/cause_img_preview.dart';
-import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
+import 'package:go/ui/widgets/common/text_field/multi_line_text_field.dart';
+import 'package:go/ui/widgets/common/text_field/single_line_text_field.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
+import 'package:stacked_hooks/stacked_hooks.dart';
 
 class CreateCauseView extends StatelessWidget {
-  final nameController = TextEditingController();
-  final goalsController = TextEditingController();
-  final whyController = TextEditingController();
-  final whoController = TextEditingController();
-  final resourcesController = TextEditingController();
-  final charityWebsiteController = TextEditingController();
-  final videoLinkController = TextEditingController();
-  bool value = false;
+  final String? id;
+  CreateCauseView(@PathParam() this.id);
 
-  Widget textFieldHeader(String header, String subHeader) {
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<CreateCauseViewModel>.reactive(
+      onModelReady: (model) => model.initialize(id!),
+      viewModelBuilder: () => CreateCauseViewModel(),
+      builder: (context, model, child) => Scaffold(
+        appBar: CustomAppBar().basicAppBar(
+            title: model.isBusy
+                ? ""
+                : model.isEditing
+                    ? "Edit Cause"
+                    : "Create Cause",
+            showBackButton: true) as PreferredSizeWidget?,
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            height: screenHeight(context),
+            width: screenWidth(context),
+            color: appBackgroundColor(),
+            child: _CauseForm(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    return Container(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          verticalSpaceSmall,
+
+          ///NAME OF CAUSE
+          _TextFieldHeader(
+            header: "*Name",
+            subHeader: "What is the name of your cause?",
+          ),
+          verticalSpaceSmall,
+          _CauseNameField(),
+          verticalSpaceMedium,
+
+          ///CAUSE IMAGES
+          _TextFieldHeader(
+            header: "*Images",
+            subHeader: "Select up to three images for your cause. The leftmost image is required, and will be your title image",
+          ),
+          verticalSpaceSmall,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _CauseImage(imgNum: 1),
+              _CauseImage(imgNum: 2),
+              _CauseImage(imgNum: 3),
+            ],
+          ),
+          verticalSpaceMedium,
+
+          ///GOALS FOR CAUSE
+          _TextFieldHeader(
+            header: "*Goals",
+            subHeader: "What are the goals of your cause? What are you fighting for?",
+          ),
+          verticalSpaceSmall,
+          _CauseGoalsField(),
+          verticalSpaceMedium,
+
+          ///REASONS FOR CAUSE
+          _TextFieldHeader(
+            header: "*Why?",
+            subHeader: "Why is your cause important? Why is it worth it?",
+          ),
+          verticalSpaceSmall,
+          _CauseWhyField(),
+          verticalSpaceMedium,
+
+          ///WHO CREATED THIS CAUSE
+          _TextFieldHeader(
+            header: "*Who Are You?",
+            subHeader: "Who are you as a changemaker? What is your experience in the fight for this cause?",
+          ),
+          verticalSpaceSmall,
+          _CauseWhoField(),
+          verticalSpaceMedium,
+
+          ///CAUSE RESOURCES
+          _TextFieldHeader(
+            header: "Resources",
+            subHeader: "Are there additional resources for anyone looking to learn more about your cause?\n"
+                "(e.g., websites, books, articles, videos, etc.)",
+          ),
+          verticalSpaceSmall,
+          _CauseResourcesField(),
+          verticalSpaceMedium,
+
+          ///CHARITY LINK
+          _TextFieldHeader(
+            header: "Charity",
+            subHeader: "Would you like to raise funds for this cause using Go!'s platform? If so, please provide a link to the charity of your choice.",
+          ),
+          verticalSpaceSmall,
+          _CauseWebsiteField(),
+          verticalSpaceMedium,
+
+          ///CAUSE TASKS
+          _TextFieldHeader(
+            header: "Youtube Link",
+            subHeader: "If you feel your cause would be supported by a short video on youtube, please link it here for display",
+          ),
+
+          verticalSpaceSmall,
+          _CauseVideoLinkField(),
+          verticalSpaceMedium,
+
+          ///CAUSE MONETIZATION
+          _TextFieldHeader(
+            header: "Monetization",
+            subHeader: "If you would like to monetize your cause by allowing users to watch advertisements, turn the switch to on",
+          ),
+          verticalSpaceSmall,
+
+          _CauseMonetizationField(),
+
+          verticalSpaceMedium,
+
+          model.cause.monetized!
+              ? Center(child: Text("On", style: TextStyle(color: CustomColors.goGreen, fontSize: 20, fontWeight: FontWeight.bold)))
+              : Center(
+                  child: Text(
+                    "Off",
+                    style: TextStyle(color: Colors.grey, fontSize: 20),
+                  ),
+                ),
+
+          verticalSpaceLarge,
+
+          _TextFieldHeader(
+            header: "Actions!",
+            subHeader:
+                "To add actions, go to 'Update Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
+                "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media). The checklist page can be accessed by clicking on your cause in your home page, and then swiping to the second tab, titled 'Action List;",
+          ),
+          verticalSpaceMedium,
+
+          verticalSpaceLarge,
+          CustomButton(
+            height: 48,
+            backgroundColor: CustomColors.goGreen,
+            text: "Publish",
+            textColor: Colors.white,
+            isBusy: model.isBusy,
+            onPressed: () => model.validateAndSubmitForm(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TextFieldHeader extends StatelessWidget {
+  final String header;
+  final String subHeader;
+  _TextFieldHeader({required this.header, required this.subHeader});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -47,75 +213,55 @@ class CreateCauseView extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget singleLineTextField(
-      {TextEditingController? controller, String? hintText, int? textLimit}) {
-    return TextFieldContainer(
-      child: TextFormField(
-        controller: controller,
-        cursorColor: appFontColorAlt(),
-        //validator: (value) => value.isEmpty ? 'Field Cannot be Empty' : null,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(textLimit),
-        ],
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: InputBorder.none,
-        ),
-      ),
+class _CauseNameField extends HookViewModelWidget<CreateCauseViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    final nameController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (!model.loadedPreviousCauseName) {
+        nameController.text = model.loadPreviousCauseName();
+      }
+    });
+
+    return SingleLineTextField(
+      controller: nameController,
+      hintText: "Cause Name",
+      textLimit: 75,
+      isPassword: false,
+      onChanged: (val) => model.updateCauseName(val),
     );
   }
+}
 
-  Widget multiLineTextField(
-      {TextEditingController? controller, String? hintText}) {
-    return TextFieldContainer(
-      child: TextFormField(
-        controller: controller,
-        cursorColor: appFontColorAlt(),
-        //validator: (value) => value.isEmpty ? 'Field Cannot be Empty' : null,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
+class _CauseImage extends HookViewModelWidget<CreateCauseViewModel> {
+  final int imgNum;
+  _CauseImage({required this.imgNum});
 
-  Widget imgBtn(BuildContext context, CreateCauseViewModel model, int imgNum) {
-    double iconSize = 20;
-    double height = 75;
-    double width = 110;
+  final double iconSize = 20;
+  final double height = 75;
+  final double width = 110;
+
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
     return model.isEditing
         ? CauseImgPreview(
-            onTap: () => model.selectImage(
-                context: context,
-                imgNum: imgNum,
-                ratioX: width,
-                ratioY: height),
+            onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
             height: height,
             width: width,
             imgURL: null,
           )
-        : (imgNum == 1 && model.img1 == null) ||
-                (imgNum == 2 && model.img2 == null) ||
-                (imgNum == 3 && model.img3 == null)
+        : (imgNum == 1 && model.img1 == null) || (imgNum == 2 && model.img2 == null) || (imgNum == 3 && model.img3 == null)
             ? AddImageButton(
-                onTap: () => model.selectImage(
-                    context: context,
-                    imgNum: imgNum,
-                    ratioX: width,
-                    ratioY: height),
+                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
                 iconSize: iconSize,
                 height: height,
                 width: width,
               )
             : CauseImgPreview(
-                onTap: () => model.selectImage(
-                    context: context,
-                    imgNum: imgNum,
-                    ratioX: width,
-                    ratioY: height),
+                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
                 height: height,
                 width: width,
                 file: imgNum == 1
@@ -125,203 +271,146 @@ class CreateCauseView extends StatelessWidget {
                         : model.img3,
               );
   }
+}
 
-  Widget addImagesRow(BuildContext context, CreateCauseViewModel model) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        imgBtn(context, model, 1),
-        imgBtn(context, model, 2),
-        imgBtn(context, model, 3),
-      ],
-    );
-  }
-
-  Widget form(BuildContext context, CreateCauseViewModel model) {
-    
-    return Container(
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          verticalSpaceSmall,
-
-          ///NAME OF CAUSE
-          textFieldHeader(
-            "*Name",
-            "What is the name of your cause?",
-          ),
-          verticalSpaceSmall,
-          singleLineTextField(
-            controller: nameController,
-            hintText: "Name of Cause",
-            textLimit: 75,
-          ),
-          verticalSpaceMedium,
-
-          ///CAUSE IMAGES
-          textFieldHeader(
-            "*Images",
-            "Select up to three images for your cause. The leftmost image is required, and will be your title image",
-          ),
-          verticalSpaceSmall,
-          addImagesRow(context, model),
-          verticalSpaceMedium,
-
-          ///GOALS FOR CAUSE
-          textFieldHeader(
-            "*Goals",
-            "What are the goals of your cause? What are you fighting for?",
-          ),
-          verticalSpaceSmall,
-          multiLineTextField(
-            controller: goalsController,
-            hintText: "Goals",
-          ),
-          verticalSpaceMedium,
-
-          ///REASONS FOR CAUSE
-          textFieldHeader(
-            "*Why?",
-            "Why is your cause important? Why is it worth it?",
-          ),
-          verticalSpaceSmall,
-          multiLineTextField(
-            controller: whyController,
-            hintText: "The reason for your cause",
-          ),
-          verticalSpaceMedium,
-
-          ///WHO CREATED THIS CAUSE
-          textFieldHeader(
-            "*Who Are You?",
-            "Who are you as a changemaker? What is your experience in the fight for this cause?",
-          ),
-          verticalSpaceSmall,
-          multiLineTextField(
-            controller: whoController,
-            hintText: "Who are you?",
-          ),
-          verticalSpaceMedium,
-
-          ///CAUSE RESOURCES
-          textFieldHeader(
-            "Resources",
-            "Are there additional resources for anyone looking to learn more about your cause?\n"
-                "(e.g., websites, books, articles, videos, etc.)",
-          ),
-          verticalSpaceSmall,
-          multiLineTextField(
-            controller: resourcesController,
-            hintText: "Additional Resources",
-          ),
-          verticalSpaceMedium,
-
-          ///CHARITY LINK
-          textFieldHeader(
-            "Charity",
-            "Would you like to raise funds for this cause using Go!'s platform? If so, please provide a link to the charity of your choice.",
-          ),
-          verticalSpaceSmall,
-          singleLineTextField(
-            controller: charityWebsiteController,
-            hintText: "https://example.com",
-          ),
-          verticalSpaceMedium,
-
-          ///CAUSE TASKS
-
-          textFieldHeader(
-            "Youtube Link",
-            "If you feel your cause would be supported by a short video on youtube, please link it here for display",
-          ),
-          verticalSpaceSmall,
-          singleLineTextField(
-            controller: videoLinkController,
-            hintText: "https://youtube.com/...",
-          ),
-
-          verticalSpaceMedium,
-
-          textFieldHeader(
-            "Monetization",
-            "If you would like to monetize your cause by allowing users to watch advertisements, turn the switch to on",
-          ),
-
-          verticalSpaceSmall,
-
-          Container(
-           // width: MediaQuery.of(context).size.width * 2/4,
-           width: 200.0,
-            child: Switch(
-                value: value,
-                onChanged: (val) {
-                  print("yay");
-                  value = !value;
-                  model.notifyListeners();
-                }),
-          ),
-
-
-          verticalSpaceMedium,
-
-          value ? Center(child: Text("On", style: TextStyle(color: CustomColors.goGreen, fontSize: 20, fontWeight: FontWeight.bold))) 
-          : 
-          Center(child: Text("Off", style: TextStyle(color: Colors.grey, fontSize: 20),), ),
-
-          verticalSpaceLarge,
-
-          textFieldHeader(
-            "Actions!",
-            "To add actions, go to 'Update Checklist' after you've created your cause on the checklist page. List things you'd like your cause's followers to do each day to further the cause - besides donating."
-                "\n\n(e.g., email/call government officials, attend protest, spread awareness via social media). The checklist page can be accessed by clicking on your cause in your home page, and then swiping to the second tab, titled 'Action List;",
-          ),
-          verticalSpaceMedium,
-
-          verticalSpaceLarge,
-          CustomButton(
-            height: 48,
-            backgroundColor: CustomColors.goGreen,
-            text: "Publish",
-            textColor: Colors.white,
-            isBusy: model.isBusy,
-            onPressed: () async {
-              bool formSuccess = await model.validateAndSubmitForm(
-                name: nameController.text.trim(),
-                goal: goalsController.text.trim(),
-                why: whyController.text.trim(),
-                who: whoController.text.trim(),
-                resources: resourcesController.text.trim(),
-                charityURL: charityWebsiteController.text.trim(),
-                videoLink: videoLinkController.text.trim(),
-                monetized: value
-              );
-              if (formSuccess) {
-                model.displayCauseUploadSuccessBottomSheet();
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
+class _CauseGoalsField extends HookViewModelWidget<CreateCauseViewModel> {
   @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder<CreateCauseViewModel>.reactive(
-      viewModelBuilder: () => CreateCauseViewModel(),
-      builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar()
-            .basicAppBar(title: "Create Cause", showBackButton: true) as PreferredSizeWidget?,
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            height: screenHeight(context),
-            width: screenWidth(context),
-            color: appBackgroundColor(),
-            child: form(context, model),
-          ),
-        ),
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    final goalsController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (!model.loadedPreviousCauseGoal) {
+        goalsController.text = model.loadPreviousCauseGoal();
+      }
+    });
+
+    return MultiLineTextField(
+      enabled: true,
+      controller: goalsController,
+      hintText: "Goals",
+      initialValue: null,
+      maxLines: null,
+      onChanged: (val) => model.updateCauseGoal(val),
+    );
+  }
+}
+
+class _CauseWhyField extends HookViewModelWidget<CreateCauseViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    final whyController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (!model.loadedPreviousCauseWhy) {
+        whyController.text = model.loadPreviousCauseWhy();
+      }
+    });
+
+    return MultiLineTextField(
+      enabled: true,
+      controller: whyController,
+      hintText: "The reason for your cause",
+      initialValue: null,
+      maxLines: null,
+      onChanged: (val) => model.updateCauseWhy(val),
+    );
+  }
+}
+
+class _CauseWhoField extends HookViewModelWidget<CreateCauseViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    final whoController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (!model.loadedPreviousCauseWho) {
+        whoController.text = model.loadPreviousCauseWho();
+      }
+    });
+
+    return MultiLineTextField(
+      enabled: true,
+      controller: whoController,
+      hintText: "Who are you?",
+      initialValue: null,
+      maxLines: null,
+      onChanged: (val) => model.updateCauseWho(val),
+    );
+  }
+}
+
+class _CauseResourcesField extends HookViewModelWidget<CreateCauseViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    final resourcesController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (!model.loadedPreviousCauseResources) {
+        resourcesController.text = model.loadPreviousCauseResources();
+      }
+    });
+
+    return MultiLineTextField(
+      enabled: true,
+      controller: resourcesController,
+      hintText: "Additional Resources",
+      initialValue: null,
+      maxLines: null,
+      onChanged: (val) => model.updateCauseResources(val),
+    );
+  }
+}
+
+class _CauseWebsiteField extends HookViewModelWidget<CreateCauseViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    final websiteController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (!model.loadedPreviousCauseWebsite) {
+        websiteController.text = model.loadPreviousCauseWebsite();
+      }
+    });
+
+    return SingleLineTextField(
+      controller: websiteController,
+      hintText: "Website",
+      textLimit: 75,
+      isPassword: false,
+      onChanged: (val) => model.updateCauseWebsite(val),
+    );
+  }
+}
+
+class _CauseVideoLinkField extends HookViewModelWidget<CreateCauseViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    final videoLinkController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (!model.loadedPreviousCauseVideoLink) {
+        videoLinkController.text = model.loadPreviousCauseVideoLink();
+      }
+    });
+
+    return SingleLineTextField(
+      controller: videoLinkController,
+      hintText: "https://youtube.com/...",
+      textLimit: 75,
+      isPassword: false,
+      onChanged: (val) => model.updateCauseVideoLink(val),
+    );
+  }
+}
+
+class _CauseMonetizationField extends HookViewModelWidget<CreateCauseViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    return Container(
+      width: 200.0,
+      child: Switch(
+        value: model.cause.monetized!,
+        onChanged: (val) => model.updateCauseMonetization(val),
       ),
     );
   }

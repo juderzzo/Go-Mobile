@@ -95,7 +95,7 @@ class CheckListItemFormView extends StatelessWidget {
                             'id': item.id,
                             'header': val,
                           }),
-                          onSubmitted: null,
+                          controller: null,
                         )),
                     verticalSpaceSmall,
                     Container(
@@ -112,7 +112,7 @@ class CheckListItemFormView extends StatelessWidget {
                           'id': item.id,
                           'subHeader': val,
                         }),
-                        onSubmitted: null,
+                        enabled: true, controller: null, initialValue: null,
                       ),
                     ),
                     verticalSpaceSmall,

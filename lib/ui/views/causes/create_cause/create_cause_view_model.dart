@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/app/app.router.dart';
-import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_cause_model.dart';
-import 'package:go/services/auth/auth_service.dart';
+import 'package:go/models/go_user_model.dart';
+import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
+import 'package:go/services/permission_handler/permission_handler_service.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/go_image_picker.dart';
 import 'package:go/utils/url_handler.dart';
@@ -15,142 +16,211 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class CreateCauseViewModel extends BaseViewModel {
-  AuthService? _authService = locator<AuthService>();
-  DialogService? _dialogService = locator<DialogService>();
-  NavigationService? _navigationService = locator<NavigationService>();
-  CauseDataService? _causeDataService = locator<CauseDataService>();
-  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
+  DialogService _dialogService = locator<DialogService>();
+  NavigationService _navigationService = locator<NavigationService>();
+  CauseDataService _causeDataService = locator<CauseDataService>();
+  CustomBottomSheetService _customBottomSheetService = locator<CustomBottomSheetService>();
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
+  PermissionHandlerService _permissionHandlerService = locator<PermissionHandlerService>();
+
+  GoUser get user => _reactiveUserService.user;
 
   bool isEditing = false;
   File? img1;
   File? img2;
   File? img3;
+  String? imgURL1;
+  String? imgURL2;
+  String? imgURL3;
 
-  GoCause? cause;
+  GoCause cause = GoCause(monetized: false);
 
-  Future<bool> validateAndSubmitForm(
-      {String? name, String? goal, String? why, String? who, String? resources, String? charityURL, required String videoLink, bool? monetized}) async {
+  ///PREVIOUS DATA IF EDITING
+  bool loadedPreviousCauseName = false;
+  bool loadedPreviousCauseGoal = false;
+  bool loadedPreviousCauseWhy = false;
+  bool loadedPreviousCauseWho = false;
+  bool loadedPreviousCauseResources = false;
+  bool loadedPreviousCauseWebsite = false;
+  bool loadedPreviousCauseVideoLink = false;
+
+  initialize(String id) async {
+    setBusy(true);
+    if (id != "new") {
+      isEditing = true;
+      cause = await _causeDataService.getCauseByID(id);
+      if (cause.isValid()) {
+        if (cause.imageURLs!.length >= 1) {
+          imgURL1 = cause.imageURLs![0];
+        }
+        if (cause.imageURLs!.length >= 2) {
+          imgURL2 = cause.imageURLs![1];
+        }
+        if (cause.imageURLs!.length >= 3) {
+          imgURL3 = cause.imageURLs![2];
+        }
+      }
+    } else {
+      cause = GoCause().generateNewCause(creatorID: user.id!);
+    }
+    notifyListeners();
+    setBusy(false);
+  }
+
+  ///LOAD PREVIOUS DATA FOR EDITING
+  String loadPreviousCauseName() {
+    loadedPreviousCauseName = true;
+    notifyListeners();
+    return cause.name ?? "";
+  }
+
+  String loadPreviousCauseGoal() {
+    loadedPreviousCauseGoal = true;
+    notifyListeners();
+    return cause.goal ?? "";
+  }
+
+  String loadPreviousCauseWhy() {
+    loadedPreviousCauseWhy = true;
+    notifyListeners();
+    return cause.why ?? "";
+  }
+
+  String loadPreviousCauseWho() {
+    loadedPreviousCauseWho = true;
+    notifyListeners();
+    return cause.who ?? "";
+  }
+
+  String loadPreviousCauseResources() {
+    loadedPreviousCauseResources = true;
+    notifyListeners();
+    return cause.resources ?? "";
+  }
+
+  String loadPreviousCauseWebsite() {
+    loadedPreviousCauseWebsite = true;
+    notifyListeners();
+    return cause.website ?? "";
+  }
+
+  String loadPreviousCauseVideoLink() {
+    loadedPreviousCauseVideoLink = true;
+    notifyListeners();
+    return cause.videoLink ?? "";
+  }
+
+  ///UPDATE DATA
+  updateCauseName(String val) {
+    cause.name = val.trim();
+    notifyListeners();
+  }
+
+  updateCauseGoal(String val) {
+    cause.goal = val.trim();
+    notifyListeners();
+  }
+
+  updateCauseWhy(String val) {
+    cause.why = val.trim();
+    notifyListeners();
+  }
+
+  updateCauseWho(String val) {
+    cause.who = val.trim();
+    notifyListeners();
+  }
+
+  updateCauseResources(String val) {
+    cause.resources = val.trim();
+    notifyListeners();
+  }
+
+  updateCauseWebsite(String val) {
+    cause.website = val.trim();
+    notifyListeners();
+  }
+
+  updateCauseVideoLink(String val) {
+    cause.videoLink = val.trim();
+    notifyListeners();
+  }
+
+  updateCauseMonetization(bool val) {
+    cause.monetized = val;
+    notifyListeners();
+  }
+
+  validateAndSubmitForm() async {
     String? formError;
-    if (videoLink.length < 2) {
-      videoLink = "";
+    if (cause.videoLink != null && cause.videoLink!.length < 2) {
+      cause.videoLink = "";
     }
     setBusy(true);
-    if (!isValidString(name)) {
+    if (!isValidString(cause.name)) {
       formError = "Cause Name Required";
-    } else if (!isValidString(goal)) {
+    } else if (!isValidString(cause.goal)) {
       formError = "Please list your causes's goals";
-    } else if (!isValidString(why)) {
+    } else if (!isValidString(cause.why)) {
       formError = "Please describe why your cause is important";
-    } else if (!isValidString(who)) {
+    } else if (!isValidString(cause.who)) {
       formError = "Please describe who you are in regards to this cause";
-    } else if (isValidString(charityURL) && !UrlHandler().isValidUrl(charityURL!)) {
+    } else if (isValidString(cause.charityURL) && !UrlHandler().isValidUrl(cause.charityURL!)) {
       formError = "Please provide a valid URL your cause";
-    } else if (!(videoLink.length < 2)) {
-      print(videoLink.length);
-      if (YoutubePlayer.convertUrlToId(videoLink) == null) {
+    } else if (cause.videoLink != null && !(cause.videoLink!.length < 2)) {
+      if (YoutubePlayer.convertUrlToId(cause.videoLink!) == null) {
         formError = "Please provide a valid youtube link or leave the field blank";
       }
     }
     if (formError != null) {
       setBusy(false);
-      _dialogService!.showDialog(
+      _dialogService.showDialog(
         title: "Form Error",
         description: formError,
         barrierDismissible: true,
       );
       return false;
     } else {
-      String? creatorID = await _authService!.getCurrentUserID();
-
-      //create the initial 3 actions
-
-      var res = await _causeDataService!.createCause(
-          creatorID: creatorID,
-          name: name,
-          goal: goal,
-          why: why,
-          who: who,
-          resources: resources,
-          charityURL: charityURL,
-          //link each checklist item to their id in the cause functionality
-          actions: [],
-          monetized: monetized,
-          img1: img1,
-          img2: img2,
-          img3: img3,
-          videoLink: videoLink);
-
-      setBusy(false);
-      if (res != null) {
-        _dialogService!.showDialog(
-          title: "Form Submission Error",
-          description: res,
-          barrierDismissible: true,
-        );
-        return false;
+      bool uploaded = true;
+      if (isEditing) {
+        uploaded = await _causeDataService.updateCause(cause: cause, img1: img1, img2: img2, img3: img3);
       } else {
-        pushAndReplaceUntilHomeNavView();
-        _dialogService!.showConfirmationDialog(
-            title: 'Approval',
-            description:
-                'Your cause will be submitted for review. Upon acceptance, it will be visible in your homepage. Review times typically take less than 24 hours');
-        return true;
+        uploaded = await _causeDataService.createCause(cause: cause, img1: img1, img2: img2, img3: img3);
+      }
+
+      if (uploaded) {
+        setBusy(false);
+        _customBottomSheetService.showCausePublishedBottomSheet(cause);
       }
     }
   }
 
   ///BOTTOM SHEETS
   selectImage({required BuildContext context, int? imgNum, double? ratioX, double? ratioY}) async {
-    File? imgFile;
+    File? img;
     FocusScope.of(context).requestFocus(FocusNode());
-    var sheetResponse = await _bottomSheetService!.showCustomSheet(
-      variant: BottomSheetType.imagePicker,
-    );
-    if (sheetResponse != null) {
-      String? res = sheetResponse.responseData;
-      if (res == "camera") {
-        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
-      } else if (res == "gallery") {
-        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+    String? source = await _customBottomSheetService.showImageSelectorBottomSheet();
+    if (source != null) {
+      //get image from camera or gallery
+      if (source == "camera") {
+        bool hasCameraPermission = await _permissionHandlerService.hasCameraPermission();
+        if (hasCameraPermission) {
+          img = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+        }
+      } else if (source == "gallery") {
+        bool hasPhotosPermission = await _permissionHandlerService.hasPhotosPermission();
+        if (hasPhotosPermission) {
+          img = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+        }
       }
-      notifyListeners();
     }
-    //print(img2.runtimeType);
-
     if (imgNum == 1) {
-      img1 = imgFile;
+      img1 = img;
     } else if (imgNum == 2) {
-      img2 = imgFile;
+      img2 = img;
     } else {
-      img3 = imgFile;
+      img3 = img;
     }
-    //print(img.runtimeType);
-    //notifyListeners();
-    return imgFile;
+    notifyListeners();
   }
-
-  displayCauseUploadSuccessBottomSheet() async {
-    var sheetResponse = await _bottomSheetService!.showCustomSheet(
-      variant: BottomSheetType.causePublished,
-      takesInput: false,
-      barrierDismissible: true,
-      customData: cause,
-    );
-    if (sheetResponse == null || sheetResponse.responseData != "return") {
-      _navigationService!.pushNamedAndRemoveUntil(Routes.AppBaseViewRoute);
-    }
-  }
-
-  ///NAVIGATION
-  pushAndReplaceUntilHomeNavView() {
-    _navigationService!.pushNamedAndRemoveUntil(Routes.AppBaseViewRoute);
-  }
-
-// replaceWithPage() {
-//   _navigationService.replaceWith(PageRouteName);
-// }
-//
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
 }

@@ -16,6 +16,7 @@ import '../ui/views/base/app_base_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
 import '../ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import '../ui/views/causes/cause/cause_view.dart';
+import '../ui/views/causes/create_cause/create_cause_view.dart';
 import '../ui/views/notifications/notifications_view.dart';
 import '../ui/views/onboarding/onboarding_view.dart';
 import '../ui/views/root/root_view.dart';
@@ -32,6 +33,9 @@ class Routes {
   static const String OnboardingViewRoute = '/onboard';
   static const String _CauseViewRoute = '/causes/:id';
   static String CauseViewRoute({@required dynamic id}) => '/causes/$id';
+  static const String _CreateCauseViewRoute = '/create_cause/:id';
+  static String CreateCauseViewRoute({@required dynamic id}) =>
+      '/create_cause/$id';
   static const String _EditCheckListViewRoute = '/causes/checklist/edit/:id';
   static String EditCheckListViewRoute({@required dynamic id}) =>
       '/causes/checklist/edit/$id';
@@ -50,6 +54,7 @@ class Routes {
     ForgotViewRoute,
     OnboardingViewRoute,
     _CauseViewRoute,
+    _CreateCauseViewRoute,
     _EditCheckListViewRoute,
     _ForumPostViewRoute,
     _UserViewRoute,
@@ -70,6 +75,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.ForgotViewRoute, page: ForgotView),
     RouteDef(Routes.OnboardingViewRoute, page: OnboardingView),
     RouteDef(Routes._CauseViewRoute, page: CauseView),
+    RouteDef(Routes._CreateCauseViewRoute, page: CreateCauseView),
     RouteDef(Routes._EditCheckListViewRoute, page: EditCheckListView),
     RouteDef(Routes._ForumPostViewRoute, page: ForumPostView),
     RouteDef(Routes._UserViewRoute, page: UserView),
@@ -126,6 +132,14 @@ class StackedRouter extends RouterBase {
     CauseView: (data) {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) => CauseView(),
+        settings: data,
+        transitionDuration: const Duration(milliseconds: 0),
+      );
+    },
+    CreateCauseView: (data) {
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            CreateCauseView(data.pathParams['id'].value),
         settings: data,
         transitionDuration: const Duration(milliseconds: 0),
       );

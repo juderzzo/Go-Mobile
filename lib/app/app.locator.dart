@@ -26,6 +26,7 @@ import '../services/firestore/utils/firebase_storage_service.dart';
 import '../services/location/google_places_service.dart';
 import '../services/location/location_service.dart';
 import '../services/navigation/custom_navigation_service.dart';
+import '../services/permission_handler/permission_handler_service.dart';
 import '../services/reactive/file_uploader/reactive_file_uploader_service.dart';
 import '../services/reactive/user/reactive_user_service.dart';
 import '../services/share/share_service.dart';
@@ -59,6 +60,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AlgoliaSearchService());
   locator.registerLazySingleton(() => DynamicLinkService());
   locator.registerLazySingleton(() => ShareService());
+  locator.registerLazySingleton(() => PermissionHandlerService());
   locator.registerLazySingleton(() => ReactiveUserService());
   locator.registerLazySingleton(() => ReactiveFileUploaderService());
   locator.registerSingleton(AppBaseViewModel());

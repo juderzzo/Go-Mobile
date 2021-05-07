@@ -56,7 +56,7 @@ class _HomeViewHead extends HookViewModelWidget<HomeViewModel> {
               children: [
                 NotificationBellView(uid: model.user.id),
                 IconButton(
-                  onPressed: () => model.appBaseViewModel.setBusy(true),
+                  onPressed: () => model.customBottomSheetService.showAddCauseBottomSheet(),
                   icon: Icon(
                     FontAwesomeIcons.plus,
                     color: appIconColor(),

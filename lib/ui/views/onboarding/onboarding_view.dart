@@ -141,7 +141,6 @@ class OnboardingView extends StatelessWidget {
             textLimit: 50,
             isPassword: false,
             onChanged: (String val) {},
-            onSubmitted: (String val) {},
           ),
           verticalSpaceMedium,
           verticalSpaceMedium,
@@ -498,8 +497,9 @@ class OnboardingView extends StatelessWidget {
             controller: model.bioTextController,
             hintText: "Who are you?",
             maxLines: 7,
-            onSubmitted: (String val) {},
             onChanged: (String val) {},
+            enabled: true,
+            initialValue: null,
           ),
           verticalSpaceMedium,
           CustomButton(
@@ -566,7 +566,6 @@ class OnboardingView extends StatelessWidget {
             textLimit: 50,
             isPassword: false,
             onChanged: (String val) {},
-            onSubmitted: (String val) {},
           ),
           verticalSpaceMedium,
           CustomButton(

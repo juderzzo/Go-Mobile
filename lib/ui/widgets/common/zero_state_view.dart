@@ -31,7 +31,7 @@ class ZeroStateView extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Image.asset(
           'assets/images/$imageAssetName.png',
-          height: 200,
+          height: 120,
           fit: BoxFit.cover,
           filterQuality: FilterQuality.medium,
         ),

@@ -29,6 +29,22 @@ class CustomBottomSheetService {
   CauseDataService _causeDataService = locator<CauseDataService>();
   PostDataService _postDataService = locator<PostDataService>();
   CustomNavigationService _customNavigationService = locator<CustomNavigationService>();
+
+  Future<String?> showImageSelectorBottomSheet() async {
+    String? source;
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      barrierDismissible: true,
+      variant: BottomSheetType.imagePicker,
+    );
+    if (sheetResponse != null) {
+      String? res = sheetResponse.responseData;
+
+      //get image from camera or gallery
+      source = res;
+    }
+    return source;
+  }
+
   showCurrentUserOptions() async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       barrierDismissible: true,
@@ -47,21 +63,29 @@ class CustomBottomSheetService {
     }
   }
 
-  showAddContentOptions() async {
-    // var sheetResponse = await _bottomSheetService.showCustomSheet(
-    //   barrierDismissible: true,
-    //   variant: BottomSheetType.addContent,
-    // );
-    // if (sheetResponse != null) {
-    //   String? res = sheetResponse.responseData;
-    //   if (res == "new post") {
-    //     _navigationService.navigateTo(Routes.CreatePostViewRoute(id: "new", promo: 0));
-    //   } else if (res == "new stream") {
-    //     _navigationService.navigateTo(Routes.CreateLiveStreamViewRoute(id: "new", promo: 0));
-    //   } else if (res == "new event") {
-    //     _navigationService.navigateTo(Routes.CreateEventViewRoute(id: "new", promo: 0));
-    //   }
-    // }
+  showAddCauseBottomSheet() async {
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      barrierDismissible: true,
+      variant: BottomSheetType.addCause,
+    );
+    if (sheetResponse != null) {
+      String? res = sheetResponse.responseData;
+      if (res == "new cause") {
+        _navigationService.navigateTo(Routes.CreateCauseViewRoute(id: "new"));
+      }
+    }
+  }
+
+  showCausePublishedBottomSheet(GoCause cause) async {
+    var sheetResponse = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.causePublished,
+      takesInput: false,
+      barrierDismissible: false,
+      customData: cause,
+    );
+    if (sheetResponse == null || sheetResponse.responseData != "return") {
+      _navigationService.pushNamedAndRemoveUntil(Routes.AppBaseViewRoute);
+    }
   }
 
   Future showContentOptions({required dynamic content}) async {

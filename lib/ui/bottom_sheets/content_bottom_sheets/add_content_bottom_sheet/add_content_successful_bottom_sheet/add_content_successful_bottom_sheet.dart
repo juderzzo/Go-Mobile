@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
+import 'package:go/ui/widgets/buttons/custom_text_button.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import 'cause_publish_successful_bottom_sheet_model.dart';
+import 'add_content_successful_bottom_sheet_model.dart';
 
-class CausePublishSuccessfulBottomSheet extends StatelessWidget {
+class AddContentSuccessfulBottomSheet extends StatelessWidget {
   final SheetRequest? request;
   final Function(SheetResponse)? completer;
 
-  const CausePublishSuccessfulBottomSheet({
+  const AddContentSuccessfulBottomSheet({
     Key? key,
     this.request,
     this.completer,
@@ -20,8 +21,8 @@ class CausePublishSuccessfulBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<CausePublishSuccessfulBottomSheetModel>.nonReactive(
-      viewModelBuilder: () => CausePublishSuccessfulBottomSheetModel(),
+    return ViewModelBuilder<AddContentSuccessfulBottomSheetModel>.nonReactive(
+      viewModelBuilder: () => AddContentSuccessfulBottomSheetModel(),
       builder: (context, model, child) => Container(
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 25),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -35,21 +36,37 @@ class CausePublishSuccessfulBottomSheet extends StatelessWidget {
           children: [
             verticalSpaceSmall,
             CustomText(
-              text: "Cause Under Review",
+              text: request!.title,
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: appFontColor(),
             ),
             verticalSpaceTiny,
             CustomText(
-              text: "Upon acceptance, your cause will be visible in your homepage.\nReview times typically take less than 24 hours",
+              text: "Don't Forget to Share it!",
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: appFontColorAlt(),
             ),
             verticalSpaceMedium,
+            CustomTextButton(
+              onTap: () => model.shareContentLink(request!.customData),
+              text: "Share",
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: appTextButtonColor(),
+            ),
+            verticalSpaceMedium,
+            CustomTextButton(
+              onTap: () => model.copyContentLink(request!.customData),
+              text: "Copy Link",
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: appTextButtonColor(),
+            ),
+            verticalSpaceMedium,
             CustomButton(
-              onPressed: () => completer!(SheetResponse(responseData: "return")),
+              onPressed: () => completer!(SheetResponse(responseData: "done")),
               text: "Done",
               textSize: 16,
               textColor: appFontColor(),
