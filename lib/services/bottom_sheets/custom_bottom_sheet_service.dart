@@ -45,20 +45,22 @@ class CustomBottomSheetService {
     return source;
   }
 
-  showCurrentUserOptions() async {
+  showCurrentUserOptions(GoUser user) async {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       barrierDismissible: true,
       variant: BottomSheetType.currentUserOptions,
     );
     if (sheetResponse != null) {
       String? res = sheetResponse.responseData;
-      if (res == "edit") {
-        //saved
-      } else if (res == "share") {
+      if (res == "edit profile") {
         //edit profile
-        //navigateToEditProfileView();
+        _navigationService.navigateTo(Routes.EditProfileViewRoute);
+      } else if (res == "share profile") {
+        //share profile
+        String? url = await _dynamicLinkService.createProfileLink(user: user);
+        _shareService.shareLink(url);
       } else if (res == "settings") {
-        _customNavigationService.navigateToSettingsView();
+        _navigationService.navigateTo(Routes.SettingsViewRoute);
       }
     }
   }
@@ -83,7 +85,7 @@ class CustomBottomSheetService {
       barrierDismissible: false,
       customData: cause,
     );
-    if (sheetResponse == null || sheetResponse.responseData != "return") {
+    if (sheetResponse == null || sheetResponse.responseData == "return") {
       _navigationService.pushNamedAndRemoveUntil(Routes.AppBaseViewRoute);
     }
   }

@@ -65,7 +65,7 @@ class AdminSearchViewModel extends BaseViewModel {
   }
 
   navigateToUserView(String id) {
-    _navigationService!.navigateTo(Routes.UserViewRoute(id: id), arguments: {'uid': uid});
+    _navigationService!.navigateTo(Routes.UserProfileViewRoute(id: id), arguments: {'uid': uid});
   }
 
   navigateToPreviousView() {

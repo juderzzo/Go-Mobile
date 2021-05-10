@@ -30,8 +30,6 @@ class ListCurrentUserCreatedCauses extends StatelessWidget {
                   onRefresh: model.refreshData,
                   backgroundColor: appBackgroundColor(),
                   child: ListView.builder(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    controller: model.scrollController,
                     key: PageStorageKey(model.listKey),
                     addAutomaticKeepAlives: true,
                     shrinkWrap: true,
@@ -52,12 +50,10 @@ class ListCurrentUserCreatedCauses extends StatelessWidget {
                         if (model.dataResults.last == model.dataResults[index]) {
                           displayBottomBorder = false;
                         }
-                        if (cause.approved!) {
-                          return CauseBlockView(
-                            cause: cause,
-                            displayBottomBorder: displayBottomBorder,
-                          );
-                        }
+                        return CauseBlockView(
+                          cause: cause,
+                          displayBottomBorder: displayBottomBorder,
+                        );
                       } else {
                         if (model.moreDataAvailable) {
                           WidgetsBinding.instance!.addPostFrameCallback((_) {

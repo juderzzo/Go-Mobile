@@ -207,7 +207,7 @@ class AboutView extends StatelessWidget {
                   text: TextSpan(
                   text: '$url',
                   style: TextStyle(color: Colors.blue),
-                  recognizer: TapGestureRecognizer()..onTap = () => UrlHandler().launchInWebViewOrVC(context, "$url"),
+                  recognizer: TapGestureRecognizer()..onTap = () => UrlHandler().launchInWebViewOrVC(url),
                 ))
               : Container(),
           verticalSpaceMedium,

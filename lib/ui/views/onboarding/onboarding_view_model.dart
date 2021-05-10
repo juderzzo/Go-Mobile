@@ -24,7 +24,7 @@ class OnboardingViewModel extends BaseViewModel {
   SnackbarService? _snackbarService = locator<SnackbarService>();
   BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
   ThemeService? _themeService = locator<ThemeService>();
-  FirebaseMessagingService? _firebaseMessagingService = locator<FirebaseMessagingService>();
+  FirebaseMessagingService _firebaseMessagingService = locator<FirebaseMessagingService>();
 
   ///HELPERS
   TextEditingController usernameTextController = TextEditingController();
@@ -60,14 +60,14 @@ class OnboardingViewModel extends BaseViewModel {
         imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
       }
       notifyListeners();
-      var uploadImgStatus = await _userDataService!.updateProfilePic(uid!, imgFile!);
-      if (uploadImgStatus is String) {
-        _snackbarService!.showSnackbar(
-          title: 'Photo Upload Error',
-          message: uploadImgStatus,
-          duration: Duration(seconds: 5),
-        );
-      }
+      // var uploadImgStatus = await _userDataService!.updateProfilePic(uid!, imgFile!);
+      // if (uploadImgStatus is String) {
+      //   _snackbarService!.showSnackbar(
+      //     title: 'Photo Upload Error',
+      //     message: uploadImgStatus,
+      //     duration: Duration(seconds: 5),
+      //   );
+      // }
     }
   }
 
@@ -89,24 +89,25 @@ class OnboardingViewModel extends BaseViewModel {
           duration: Duration(seconds: 5),
         );
       } else {
-        bool usernameExists = await (_userDataService!.checkIfUsernameExists(uid, username) as FutureOr<bool>);
+        bool usernameExists = true; //await (_userDataService!.checkIfUsernameExists(uid, username) as FutureOr<bool>);
         if (usernameExists) {
           _snackbarService!.showSnackbar(
             title: 'Username Taken',
             message: 'This username has already been taken',
             duration: Duration(seconds: 5),
           );
-        } else {
-          var res = await _userDataService!.updateGoUserName(uid, username);
-          if (res is String) {
-            _snackbarService!.showSnackbar(
-              title: 'Uh-Oh...',
-              message: res,
-              duration: Duration(seconds: 5),
-            );
-          }
-          complete = true;
         }
+        //   else {
+        //   //   var res = await _userDataService!.updateGoUsername(uid!, username);
+        //   //   if (res is String) {
+        //   //     _snackbarService!.showSnackbar(
+        //   //       title: 'Uh-Oh...',
+        //   //       message: res,
+        //   //       duration: Duration(seconds: 5),
+        //   //     );
+        //   //   }
+        //   //   complete = true;
+        //   // }
       }
     }
     setBusy(false);
@@ -126,14 +127,7 @@ class OnboardingViewModel extends BaseViewModel {
     setBusy(true);
     var res = await _userDataService!.updateBio(uid, bio);
     setBusy(false);
-    if (res is String) {
-      _snackbarService!.showSnackbar(
-        title: 'Uh-Oh...',
-        message: res,
-        duration: Duration(seconds: 5),
-      );
-      return false;
-    }
+
     return true;
   }
 
@@ -147,7 +141,7 @@ class OnboardingViewModel extends BaseViewModel {
       }
     } else if (permissionStatus.isGranted) {
       notificationsEnabled = true;
-      _firebaseMessagingService!.configFirebaseMessaging();
+      _firebaseMessagingService.configureFirebaseMessagingListener();
       notifyListeners();
     } else if (permissionStatus.isDenied) {
       DialogResponse response = await (_dialogService!.showConfirmationDialog(
@@ -179,7 +173,7 @@ class OnboardingViewModel extends BaseViewModel {
         duration: Duration(seconds: 5),
       );
     } else {
-      replaceWithHomeNavView();
+      //replaceWithHomeNavView();
     }
   }
 

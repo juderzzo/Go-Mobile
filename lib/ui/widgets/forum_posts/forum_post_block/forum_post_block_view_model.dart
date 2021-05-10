@@ -122,6 +122,6 @@ class ForumPostBlockViewModel extends BaseViewModel {
   }
 
   navigateToUserView(String? uid) {
-    //  _navigationService.navigateTo(Routes.UserViewRoute, arguments: {'uid': uid});
+    //  _navigationService.navigateTo(Routes.UserProfileViewRoute, arguments: {'uid': uid});
   }
 }

@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/dialogs/custom_dialog_service.dart';
-import 'package:go/utils/custom_string_methods.dart';
-import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class UserDataService {
@@ -53,17 +50,51 @@ class UserDataService {
     return onboarded;
   }
 
-  Future checkIfUsernameExists(String? uid, String username) async {
-    bool exists = false;
-    QuerySnapshot snapshot = await userRef.where('username', isEqualTo: username).get();
+  Future<bool> checkIfUsernameExists(String username) async {
+    bool usernameExists = false;
+    QuerySnapshot snapshot = await userRef.where("username", isEqualTo: username).get();
     if (snapshot.docs.isNotEmpty) {
-      snapshot.docs.forEach((doc) {
-        if (doc.id != uid) {
-          exists = true;
-        }
-      });
+      usernameExists = true;
     }
-    return exists;
+    return usernameExists;
+  }
+
+  Future<bool> updateUsername({required String username, required String id}) async {
+    bool updated = true;
+    String? error;
+    bool usernameExists = await checkIfUsernameExists(username);
+    if (usernameExists) {
+      _customDialogService.showErrorDialog(description: "Username already exists, please choose another.");
+      updated = false;
+    } else if (username.startsWith("user")) {
+      _customDialogService.showErrorDialog(description: "invalid username");
+      updated = false;
+    } else {
+      await userRef.doc(id).update({
+        "username": username,
+      }).catchError((e) {
+        error = e.message;
+      });
+      if (error != null) {
+        updated = false;
+      }
+    }
+
+    return updated;
+  }
+
+  Future<bool> updateUserDeviceToken({String? id, String? messageToken}) async {
+    bool updated = true;
+    String? error;
+    await userRef.doc(id).update({
+      "messageToken": messageToken,
+    }).catchError((e) {
+      error = e.message;
+    });
+    if (error != null) {
+      updated = false;
+    }
+    return updated;
   }
 
   Future<bool> createGoUser({required GoUser user}) async {
@@ -178,19 +209,6 @@ class UserDataService {
     return user.checks!.contains(id);
   }
 
-  Future updateGoUserName(String? id, String username) async {
-    // bool exists = await (checkIfUserExists(id) as FutureOr<bool>);
-    // if (exists) {
-    //   await userRef.doc(id).update({
-    //     "username": username,
-    //   }).catchError((e) {
-    //     return e.message;
-    //   });
-    // } else {
-    //   print("does not exist");
-    // }
-  }
-
   Future updateLikedPosts(String id, List likedPosts) async {
     await userRef.doc(id).update({
       "liked": likedPosts,
@@ -226,26 +244,47 @@ class UserDataService {
     });
   }
 
-  Future updateProfilePic(String id, File img) async {
-    String imgURL = await FirestoreImageUploader().uploadImage(
-      img: img,
-      storageBucket: 'users',
-      folderName: id,
-      fileName: getRandomString(10) + ".png",
-    );
+  Future<bool> updateProfilePicURL({required String id, required String url}) async {
+    bool updated = true;
+    String? error;
     await userRef.doc(id).update({
-      "profilePicURL": imgURL,
+      "profilePicURL": url,
     }).catchError((e) {
-      return e.message;
+      error = e.message;
     });
+    if (error != null) {
+      updated = false;
+    }
+    return updated;
   }
 
-  Future updateBio(String? id, String bio) async {
+  Future<bool> updateBio(String? id, String bio) async {
+    bool updated = true;
+    String? error;
     await userRef.doc(id).update({
       "bio": bio,
     }).catchError((e) {
-      return e.message;
+      error = e.message;
+      print(error);
     });
+    if (error != null) {
+      updated = false;
+    }
+    return updated;
+  }
+
+  Future<bool> updatePersonalSite({String? id, String? website}) async {
+    bool updated = true;
+    String? error;
+    await userRef.doc(id).update({
+      "personalSite": website,
+    }).catchError((e) {
+      error = e.message;
+    });
+    if (error != null) {
+      updated = false;
+    }
+    return updated;
   }
 
   Future updateUserMessageToken(String? id, String? messageToken) async {
@@ -264,36 +303,54 @@ class UserDataService {
     return user.data()!['following'].contains(uid);
   }
 
-  Future followUnfollowUser(String? uid) async {
-    AuthService _authService = locator<AuthService>();
-    String? id = await _authService.getCurrentUserID();
-    if (await (isFollowing(uid) as FutureOr<bool>)) {
-      DocumentSnapshot user = await userRef.doc(id).get();
-      List following = user.data()!['following'];
-      following.remove(uid);
-      userRef.doc(id).update({'following': following, 'followingCount': following.length});
-
-      DocumentSnapshot other = await userRef.doc(uid).get();
-      List followers = other.data()!['followers'];
-      followers.remove(id);
-      userRef.doc(uid).update({
-        'followers': followers,
-        'followersCount': followers.length,
-      });
-    } else {
-      DocumentSnapshot user = await userRef.doc(id).get();
-      List following = user.data()!['following'];
-      following.add(uid);
-      userRef.doc(id).update({'following': following, 'followingCount': following.length});
-
-      DocumentSnapshot other = await userRef.doc(uid).get();
-      List followers = other.data()!['followers'];
-      followers.add(id);
-      userRef.doc(uid).update({
-        'followers': followers,
-        'followersCount': followers.length,
+  Future<bool> followUser(String? currentUID, String? targetUserID) async {
+    bool didFollow = true;
+    DocumentSnapshot currentUserSnapshot = await userRef.doc(currentUID).get();
+    DocumentSnapshot targetUserSnapshot = await userRef.doc(targetUserID).get();
+    Map<String, dynamic> currentUserData = currentUserSnapshot.data()!;
+    Map<String, dynamic> targetUserData = targetUserSnapshot.data()!;
+    List currentUserFollowing = currentUserData['following'] == null ? [] : currentUserData['following'].toList(growable: true);
+    List targetUserFollowers = targetUserData['followers'] == null ? [] : targetUserData['followers'].toList(growable: true);
+    if (!currentUserFollowing.contains(targetUserID)) {
+      currentUserFollowing.add(targetUserID);
+      await userRef.doc(currentUID).update({'following': currentUserFollowing}).catchError((e) {
+        print(e);
+        didFollow = false;
       });
     }
+    if (!targetUserFollowers.contains(currentUID)) {
+      targetUserFollowers.add(currentUID);
+      await userRef.doc(targetUserID).update({'followers': targetUserFollowers}).catchError((e) {
+        print(e);
+        didFollow = false;
+      });
+    }
+    return didFollow;
+  }
+
+  Future<bool> unFollowUser(String? currentUID, String? targetUserID) async {
+    bool didUnfollowUser = true;
+    DocumentSnapshot currentUserSnapshot = await userRef.doc(currentUID).get();
+    DocumentSnapshot targetUserSnapshot = await userRef.doc(targetUserID).get();
+    Map<String, dynamic> currentUserData = currentUserSnapshot.data()!;
+    Map<String, dynamic> targetUserData = targetUserSnapshot.data()!;
+    List currentUserFollowing = currentUserData['following'] == null ? [] : currentUserData['following'].toList(growable: true);
+    List targetUserFollowers = targetUserData['followers'] == null ? [] : targetUserData['followers'].toList(growable: true);
+    if (currentUserFollowing.contains(targetUserID)) {
+      currentUserFollowing.remove(targetUserID);
+      await userRef.doc(currentUID).update({'following': currentUserFollowing}).catchError((e) {
+        print(e);
+        didUnfollowUser = false;
+      });
+    }
+    if (targetUserFollowers.contains(currentUID)) {
+      targetUserFollowers.remove(currentUID);
+      await userRef.doc(targetUserID).update({'followers': targetUserFollowers}).catchError((e) {
+        print(e);
+        didUnfollowUser = false;
+      });
+    }
+    return didUnfollowUser;
   }
 
   ///QUERIES
@@ -309,8 +366,8 @@ class UserDataService {
         message: e.message,
         duration: Duration(seconds: 5),
       );
-      return docs;
     });
+
     if (snapshot.docs.isNotEmpty) {
       docs = snapshot.docs;
     }

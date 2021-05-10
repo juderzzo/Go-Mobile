@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
@@ -22,47 +23,53 @@ class CurrentUserBottomSheet extends StatelessWidget {
     return ViewModelBuilder<CurrentUserBottomSheetModel>.nonReactive(
       viewModelBuilder: () => CurrentUserBottomSheetModel(),
       builder: (context, model, child) => Container(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 25),
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 25),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         color: Colors.transparent,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomButton(
-              onPressed: () => completer!(SheetResponse(responseData: "edit")),
+            CustomIconButton(
+              icon: Icon(
+                FontAwesomeIcons.edit,
+                size: 16,
+              ),
+              height: 45,
+              onPressed: () => completer!(SheetResponse(responseData: "edit profile")),
+              backgroundColor: appButtonColor(),
+              elevation: 1,
               text: "Edit Profile",
-              textSize: 16,
               textColor: appFontColor(),
-              height: 45,
-              width: screenWidth(context),
-              backgroundColor: appBackgroundColor(),
-              elevation: 1.0,
-              isBusy: false,
+              centerContent: false,
             ),
             verticalSpaceSmall,
-            CustomButton(
-              onPressed: () => completer!(SheetResponse(responseData: "share")),
-              text: "Share Profile (disabled)",
-              textSize: 16,
-              textColor: appInActiveColorAlt(),
+            CustomIconButton(
+              icon: Icon(
+                FontAwesomeIcons.link,
+                size: 16,
+              ),
               height: 45,
-              width: screenWidth(context),
-              backgroundColor: appBackgroundColor(),
-              elevation: 1.0,
-              isBusy: false,
+              onPressed: () => completer!(SheetResponse(responseData: "share profile")),
+              backgroundColor: appButtonColor(),
+              elevation: 1,
+              text: "Share Profile",
+              textColor: appFontColor(),
+              centerContent: false,
             ),
             verticalSpaceSmall,
-            CustomButton(
+            CustomIconButton(
+              icon: Icon(
+                FontAwesomeIcons.cog,
+                size: 16,
+              ),
+              height: 45,
               onPressed: () => completer!(SheetResponse(responseData: "settings")),
+              backgroundColor: appButtonColor(),
+              elevation: 1,
               text: "Settings",
-              textSize: 16,
               textColor: appFontColor(),
-              height: 45,
-              width: screenWidth(context),
-              backgroundColor: appBackgroundColor(),
-              elevation: 1.0,
-              isBusy: false,
+              centerContent: false,
             ),
           ],
         ),

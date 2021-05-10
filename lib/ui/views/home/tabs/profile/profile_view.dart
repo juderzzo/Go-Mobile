@@ -7,11 +7,13 @@ import 'package:go/app/app.locator.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
+import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/list_builders/causes/current_user/created/list_current_user_created_causes.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_stats_row.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
+import 'package:go/utils/url_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 
@@ -60,7 +62,7 @@ class _ProfileViewHead extends HookViewModelWidget<ProfileViewModel> {
           Row(
             children: [
               IconButton(
-                onPressed: () => model.customBottomSheetService.showCurrentUserOptions(),
+                onPressed: () => model.customBottomSheetService.showCurrentUserOptions(model.user),
                 icon: Icon(
                   FontAwesomeIcons.ellipsisH,
                   color: appIconColor(),
@@ -162,7 +164,32 @@ class _UserDetails extends HookViewModelWidget<ProfileViewModel> {
               physics: AlwaysScrollableScrollPhysics(),
               //controller: new ScrollController(),
               children: [
-                verticalSpaceLarge,
+                model.user.personalSite != null && model.user.personalSite!.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () => UrlHandler().launchInWebViewOrVC(model.user.personalSite!),
+                        child: Container(
+                          margin: EdgeInsets.only(top: 16, bottom: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.link,
+                                size: 12,
+                                color: appFontColor(),
+                              ),
+                              horizontalSpaceTiny,
+                              CustomText(
+                                text: model.user.personalSite!,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: appFontColor(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(),
                 UserBio(
                   username: model.user.username,
                   profilePicURL: model.user.profilePicURL,

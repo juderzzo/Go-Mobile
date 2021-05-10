@@ -69,8 +69,8 @@ class SignUpView extends StatelessWidget {
               text: 'Terms and Conditions ',
               style: TextStyle(color: Colors.blue),
               recognizer: TapGestureRecognizer()
-                ..onTap = () =>
-                    UrlHandler().launchInWebViewOrVC(context, "https://app.termly.io/document/terms-of-use-for-ios-app/78fa496a-010a-4d4f-b33c-c835e23059bb"),
+                ..onTap =
+                    () => UrlHandler().launchInWebViewOrVC("https://app.termly.io/document/terms-of-use-for-ios-app/78fa496a-010a-4d4f-b33c-c835e23059bb"),
             ),
             TextSpan(
               text: 'and ',
@@ -80,8 +80,8 @@ class SignUpView extends StatelessWidget {
               text: 'Privacy Policy. ',
               style: TextStyle(color: Colors.blue),
               recognizer: TapGestureRecognizer()
-                ..onTap = () =>
-                    UrlHandler().launchInWebViewOrVC(context, "https://app.termly.io/document/terms-of-use-for-ios-app/78fa496a-010a-4d4f-b33c-c835e23059bb"),
+                ..onTap =
+                    () => UrlHandler().launchInWebViewOrVC("https://app.termly.io/document/terms-of-use-for-ios-app/78fa496a-010a-4d4f-b33c-c835e23059bb"),
             ),
           ],
         ),

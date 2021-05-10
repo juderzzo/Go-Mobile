@@ -24,6 +24,7 @@ import 'package:go/ui/views/auth/sign_up/sign_up_view.dart';
 import 'package:go/ui/views/base/app_base_view.dart';
 import 'package:go/ui/views/base/app_base_view_model.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view.dart';
+import 'package:go/ui/views/causes/cause/cause_detail_views/forum/create_forum_post/create_forum_post_view.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/forum_post_view.dart';
 import 'package:go/ui/views/causes/cause/cause_view.dart';
 import 'package:go/ui/views/causes/create_cause/create_cause_view.dart';
@@ -33,9 +34,11 @@ import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
 import 'package:go/ui/views/notifications/notifications_view.dart';
 import 'package:go/ui/views/onboarding/onboarding_view.dart';
 import 'package:go/ui/views/root/root_view.dart';
+import 'package:go/ui/views/search/all_search_results/all_search_results_view.dart';
 import 'package:go/ui/views/search/search_view.dart';
 import 'package:go/ui/views/settings/settings_view.dart';
-import 'package:go/ui/views/user/user_view.dart';
+import 'package:go/ui/views/user/edit_profile/edit_profile_view.dart';
+import 'package:go/ui/views/user/profile/user_profile_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
@@ -121,15 +124,43 @@ import 'package:stacked_themes/stacked_themes.dart';
       //transitionsBuilder: ,
       durationInMilliseconds: 0,
     ),
+    CustomRoute(
+      page: CreateForumPostView,
+      name: "CreateForumPostViewRoute",
+      path: "/create_post/:id",
+      //transitionsBuilder: ,
+      durationInMilliseconds: 0,
+    ),
 
     //USERS
     CustomRoute(
-      page: UserView,
-      name: "UserViewRoute",
+      page: UserProfileView,
+      name: "UserProfileViewRoute",
       path: "/users/:id",
       //transitionsBuilder: ,
       durationInMilliseconds: 0,
     ),
+    CustomRoute(
+      page: EditProfileView,
+      name: "EditProfileViewRoute",
+      path: "/edit_profile",
+      //transitionsBuilder: TransitionsBuilders.fadeIn,
+      durationInMilliseconds: 0,
+    ),
+    // CustomRoute(
+    //   page: UserFollowersView,
+    //   name: "UserFollowersViewRoute",
+    //   path: "/profile/followers/:id",
+    //   //transitionsBuilder: TransitionsBuilders.fadeIn,
+    //   durationInMilliseconds: 0,
+    // ),
+    // CustomRoute(
+    //   page: UserFollowingView,
+    //   name: "UserFollowingViewRoute",
+    //   path: "/profile/following/:id",
+    //   //transitionsBuilder: TransitionsBuilders.fadeIn,
+    //   durationInMilliseconds: 0,
+    // ),
 
     //SEARCH
     CustomRoute(
@@ -137,6 +168,12 @@ import 'package:stacked_themes/stacked_themes.dart';
       name: "SearchViewRoute",
       path: "/search",
       //transitionsBuilder: ,
+      durationInMilliseconds: 0,
+    ),
+    CustomRoute(
+      page: AllSearchResultsView,
+      name: "AllSearchResultsViewRoute",
+      path: "/all_results/:term",
       durationInMilliseconds: 0,
     ),
 

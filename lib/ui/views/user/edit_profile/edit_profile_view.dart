@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/views/home/tabs/profile/edit_profile/edit_profile_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
-import 'package:go/ui/widgets/common/text_field/multi_line_text_field.dart';
 import 'package:go/ui/widgets/common/text_field/single_line_text_field.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:stacked/stacked.dart';
+
+import 'edit_profile_view_model.dart';
 
 class EditProfileView extends StatelessWidget {
   @override
@@ -22,12 +22,12 @@ class EditProfileView extends StatelessWidget {
           appBar: CustomAppBar().basicActionAppBar(
             title: "Edit Profile",
             showBackButton: true,
-            actionWidget: model.isBusy
+            actionWidget: model.isBusy || model.updatingData
                 ? Padding(
                     padding: EdgeInsets.only(right: 16),
-                    child: CustomCircleProgressIndicator(
+                    child: AppBarCircleProgressIndicator(
                       size: 20,
-                      color: appInActiveColorAlt(),
+                      color: appActiveColor(),
                     ),
                   )
                 : Container(
@@ -42,7 +42,7 @@ class EditProfileView extends StatelessWidget {
                       ),
                     ),
                   ),
-          ) as PreferredSizeWidget?,
+          ),
           body: Container(
             height: screenHeight(context),
             color: appBackgroundColor(),
@@ -50,9 +50,9 @@ class EditProfileView extends StatelessWidget {
             child: ListView(
               children: [
                 verticalSpaceMedium,
-                model.updatedProfilePic == null
+                model.updatedProfilePicFile == null
                     ? GestureDetector(
-                        onTap: () => model.selectImage(context),
+                        onTap: () => model.selectImage(),
                         child: Align(
                           child: UserProfilePic(
                             isBusy: model.isBusy,
@@ -62,10 +62,10 @@ class EditProfileView extends StatelessWidget {
                         ),
                       )
                     : GestureDetector(
-                        onTap: () => model.selectImage(context),
+                        onTap: () => model.selectImage(),
                         child: Align(
                           child: UserProfilePicFromFile(
-                            file: model.updatedProfilePic,
+                            file: model.updatedProfilePicFile,
                             size: 80,
                           ),
                         ),
@@ -73,7 +73,7 @@ class EditProfileView extends StatelessWidget {
                 verticalSpaceSmall,
                 Align(
                   child: GestureDetector(
-                    onTap: () => model.selectImage(context),
+                    onTap: () => model.selectImage(),
                     child: CustomText(
                       text: "Change Profile Pic",
                       textAlign: TextAlign.center,
@@ -94,25 +94,36 @@ class EditProfileView extends StatelessWidget {
                 SingleLineTextField(
                   controller: model.usernameTextController,
                   hintText: "Username",
-                  textLimit: 30,
+                  textLimit: 50,
                   isPassword: false,
-                  onChanged: (String val) {},
                 ),
                 verticalSpaceMedium,
                 CustomText(
-                  text: "Bio",
+                  text: "Short Bio",
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: appFontColor(),
                 ),
                 verticalSpaceSmall,
-                MultiLineTextField(
+                SingleLineTextField(
                   controller: model.bioTextController,
-                  hintText: "Tell Us About Yourself",
-                  maxLines: 7,
-                  onChanged: (String val) {},
-                  initialValue: null,
-                  enabled: true,
+                  hintText: "What are you about?",
+                  textLimit: 50,
+                  isPassword: false,
+                ),
+                verticalSpaceMedium,
+                CustomText(
+                  text: "Website",
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: appFontColor(),
+                ),
+                verticalSpaceSmall,
+                SingleLineTextField(
+                  controller: model.websiteTextController,
+                  hintText: "https://mysite.com",
+                  isPassword: false,
+                  textLimit: null,
                 ),
               ],
             ),

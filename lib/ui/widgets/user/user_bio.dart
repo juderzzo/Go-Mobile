@@ -13,7 +13,7 @@ class UserBio extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: screenWidth(context),
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         color: appTextFieldContainerColor(),
@@ -23,7 +23,7 @@ class UserBio extends StatelessWidget {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             "ABOUT ME",
@@ -34,12 +34,14 @@ class UserBio extends StatelessWidget {
             ),
           ),
           SizedBox(height: 6),
-          Text(
-            bio!,
-            style: TextStyle(
-              fontSize: 14,
-              color: appFontColor(),
-              fontWeight: FontWeight.w400,
+          Container(
+            child: Text(
+              bio!,
+              style: TextStyle(
+                fontSize: 14,
+                color: appFontColor(),
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ],

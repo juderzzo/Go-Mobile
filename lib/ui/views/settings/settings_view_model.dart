@@ -66,7 +66,7 @@ class SettingsViewModel extends BaseViewModel {
       }
     } else if (permissionStatus.isGranted) {
       notificationsEnabled = true;
-      _firebaseMessagingService!.configFirebaseMessaging();
+      // _firebaseMessagingService!.configFirebaseMessaging();
       notifyListeners();
     } else if (permissionStatus.isDenied) {
       DialogResponse response = await (_dialogService!.showConfirmationDialog(
@@ -92,7 +92,7 @@ class SettingsViewModel extends BaseViewModel {
       }
     } else if (permissionStatus.isGranted) {
       notificationsEnabled = false;
-      _firebaseMessagingService!.configFirebaseMessaging();
+      // _firebaseMessagingService!.configFirebaseMessaging();
       notifyListeners();
     } else if (permissionStatus.isDenied) {
       DialogResponse response = await (_dialogService!.showConfirmationDialog(

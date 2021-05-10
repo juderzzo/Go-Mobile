@@ -24,15 +24,14 @@ dependencies:
   async:
 
   #FIRESTORE/FIREBASE
-  firebase_core: ^1.0.4
-  firebase_auth: ^1.1.1
+  firebase_core: ^1.1.0
+  firebase_auth: ^1.1.2
   firebase_auth_oauth: ^1.0.1
-  firebase_dynamic_links: ^2.0.1
-  firebase_messaging: ^9.1.2
-  firebase_storage: ^8.0.4
-  cloud_functions: ^1.0.4
-  cloud_firestore: ^1.0.6
-
+  firebase_dynamic_links: ^2.0.2
+  firebase_messaging: ^9.1.3
+  firebase_storage: ^8.0.5
+  cloud_functions: ^1.0.5
+  cloud_firestore: ^1.0.7
 
   #Firebase
   #Firebase_Admob:
@@ -46,6 +45,7 @@ dependencies:
   share: ^2.0.1
   permission_handler: ^7.0.0
   app_settings: ^4.1.0
+  flutter_local_notifications: ^5.0.0+4
   
   #LOCATION
   location: ^4.1.1
@@ -54,6 +54,7 @@ dependencies:
   flutter_google_places: ^0.3.0
   google_maps_webservice: ^0.0.20-nullsafety.4
   google_maps_flutter: ^2.0.3
+  maps_launcher: ^2.0.0
 
   #IMAGES
   cached_network_image: ^3.0.0
@@ -79,6 +80,7 @@ dependencies:
   intl_phone_field: ^2.0.0
   introduction_screen: ^2.1.0
   mailer: ^5.0.0
+
 
 
 

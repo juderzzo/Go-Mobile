@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,7 +12,7 @@ class UrlHandler {
     return isValid;
   }
 
-  launchInWebViewOrVC(BuildContext context, String url) async {
+  launchInWebViewOrVC(String url) async {
     if (await canLaunch(url)) {
       await launch(
         url,

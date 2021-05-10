@@ -25,9 +25,9 @@ class CauseBlockView extends StatelessWidget {
     //print(model.orgLength);
     //print(model.videoLink);
     YoutubePlayerController _controller;
-    if ((cause!.videoLink != null) && cause!.videoLink!.length > 5 && images.length == model.orgLength) {
+    if ((cause.videoLink != null) && cause.videoLink!.length > 5 && images.length == model.orgLength) {
       //print(cause.videoLink);
-      String? videoID = YoutubePlayer.convertUrlToId(cause!.videoLink!);
+      String? videoID = YoutubePlayer.convertUrlToId(cause.videoLink!);
       //print(videoID);
       if (videoID != null) {
         _controller = YoutubePlayerController(
@@ -96,7 +96,7 @@ class CauseBlockView extends StatelessWidget {
             ),
           ),
           Text(
-            (cause!.why!.length < 95) ? cause!.why! : cause!.why!.substring(0, 85) + "... See More",
+            (cause.why!.length < 95) ? cause.why! : cause.why!.substring(0, 85) + "... See More",
             style: TextStyle(
               fontSize: 14,
               color: appFontColor(),
@@ -155,7 +155,7 @@ class CauseBlockView extends StatelessWidget {
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
       fireOnModelReadyOnce: true,
-      onModelReady: (model) => model.initialize(cause!.creatorID, cause!.imageURLs!),
+      onModelReady: (model) => model.initialize(cause!),
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: () => model.navigateToCauseView(cause!.id),
@@ -178,7 +178,7 @@ class CauseBlockView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               _Head(causeName: cause.name!, showOptions: () => model.showOptions(cause)),
-              cause.videoLink != null ? Container() : _CauseImages(imgURLs: cause.imageURLs!),
+              cause.videoLink != null ? _CauseVideoAndImages() : _CauseImages(imgURLs: cause.imageURLs!),
               causeDetails(model, context),
               causeOrganizer(model, context),
               SizedBox(height: 16.0),
@@ -266,10 +266,60 @@ class _CauseImages extends HookViewModelWidget<CauseBlockViewModel> {
               );
             }).toList(),
           ),
-          _BulletIndicator(
-            current: model.currentImageIndex,
-            total: imgURLs.length,
+          imgURLs.length == 1
+              ? Container()
+              : _BulletIndicator(
+                  current: model.currentImageIndex,
+                  total: imgURLs.length,
+                ),
+        ],
+      ),
+    );
+  }
+}
+
+///THIS IS A HACKY WAY OF DOING THIS
+///I"M NOT A FAN OF THIS SOLUTION, BUT IN THIS MOMENT IN TIME, I'M A TAD TOO LAZY TO FIGURE A BETTER SOLUTION
+///WE'RE ALSO ON A TIME CONSTRAINTS SO... ¯\_(ツ)_/¯
+///
+class _CauseVideoAndImages extends HookViewModelWidget<CauseBlockViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CauseBlockViewModel model) {
+    return Container(
+      child: Column(
+        children: [
+          CarouselSlider(
+            options: CarouselOptions(
+              height: screenWidth(context),
+              aspectRatio: 1,
+              viewportFraction: 1,
+              onPageChanged: (index, reason) => model.updateImageIndex(index),
+            ),
+            items: model.contentURLs.map((url) {
+              return Builder(
+                builder: (BuildContext context) {
+                  if (url.contains('youtube')) {
+                    return model.youtubePlayer;
+                  }
+                  return Container(
+                    height: screenWidth(context),
+                    width: screenWidth(context),
+                    child: FadeInImage.memoryNetwork(
+                      image: url,
+                      fit: BoxFit.cover,
+                      placeholder: kTransparentImage,
+                    ),
+                  );
+                },
+              );
+            }).toList(),
           ),
+          model.contentURLs.length == 1
+              ? Container()
+              : _BulletIndicator(
+                  current: model.currentImageIndex,
+                  total: model.contentURLs.length,
+                ),
         ],
       ),
     );

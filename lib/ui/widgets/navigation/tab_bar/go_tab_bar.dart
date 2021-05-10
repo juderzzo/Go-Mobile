@@ -211,7 +211,7 @@ class GoCauseViewTabBar extends StatelessWidget {
 }
 
 class GoProfileTabBar extends StatelessWidget {
-  final  tabController;
+  final tabController;
   GoProfileTabBar({this.tabController});
 
   @override
@@ -321,9 +321,7 @@ class GoChecklistTabBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   "Events",
-                  style: TextStyle(
-                      fontWeight: fontWeight,
-                      fontSize: tabController!.index == 0 ? 16 : 12),
+                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController!.index == 0 ? 16 : 12),
                 ),
               ),
             ),
@@ -339,9 +337,7 @@ class GoChecklistTabBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   "Announcements",
-                  style: TextStyle(
-                      fontWeight: fontWeight,
-                      fontSize: tabController!.index == 1 ? 16 : 12),
+                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController!.index == 1 ? 16 : 12),
                 ),
               ),
             ),
@@ -357,9 +353,7 @@ class GoChecklistTabBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   "Donate!",
-                  style: TextStyle(
-                      fontWeight: fontWeight,
-                      fontSize: tabController!.index == 2 ? 16 : 12),
+                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController!.index == 2 ? 16 : 12),
                 ),
               ),
             ),
@@ -403,22 +397,6 @@ class GoProfilePageTabBar extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Liked",
-                  style: TextStyle(fontWeight: fontWeight),
-                ),
-              ),
-            ),
-          ),
-          Tab(
-            child: Container(
-              height: 30,
-              width: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
                   "Causes",
                   style: TextStyle(fontWeight: fontWeight),
                 ),
@@ -436,6 +414,22 @@ class GoProfilePageTabBar extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   "Posts",
+                  style: TextStyle(fontWeight: fontWeight),
+                ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Liked",
                   style: TextStyle(fontWeight: fontWeight),
                 ),
               ),

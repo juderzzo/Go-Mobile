@@ -88,7 +88,7 @@ class OnboardingView extends StatelessWidget {
             isBusy: false,
           ),
           FlatButton(
-              onPressed: OnboardingViewModel.signOut,
+              onPressed: () => OnboardingViewModel.signOut(),
               child: Text(
                 "Logout",
                 style: TextStyle(color: Colors.red),

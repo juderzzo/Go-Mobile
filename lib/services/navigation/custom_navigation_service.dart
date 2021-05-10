@@ -11,15 +11,15 @@ class CustomNavigationService {
   }
 
   navigateToCreateCauseView(String id) {
-    //_navigationService.navigateTo(Routes.CauseViewRoute(id: id));
+    _navigationService.navigateTo(Routes.CreateCauseViewRoute(id: id));
   }
 
   navigateToForumPostView(String id) {
-    //_navigationService.navigateTo(Routes.CauseViewRoute(id: id));
+    _navigationService.navigateTo(Routes.ForumPostViewRoute(id: id));
   }
 
   navigateToCreateForumPostView(String id) {
-    //_navigationService.navigateTo(Routes.CauseViewRoute(id: id));
+    _navigationService.navigateTo(Routes.CreateForumPostViewRoute(id: id));
   }
 
   navigateToSearchView() {
@@ -27,6 +27,6 @@ class CustomNavigationService {
   }
 
   navigateToSettingsView() {
-    _navigationService!.navigateTo(Routes.SettingsViewRoute);
+    _navigationService.navigateTo(Routes.SettingsViewRoute);
   }
 }

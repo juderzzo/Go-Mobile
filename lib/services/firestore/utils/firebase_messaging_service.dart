@@ -1,51 +1,66 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
 
+import '../../../main.dart';
+
 class FirebaseMessagingService {
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-  final CollectionReference notificationRef = FirebaseFirestore.instance.collection("notifications");
-  UserDataService? _userDataService = locator<UserDataService>();
-//** FIREBASE MESSAGING  */
-  configFirebaseMessaging() {
-    firebaseMessaging.getAPNSToken();
-    // String messageTitle;
-    // String messageBody;
-    // String messageType;
-    // String messageData;
-    //
-    // firebaseMessaging.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     print("onMessage: $message");
-    //     //_showItemDialog(message);
-    //   },
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("onLaunch: $message");
-    //     //_navigateToItemDetail(message);
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("onResume: $message");
-    //     //_navigateToItemDetail(message);
-    //   },
-    // );
-    //
-    // firebaseMessaging.requestNotificationPermissions(
-    //   const IosNotificationSettings(
-    //     sound: false,
-    //     alert: true,
-    //     badge: true,
-    //   ),
-    // );
-    // firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings iosSetting) {
-    //   //print('ios settings registered');
-    // });
+  Future<String?> getDeviceToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    return token;
   }
 
-  updateFirebaseMessageToken(String? uid) {
-    firebaseMessaging.getToken().then((token) {
-      print(token);
-      _userDataService!.updateUserMessageToken(uid, token);
+  Future<void> setDeviceMessagingToken(String? uid) async {
+    String? token = await getDeviceToken().catchError((e) {
+      print(e);
+    });
+    if (token != null) {
+      UserDataService _userDataService = locator<UserDataService>();
+      await _userDataService.updateUserDeviceToken(id: uid, messageToken: token);
+    }
+  }
+
+  configureFirebaseMessagingListener() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print(message);
+      int hash = message.notification.hashCode;
+      String? title = message.notification?.title;
+      String? body = message.notification?.body;
+      int badgeCount = int.parse(message.data['badgeCount']);
+
+      AndroidNotification? android = message.notification?.android;
+      if (android != null) {
+        flutterLocalNotificationsPlugin.show(
+          hash,
+          title,
+          body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channel.description,
+              icon: 'launch_background',
+            ),
+          ),
+        );
+      } else {
+        flutterLocalNotificationsPlugin.show(
+          hash,
+          title,
+          body,
+          NotificationDetails(
+            iOS: IOSNotificationDetails(
+              presentAlert: true,
+              presentBadge: true,
+              presentSound: true,
+              badgeNumber: badgeCount,
+            ),
+          ),
+        );
+      }
+    }).onError((e) {
+      print(e);
     });
   }
 }

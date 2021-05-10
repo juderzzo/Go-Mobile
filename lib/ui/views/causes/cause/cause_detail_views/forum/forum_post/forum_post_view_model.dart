@@ -327,7 +327,7 @@ class ForumPostViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToUserView(String? id) {
-    _navigationService!.navigateTo(Routes.UserViewRoute(id: id));
+    _navigationService!.navigateTo(Routes.UserProfileViewRoute(id: id));
   }
 
   navigateToPostView(String id) {

@@ -30,7 +30,7 @@ class CreateCauseView extends StatelessWidget {
                 : model.isEditing
                     ? "Edit Cause"
                     : "Create Cause",
-            showBackButton: true) as PreferredSizeWidget?,
+            showBackButton: true),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(

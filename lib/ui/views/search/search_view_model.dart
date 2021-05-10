@@ -69,7 +69,7 @@ class SearchViewModel extends BaseViewModel {
   }
 
   navigateToUserView(String id) {
-    _navigationService!.navigateTo(Routes.UserViewRoute(id: id));
+    _navigationService!.navigateTo(Routes.UserProfileViewRoute(id: id));
   }
 
   navigateToPreviousView() {

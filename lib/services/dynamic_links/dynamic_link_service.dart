@@ -1,9 +1,9 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_forum_post_model.dart';
+import 'package:go/models/go_user_model.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class DynamicLinkService {
@@ -14,6 +14,37 @@ class DynamicLinkService {
   String androidPackageName = 'com.takeoff.Goapp';
   String iosBundleID = 'com.takeoff.Goapp';
   String iosAppStoreID = '1543627114';
+
+  Future<String> createProfileLink({required GoUser user}) async {
+    //set uri
+    Uri postURI = Uri.parse('https://appgo.page.link/profile?id=${user.id}');
+
+    //set dynamic link params
+    final DynamicLinkParameters params = DynamicLinkParameters(
+      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      ),
+      uriPrefix: shareContentPrefix,
+      link: postURI,
+      androidParameters: AndroidParameters(
+        packageName: androidPackageName,
+      ),
+      iosParameters: IosParameters(
+        bundleId: iosBundleID,
+        appStoreId: iosAppStoreID,
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+        title: "Checkout ${user.username}'s account on Go!",
+        description: user.bio != null ? user.bio : null,
+        imageUrl: user.profilePicURL != null ? Uri.parse(user.profilePicURL!) : null,
+      ),
+    );
+
+    ShortDynamicLink shortDynamicLink = await params.buildShortLink();
+    Uri dynamicURL = shortDynamicLink.shortUrl;
+
+    return dynamicURL.toString();
+  }
 
   Future<String> createPostLink({required String postAuthorUsername, required GoForumPost post}) async {
     //set post uri
