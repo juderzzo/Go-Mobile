@@ -127,7 +127,7 @@ import 'package:stacked_themes/stacked_themes.dart';
     CustomRoute(
       page: CreateForumPostView,
       name: "CreateForumPostViewRoute",
-      path: "/create_post/:id",
+      path: "/create_post/:causeID/:id",
       //transitionsBuilder: ,
       durationInMilliseconds: 0,
     ),

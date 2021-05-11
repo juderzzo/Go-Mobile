@@ -10,11 +10,9 @@ import 'package:stacked/stacked.dart';
 import 'adminviewmodel.dart';
 
 class AdminView extends StatelessWidget {
-  final GoCause? cause;
-  bool? admin;
-  ScrollController? scrollController;
+  final GoCause cause;
 
-  AdminView({this.cause, this.admin});
+  AdminView({required this.cause});
 
   Widget Stats({int? index, required String title, AdminViewModel? model}) {
     bool show = (index == 0 && model!.showMoney) || (index == 1 && model!.showAdmins) || (index == 2 && model!.showFollowers);
@@ -70,7 +68,7 @@ class AdminView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AdminViewModel>.reactive(
-        onModelReady: (model) => model.initialize(cause!, admin),
+        onModelReady: (model) => model.initialize(cause!),
         viewModelBuilder: () => AdminViewModel(),
         builder: (context, model, child) {
           //model.initialize(cause);

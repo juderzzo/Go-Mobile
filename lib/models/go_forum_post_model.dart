@@ -7,26 +7,17 @@ class GoForumPost {
   String? body;
   int? commentCount;
 
-  GoForumPost({
-    this.id,
-    this.causeID,
-    this.authorID,
-    this.dateCreatedInMilliseconds,
-    this.body,
-    this.commentCount,
-    this.imageID
-  });
+  GoForumPost({this.id, this.causeID, this.authorID, this.dateCreatedInMilliseconds, this.body, this.commentCount, this.imageID});
 
   GoForumPost.fromMap(Map<String, dynamic> data)
       : this(
-          id: data['id'],
-          causeID: data['causeID'],
-          authorID: data['authorID'],
-          dateCreatedInMilliseconds: data['dateCreatedInMilliseconds'],
-          body: data['body'],
-          commentCount: data['commentCount'],
-          imageID: data['imageID']
-        );
+            id: data['id'],
+            causeID: data['causeID'],
+            authorID: data['authorID'],
+            dateCreatedInMilliseconds: data['dateCreatedInMilliseconds'],
+            body: data['body'],
+            commentCount: data['commentCount'],
+            imageID: data['imageID']);
 
   Map<String, dynamic> toMap() => {
         'id': this.id,
@@ -37,4 +28,13 @@ class GoForumPost {
         'commentCount': this.commentCount,
         'imageID': this.imageID
       };
+
+  //checks if obj is valid
+  bool isValid() {
+    bool isValid = true;
+    if (id == null) {
+      isValid = false;
+    }
+    return isValid;
+  }
 }

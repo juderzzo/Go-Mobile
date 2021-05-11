@@ -18,8 +18,8 @@ class CustomNavigationService {
     _navigationService.navigateTo(Routes.ForumPostViewRoute(id: id));
   }
 
-  navigateToCreateForumPostView(String id) {
-    _navigationService.navigateTo(Routes.CreateForumPostViewRoute(id: id));
+  navigateToCreateForumPostView(String causeID, String id) {
+    _navigationService.navigateTo(Routes.CreateForumPostViewRoute(causeID: causeID, id: id));
   }
 
   navigateToSearchView() {

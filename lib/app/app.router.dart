@@ -44,9 +44,10 @@ class Routes {
       '/causes/checklist/edit/$id';
   static const String _ForumPostViewRoute = '/forums/:id';
   static String ForumPostViewRoute({@required dynamic id}) => '/forums/$id';
-  static const String _CreateForumPostViewRoute = '/create_post/:id';
-  static String CreateForumPostViewRoute({@required dynamic id}) =>
-      '/create_post/$id';
+  static const String _CreateForumPostViewRoute = '/create_post/:causeID/:id';
+  static String CreateForumPostViewRoute(
+          {@required dynamic causeID, @required dynamic id}) =>
+      '/create_post/$causeID/$id';
   static const String _UserProfileViewRoute = '/users/:id';
   static String UserProfileViewRoute({@required dynamic id}) => '/users/$id';
   static const String EditProfileViewRoute = '/edit_profile';
@@ -147,7 +148,8 @@ class StackedRouter extends RouterBase {
     },
     CauseView: (data) {
       return PageRouteBuilder<dynamic>(
-        pageBuilder: (context, animation, secondaryAnimation) => CauseView(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            CauseView(id: data.pathParams['id'].value),
         settings: data,
         transitionDuration: const Duration(milliseconds: 0),
       );
@@ -179,7 +181,10 @@ class StackedRouter extends RouterBase {
     CreateForumPostView: (data) {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            CreateForumPostView(),
+            CreateForumPostView(
+          causeID: data.pathParams['causeID'].value,
+          id: data.pathParams['id'].value,
+        ),
         settings: data,
         transitionDuration: const Duration(milliseconds: 0),
       );

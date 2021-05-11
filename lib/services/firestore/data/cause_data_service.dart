@@ -136,16 +136,20 @@ class CauseDataService {
     return updated;
   }
 
-  Future getCauseByID(String? id) async {
-    GoCause? cause;
+  Future<GoCause> getCauseByID(String? id) async {
+    GoCause cause = GoCause();
+    String? error;
     DocumentSnapshot snapshot = await causeRef.doc(id).get().catchError((e) {
+      error = e.message;
       _snackbarService!.showSnackbar(
         title: 'Cause Load Error',
-        message: e.message,
+        message: error!,
         duration: Duration(seconds: 5),
       );
-      return null;
     });
+    if (error != null) {
+      return cause;
+    }
     if (snapshot.exists) {
       Map<String, dynamic> snapshotData = snapshot.data()!;
       cause = GoCause.fromMap(snapshotData);
@@ -155,7 +159,7 @@ class CauseDataService {
 
   Future addView(String causeID) async {
     DocumentReference cause = causeRef.doc(causeID);
-    GoCause rev = await (getCauseByID(causeID) as FutureOr<GoCause>);
+    GoCause rev = await getCauseByID(causeID);
     cause.update({"revenue": rev.revenue! + 1});
   }
 

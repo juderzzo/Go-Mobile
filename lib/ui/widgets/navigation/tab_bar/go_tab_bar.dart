@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
 
 class GoExplorePageTabBar extends StatelessWidget {
   final TabController? tabController;
@@ -65,16 +66,15 @@ class GoExplorePageTabBar extends StatelessWidget {
 }
 
 class GoCauseViewTabBar extends StatelessWidget {
-  final TabController? tabController;
-  final bool? isAdmin;
-  GoCauseViewTabBar({this.tabController, this.isAdmin});
+  final TabController tabController;
+  GoCauseViewTabBar({required this.tabController});
 
   @override
   Widget build(BuildContext context) {
-    print("tabcontroller");
-    print(tabController);
     return Container(
       height: 35,
+      width: screenWidth(context),
+      color: appBackgroundColor(),
       padding: EdgeInsets.only(bottom: 8),
       child: TabBar(
         controller: tabController,
@@ -88,123 +88,150 @@ class GoCauseViewTabBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: appActiveColor(),
         ),
-        tabs: isAdmin!
-            ? [
-                Tab(
-                  child: Container(
-                    height: 30,
-                    width: 75,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "About",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+        tabs: [
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "About",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Tab(
-                  child: Container(
-                    height: 30,
-                    width: 75,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Actions",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Actions",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Tab(
-                  child: Container(
-                    height: 30,
-                    width: 75,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Forum",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Forum",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Tab(
-                  child: Container(
-                    height: 30,
-                    width: 75,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Admin",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class GoCauseViewAdminTabBar extends StatelessWidget {
+  final TabController tabController;
+  GoCauseViewAdminTabBar({required this.tabController});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 35,
+      width: screenWidth(context),
+      color: appBackgroundColor(),
+      padding: EdgeInsets.only(bottom: 8),
+      child: TabBar(
+        controller: tabController,
+        isScrollable: true,
+        labelPadding: EdgeInsets.symmetric(horizontal: 10),
+        indicatorColor: appActiveColor(),
+        labelColor: Colors.white,
+        unselectedLabelColor: appInActiveColorAlt(),
+        indicatorSize: TabBarIndicatorSize.label,
+        indicator: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: appActiveColor(),
+        ),
+        tabs: [
+          Tab(
+            child: Container(
+              height: 30,
+              width: 75,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "About",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ]
-            : [
-                Tab(
-                  child: Container(
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "About",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 75,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Actions",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Tab(
-                  child: Container(
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Actions",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 75,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Forum",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Tab(
-                  child: Container(
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Forum",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+              ),
+            ),
+          ),
+          Tab(
+            child: Container(
+              height: 30,
+              width: 75,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Admin",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

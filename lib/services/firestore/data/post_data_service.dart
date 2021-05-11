@@ -176,10 +176,10 @@ class PostDataService {
     return;
   }
 
-  Future getPostByID(String? id) async {
-    GoForumPost? post;
+  Future<GoForumPost> getPostByID(String? id) async {
+    GoForumPost post = GoForumPost();
     DocumentSnapshot snapshot = await postRef.doc(id).get().catchError((e) {
-      return e.message;
+      print(e.message);
     });
     if (snapshot.exists) {
       Map<String, dynamic> snapshotData = snapshot.data()!;
@@ -198,7 +198,7 @@ class PostDataService {
   Future deletePost(id) async {
     //do the image
 
-    GoForumPost post = await (getPostByID(id) as FutureOr<GoForumPost>);
+    GoForumPost post = await getPostByID(id);
     if (post.imageID != null && post.imageID!.length > 10) {
       FirebaseStorage.instance.refFromURL(post.imageID!).delete();
     }
@@ -222,7 +222,6 @@ class PostDataService {
         message: e.message,
         duration: Duration(seconds: 5),
       );
-      return docs;
     });
     if (snapshot.docs.isNotEmpty) {
       docs = snapshot.docs;

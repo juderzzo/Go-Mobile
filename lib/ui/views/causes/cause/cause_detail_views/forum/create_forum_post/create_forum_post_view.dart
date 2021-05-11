@@ -4,11 +4,15 @@ import 'package:go/constants/custom_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/forum/create_forum_post/create_forum_post_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
-import 'package:go/ui/widgets/common/text_field/multi_line_text_field.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 class CreateForumPostView extends StatelessWidget {
+  final String? causeID;
+  final String? id;
+  CreateForumPostView({@PathParam() this.causeID, @PathParam() this.id});
+
   Widget textFieldHeader(String header, String subHeader) {
     return Container(
       child: Column(
@@ -37,7 +41,6 @@ class CreateForumPostView extends StatelessWidget {
   }
 
   Widget form(BuildContext context, CreateForumPostViewModel model) {
-    
     return Container(
       width: MediaQuery.of(context).size.width,
       child: ListView(
@@ -52,10 +55,7 @@ class CreateForumPostView extends StatelessWidget {
                 TextFormField(
                   controller: model.postTextController,
                   decoration: InputDecoration(
-                      hintText: "What's on your mind?",
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(5),
-                      fillColor: appBackgroundColor()),
+                      hintText: "What's on your mind?", border: InputBorder.none, contentPadding: EdgeInsets.all(5), fillColor: appBackgroundColor()),
                   maxLines: null,
                 ),
                 model.imgFile == null && model.img == null
@@ -84,9 +84,7 @@ class CreateForumPostView extends StatelessWidget {
                     model.imgFile != null
                         ? Stack(
                             children: [
-                              Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                  child: Image.file(model.imgFile)),
+                              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20), child: Image.file(model.imgFile)),
                               SizedBox(
                                 height: 42,
                                 width: 42,
@@ -107,9 +105,7 @@ class CreateForumPostView extends StatelessWidget {
                         //this is for the network image
                         : Stack(
                             children: [
-                              Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                  child: Image.network(model.img)),
+                              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20), child: Image.network(model.img)),
                               SizedBox(
                                 height: 22,
                                 width: 22,
@@ -146,11 +142,13 @@ class CreateForumPostView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateForumPostViewModel>.reactive(
-      onModelReady: (model) => model.initialize(context),
+      onModelReady: (model) => model.initialize(causeID!, id!),
       viewModelBuilder: () => CreateForumPostViewModel(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar()
-            .basicAppBar(title: "Create Post", showBackButton: true) as PreferredSizeWidget?,
+        appBar: CustomAppBar().basicAppBar(
+          title: "Create Post",
+          showBackButton: true,
+        ),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(

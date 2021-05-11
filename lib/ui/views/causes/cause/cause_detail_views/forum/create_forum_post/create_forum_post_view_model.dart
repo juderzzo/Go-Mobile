@@ -32,13 +32,12 @@ class CreateForumPostViewModel extends BaseViewModel {
   dynamic img;
   bool imgChanged = false;
 
-  initialize(BuildContext context) async {
-    Map<String, dynamic> args = {}; //RouteData.of(context).arguments;
-    causeID = args['causeID'];
-    postID = args['postID'];
-    if (postID != null) {
+  initialize(String cID, String pID) async {
+    causeID = cID;
+    postID = pID;
+    if (postID != "new") {
       isEditing = true;
-      originalPost = await (_postDataService!.getPostByID(postID) as FutureOr<GoForumPost?>);
+      originalPost = await _postDataService!.getPostByID(postID);
       if (originalPost!.imageID != null) {
         img = originalPost!.imageID;
       }
@@ -47,10 +46,11 @@ class CreateForumPostViewModel extends BaseViewModel {
         //from above
         img = null;
       }
-
       postTextController.text = originalPost!.body!;
-      notifyListeners();
+    } else {
+      postID = getRandomString(32);
     }
+    notifyListeners();
   }
 
   Future<bool> validateAndSubmitForm() async {

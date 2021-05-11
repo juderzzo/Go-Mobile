@@ -18,7 +18,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class CauseBlockViewModel extends BaseViewModel {
   AuthService? _authService = locator<AuthService>();
-  NavigationService? _navigationService = locator<NavigationService>();
+  NavigationService _navigationService = locator<NavigationService>();
   UserDataService? _userDataService = locator<UserDataService>();
   BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
   CauseDataService? _causeDataService = locator<CauseDataService>();
@@ -102,104 +102,11 @@ class CauseBlockViewModel extends BaseViewModel {
       print(res);
 
       if (res == "Edit") {
-        // if (isCreator) {
-        //   print(cause.charityURL);
-        //
-        //   try {
-        //     print("le");
-        //     //   _navigationService.navigateTo(Routes.EditCauseViewRoute, arguments: {
-        //     //   "causeID": cause.id,
-        //     //   "name": cause.name,
-        //     //   "goals": cause.goal,
-        //     //   "why": cause.why,
-        //     //   "who": cause.who,
-        //     //   "resources": cause.resources,
-        //     //   "charity": cause.charityURL,
-        //     //   "videoLink": cause.videoLink,
-        //     //   "img1": cause.imageURLs[0],
-        //     //   "img2": cause.imageURLs.length > 1 ? cause.imageURLs[1] : null,
-        //     //   "img3": cause.imageURLs.length > 2 ? cause.imageURLs[2] : null,
-        //     //   "monetized": cause.monetized
-        //
-        //     // });
-        //
-        //     _navigationService.navigateTo(Routes.EditCauseViewRoute,
-        //         arguments: EditCauseViewArguments(
-        //             causeID: cause.id,
-        //             name: cause.name,
-        //             goals: cause.goal,
-        //             why: cause.why,
-        //             who: cause.who,
-        //             resources: cause.resources,
-        //             charity: cause.charityURL,
-        //             videoLink: cause.videoLink,
-        //             img1: NetworkImage(cause.imageURLs[0]),
-        //             img2: cause.imageURLs.length > 1 ? NetworkImage(cause.imageURLs[1]) : null,
-        //             img3: cause.imageURLs.length > 2 ? NetworkImage(cause.imageURLs[2]) : null,
-        //             monetized: cause.monetized));
-        //   } catch (e) {
-        //     print(e);
-        //   }
-        // }
-        // if (isCreator) {
-        //   //print(cause.id);
-        //   //redo the network images if theres a video
-        //   List imgs = [];
-        //   cause.imageURLs.forEach((url) {
-        //     imgs.add(
-        //       NetworkImage(url),
-        //     );
-        //     orgLength++;
-        //   });
-        //
-        //   _navigationService.navigateTo(Routes.EditCauseViewRoute,
-        //       arguments: EditCauseViewArguments(
-        //           causeID: cause.id,
-        //           name: cause.name,
-        //           goals: cause.goal,
-        //           who: cause.who,
-        //           why: cause.why,
-        //           charity: cause.charityURL,
-        //           resources: cause.resources,
-        //           img1: imgs[0],
-        //           img2: imgs.length > 1 ? imgs[1] : null,
-        //           img3: imgs.length > 2 ? imgs[2] : null,
-        //           videoLink: cause.videoLink,
-        //           monetized: cause.monetized
-        //           ));
-        // }
-        //edit
       } else if (res == "share") {
         //share
-        String url = await _dynamicLinkService!.createCauseLink(cause: cause!);
+        String url = await _dynamicLinkService!.createCauseLink(cause: cause);
         _shareService!.shareLink(url);
       } else if (res == "report") {
-        //report
-        // if (isCreator) {
-        //   showDialog(
-        //       context: context,
-        //       barrierDismissible: true,
-        //       builder: (_) => AlertDialog(
-        //             content: Text("Are you sure you want to delete this cause?"),
-        //             actions: [
-        //               TextButton(
-        //                   onPressed: () {
-        //                     Navigator.pop(context, true);
-        //                   },
-        //                   child: Text(
-        //                     "No",
-        //                   )),
-        //               TextButton(
-        //                   onPressed: () {
-        //                     _causeDataService!.deleteCause(id);
-        //                     Navigator.pop(context, true);
-        //                   },
-        //                   child: Text(
-        //                     "Yes",
-        //                   )),
-        //             ],
-        //           ));
-        // }
       } else if (res == "delete") {
         //delete
       }
@@ -214,10 +121,10 @@ class CauseBlockViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToCauseView(String? id) {
-    _navigationService!.navigateTo(Routes.CauseViewRoute(id: id));
+    _navigationService.navigateTo(Routes.CauseViewRoute(id: id));
   }
 
   navigateToUserView(String? id) {
-    _navigationService!.navigateTo(Routes.CauseViewRoute(id: id));
+    _navigationService.navigateTo(Routes.CauseViewRoute(id: id));
   }
 }

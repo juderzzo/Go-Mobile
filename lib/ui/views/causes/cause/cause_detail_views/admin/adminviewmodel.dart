@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/models/go_cause_model.dart';
@@ -28,16 +26,13 @@ class AdminViewModel extends BaseViewModel {
 
   List<SearchResult> currentAdmins = [];
 
-  initialize(GoCause cause, bool? admin) async {
+  initialize(GoCause cause) async {
     currentAdmins = [];
-    if (admin != null) {
-      showAdmins = admin;
-    }
 
     //print("init");
     cause.admins!.forEach((element) async {
       print(element);
-      GoUser user = await (_userDataService!.getGoUserByID(element) as FutureOr<GoUser>);
+      GoUser user = await _userDataService!.getGoUserByID(element);
       SearchResult result = SearchResult(additionalData: user.profilePicURL, id: user.id, type: null, name: user.username);
 
       currentAdmins.add(result);
@@ -45,12 +40,12 @@ class AdminViewModel extends BaseViewModel {
   }
 
   updateAdmins(GoCause cause) async {
-    GoCause c = await (_causeDataService!.getCauseByID(cause.id) as FutureOr<GoCause>);
+    GoCause c = await _causeDataService!.getCauseByID(cause.id);
     if (c.admins != cause.admins) {
       currentAdmins = [];
       c.admins!.forEach((element) async {
         print(element);
-        GoUser user = await (_userDataService!.getGoUserByID(element) as FutureOr<GoUser>);
+        GoUser user = await _userDataService!.getGoUserByID(element);
         SearchResult result = SearchResult(additionalData: user.profilePicURL, id: user.id, type: null, name: user.username);
 
         currentAdmins.add(result);

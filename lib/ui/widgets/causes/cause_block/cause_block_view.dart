@@ -155,10 +155,10 @@ class CauseBlockView extends StatelessWidget {
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
       fireOnModelReadyOnce: true,
-      onModelReady: (model) => model.initialize(cause!),
+      onModelReady: (model) => model.initialize(cause),
       viewModelBuilder: () => CauseBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
-        onTap: () => model.navigateToCauseView(cause!.id),
+        onTap: () => model.navigateToCauseView(cause.id),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(

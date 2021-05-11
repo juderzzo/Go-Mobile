@@ -26,24 +26,24 @@ class CheckListViewModel extends BaseViewModel {
   initialize(id) async {
     working = false;
     //print(busy("f"));
-    GoCause cause = await (_causeDataService!.getCauseByID(id) as FutureOr<GoCause>);
+    GoCause cause = await _causeDataService!.getCauseByID(id);
     link = cause.charityURL;
 
     monetizer = await monetized(id);
 
     //GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = @[kGADSimulatorID];
     setBusy(true);
-    notifyListeners();
-    adInstance
-        .load(
-      adUnitId: 'ca-app-pub-9312496461922231/3137448396',
-    )
-        .then((value) {
-      //print("new ad loaded");
-      setBusy(false);
-      //print("monetizer");
-      //print(monetizer);
-    });
+    // notifyListeners();
+    // adInstance
+    //     .load(
+    //   adUnitId: 'ca-app-pub-9312496461922231/3137448396',
+    // )
+    //     .then((value) {
+    //   //print("new ad loaded");
+    //   setBusy(false);
+    //   //print("monetizer");
+    //   //print(monetizer);
+    // });
 
     // RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event,
     //     {String rewardType, int rewardAmount}) async {
@@ -74,7 +74,7 @@ class CheckListViewModel extends BaseViewModel {
   }
 
   Future<bool?> monetized(id) async {
-    GoCause cause = await (_causeDataService!.getCauseByID(id) as FutureOr<GoCause>);
+    GoCause cause = await _causeDataService!.getCauseByID(id);
     return cause.monetized;
   }
 
