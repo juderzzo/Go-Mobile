@@ -9,7 +9,8 @@ import 'list_cause_check_list_items_model.dart';
 
 class ListCauseCheckListItems extends StatelessWidget {
   final String causeID;
-  ListCauseCheckListItems({required this.causeID});
+  final bool isAdmin;
+  ListCauseCheckListItems({required this.causeID, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +20,33 @@ class ListCauseCheckListItems extends StatelessWidget {
       builder: (context, model, child) => model.isBusy
           ? Container()
           : model.checkListItems.isEmpty
-              ? ZeroStateView(
-                  imageAssetName: "coding",
-                  header: "No Items Found",
-                  subHeader: "Start a Movement and Create a Cause",
-                  mainActionButtonTitle: "Create Item",
-                  mainAction: () => model.appBaseViewModel.setBusy(true),
-                  secondaryActionButtonTitle: null,
-                  secondaryAction: null,
-                )
+              ? isAdmin
+                  ? ZeroStateView(
+                      imageAssetName: "coding",
+                      header: "No Items Found",
+                      subHeader: "Start a Movement and Create a Cause",
+                      mainActionButtonTitle: "Create Item",
+                      mainAction: () => model.appBaseViewModel.setBusy(true),
+                      secondaryActionButtonTitle: null,
+                      secondaryAction: null,
+                    )
+                  : ZeroStateView(
+                      imageAssetName: "coding",
+                      header: "No Items Found",
+                      subHeader:
+                          "This cause does not have any actions or events yet.",
+                      //mainActionButtonTitle: null,
+                      //mainAction: () => null,
+                      secondaryActionButtonTitle: null,
+                      secondaryAction: null,
+                    )
               : Container(
                   height: screenHeight(context),
                   color: appBackgroundColor(),
                   child: RefreshIndicator(
-                    onRefresh: model.initialize(causeID),
+                    onRefresh: () async {
+                      model.initialize(causeID);
+                    },
                     backgroundColor: appBackgroundColor(),
                     child: ListView.builder(
                       physics: AlwaysScrollableScrollPhysics(),
@@ -48,7 +62,8 @@ class ListCauseCheckListItems extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return CheckListItemView(
                           item: model.checkListItems[index],
-                          isChecked: model.checkListItems[index].checkedOffBy!.contains(model.user.id),
+                          isChecked: model.checkListItems[index].checkedOffBy!
+                              .contains(model.user.id),
                           checkOffItem: (item) => model.checkOffItem(item),
                         );
                       },
