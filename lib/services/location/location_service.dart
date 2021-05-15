@@ -4,6 +4,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go/app/app.locator.dart';
+import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:location/location.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -12,6 +13,7 @@ class LocationService {
   Map<String, double>? currentLocation;
   Location currentUserLocation = Location();
   SnackbarService? _snackbarService = locator<SnackbarService>();
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
 
   Future<LocationData?> getCurrentLocation() async {
     LocationData? locationData;
@@ -132,11 +134,17 @@ class LocationService {
 
   Future<bool> isNearbyLocation({required double lat, required double lon}) async {
     bool isNearby = true;
-    LocationData currentLocationData = await (getCurrentLocation() as FutureOr<LocationData>);
-    double distanceInMeters = Geolocator.distanceBetween(lat, lon, currentLocationData.latitude!, currentLocationData.longitude!);
-    if (distanceInMeters >= 500) {
+    LocationData? currentLocationData = await getCurrentLocation();
+    if (currentLocationData != null) {
+      double distanceInKilometers = Geolocator.distanceBetween(lat, lon, currentLocationData.latitude!, currentLocationData.longitude!);
+      if (distanceInKilometers >= 1) {
+        isNearby = false;
+      }
+    } else {
       isNearby = false;
+      _customDialogService.showErrorDialog(description: "There was an issue accessing your location. Please try again");
     }
+
     return isNearby;
   }
 }

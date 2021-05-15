@@ -32,7 +32,13 @@ class ListCauseCheckListItemsModel extends BaseViewModel {
   List<GoCheckListItem> checkListItems = [];
 
   initialize(String id) async {
+    causeID = id;
     checkListItems = await _causeDataService.getCheckListItems(id);
+    notifyListeners();
+  }
+
+  Future<void> refreshData() async {
+    checkListItems = await _causeDataService.getCheckListItems(causeID);
     notifyListeners();
   }
 

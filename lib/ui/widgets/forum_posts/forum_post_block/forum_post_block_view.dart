@@ -136,7 +136,7 @@ class ForumPostBlockView extends StatelessWidget {
                         model.likedPost
                             ? IconButton(
                                 onPressed: () {
-                                  model.likeUnlikePost(post!.id);
+                                  model.likeUnlikePost(post!.id!);
 
                                   model.notifyListeners();
                                 },
@@ -147,7 +147,7 @@ class ForumPostBlockView extends StatelessWidget {
                                 ))
                             : IconButton(
                                 onPressed: () {
-                                  model.likeUnlikePost(post!.id);
+                                  model.likeUnlikePost(post!.id!);
                                 },
                                 icon: Icon(
                                   Icons.favorite_border,
@@ -189,10 +189,11 @@ class ForumPostBlockView extends StatelessWidget {
   Widget build(BuildContext context) {
     ///print(post.imageID);
     return ViewModelBuilder<ForumPostBlockViewModel>.reactive(
-      onModelReady: (model) => model.initialize(post!.authorID, post!.causeID, post!.id),
+      onModelReady: (model) => model.initialize(post!.authorID, post!.causeID, post!),
       viewModelBuilder: () => ForumPostBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
         onTap: () => model.customNavigationService.navigateToForumPostView(post!.id!),
+        onDoubleTap: () => model.likeUnlikePost(post!.id!),
         child: model.isBusy
             ? Container()
             : Container(

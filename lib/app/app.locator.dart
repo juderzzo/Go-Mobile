@@ -32,6 +32,7 @@ import '../services/reactive/user/reactive_user_service.dart';
 import '../services/share/share_service.dart';
 import '../ui/views/base/app_base_view_model.dart';
 import '../ui/views/home/tabs/explore/explore_view_model.dart';
+import '../ui/views/home/tabs/feed/feed_view_model.dart';
 import '../ui/views/home/tabs/home/home_view_model.dart';
 import '../ui/views/home/tabs/profile/profile_view_model.dart';
 
@@ -67,4 +68,5 @@ void setupLocator() {
   locator.registerSingleton(HomeViewModel());
   locator.registerSingleton(ExploreViewModel());
   locator.registerSingleton(ProfileViewModel());
+  locator.registerSingleton(FeedViewModel());
 }

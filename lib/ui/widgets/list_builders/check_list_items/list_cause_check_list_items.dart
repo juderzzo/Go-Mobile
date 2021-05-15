@@ -32,7 +32,7 @@ class ListCauseCheckListItems extends StatelessWidget {
                   height: screenHeight(context),
                   color: appBackgroundColor(),
                   child: RefreshIndicator(
-                    onRefresh: model.initialize(causeID),
+                    onRefresh: model.refreshData,
                     backgroundColor: appBackgroundColor(),
                     child: ListView.builder(
                       physics: AlwaysScrollableScrollPhysics(),

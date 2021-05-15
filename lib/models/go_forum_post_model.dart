@@ -7,6 +7,7 @@ class GoForumPost {
   String? body;
   int? commentCount;
   List? likedBy;
+  List? followers;
 
   GoForumPost({
     this.id,
@@ -17,6 +18,7 @@ class GoForumPost {
     this.commentCount,
     this.imageID,
     this.likedBy,
+    this.followers,
   });
 
   GoForumPost.fromMap(Map<String, dynamic> data)
@@ -29,6 +31,7 @@ class GoForumPost {
           commentCount: data['commentCount'],
           imageID: data['imageID'],
           likedBy: data['likedBy'],
+          followers: data['followers'],
         );
 
   Map<String, dynamic> toMap() => {
@@ -40,6 +43,7 @@ class GoForumPost {
         'commentCount': this.commentCount,
         'imageID': this.imageID,
         'likedBy': this.likedBy,
+        'followers': this.followers,
       };
 
   //checks if obj is valid

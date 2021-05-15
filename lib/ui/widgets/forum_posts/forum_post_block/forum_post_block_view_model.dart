@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_cause_model.dart';
@@ -12,6 +13,7 @@ import 'package:go/services/firestore/data/comment_data_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/services/navigation/custom_navigation_service.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -22,11 +24,12 @@ class ForumPostBlockViewModel extends BaseViewModel {
   NavigationService? _navigationService = locator<NavigationService>();
   BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
   UserDataService? _userDataService = locator<UserDataService>();
-  PostDataService? _postDataService = locator<PostDataService>();
+  PostDataService _postDataService = locator<PostDataService>();
   CommentDataService? _commentDataService = locator<CommentDataService>();
   CauseDataService? _causeDataService = locator<CauseDataService>();
   DynamicLinkService? _dynamicLinkService = locator<DynamicLinkService>();
   CustomNavigationService customNavigationService = locator<CustomNavigationService>();
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
 
   ShareService? _shareService = locator<ShareService>();
   DialogService? _dialogService = locator<DialogService>();
@@ -37,12 +40,11 @@ class ForumPostBlockViewModel extends BaseViewModel {
   bool isAdmin = false;
   bool likedPost = false;
 
-  initialize(String? authorID, String? causeID, String? postID) async {
+  initialize(String? authorID, String? causeID, GoForumPost post) async {
     setBusy(true);
     String? currentUID = await _authService!.getCurrentUserID();
 
-    GoUser user = await _userDataService!.getGoUserByID(currentUID);
-    likedPost = user.liked!.contains(postID);
+    likedPost = post.likedBy == null ? false : post.likedBy!.contains(_reactiveUserService.user.id);
 
     GoUser author = await _userDataService!.getGoUserByID(authorID);
     if (currentUID == authorID) {
@@ -51,6 +53,7 @@ class ForumPostBlockViewModel extends BaseViewModel {
 
     GoCause cause = await _causeDataService!.getCauseByID(causeID);
     isAdmin = currentUID == cause.creatorID;
+
     //this is the admin part
 
     authorUsername = "@" + author.username!;
@@ -70,11 +73,15 @@ class ForumPostBlockViewModel extends BaseViewModel {
         });
   }
 
-  likeUnlikePost(String? postID) async {
-    String? currentUID = await _authService!.getCurrentUserID();
-    _userDataService!.likeUnlikePost(currentUID, postID);
-    likedPost = !likedPost;
-    print(likedPost);
+  likeUnlikePost(String postID) async {
+    if (likedPost) {
+      likedPost = false;
+      _postDataService.unlikePost(uid: _reactiveUserService.user.id!, postID: postID);
+    } else {
+      likedPost = true;
+      _postDataService.likePost(uid: _reactiveUserService.user.id!, postID: postID);
+    }
+    HapticFeedback.lightImpact();
     notifyListeners();
   }
 

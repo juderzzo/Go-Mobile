@@ -8,22 +8,23 @@ import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
 import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
+import 'package:go/ui/views/base/app_base_view_model.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 
-class ListLikedUserPostsModel extends BaseViewModel {
+class ListFollowedPostsModel extends BaseViewModel {
   PostDataService _postDataService = locator<PostDataService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
   CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
   CustomNavigationService customNavigationService = locator<CustomNavigationService>();
+  AppBaseViewModel appBaseViewModel = locator<AppBaseViewModel>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
-  String listKey = "initial-user-posts-created-key";
+  String listKey = "initial_followed_posts_model";
 
   ///USER DATA
   GoUser get user => _reactiveUserService.user;
-  String? uid;
 
   ///DATA
   List<DocumentSnapshot> dataResults = [];
@@ -33,17 +34,13 @@ class ListLikedUserPostsModel extends BaseViewModel {
 
   int resultsLimit = 30;
 
-  initialize(String? id) async {
-    if (id != null) {
-      uid = id;
-    } else {
-      uid = user.id;
-    }
-    notifyListeners();
+  initialize() async {
     await loadData();
   }
 
   Future<void> refreshData() async {
+    scrollController.jumpTo(scrollController.position.minScrollExtent);
+
     //clear previous data
     dataResults = [];
     loadingAdditionalData = false;
@@ -58,8 +55,8 @@ class ListLikedUserPostsModel extends BaseViewModel {
     setBusy(true);
 
     //load data with params
-    dataResults = await _postDataService.loadPostsLikedByUser(
-      uid: uid,
+    dataResults = await _postDataService.loadFollowingPosts(
+      uid: user.id,
       resultsLimit: resultsLimit,
     );
 
@@ -79,8 +76,8 @@ class ListLikedUserPostsModel extends BaseViewModel {
     notifyListeners();
 
     //load additional data
-    List<DocumentSnapshot> newResults = await _postDataService.loadAdditionalPostsLikedByUser(
-      uid: uid,
+    List<DocumentSnapshot> newResults = await _postDataService.loadAdditionalFollowingPosts(
+      uid: user.id,
       lastDocSnap: dataResults[dataResults.length - 1],
       resultsLimit: resultsLimit,
     );

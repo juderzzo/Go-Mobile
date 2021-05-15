@@ -17,7 +17,7 @@ class CauseDataService {
   CollectionReference checkRef = FirebaseFirestore.instance.collection('checks');
   SnackbarService? _snackbarService = locator<SnackbarService>();
   CustomDialogService _customDialogService = locator<CustomDialogService>();
-  PostDataService? _postDataService = locator<PostDataService>();
+  PostDataService _postDataService = locator<PostDataService>();
   FirebaseStorageService _firebaseStorageService = locator<FirebaseStorageService>();
 
   Future checkIfCauseExists(String id) async {
@@ -168,6 +168,22 @@ class CauseDataService {
     causeR.update({"admins": cause.admins});
   }
 
+  Future<List> getCauseFollowers(String? id) async {
+    List followers = [];
+    String? error;
+    DocumentSnapshot snapshot = await causeRef.doc(id).get().catchError((e) {
+      error = e.message;
+    });
+    if (error == null) {
+      return followers;
+    }
+    if (snapshot.exists) {
+      GoCause cause = GoCause.fromMap(snapshot.data()!);
+      followers = cause.followers ?? [];
+    }
+    return followers;
+  }
+
   Future followUnfollowCause(String? causeID, String? uid) async {
     GoCause? cause;
     DocumentSnapshot snapshot = await causeRef.doc(causeID).get().catchError((e) {
@@ -179,8 +195,10 @@ class CauseDataService {
       List causeFollowers = cause.followers!.toList(growable: true);
       if (causeFollowers.contains(uid)) {
         causeFollowers.remove(uid);
+        _postDataService.unfollowPosts(uid: uid!, causeID: causeID!);
       } else {
         causeFollowers.add(uid);
+        _postDataService.followPosts(uid: uid!, causeID: causeID!);
       }
       await causeRef.doc(cause.id).update({
         "followers": causeFollowers,
@@ -444,12 +462,12 @@ class CauseDataService {
     QuerySnapshot posts = await FirebaseFirestore.instance.collection('posts').where('causeID', isEqualTo: id).get();
 
     for (int i = 0; i < posts.docs.length; i++) {
-      _postDataService!.deletePost(posts.docs[i].reference.id);
+      _postDataService.deletePost(posts.docs[i].reference.id);
     }
 
     //delete the cause and the images associated with it
     await FirebaseFirestore.instance.runTransaction((Transaction deleteTransaction) async {
-      GoCause cause = await (getCauseByID(id) as FutureOr<GoCause>);
+      GoCause cause = await getCauseByID(id);
       List imageURLs = cause.imageURLs!;
       imageURLs.forEach((url) {
         FirebaseStorage.instance.refFromURL(url).delete();

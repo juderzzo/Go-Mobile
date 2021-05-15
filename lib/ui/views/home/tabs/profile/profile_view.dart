@@ -9,6 +9,8 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/list_builders/causes/current_user/list_current_user_created_causes.dart';
+import 'package:go/ui/widgets/list_builders/posts/liked_posts/list_liked_user_posts.dart';
+import 'package:go/ui/widgets/list_builders/posts/user_posts/list_user_posts.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_stats_row.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';
@@ -118,8 +120,8 @@ class _ProfileViewBody extends HookViewModelWidget<ProfileViewModel> {
             controller: _tabController,
             children: [
               ListCurrentUserCreatedCauses(),
-              ListCurrentUserCreatedCauses(),
-              ListCurrentUserCreatedCauses(),
+              ListUserPosts(id: model.user.id),
+              ListLikedUserPosts(id: model.user.id),
             ],
           ),
         ),

@@ -1,25 +1,51 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go/app/app.locator.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/ui/widgets/common/zero_state_view.dart';
-import 'package:go/ui/widgets/list_builders/list_posts.dart';
+import 'package:go/ui/shared/ui_helpers.dart';
+import 'package:go/ui/widgets/list_builders/posts/followed_posts/list_followed_posts.dart';
 import 'package:go/ui/widgets/notifications/notification_bell/notification_bell_view.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_hooks/stacked_hooks.dart';
 
 import 'feed_view_model.dart';
 
 class FeedView extends StatelessWidget {
-  final ScrollController _scrollController = ScrollController();
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<FeedViewModel>.reactive(
+      disposeViewModel: false,
+      initialiseSpecialViewModelsOnce: true,
+      viewModelBuilder: () => locator<FeedViewModel>(),
+      builder: (context, model, child) => Container(
+        height: screenHeight(context),
+        color: appBackgroundColor(),
+        child: SafeArea(
+          child: Container(
+            child: Column(
+              children: [
+                _FeedViewHead(),
+                _FeedBody(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-  Widget head(FeedViewModel model) {
+class _FeedViewHead extends HookViewModelWidget<FeedViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, FeedViewModel model) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
-      color: appBackgroundColor(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Feed",
+            "Home",
             style: TextStyle(
               color: appFontColor(),
               fontWeight: FontWeight.bold,
@@ -30,7 +56,15 @@ class FeedView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                NotificationBellView(uid: model.user!.id),
+                NotificationBellView(uid: model.user.id),
+                IconButton(
+                  onPressed: () => model.customBottomSheetService.showAddCauseBottomSheet(),
+                  icon: Icon(
+                    FontAwesomeIcons.plus,
+                    color: appIconColor(),
+                    size: 20,
+                  ),
+                ),
               ],
             ),
           ),
@@ -38,60 +72,13 @@ class FeedView extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget bodyEmpty(FeedViewModel model) {
-    //print(model.causesFollowingResults);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: ZeroStateView(
-            imageAssetName: 'coding',
-            header: "You're Not Following Any Causes or Changemakers",
-            subHeader: "Follow the causes and changemakers that youre interested in",
-            mainActionButtonTitle: "Explore Causes",
-            mainAction: () => model.appBaseViewModel.setNavBarIndex(1),
-            secondaryActionButtonTitle: 'Refresh Page',
-            secondaryAction: () => model.refreshCausesFollowing(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget bodyFull(FeedViewModel model, BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 3 / 4,
-      child: ListPosts(
-        postResults: model.newPosts,
-        scrollController: _scrollController,
-        refreshingData: model.refreshingPosts,
-        refreshData: model.loadPosts,
-      ),
-    );
-  }
-
+class _FeedBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<FeedViewModel>.reactive(
-        onModelReady: (model) => model.initialize(),
-        viewModelBuilder: () => FeedViewModel(),
-        builder: (context, model, child) => Scaffold(
-              body: Container(
-                color: appBackgroundColor(),
-                child: SafeArea(
-                  child: Column(
-                    children: [
-                      head(model),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      model.newPosts == null ? bodyEmpty(model) : bodyFull(model, context),
-                      Container(),
-                    ],
-                  ),
-                ),
-              ),
-            ));
+    return Expanded(
+      child: ListFollowedPosts(),
+    );
   }
 }

@@ -29,6 +29,7 @@ import 'package:go/ui/views/causes/cause/cause_detail_views/forum/forum_post/for
 import 'package:go/ui/views/causes/cause/cause_view.dart';
 import 'package:go/ui/views/causes/create_cause/create_cause_view.dart';
 import 'package:go/ui/views/home/tabs/explore/explore_view_model.dart';
+import 'package:go/ui/views/home/tabs/feed/feed_view_model.dart';
 import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
 import 'package:go/ui/views/notifications/notifications_view.dart';
@@ -232,6 +233,7 @@ import 'package:stacked_themes/stacked_themes.dart';
     Singleton(classType: HomeViewModel),
     Singleton(classType: ExploreViewModel),
     Singleton(classType: ProfileViewModel),
+    Singleton(classType: FeedViewModel),
   ],
 )
 class AppSetup {

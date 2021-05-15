@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
+import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -145,14 +146,20 @@ class PostDataService {
     int? dateCreatedInMilliseconds,
     int? commentCount,
   }) async {
-    String url = "";
+    CauseDataService _causeDataService = locator<CauseDataService>();
 
+    //post img upload
+    String url = "";
     if (image != null) {
       await FirestoreImageUploader().uploadImage(img: image, storageBucket: 'posts', folderName: causeID!, fileName: id!).then((v) async {
         url = await FirebaseStorage.instance.ref('posts/$causeID/$id').getDownloadURL();
       });
     }
 
+    //get cause followers
+    List followers = await _causeDataService.getCauseFollowers(causeID);
+
+    //upload cause
     GoForumPost post = GoForumPost(
       id: id,
       causeID: causeID,
@@ -161,18 +168,17 @@ class PostDataService {
       imageID: url,
       dateCreatedInMilliseconds: dateCreatedInMilliseconds,
       commentCount: commentCount,
+      followers: followers,
     );
+
     await postRef.doc(post.id).set(post.toMap()).catchError((e) {
       return e.message;
     });
-    print("post service");
 
     await _userDataService!.addPost(authorID, id).catchError((e) {
-      print("post service2");
-      print(e);
       return e.message;
     });
-    print("post service2");
+
     return;
   }
 
@@ -206,6 +212,88 @@ class PostDataService {
     await commentsRef.doc(id).delete();
     await postRef.doc(id).delete();
     await _userDataService!.removePost(post.authorID, post.id);
+  }
+
+  Future<bool> likePost({required String uid, required String postID}) async {
+    bool success = true;
+    String? error;
+    await postRef.doc(postID).update({
+      'likedBy': FieldValue.arrayUnion([uid])
+    }).catchError((e) {
+      error = e.message;
+      print(e);
+    });
+    if (error != null) {
+      success = false;
+      return success;
+    }
+    return success;
+  }
+
+  Future<bool> unlikePost({required String uid, required String postID}) async {
+    bool success = true;
+    String? error;
+    await postRef.doc(postID).update({
+      'likedBy': FieldValue.arrayRemove([uid])
+    }).catchError((e) {
+      error = e.message;
+      print(e);
+    });
+    if (error != null) {
+      success = false;
+      return success;
+    }
+    return success;
+  }
+
+  Future<bool> followPosts({required String uid, required String causeID}) async {
+    bool success = true;
+    String? error;
+    QuerySnapshot snapshot = await postRef.where("causeID", isEqualTo: causeID).get().catchError((e) {
+      error = e.message;
+      print(e);
+    });
+
+    if (error != null) {
+      success = false;
+      return success;
+    }
+
+    if (snapshot.docs.isNotEmpty) {
+      snapshot.docs.forEach((doc) async {
+        await postRef.doc(doc.id).update({
+          'followers': FieldValue.arrayUnion([uid])
+        }).catchError((e) {
+          print(e.message);
+        });
+      });
+    }
+    return success;
+  }
+
+  Future<bool> unfollowPosts({required String uid, required String causeID}) async {
+    bool success = true;
+    String? error;
+    QuerySnapshot snapshot = await postRef.where("causeID", isEqualTo: causeID).get().catchError((e) {
+      error = e.message;
+      print(e);
+    });
+
+    if (error != null) {
+      success = false;
+      return success;
+    }
+
+    if (snapshot.docs.isNotEmpty) {
+      snapshot.docs.forEach((doc) async {
+        await postRef.doc(doc.id).update({
+          'followers': FieldValue.arrayRemove([uid])
+        }).catchError((e) {
+          print(e.message);
+        });
+      });
+    }
+    return success;
   }
 
   ///QUERIES
@@ -325,6 +413,52 @@ class PostDataService {
     List<DocumentSnapshot> docs = [];
     query =
         postRef.where('likedBy', arrayContains: uid).orderBy('dateCreatedInMilliseconds', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  Future<List<DocumentSnapshot>> loadFollowingPosts({
+    required String? uid,
+    required int resultsLimit,
+  }) async {
+    List<DocumentSnapshot> docs = [];
+
+    Query query = postRef.where('followers', arrayContains: uid).orderBy('dateCreatedInMilliseconds', descending: true);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  Future<List<DocumentSnapshot>> loadAdditionalFollowingPosts({
+    required String? uid,
+    required DocumentSnapshot lastDocSnap,
+    required int resultsLimit,
+  }) async {
+    Query query;
+    List<DocumentSnapshot> docs = [];
+    query = postRef
+        .where('followers', arrayContains: uid)
+        .orderBy('dateCreatedInMilliseconds', descending: true)
+        .startAfterDocument(lastDocSnap)
+        .limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
         title: 'Error',
