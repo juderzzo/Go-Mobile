@@ -55,12 +55,10 @@ class ListHomeCauses extends StatelessWidget {
                           if (model.dataResults.last == model.dataResults[index]) {
                             displayBottomBorder = false;
                           }
-                          if (cause.approved!) {
-                            return CauseBlockView(
-                              cause: cause,
-                              displayBottomBorder: displayBottomBorder,
-                            );
-                          }
+                          return CauseBlockView(
+                            cause: cause,
+                            displayBottomBorder: displayBottomBorder,
+                          );
                         } else {
                           if (model.moreDataAvailable) {
                             WidgetsBinding.instance!.addPostFrameCallback((_) {

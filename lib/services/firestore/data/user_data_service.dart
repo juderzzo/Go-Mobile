@@ -59,6 +59,18 @@ class UserDataService {
     return usernameExists;
   }
 
+  Future<bool> updateAssociatedEmailAddress(String uid, String emailAddress) async {
+    bool updated = true;
+    String? error;
+    userRef.doc(uid).update({"emailAddress": emailAddress}).whenComplete(() {}).catchError((e) {
+          error = e.message;
+        });
+    if (error != null) {
+      updated = false;
+    }
+    return updated;
+  }
+
   Future<bool> updateUsername({required String username, required String id}) async {
     bool updated = true;
     String? error;
@@ -158,10 +170,17 @@ class UserDataService {
     updateGoUser(user);
   }
 
-  Future updateGoUser(GoUser user) async {
+  Future<bool> updateGoUser(GoUser user) async {
+    bool updated = true;
+    String? error;
     await userRef.doc(user.id).update(user.toMap()).catchError((e) {
-      return e.message;
+      error = e.message;
+      _customDialogService.showErrorDialog(description: error!);
     });
+    if (error != null) {
+      updated = false;
+    }
+    return updated;
   }
 
   Future updateUserOnboardStatus(String? id) async {

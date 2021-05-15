@@ -1,196 +1,235 @@
-import 'dart:async';
 import 'dart:io';
 
-import 'package:app_settings/app_settings.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
-import 'package:go/enums/bottom_sheet_type.dart';
-import 'package:go/services/auth/auth_service.dart';
+import 'package:go/models/go_user_model.dart';
+import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
+import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
-import 'package:go/services/firestore/utils/firebase_messaging_service.dart';
+import 'package:go/services/firestore/utils/firebase_storage_service.dart';
+import 'package:go/services/location/location_service.dart';
+import 'package:go/services/permission_handler/permission_handler_service.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
+import 'package:go/utils/custom_string_methods.dart';
 import 'package:go/utils/go_image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
 
-class OnboardingViewModel extends BaseViewModel {
-  ///SERVICES
-  AuthService? _authService = locator<AuthService>();
-  DialogService? _dialogService = locator<DialogService>();
-  NavigationService? _navigationService = locator<NavigationService>();
-  UserDataService? _userDataService = locator<UserDataService>();
-  SnackbarService? _snackbarService = locator<SnackbarService>();
-  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
-  ThemeService? _themeService = locator<ThemeService>();
-  FirebaseMessagingService _firebaseMessagingService = locator<FirebaseMessagingService>();
+class OnboardingViewModel extends ReactiveViewModel {
+  CustomBottomSheetService _customBottomSheetService = locator<CustomBottomSheetService>();
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
+  NavigationService _navigationService = locator<NavigationService>();
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
+  PermissionHandlerService _permissionHandlerService = locator<PermissionHandlerService>();
+  FirebaseStorageService _firebaseStorageService = locator<FirebaseStorageService>();
+  LocationService _locationService = locator<LocationService>();
+  UserDataService _userDataService = locator<UserDataService>();
+  ThemeService _themeService = locator<ThemeService>();
 
-  ///HELPERS
-  TextEditingController usernameTextController = TextEditingController();
-  TextEditingController bioTextController = TextEditingController();
+  ///USER
+  GoUser get user => _reactiveUserService.user;
+  String emailAddress = "";
+  String username = "";
+  String bio = "";
 
+  bool isLoading = false;
+  File? imgFile;
   String profilePlaceholderImgURL =
       "https://www.qualitysleepstore.com/pub/static/version1597711649/frontend/Pearl/weltpixel_custom/en_US/Magento_Catalog/images/product/placeholder/image.jpg";
 
-  ///DATA
-  String? uid;
-  File? imgFile;
-  bool notificationsEnabled = false;
-  bool? tutorial = false;
+  ///PERMISSIONS DATA
+  bool notificationError = false;
+  bool updatingLocation = false;
+  bool locationError = false;
+  bool hasLocation = false;
 
-  initialize() async {
+  ///INTRO STATE
+  final introKey = GlobalKey<IntroductionScreenState>();
+  bool showSkipButton = true;
+  bool showNextButton = true;
+  bool freezeSwipe = false;
+  int pageNum = 0;
+  int imgFlex = 3;
+
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_reactiveUserService];
+
+  initialize() {
     setBusy(true);
-    uid = await _authService!.getCurrentUserID();
-    //tutorial = await (_userDataService!.checkIfUserHasBeenOnboarded(uid) as FutureOr<bool?>);
+    _themeService.setThemeMode(ThemeManagerMode.light);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     notifyListeners();
     setBusy(false);
   }
 
-  selectImage(context) async {
-    FocusScope.of(context).requestFocus(FocusNode());
-    var sheetResponse = await _bottomSheetService!.showCustomSheet(
-      variant: BottomSheetType.imagePicker,
-    );
-    if (sheetResponse != null) {
-      String? res = sheetResponse.responseData;
-      if (res == "camera") {
-        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
-      } else if (res == "gallery") {
-        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
-      }
-      notifyListeners();
-      // var uploadImgStatus = await _userDataService!.updateProfilePic(uid!, imgFile!);
-      // if (uploadImgStatus is String) {
-      //   _snackbarService!.showSnackbar(
-      //     title: 'Photo Upload Error',
-      //     message: uploadImgStatus,
-      //     duration: Duration(seconds: 5),
-      //   );
-      // }
-    }
+  updatePageNum(int val) {
+    pageNum = val;
+    notifyListeners();
   }
 
-  Future<bool> completeProfilePicUsernamePage() async {
-    bool complete = false;
-    setBusy(true);
-    if (imgFile == null) {
-      _snackbarService!.showSnackbar(
-        title: 'Photo Missing',
-        message: 'Please Select an Image for Your Profile',
-        duration: Duration(seconds: 5),
-      );
+  updateImgFlex(int val) {
+    imgFlex = val;
+    notifyListeners();
+  }
+
+  updateShowNextButton(bool val) {
+    showNextButton = val;
+    notifyListeners();
+  }
+
+  updateEmail(String val) {
+    emailAddress = val.trim();
+    notifyListeners();
+  }
+
+  updateUsername(String val) {
+    username = val.trim().toLowerCase();
+    notifyListeners();
+  }
+
+  updateBio(String val) {
+    bio = val.trim();
+    notifyListeners();
+  }
+
+  validateAndSubmitEmailAddress() {
+    if (!isValidEmail(emailAddress)) {
+      _customDialogService.showErrorDialog(description: "Invalid Email Address");
+      return;
     } else {
-      String username = usernameTextController.text.trim().toLowerCase();
-      if (username.isEmpty) {
-        _snackbarService!.showSnackbar(
-          title: 'Username Missing',
-          message: 'Please add a username',
-          duration: Duration(seconds: 5),
-        );
-      } else {
-        bool usernameExists = true; //await (_userDataService!.checkIfUsernameExists(uid, username) as FutureOr<bool>);
-        if (usernameExists) {
-          _snackbarService!.showSnackbar(
-            title: 'Username Taken',
-            message: 'This username has already been taken',
-            duration: Duration(seconds: 5),
-          );
-        }
-        //   else {
-        //   //   var res = await _userDataService!.updateGoUsername(uid!, username);
-        //   //   if (res is String) {
-        //   //     _snackbarService!.showSnackbar(
-        //   //       title: 'Uh-Oh...',
-        //   //       message: res,
-        //   //       duration: Duration(seconds: 5),
-        //   //     );
-        //   //   }
-        //   //   complete = true;
-        //   // }
-      }
+      _userDataService.updateAssociatedEmailAddress(user.id!, emailAddress);
+      introKey.currentState!.next();
     }
-    setBusy(false);
-    return complete;
   }
 
-  Future<bool> completeBio() async {
-    String bio = bioTextController.text.trim();
-    if (bio.isEmpty) {
-      _snackbarService!.showSnackbar(
-        title: 'Bio Error',
-        message: 'Bio cannot be empty',
-        duration: Duration(seconds: 5),
-      );
-      return false;
-    }
-    setBusy(true);
-    var res = await _userDataService!.updateBio(uid, bio);
-    setBusy(false);
-
-    return true;
-  }
-
-  enableNotifications() async {
-    PermissionStatus permissionStatus = await Permission.notification.status;
-    if (permissionStatus == null) {
-      permissionStatus = await Permission.notification.request();
-      if (permissionStatus.isGranted) {
-        notificationsEnabled = true;
-        notifyListeners();
-      }
-    } else if (permissionStatus.isGranted) {
-      notificationsEnabled = true;
-      _firebaseMessagingService.configureFirebaseMessagingListener();
+  checkNotificationPermissions() async {
+    bool hasPermission = await _permissionHandlerService.hasNotificationsPermission();
+    if (hasPermission) {
+      introKey.currentState!.next();
+    } else {
+      notificationError = true;
       notifyListeners();
-    } else if (permissionStatus.isDenied) {
-      DialogResponse response = await (_dialogService!.showConfirmationDialog(
-        title: "Enable Notifications?",
-        description: "Open app settings to enable notifications",
-        cancelTitle: "Cancel",
-        confirmationTitle: "Open App Settings",
-        barrierDismissible: true,
-      ) as FutureOr<DialogResponse>);
-      if (response.confirmed) {
-        AppSettings.openNotificationSettings();
-      }
     }
   }
 
-  completeOnboarding() async {
-    if (tutorial!) {
-      _navigationService!.back();
+  checkLocationPermissions() async {
+    updatingLocation = true;
+    notifyListeners();
+    bool hasPermission = await _permissionHandlerService.hasLocationPermission();
+    if (hasPermission) {
+      introKey.currentState!.next();
+    } else {
+      locationError = true;
+      notifyListeners();
+    }
+    updatingLocation = false;
+    notifyListeners();
+  }
+
+  openAppSettings() {
+    openAppSettings();
+  }
+
+  selectImage() async {
+    String? source = await _customBottomSheetService.showImageSelectorBottomSheet();
+    if (source != null) {
+      //get image from camera or gallery
+      if (source == "camera") {
+        bool hasCameraPermission = await _permissionHandlerService.hasCameraPermission();
+        if (hasCameraPermission) {
+          imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+        } else {
+          if (Platform.isAndroid) {
+            _customDialogService.showAppSettingsDialog(
+              title: "Camera Permission Required",
+              description: "Please open your app settings and enable your camera",
+            );
+          }
+        }
+      } else if (source == "gallery") {
+        bool hasPhotosPermission = await _permissionHandlerService.hasPhotosPermission();
+        if (hasPhotosPermission) {
+          imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+        } else {
+          if (Platform.isAndroid) {
+            _customDialogService.showAppSettingsDialog(
+              title: "Storage Permission Required",
+              description: "Please open your app settings and enable your access to your storage",
+            );
+          }
+        }
+      }
+    }
+    notifyListeners();
+  }
+
+  validateAndSubmit() async {
+    isLoading = true;
+    notifyListeners();
+    bool usernameExists = await _userDataService.checkIfUsernameExists(username);
+    print(username);
+    if (usernameExists) {
+      _customDialogService.showErrorDialog(description: "Username Unavailable");
+      isLoading = false;
+      notifyListeners();
       return;
     }
-    setBusy(true);
-    var res = await _userDataService!.updateUserOnboardStatus(uid);
-    await _userDataService!.setGoUserPoints(uid, 0);
-    setBusy(false);
-    if (res is String) {
-      _snackbarService!.showSnackbar(
-        title: 'Uh-Oh...',
-        message: res,
-        duration: Duration(seconds: 5),
-      );
-    } else {
-      //replaceWithHomeNavView();
+    if (username.isEmpty) {
+      _customDialogService.showErrorDialog(description: "Username Required");
+      isLoading = false;
+      notifyListeners();
+      return;
     }
+    if (!isValidUsername(username)) {
+      _customDialogService.showErrorDialog(description: "Invalid Username");
+      isLoading = false;
+      notifyListeners();
+      return;
+    }
+    if (imgFile == null) {
+      _customDialogService.showErrorDialog(description: "Profile Pic Required");
+      isLoading = false;
+      notifyListeners();
+      return;
+    }
+
+    String? profilePicURL = await _firebaseStorageService.uploadImage(img: imgFile!, storageBucket: "images", folderName: "users", fileName: user.id!);
+    if (profilePicURL == null) {
+      _customDialogService.showErrorDialog(description: "There was an issue uploading your profile pic.\nPlease Try Again.");
+      isLoading = false;
+      notifyListeners();
+      return;
+    }
+
+    GoUser currentUser = user;
+    currentUser.username = username;
+    currentUser.profilePicURL = profilePicURL;
+    currentUser.bio = bio;
+    currentUser.onboarded = true;
+    bool updatedUser = await _userDataService.updateGoUser(currentUser);
+    if (!updatedUser) {
+      _customDialogService.showErrorDialog(description: "There was an issue unknown issue.\nPlease Try Again.");
+      isLoading = false;
+      notifyListeners();
+      return;
+    }
+    _reactiveUserService.updateUser(currentUser);
+    navigateToAppBase();
   }
 
-  ///NAVIGATION
-  replaceWithHomeNavView() {
-    _navigationService!.pushNamedAndRemoveUntil(Routes.RootViewRoute);
+  navigateToNextPage() {
+    introKey.currentState!.next();
   }
 
-  static signOut() async {
-    AuthService _authService = locator<AuthService>();
-    ThemeService _themeService = locator<ThemeService>();
-    NavigationService _navigationService = locator<NavigationService>();
+  navigateToPreviousPage() {
+    introKey.currentState!.animateScroll(pageNum - 1);
+  }
 
-    await _authService.signOut();
-    if (_themeService.selectedThemeMode != ThemeManagerMode.light) {
-      _themeService.setThemeMode(ThemeManagerMode.light);
-    }
-    _navigationService.pushNamedAndRemoveUntil(Routes.RootViewRoute);
+  navigateToAppBase() {
+    _navigationService.navigateTo(Routes.AppBaseViewRoute);
   }
 }

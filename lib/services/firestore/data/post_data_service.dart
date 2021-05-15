@@ -229,33 +229,6 @@ class PostDataService {
     return docs;
   }
 
-  Future<List> loadPostsByUser(
-    String? id,
-  ) async {
-    List ans = [];
-    Query query;
-
-    query = postRef.where('authorID', isEqualTo: id).orderBy('dateCreatedInMilliseconds', descending: true);
-
-    QuerySnapshot snapshot = await query.get();
-    print(snapshot.docs.length);
-    for (int i = 0; i < snapshot.docs.length; i++) {
-      //turn everything to a post and add it to the list
-      GoForumPost post = GoForumPost(
-          id: snapshot.docs[i].data()['id'],
-          causeID: snapshot.docs[i].data()['causeID'],
-          authorID: id,
-          dateCreatedInMilliseconds: snapshot.docs[i].data()['dateCreatedInMilliseconds'],
-          body: snapshot.docs[i].data()['body'],
-          commentCount: snapshot.docs[i].data()['commentCount'],
-          imageID: snapshot.docs[i].data()['imageID']);
-
-      ans.add(post);
-    }
-
-    return ans;
-  }
-
   //Load Additional Causes by Follower Count
   Future<List<DocumentSnapshot>> loadAdditionalPosts({
     required String? causeID,
@@ -266,6 +239,92 @@ class PostDataService {
     List<DocumentSnapshot> docs = [];
     query =
         postRef.where('causeID', isEqualTo: causeID).orderBy('dateCreatedInMilliseconds', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  Future<List<DocumentSnapshot>> loadPostsByUser({
+    required String? uid,
+    required int resultsLimit,
+  }) async {
+    List<DocumentSnapshot> docs = [];
+
+    Query query = postRef.where('authorID', isEqualTo: uid).orderBy('dateCreatedInMilliseconds', descending: true);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  Future<List<DocumentSnapshot>> loadAdditionalPostsByUser({
+    required String? uid,
+    required DocumentSnapshot lastDocSnap,
+    required int resultsLimit,
+  }) async {
+    Query query;
+    List<DocumentSnapshot> docs = [];
+    query =
+        postRef.where('authorID', isEqualTo: uid).orderBy('dateCreatedInMilliseconds', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  Future<List<DocumentSnapshot>> loadPostsLikedByUser({
+    required String? uid,
+    required int resultsLimit,
+  }) async {
+    List<DocumentSnapshot> docs = [];
+
+    Query query = postRef.where('likedBy', arrayContains: uid).orderBy('dateCreatedInMilliseconds', descending: true);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  Future<List<DocumentSnapshot>> loadAdditionalPostsLikedByUser({
+    required String? uid,
+    required DocumentSnapshot lastDocSnap,
+    required int resultsLimit,
+  }) async {
+    Query query;
+    List<DocumentSnapshot> docs = [];
+    query =
+        postRef.where('likedBy', arrayContains: uid).orderBy('dateCreatedInMilliseconds', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
         title: 'Error',

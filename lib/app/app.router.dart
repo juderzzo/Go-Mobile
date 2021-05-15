@@ -165,7 +165,7 @@ class StackedRouter extends RouterBase {
     EditCheckListView: (data) {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            EditCheckListView(),
+            EditCheckListView(data.pathParams['id'].value),
         settings: data,
         transitionDuration: const Duration(milliseconds: 0),
       );
@@ -173,7 +173,7 @@ class StackedRouter extends RouterBase {
     ForumPostView: (data) {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            ForumPostView(),
+            ForumPostView(data.pathParams['id'].value),
         settings: data,
         transitionDuration: const Duration(milliseconds: 0),
       );

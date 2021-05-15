@@ -253,53 +253,7 @@ class CauseDataService {
     required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = causeRef.orderBy('followerCount', descending: true).limit(resultsLimit);
-    QuerySnapshot snapshot = await query.get().catchError((e) {
-      _snackbarService!.showSnackbar(
-        title: 'Error',
-        message: e.message,
-        duration: Duration(seconds: 5),
-      );
-      return docs;
-    });
-    if (snapshot.docs.isNotEmpty) {
-      docs = snapshot.docs;
-    }
-    return docs;
-  }
-
-  //Load Causes Following
-  Future<List<DocumentSnapshot>> loadCausesFollowing({
-    required String uid,
-    required int resultsLimit,
-  }) async {
-    List<DocumentSnapshot> docs = [];
-    String? error;
-    Query query = causeRef.where('followers', arrayContains: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
-
-    QuerySnapshot snapshot = await query.get().catchError((e) {
-      error = e.message;
-    });
-
-    if (error != null) {
-      print(error);
-      return docs;
-    }
-
-    if (snapshot.docs.isNotEmpty) {
-      docs = snapshot.docs;
-    }
-    return docs;
-  }
-
-  //Load Causes Created
-  Future<List<DocumentSnapshot>> loadCausesCreated({
-    required String? uid,
-    required int resultsLimit,
-  }) async {
-    List<DocumentSnapshot> docs = [];
-    Query query = causeRef.where('creatorID', isEqualTo: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
-
+    Query query = causeRef.where('approved', isEqualTo: true).orderBy('followerCount', descending: true).limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
         title: 'Error',
@@ -321,7 +275,7 @@ class CauseDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = causeRef.orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    query = causeRef.where('approved', isEqualTo: true).orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
@@ -330,6 +284,31 @@ class CauseDataService {
         duration: Duration(seconds: 5),
       );
     });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  //Load Causes Following
+  Future<List<DocumentSnapshot>> loadCausesFollowing({
+    required String uid,
+    required int resultsLimit,
+  }) async {
+    List<DocumentSnapshot> docs = [];
+    String? error;
+    Query query =
+        causeRef.where('approved', isEqualTo: true).where('followers', arrayContains: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      error = e.message;
+    });
+
+    if (error != null) {
+      print(error);
+      return docs;
+    }
+
     if (snapshot.docs.isNotEmpty) {
       docs = snapshot.docs;
     }
@@ -344,7 +323,12 @@ class CauseDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = causeRef.where('followers', arrayContains: uid).orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    query = causeRef
+        .where('approved', isEqualTo: true)
+        .where('followers', arrayContains: uid)
+        .orderBy('followerCount', descending: true)
+        .startAfterDocument(lastDocSnap)
+        .limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
@@ -359,8 +343,80 @@ class CauseDataService {
     return docs;
   }
 
+  //Load Causes Created
+  Future<List<DocumentSnapshot>> loadCausesCreated({
+    required String? uid,
+    required int resultsLimit,
+  }) async {
+    List<DocumentSnapshot> docs = [];
+    Query query = causeRef.where("approved", isEqualTo: true).where('creatorID', isEqualTo: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+      return docs;
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
   //Load Additional Causes Created
   Future<List<DocumentSnapshot>> loadAdditionalCausesCreated({
+    required DocumentSnapshot lastDocSnap,
+    required String? uid,
+    required int resultsLimit,
+  }) async {
+    Query query;
+    List<DocumentSnapshot> docs = [];
+    query = causeRef
+        .where("approved", isEqualTo: true)
+        .where('creatorID', isEqualTo: uid)
+        .orderBy('followerCount', descending: true)
+        .startAfterDocument(lastDocSnap)
+        .limit(resultsLimit);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  //Load Causes Created
+  Future<List<DocumentSnapshot>> loadCausesCurrentUserCreated({
+    required String? uid,
+    required int resultsLimit,
+  }) async {
+    List<DocumentSnapshot> docs = [];
+    Query query = causeRef.where('creatorID', isEqualTo: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
+
+    QuerySnapshot snapshot = await query.get().catchError((e) {
+      _snackbarService!.showSnackbar(
+        title: 'Error',
+        message: e.message,
+        duration: Duration(seconds: 5),
+      );
+      return docs;
+    });
+    if (snapshot.docs.isNotEmpty) {
+      docs = snapshot.docs;
+    }
+    return docs;
+  }
+
+  //Load Additional Causes Created
+  Future<List<DocumentSnapshot>> loadAdditionalCausesCurrentUserCreated({
     required DocumentSnapshot lastDocSnap,
     required String? uid,
     required int resultsLimit,

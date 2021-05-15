@@ -99,7 +99,7 @@ class PermissionHandlerService {
     if (status.isGranted || status.isLimited) {
       hasPermission = true;
     } else if (status.isDenied) {
-      status = await Permission.calendar.request();
+      status = await Permission.location.request();
       if (status.isGranted) {
         hasPermission = true;
       }

@@ -6,6 +6,7 @@ import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/services/location/location_service.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/ui/views/base/app_base_view_model.dart';
 import 'package:stacked/stacked.dart';
@@ -14,6 +15,7 @@ import 'package:stacked_services/stacked_services.dart';
 class ListCauseCheckListItemsModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
   CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
+  CustomNavigationService customNavigationService = locator<CustomNavigationService>();
   AppBaseViewModel appBaseViewModel = locator<AppBaseViewModel>();
   LocationService _locationService = locator<LocationService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();

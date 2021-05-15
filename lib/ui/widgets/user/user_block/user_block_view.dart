@@ -17,7 +17,7 @@ class UserBlockView extends StatelessWidget {
 
   Widget isFollowingUser() {
     return Container(
-      padding: EdgeInsets.only(bottom: 4),
+      padding: EdgeInsets.only(bottom: 2),
       child: Row(
         children: [
           Icon(
@@ -26,42 +26,44 @@ class UserBlockView extends StatelessWidget {
             color: appIconColorAlt(),
           ),
           horizontalSpaceTiny,
-          
+          CustomText(
+            text: "Following",
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: appFontColorAlt(),
+          ),
         ],
       ),
     );
   }
 
   Widget body(UserBlockViewModel model) {
-    return GestureDetector(
-      onTap: () => model.navigateToUserView(user!.id),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: displayBottomBorder! ? appBorderColor() : Colors.transparent, width: 0.5),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: displayBottomBorder! ? appBorderColor() : Colors.transparent, width: 0.5),
+        ),
+      ),
+      child: Row(
+        children: <Widget>[
+          UserProfilePic(userPicUrl: user!.profilePicURL, size: 35, isBusy: false),
+          SizedBox(
+            width: 10.0,
           ),
-        ),
-        child: Row(
-          children: <Widget>[
-            UserProfilePic(userPicUrl: user!.profilePicURL, size: 35, isBusy: false),
-            SizedBox(
-              width: 10.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                true ? isFollowingUser() : Container(),
-                CustomText(
-                  text: user!.username!.length < 20 ? "@${user!.username}" : "@${user!.username!.substring(0,20)}...",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: appFontColor(),
-                ),
-              ],
-            ),
-          ],
-        ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              model.currentUser.following != null && model.currentUser.following!.contains(user!.id!) ? isFollowingUser() : Container(),
+              CustomText(
+                text: user!.username!.length < 20 ? "@${user!.username}" : "@${user!.username!.substring(0, 20)}...",
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: appFontColor(),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -72,10 +74,9 @@ class UserBlockView extends StatelessWidget {
       disposeViewModel: false,
       initialiseSpecialViewModelsOnce: true,
       fireOnModelReadyOnce: true,
-      onModelReady: (model) => model.initialize(user!.followers!),
       viewModelBuilder: () => UserBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
-        onTap: () => model.navigateToUserView(user!.id),
+        onTap: () => model.customNavigationService.navigateToUserView(user!.id!),
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

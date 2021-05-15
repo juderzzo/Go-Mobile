@@ -8,7 +8,7 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/home/tabs/profile/profile_view_model.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
-import 'package:go/ui/widgets/list_builders/causes/current_user/created/list_current_user_created_causes.dart';
+import 'package:go/ui/widgets/list_builders/causes/current_user/list_current_user_created_causes.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_stats_row.dart';
 import 'package:go/ui/widgets/user/user_bio.dart';

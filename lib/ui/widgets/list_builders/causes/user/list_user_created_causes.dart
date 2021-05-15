@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/models/go_forum_post_model.dart';
+import 'package:go/models/go_cause_model.dart';
+import 'package:go/ui/widgets/causes/cause_block/cause_block_view.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
-import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
 import 'package:stacked/stacked.dart';
 
-import 'list_user_posts_model.dart';
+import 'list_user_created_causes_model.dart';
 
-class ListUserPosts extends StatelessWidget {
-  final String? id;
-  ListUserPosts({required this.id});
+class ListUserCreatedCauses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ListUserPostsModel>.reactive(
-      onModelReady: (model) => model.initialize(id),
-      viewModelBuilder: () => ListUserPostsModel(),
+    return ViewModelBuilder<ListUserCreatedCausesModel>.reactive(
+      onModelReady: (model) => model.initialize(),
+      viewModelBuilder: () => ListUserCreatedCausesModel(),
       builder: (context, model, child) => model.isBusy
           ? Container()
           : model.dataResults.isEmpty
@@ -42,18 +40,18 @@ class ListUserPosts extends StatelessWidget {
                     itemCount: model.dataResults.length + 1,
                     itemBuilder: (context, index) {
                       if (index < model.dataResults.length) {
-                        GoForumPost post;
+                        GoCause cause;
                         bool displayBottomBorder = true;
 
                         ///GET CAUSE OBJECT
-                        post = GoForumPost.fromMap(model.dataResults[index].data()!);
+                        cause = GoCause.fromMap(model.dataResults[index].data()!);
 
                         ///DISPLAY BOTTOM BORDER
                         if (model.dataResults.last == model.dataResults[index]) {
                           displayBottomBorder = false;
                         }
-                        return ForumPostBlockView(
-                          post: post,
+                        return CauseBlockView(
+                          cause: cause,
                           displayBottomBorder: displayBottomBorder,
                         );
                       } else {

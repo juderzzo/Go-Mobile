@@ -24,7 +24,7 @@ class ForumPostBlockView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           GestureDetector(
-            onTap: () => model.navigateToUserView(post!.authorID),
+            onTap: () => model.customNavigationService.navigateToUserView(post!.authorID!),
             child: Row(
               children: <Widget>[
                 // isLoading
@@ -192,7 +192,7 @@ class ForumPostBlockView extends StatelessWidget {
       onModelReady: (model) => model.initialize(post!.authorID, post!.causeID, post!.id),
       viewModelBuilder: () => ForumPostBlockViewModel(),
       builder: (context, model, child) => GestureDetector(
-        onTap: () => model.navigateToPostView(post!.id),
+        onTap: () => model.customNavigationService.navigateToForumPostView(post!.id!),
         child: model.isBusy
             ? Container()
             : Container(

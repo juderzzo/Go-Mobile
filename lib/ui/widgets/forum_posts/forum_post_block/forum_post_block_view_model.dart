@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/app/app.router.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_forum_post_model.dart';
@@ -14,6 +11,7 @@ import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/comment_data_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -28,6 +26,8 @@ class ForumPostBlockViewModel extends BaseViewModel {
   CommentDataService? _commentDataService = locator<CommentDataService>();
   CauseDataService? _causeDataService = locator<CauseDataService>();
   DynamicLinkService? _dynamicLinkService = locator<DynamicLinkService>();
+  CustomNavigationService customNavigationService = locator<CustomNavigationService>();
+
   ShareService? _shareService = locator<ShareService>();
   DialogService? _dialogService = locator<DialogService>();
 
@@ -41,17 +41,16 @@ class ForumPostBlockViewModel extends BaseViewModel {
     setBusy(true);
     String? currentUID = await _authService!.getCurrentUserID();
 
-    GoUser user = await (_userDataService!.getGoUserByID(currentUID) as FutureOr<GoUser>);
+    GoUser user = await _userDataService!.getGoUserByID(currentUID);
     likedPost = user.liked!.contains(postID);
 
-    GoUser author = await (_userDataService!.getGoUserByID(authorID) as FutureOr<GoUser>);
+    GoUser author = await _userDataService!.getGoUserByID(authorID);
     if (currentUID == authorID) {
       isAuthor = true;
     }
 
-    GoCause cause = await (_causeDataService!.getCauseByID(causeID) as FutureOr<GoCause>);
+    GoCause cause = await _causeDataService!.getCauseByID(causeID);
     isAdmin = currentUID == cause.creatorID;
-    print(isAdmin);
     //this is the admin part
 
     authorUsername = "@" + author.username!;
@@ -114,14 +113,5 @@ class ForumPostBlockViewModel extends BaseViewModel {
   delete(id) async {
     _postDataService!.deletePost(id);
     notifyListeners();
-  }
-
-  ///NAVIGATION
-  navigateToPostView(String? id) {
-    _navigationService!.navigateTo(Routes.ForumPostViewRoute(id: id));
-  }
-
-  navigateToUserView(String? uid) {
-    //  _navigationService.navigateTo(Routes.UserProfileViewRoute, arguments: {'uid': uid});
   }
 }

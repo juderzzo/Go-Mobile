@@ -13,6 +13,7 @@ class ListComments extends StatelessWidget {
   final ScrollController? scrollController;
   final bool? refreshingData;
   final Function(GoForumPostComment) replyToComment;
+  final Function(GoForumPostComment) deleteComment;
   ListComments({
     required this.refreshData,
     required this.results,
@@ -21,21 +22,23 @@ class ListComments extends StatelessWidget {
     required this.scrollController,
     required this.refreshingData,
     required this.replyToComment,
+    required this.deleteComment,
   });
 
   Widget listReplies(BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.width - 70,
+        constraints: BoxConstraints(
+          maxWidth: screenWidth(context) - 80,
+        ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             ListView.builder(
+              cacheExtent: 8000,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: results.length,
               itemBuilder: (context, index) {
                 GoForumPostComment comment;
-                bool displayBottomBorder = true;
 
                 ///GET POST OBJECT
                 if (results[index] is DocumentSnapshot) {
@@ -46,12 +49,9 @@ class ListComments extends StatelessWidget {
                   comment = results[index];
                 }
 
-                ///DISPLAY BOTTOM BORDER
-                if (results.last == results[index]) {
-                  displayBottomBorder = false;
-                }
                 return CommentBlockView(
-                  replyToComment: replyToComment == null ? (val) {} : (val) => replyToComment(val),
+                  replyToComment: (val) => replyToComment(val),
+                  deleteComment: (val) => deleteComment(val),
                   comment: comment,
                 );
               },
@@ -61,48 +61,39 @@ class ListComments extends StatelessWidget {
   }
 
   Widget listResults() {
-    return RefreshIndicator(
-      onRefresh: refreshData as Future<void> Function(),
-      backgroundColor: appBackgroundColor(),
-      child: ListView.builder(
-        physics: ScrollPhysics(),
-        controller: scrollController,
-        key: pageStorageKey,
-        addAutomaticKeepAlives: true,
-        shrinkWrap: true,
-        padding: EdgeInsets.only(
-          top: 4.0,
-          bottom: 4.0,
-        ),
-        itemCount: results.length,
-        itemBuilder: (context, index) {
-          GoForumPostComment comment;
-          bool displayBottomBorder = true;
-
-          ///GET POST OBJECT
-          if (results[index] is DocumentSnapshot) {
-            comment = GoForumPostComment.fromMap(results[index].data());
-          } else {
-            comment = results[index];
-          }
-
-          ///DISPLAY BOTTOM BORDER
-          if (results.last == results[index]) {
-            displayBottomBorder = false;
-          }
-          return CommentBlockView(
-            replyToComment: (val) => replyToComment(val),
-            comment: comment,
-          );
-        },
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      controller: scrollController,
+      key: pageStorageKey,
+      addAutomaticKeepAlives: true,
+      shrinkWrap: true,
+      padding: EdgeInsets.only(
+        top: 4.0,
+        bottom: 4.0,
       ),
+      itemCount: results.length,
+      itemBuilder: (context, index) {
+        GoForumPostComment comment;
+
+        ///GET POST COMMENT OBJECT
+        if (results[index] is DocumentSnapshot) {
+          comment = GoForumPostComment.fromMap(results[index].data());
+        } else {
+          comment = results[index];
+        }
+
+        return CommentBlockView(
+          replyToComment: (val) => replyToComment(val),
+          deleteComment: (val) => deleteComment(val),
+          comment: comment,
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: screenHeight(context),
       color: appBackgroundColor(),
       child: showingReplies ? listReplies(context) : listResults(),
     );

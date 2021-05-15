@@ -5,25 +5,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
-import 'package:go/services/firestore/data/post_data_service.dart';
+import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 
-class ListUserPostsModel extends BaseViewModel {
-  PostDataService _postDataService = locator<PostDataService>();
+class ListCurrentUserCreatedCausesModel extends BaseViewModel {
+  CauseDataService _causeDataService = locator<CauseDataService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
   CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
   CustomNavigationService customNavigationService = locator<CustomNavigationService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
-  String listKey = "initial-user-posts-created-key";
+  String listKey = "initial-current-user-created-causes-key";
 
   ///USER DATA
   GoUser get user => _reactiveUserService.user;
-  String? uid;
 
   ///DATA
   List<DocumentSnapshot> dataResults = [];
@@ -33,13 +32,7 @@ class ListUserPostsModel extends BaseViewModel {
 
   int resultsLimit = 30;
 
-  initialize(String? id) async {
-    if (id != null) {
-      uid = id;
-    } else {
-      uid = user.id;
-    }
-    notifyListeners();
+  initialize() async {
     await loadData();
   }
 
@@ -60,7 +53,7 @@ class ListUserPostsModel extends BaseViewModel {
     setBusy(true);
 
     //load data with params
-    dataResults = await _postDataService.loadPostsByUser(
+    dataResults = await _causeDataService.loadCausesCurrentUserCreated(
       uid: user.id,
       resultsLimit: resultsLimit,
     );
@@ -81,7 +74,7 @@ class ListUserPostsModel extends BaseViewModel {
     notifyListeners();
 
     //load additional data
-    List<DocumentSnapshot> newResults = await _postDataService.loadAdditionalPostsByUser(
+    List<DocumentSnapshot> newResults = await _causeDataService.loadAdditionalCausesCurrentUserCreated(
       uid: user.id,
       lastDocSnap: dataResults[dataResults.length - 1],
       resultsLimit: resultsLimit,

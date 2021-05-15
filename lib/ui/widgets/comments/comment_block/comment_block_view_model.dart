@@ -1,37 +1,61 @@
-import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/app/app.router.dart';
-import 'package:go/models/go_forum_post_comment_model.dart';
 import 'package:go/models/go_user_model.dart';
-import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/firestore/data/comment_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CommentBlockViewModel extends BaseViewModel {
-  AuthService? _authService = locator<AuthService>();
-  DialogService? _dialogService = locator<DialogService>();
-  NavigationService? _navigationService = locator<NavigationService>();
-  UserDataService? _userDataService = locator<UserDataService>();
-  CommentDataService? _commentDataService = locator<CommentDataService>();
+  NavigationService _navigationService = locator<NavigationService>();
+  UserDataService _userDataService = locator<UserDataService>();
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
+  CustomNavigationService customNavigationService = locator<CustomNavigationService>();
 
-  GoUser? user;
+  ///ERROR STATUS
+  bool errorLoadingData = false;
+
+  ///USER DATA
+  GoUser get user => _reactiveUserService.user;
+
+  ///DATA
+  bool isAuthor = false;
+  String? authorUID;
+  String? username;
+  String? authorProfilePicURL;
+
+  ///VIEW STATUS
   bool showingReplies = false;
-  String? currentUID = "";
 
+  ///Loading User
+  bool loadingUser = false;
+
+  ///INITIALIZE
   initialize(String? uid) async {
+    //set busy status
     setBusy(true);
-    var res = await _userDataService!.getGoUserByID(uid);
+
+    //get comment author data
+    var res = await _userDataService.getGoUserByID(uid);
+
     if (res is String) {
+      errorLoadingData = true;
     } else {
-      user = res;
+      //set author data
+      authorUID = res.id;
+      username = res.username;
+      authorProfilePicURL = res.profilePicURL;
+
+      //check if author is current user
+      if (authorUID == user.id) {
+        isAuthor = true;
+      }
     }
-    currentUID = await _authService!.getCurrentUserID();
     notifyListeners();
     setBusy(false);
   }
 
+  ///Toggle Replies
   toggleShowReplies() {
     if (showingReplies) {
       showingReplies = false;
@@ -41,34 +65,16 @@ class CommentBlockViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  delete(GoForumPostComment comment) async {
-    print("chungus");
-    _commentDataService!.deleteComment(comment.postID, comment.timePostedInMilliseconds.toString());
-    _navigationService!.back();
-    navigateToPostView(comment.postID);
+  navigateToMentionedUser(String username) async {
+    if (!loadingUser) {
+      loadingUser = true;
+      notifyListeners();
+      GoUser user = await _userDataService.getGoUserByUsername(username);
+      loadingUser = false;
+      notifyListeners();
+      if (user.isValid()) {
+        customNavigationService.navigateToUserView(user.id!);
+      }
+    }
   }
-
-  showImage(Widget image, context) {
-    // print(image);
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            child: image,
-          );
-        });
-  }
-
-  navigateToPostView(String? id) {
-    _navigationService!.navigateTo(Routes.ForumPostViewRoute(id: id));
-  }
-
-  ///NAVIGATION
-// replaceWithPage() {
-//   _navigationService.replaceWith(PageRouteName);
-// }
-//
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
 }

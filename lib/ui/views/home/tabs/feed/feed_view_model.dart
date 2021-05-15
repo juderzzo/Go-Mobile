@@ -4,30 +4,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_user_model.dart';
-import 'package:go/services/auth/auth_service.dart';
-import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
-import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
+import 'package:go/ui/views/base/app_base_view_model.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class FeedViewModel extends BaseViewModel {
-  AuthService? _authService = locator<AuthService>();
-  DialogService? _dialogService = locator<DialogService>();
-  NavigationService? _navigationService = locator<NavigationService>();
   CauseDataService? _causeDataService = locator<CauseDataService>();
-  UserDataService? _userDataService = locator<UserDataService>();
-  SnackbarService? _snackbarService = locator<SnackbarService>();
-  BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
-  DynamicLinkService? _dynamicLinkService = locator<DynamicLinkService>();
+  AppBaseViewModel appBaseViewModel = locator<AppBaseViewModel>();
   PostDataService? _postDataService = locator<PostDataService>();
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
 
   ///CURRENT USER
-  GoUser? user;
+  GoUser get user => _reactiveUserService.user;
 
   ///DATA RESULTS
   List<DocumentSnapshot> causesFollowingResults = [];
@@ -43,8 +36,7 @@ class FeedViewModel extends BaseViewModel {
   List? recCauses;
   bool initialized = false;
 
-  initialize({GoUser? currentUser}) async {
-    user = currentUser;
+  initialize() async {
     await loadPosts();
     notifyListeners();
     scrollController.addListener(() {

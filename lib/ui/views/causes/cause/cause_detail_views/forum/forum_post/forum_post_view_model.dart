@@ -1,31 +1,26 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/app/app.router.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
-import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_forum_post_comment_model.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_notification_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
+import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
-import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/comment_data_service.dart';
 import 'package:go/services/firestore/data/notification_data_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
-import 'package:go/utils/go_image_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:stacked_themes/stacked_themes.dart';
 
 class ForumPostViewModel extends BaseViewModel {
-  ThemeService? _themeService = locator<ThemeService>();
   AuthService? _authService = locator<AuthService>();
   DialogService? _dialogService = locator<DialogService>();
   NavigationService? _navigationService = locator<NavigationService>();
@@ -36,101 +31,73 @@ class ForumPostViewModel extends BaseViewModel {
   NotificationDataService? _notificationDataService = locator<NotificationDataService>();
   DynamicLinkService? _dynamicLinkService = locator<DynamicLinkService>();
   ShareService? _shareService = locator<ShareService>();
-  CauseDataService? _causeDataService = locator<CauseDataService>();
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
+  CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
+
+  ///USER DATA
+  GoUser get user => _reactiveUserService.user;
 
   ///HELPERS
-  ScrollController commentScrollController = ScrollController();
+  FocusNode focusNode = FocusNode();
+  ScrollController postScrollController = ScrollController();
   TextEditingController commentTextController = TextEditingController();
+  double postScrollPosition = 0.0;
+  PageStorageKey commentStorageKey = PageStorageKey('initial');
 
   ///DATA RESULTS
   bool loadingAdditionalComments = false;
   bool moreCommentsAvailable = true;
-  bool commentSending = false;
-
   List<DocumentSnapshot> commentResults = [];
-  int resultsLimit = 15;
+  int resultsLimit = 10;
 
   ///DATA
-  GoUser? currentUser;
   GoUser? author;
   GoForumPost? post;
   bool isAuthor = false;
-  bool isAdmin = false;
   bool isReplying = false;
   bool refreshingComments = true;
   GoForumPostComment? commentToReplyTo;
-  bool likedPost = false;
 
-  //images
-  bool imgChanged = false;
-  dynamic imgFile;
-  dynamic img;
-
-  ///
-
-  initialize(BuildContext context) async {
+  ///INITIALIZE
+  initialize(String id) async {
     setBusy(true);
-    String? uid = await _authService!.getCurrentUserID();
-    currentUser = await (_userDataService!.getGoUserByID(uid) as FutureOr<GoUser?>);
-    GoCause? cause;
 
-    Map<String, dynamic> args = {}; //RouteData.of(context).arguments;
-    String postID = args['postID'] ?? "";
-
-    print(postID);
-    var res = await _postDataService!.getPostByID(postID);
-    print(res);
-    if (res is String) {
-    } else {
-      post = res;
-      print(post);
-      cause = await (_causeDataService!.getCauseByID(post!.causeID) as FutureOr<GoCause?>);
+    post = await _postDataService!.getPostByID(id);
+    if (!post!.isValid()) {
+      _customDialogService.showErrorDialog(description: "This Post No Longer Exists");
+      return;
     }
-    author = await (_userDataService!.getGoUserByID(post!.authorID) as FutureOr<GoUser?>);
-    if (currentUser!.id == post!.authorID) {
+
+    author = await _userDataService!.getGoUserByID(post!.authorID);
+
+    if (user.id! == post!.authorID) {
       isAuthor = true;
     }
 
     ///SET SCROLL CONTROLLER
-    commentScrollController.addListener(() {
-      double triggerFetchMoreSize = 0.9 * commentScrollController.position.maxScrollExtent;
-      if (commentScrollController.position.pixels > triggerFetchMoreSize) {
-        loadAdditionalComments();
+    postScrollController.addListener(() {
+      double triggerFetchMoreSize = 0.7 * postScrollController.position.maxScrollExtent;
+      if (postScrollController.position.pixels > triggerFetchMoreSize) {
+        if (commentResults.isNotEmpty) {
+          loadAdditionalComments();
+        }
       }
     });
-    print(cause);
-
-    isAdmin = (uid == post!.causeID || cause!.admins!.contains(uid));
-    //print(isAdmin);
-
     await loadComments();
     notifyListeners();
     setBusy(false);
   }
 
-  bool isDarkMode() {
-    return _themeService!.isDarkMode ? true : false;
-  }
-
-  ///LOAD POSTS
+  ///LOAD COMMENTS
   Future<void> refreshComments() async {
-    refreshingComments = true;
-    commentResults = [];
-    notifyListeners();
     await loadComments();
+    resetPageStorageKey();
   }
 
   loadComments() async {
     commentResults = await _commentDataService!.loadComments(postID: post!.id, resultsLimit: resultsLimit);
     refreshingComments = false;
-    notifyListeners();
-    if (commentResults.length != post!.commentCount) ;
-    post!.commentCount = commentResults.length;
-    _postDataService!.updatePostby(post!);
-  }
-
-  delete() async {
-    _postDataService!.deletePost(post!.id);
     notifyListeners();
   }
 
@@ -154,86 +121,62 @@ class ForumPostViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  showOptions() async {
-    var sheetResponse = await _bottomSheetService!.showCustomSheet(
-      variant: isAuthor || isAdmin ? BottomSheetType.postAuthorOptions : BottomSheetType.postOptions,
-    );
-    if (sheetResponse != null) {
-      String? res = sheetResponse.responseData;
-
-      if (res == "edit") {
-        //edit
-        print("edit");
-      } else if (res == "share") {
-        //share post link
-        String url = await _dynamicLinkService!.createPostLink(postAuthorUsername: "${author!.username}", post: post!);
-        _shareService!.shareLink(url);
-      } else if (res == "report") {
-        //report
-        print("edit");
-      } else if (res == "delete") {
-        delete();
-      }
-      notifyListeners();
-    }
-  }
-
   ///COMMENTING
-
   toggleReply(FocusNode focusNode, GoForumPostComment comment) {
     isReplying = true;
     commentToReplyTo = comment;
     focusNode.requestFocus();
   }
 
-  submitComment({BuildContext? context, required String commentVal, dynamic image}) async {
+  submitComment({BuildContext? context, required Map<String, dynamic> commentData}) async {
     isReplying = false;
-    commentSending = true;
-    String text = commentVal.trim();
-    print("we got this far");
+    String text = commentData['comment'].trim();
     if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
-          postID: post!.id,
-          senderUID: currentUser!.id,
-          username: currentUser!.username,
-          message: text,
-          isReply: false,
-          replies: [],
-          replyCount: 0,
-          timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-          image: image);
+        postID: post!.id,
+        senderUID: user.id!,
+        username: user.username,
+        message: text,
+        isReply: false,
+        replies: [],
+        replyCount: 0,
+        timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+      );
+
+      //send comment & notification
       await _commentDataService!.sendComment(post!.id, post!.authorID, comment);
-      sendCommentNotification(text);
-      sendUserMentionNotification(text);
-      clearState(context!);
+      if (user.id! != post!.authorID) {
+        sendCommentNotification(text);
+      }
+
+      //send notification to mentioned users
+      if (commentData['mentionedUsers'].isNotEmpty) {
+        List<GoUser> users = commentData['mentionedUsers'];
+        users.forEach((user) {
+          sendCommentMentionNotification(user.id, text);
+        });
+      }
+
+      clearState(context);
     }
     refreshComments();
-    commentSending = false;
   }
 
-  deleteComment({required BuildContext context, String? commentID}) async {
-    isReplying = false;
-    await CommentDataService().deleteComment(post!.id, commentID);
-    clearState(context);
-    refreshComments();
-  }
-
-  replyToComment({required BuildContext context, required String commentVal, dynamic image}) async {
-    String text = commentVal.trim();
-    commentSending = true;
+  replyToComment({BuildContext? context, required Map<String, dynamic> commentData}) async {
+    String text = commentData['comment'].trim();
     if (text.isNotEmpty) {
       GoForumPostComment comment = GoForumPostComment(
-          postID: post!.id,
-          senderUID: currentUser!.id,
-          username: currentUser!.username,
-          message: text,
-          isReply: true,
-          replies: [],
-          replyCount: 0,
-          replyReceiverUsername: commentToReplyTo!.username,
-          originalReplyCommentID: commentToReplyTo!.timePostedInMilliseconds.toString(),
-          timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
-          image: image);
+        postID: post!.id,
+        senderUID: user.id!,
+        username: user.username,
+        message: text,
+        isReply: true,
+        replies: [],
+        replyCount: 0,
+        replyReceiverUsername: commentToReplyTo!.username,
+        originalReplyCommentID: commentToReplyTo!.timePostedInMilliseconds.toString(),
+        timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
+      );
       await _commentDataService!.replyToComment(
         post!.id,
         commentToReplyTo!.senderUID,
@@ -241,46 +184,55 @@ class ForumPostViewModel extends BaseViewModel {
         comment,
       );
     }
-    sendCommentReplyNotification(commentToReplyTo!.senderUID, text);
-    sendUserMentionNotification(text);
+
+    if (user.id! != post!.authorID) {
+      sendCommentReplyNotification(commentToReplyTo!.senderUID, text);
+    }
+
+    //send notification to mentioned users
+    if (commentData['mentionedUsers'].isNotEmpty) {
+      List<GoUser> users = commentData['mentionedUsers'];
+      users.forEach((user) {
+        sendCommentMentionNotification(user.id, text);
+      });
+    }
+
     clearState(context);
     refreshComments();
-    commentSending = false;
   }
 
-  clearState(BuildContext context) {
+  deleteComment({BuildContext? context, required GoForumPostComment comment}) async {
+    isReplying = false;
+    if (comment.isReply!) {
+      await CommentDataService().deleteReply(post!.id!, comment.originalReplyCommentID!, comment);
+    } else {
+      await CommentDataService().deleteComment(post!.id!, comment.timePostedInMilliseconds.toString());
+    }
+    clearState(context);
+    if (comment.isReply!) {
+      commentResults = [];
+    }
+    refreshComments();
+  }
+
+  unFocusKeyboard(BuildContext context) {
+    FocusScope.of(context).unfocus();
+    if (isReplying) {
+      clearState(context);
+    }
+  }
+
+  clearState(BuildContext? context) {
     isReplying = false;
     commentToReplyTo = null;
     commentTextController.clear();
-    FocusScope.of(context).unfocus();
     notifyListeners();
   }
 
-  likeUnlikePost(String? postID) async {
-    String? currentUID = await _authService!.getCurrentUserID();
-    _userDataService!.likeUnlikePost(currentUID, postID);
-    likedPost = !likedPost;
-    print(likedPost);
+  resetPageStorageKey() {
+    String val = getRandomString(10);
+    commentStorageKey = PageStorageKey(val);
     notifyListeners();
-  }
-
-  //comments with images
-
-  void selectImage() async {
-    imgChanged = true;
-    var sheetResponse = await _bottomSheetService!.showCustomSheet(
-      variant: BottomSheetType.imagePicker,
-    );
-    if (sheetResponse != null) {
-      String? res = sheetResponse.responseData;
-      if (res == "camera") {
-        imgFile = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
-      } else if (res == "gallery") {
-        imgFile = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
-      }
-      img = imgFile;
-      notifyListeners();
-    }
   }
 
   ///NOTIFICATIONS
@@ -288,8 +240,8 @@ class ForumPostViewModel extends BaseViewModel {
     GoNotification notification = GoNotification().generateGoCommentNotification(
       postID: post!.id,
       receiverUID: post!.authorID,
-      senderUID: currentUser!.id,
-      commenterUsername: "@${currentUser!.username}",
+      senderUID: user.id!,
+      commenterUsername: "@${user.username}",
       comment: comment,
     );
     _notificationDataService!.sendNotification(notif: notification);
@@ -299,39 +251,52 @@ class ForumPostViewModel extends BaseViewModel {
     GoNotification notification = GoNotification().generateCommmentReplyNotification(
       postID: post!.id,
       receiverUID: receiverUID,
-      senderUID: currentUser!.id,
-      commenterUsername: "@${currentUser!.username}",
+      senderUID: user.id!,
+      commenterUsername: "@${user.username}",
       comment: comment,
     );
     _notificationDataService!.sendNotification(notif: notification);
   }
 
-  sendUserMentionNotification(String comment) async {
-    List<String> mentionedUsernames = getListOfUsernamesFromString(comment);
-    print(mentionedUsernames);
-    mentionedUsernames.forEach((username) async {
-      GoUser? user = await (_userDataService!.getGoUserByUsername(username) as FutureOr<GoUser?>);
-      if (user != null) {
-        GoNotification notification = GoNotification().generateGoCommentMentionNotification(
-          postID: post!.id,
-          receiverUID: user.id,
-          senderUID: currentUser!.id,
-          commenterUsername: "@${currentUser!.username}",
-          comment: comment,
-        );
-        print(notification.toMap());
-        _notificationDataService!.sendNotification(notif: notification);
+  sendCommentMentionNotification(String? receiverUID, String comment) {
+    GoNotification notification = GoNotification().generateGoCommentMentionNotification(
+      postID: post!.id,
+      receiverUID: receiverUID,
+      senderUID: user.id!,
+      commenterUsername: "@${user.username}",
+      comment: comment,
+    );
+    _notificationDataService!.sendNotification(notif: notification);
+  }
+
+  ///DIALOGS & BOTTOM SHEETS
+  showContentOptions() async {
+    var actionPerformed = await customBottomSheetService.showContentOptions(content: post);
+    if (actionPerformed == "deleted content") {
+      _navigationService!.back();
+    }
+  }
+
+  showDeleteCommentConfirmation({BuildContext? context, GoForumPostComment? comment}) async {
+    var sheetResponse = await _bottomSheetService!.showCustomSheet(
+      title: "Delete Comment",
+      description: "Are You Sure You Want to Delete this Comment?",
+      mainButtonTitle: "Delete",
+      secondaryButtonTitle: "Cancel",
+      barrierDismissible: true,
+      variant: BottomSheetType.destructiveConfirmation,
+    );
+    if (sheetResponse != null) {
+      String? res = sheetResponse.responseData;
+      if (res == "confirmed") {
+        deleteComment(context: context, comment: comment!);
       }
-    });
+    }
   }
 
   ///NAVIGATION
   navigateToUserView(String? id) {
-    _navigationService!.navigateTo(Routes.UserProfileViewRoute(id: id));
-  }
-
-  navigateToPostView(String id) {
-    _navigationService!.navigateTo(Routes.ForumPostViewRoute(id: id));
+    //_navigationService.navigateTo(Routes.UserProfileView, arguments: {'id': id});
   }
 
 // replaceWithPage() {

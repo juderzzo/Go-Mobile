@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/models/go_user_model.dart';
-import 'package:go/ui/views/home/tabs/home/home_view_model.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/list_builders/list_posts.dart';
 import 'package:go/ui/widgets/notifications/notification_bell/notification_bell_view.dart';
@@ -12,11 +9,7 @@ import 'package:stacked/stacked.dart';
 import 'feed_view_model.dart';
 
 class FeedView extends StatelessWidget {
-  final GoUser? user;
-  final VoidCallback? navigateToExplorePage;
-  ScrollController _scrollController = new ScrollController();
-
-  FeedView({this.user, this.navigateToExplorePage});
+  final ScrollController _scrollController = ScrollController();
 
   Widget head(FeedViewModel model) {
     return Container(
@@ -37,7 +30,7 @@ class FeedView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                NotificationBellView(uid: user!.id),
+                NotificationBellView(uid: model.user!.id),
               ],
             ),
           ),
@@ -55,10 +48,9 @@ class FeedView extends StatelessWidget {
           child: ZeroStateView(
             imageAssetName: 'coding',
             header: "You're Not Following Any Causes or Changemakers",
-            subHeader:
-                "Follow the causes and changemakers that youre interested in",
+            subHeader: "Follow the causes and changemakers that youre interested in",
             mainActionButtonTitle: "Explore Causes",
-            mainAction: navigateToExplorePage,
+            mainAction: () => model.appBaseViewModel.setNavBarIndex(1),
             secondaryActionButtonTitle: 'Refresh Page',
             secondaryAction: () => model.refreshCausesFollowing(),
           ),
@@ -82,9 +74,7 @@ class FeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<FeedViewModel>.reactive(
-        onModelReady: (model) {
-         if(!model.initialized){ model.initialize(currentUser: user);
-  }},
+        onModelReady: (model) => model.initialize(),
         viewModelBuilder: () => FeedViewModel(),
         builder: (context, model, child) => Scaffold(
               body: Container(
@@ -96,9 +86,7 @@ class FeedView extends StatelessWidget {
                       SizedBox(
                         height: 10,
                       ),
-                      model.newPosts == null
-                          ? bodyEmpty(model)
-                          : bodyFull(model, context),
+                      model.newPosts == null ? bodyEmpty(model) : bodyFull(model, context),
                       Container(),
                     ],
                   ),

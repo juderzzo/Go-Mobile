@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/models/go_cause_model.dart';
@@ -27,11 +24,10 @@ class EditCheckListViewModel extends BaseViewModel {
   bool send = false;
   List<GoCheckListItem> checkListItems = [];
 
-  initialize(BuildContext context) async {
+  initialize(String? id) async {
     setBusy(true);
-    Map<String, dynamic> args = {}; //RouteData.of(context).arguments;
-    String? causeID = args['id'];
-    cause = await (_causeDataService!.getCauseByID(causeID) as FutureOr<GoCause?>);
+    String? causeID = id;
+    cause = await _causeDataService!.getCauseByID(causeID);
     // print(cause);
     checkListItems = await _causeDataService!.getCheckListItems(causeID);
     currentUID = await _authService!.getCurrentUserID();

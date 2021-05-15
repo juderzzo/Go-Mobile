@@ -6,12 +6,20 @@ import 'package:stacked_services/stacked_services.dart';
 class CustomNavigationService {
   NavigationService _navigationService = locator<NavigationService>();
 
+  navigateToUserView(String id) {
+    _navigationService.navigateTo(Routes.UserProfileViewRoute(id: id));
+  }
+
   navigateToCauseView(String id) {
     _navigationService.navigateTo(Routes.CauseViewRoute(id: id));
   }
 
   navigateToCreateCauseView(String id) {
     _navigationService.navigateTo(Routes.CreateCauseViewRoute(id: id));
+  }
+
+  navigateToCreateActionItems(String id){
+    //_navigationService.navigateTo(Routes.Crea(id: id));
   }
 
   navigateToForumPostView(String id) {

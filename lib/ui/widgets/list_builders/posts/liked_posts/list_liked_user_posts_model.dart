@@ -11,7 +11,7 @@ import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 
-class ListUserPostsModel extends BaseViewModel {
+class ListLikedUserPostsModel extends BaseViewModel {
   PostDataService _postDataService = locator<PostDataService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
   CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
@@ -61,7 +61,7 @@ class ListUserPostsModel extends BaseViewModel {
 
     //load data with params
     dataResults = await _postDataService.loadPostsByUser(
-      uid: user.id,
+      uid: uid,
       resultsLimit: resultsLimit,
     );
 
@@ -82,7 +82,7 @@ class ListUserPostsModel extends BaseViewModel {
 
     //load additional data
     List<DocumentSnapshot> newResults = await _postDataService.loadAdditionalPostsByUser(
-      uid: user.id,
+      uid: uid,
       lastDocSnap: dataResults[dataResults.length - 1],
       resultsLimit: resultsLimit,
     );

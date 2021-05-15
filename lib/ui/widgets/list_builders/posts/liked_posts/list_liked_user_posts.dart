@@ -6,16 +6,16 @@ import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
 import 'package:stacked/stacked.dart';
 
-import 'list_user_posts_model.dart';
+import 'list_liked_user_posts_model.dart';
 
-class ListUserPosts extends StatelessWidget {
+class ListLikedUserPosts extends StatelessWidget {
   final String? id;
-  ListUserPosts({required this.id});
+  ListLikedUserPosts({required this.id});
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ListUserPostsModel>.reactive(
+    return ViewModelBuilder<ListLikedUserPostsModel>.reactive(
       onModelReady: (model) => model.initialize(id),
-      viewModelBuilder: () => ListUserPostsModel(),
+      viewModelBuilder: () => ListLikedUserPostsModel(),
       builder: (context, model, child) => model.isBusy
           ? Container()
           : model.dataResults.isEmpty

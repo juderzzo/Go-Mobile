@@ -47,6 +47,7 @@ import 'package:stacked_themes/stacked_themes.dart';
   routes: [
     //ROOT & BASE
     CustomRoute(
+      initial: true,
       page: RootView,
       name: "RootViewRoute",
       path: "/",

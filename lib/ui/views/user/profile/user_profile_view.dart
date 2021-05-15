@@ -5,6 +5,9 @@ import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/user/profile/user_profile_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/custom_text.dart';
+import 'package:go/ui/widgets/list_builders/causes/user/list_user_created_causes.dart';
+import 'package:go/ui/widgets/list_builders/posts/liked_posts/list_liked_user_posts.dart';
+import 'package:go/ui/widgets/list_builders/posts/user_posts/list_user_posts.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:go/ui/widgets/user/follow_unfollow_button.dart';
@@ -76,7 +79,10 @@ class _UserProfileViewState extends State<UserProfileView> with SingleTickerProv
           SizedBox(height: 8),
           model.isFollowingUser == null
               ? Container()
-              : FollowUnfollowButton(isFollowing: model.isFollowingUser, followUnfollowAction: () => model.followUnfollowUser()),
+              : Container(
+                  width: 100,
+                  child: FollowUnfollowButton(isFollowing: model.isFollowingUser, followUnfollowAction: () => model.followUnfollowUser()),
+                ),
 
           ///BIO & WEBSITE
           Container(
@@ -140,22 +146,13 @@ class _UserProfileViewState extends State<UserProfileView> with SingleTickerProv
       controller: _tabController,
       children: [
         //causes
-        // ListProfileCauses(
-        //   id: model.user!.id!,
-        //   isCurrentUser: false,
-        // ),
+        ListUserCreatedCauses(),
 
-        //scheduled streams
-        // ListProfilePosts(
-        //   id: model.user!.id!,
-        //   isCurrentUser: false,
-        // ),
+        //posts
+        ListUserPosts(id: widget.id),
 
-        //scheduled streams
-        // ListProfileLikedPosts(
-        //   id: model.user!.id!,
-        //   isCurrentUser: false,
-        // ),
+        //liked posts
+        ListLikedUserPosts(id: widget.id),
       ],
     );
   }

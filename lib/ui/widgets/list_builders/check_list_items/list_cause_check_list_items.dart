@@ -22,7 +22,7 @@ class ListCauseCheckListItems extends StatelessWidget {
               ? ZeroStateView(
                   imageAssetName: "coding",
                   header: "No Items Found",
-                  subHeader: "Start a Movement and Create a Cause",
+                  subHeader: "Create Action Items for Followers",
                   mainActionButtonTitle: "Create Item",
                   mainAction: () => model.appBaseViewModel.setBusy(true),
                   secondaryActionButtonTitle: null,

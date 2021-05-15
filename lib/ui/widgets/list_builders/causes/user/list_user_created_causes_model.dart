@@ -11,7 +11,7 @@ import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
 
-class ListCurrentUserCreatedCausesModel extends BaseViewModel {
+class ListUserCreatedCausesModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
   CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
@@ -19,7 +19,7 @@ class ListCurrentUserCreatedCausesModel extends BaseViewModel {
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
-  String listKey = "initial-current-user-created-causes-key";
+  String listKey = "initial-user-created-causes-key";
 
   ///USER DATA
   GoUser get user => _reactiveUserService.user;
