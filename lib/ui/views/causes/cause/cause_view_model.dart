@@ -6,6 +6,7 @@ import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/models/go_user_model.dart';
+import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
@@ -22,8 +23,10 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   PostDataService _postDataService = locator<PostDataService>();
   UserDataService _userDataService = locator<UserDataService>();
   LocationService _locationService = locator<LocationService>();
+  AuthService _authService = locator<AuthService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
-  CustomNavigationService _customNavigationService = locator<CustomNavigationService>();
+  CustomNavigationService _customNavigationService =
+      locator<CustomNavigationService>();
 
   ///HELPERS
   ScrollController postsScrollController = ScrollController();
@@ -34,6 +37,7 @@ class CauseViewModel extends StreamViewModel<GoCause> {
   String? causeID;
   GoCause? cause;
   GoUser? causeCreator;
+  GoUser? currentUser;
   List images = [];
   bool? isFollowingCause;
   bool loadedImages = false;
@@ -53,11 +57,12 @@ class CauseViewModel extends StreamViewModel<GoCause> {
     setBusy(true);
     causeID = id;
     notifyListeners();
+    String? currID = await _authService.getCurrentUserID();
     cause = await _causeDataService.getCauseByID(id);
     if (cause!.isValid()) {
       causeCreator = await _userDataService.getGoUserByID(cause!.creatorID);
       if (cause!.admins != null) {
-        isAdmin = cause!.admins!.contains(user.id);
+        isAdmin = cause!.admins!.contains(user.id) || cause!.creatorID == currID;
       }
     }
     notifyListeners();
@@ -86,11 +91,13 @@ class CauseViewModel extends StreamViewModel<GoCause> {
       if (response != null && response.confirmed) {
         //validate location if required
         if (item.lat != null && item.lon != null && item.address != null) {
-          bool isNearbyLocation = await _locationService.isNearbyLocation(lat: item.lat!, lon: item.lon!);
+          bool isNearbyLocation = await _locationService.isNearbyLocation(
+              lat: item.lat!, lon: item.lon!);
           if (!isNearbyLocation) {
             _dialogService.showDialog(
               title: "Location Error",
-              description: "You are not near the required location to check off this item.",
+              description:
+                  "You are not near the required location to check off this item.",
               buttonTitle: "Ok",
             );
             return;
@@ -99,7 +106,8 @@ class CauseViewModel extends StreamViewModel<GoCause> {
         //check off item
         checkedOffBy.add(user.id);
 
-        await _causeDataService.checkOffCheckListItem(id: item.id, checkedOffBy: checkedOffBy);
+        await _causeDataService.checkOffCheckListItem(
+            id: item.id, checkedOffBy: checkedOffBy);
         await _userDataService.updateGoUserPoints(user.id, item.points!);
       }
     }

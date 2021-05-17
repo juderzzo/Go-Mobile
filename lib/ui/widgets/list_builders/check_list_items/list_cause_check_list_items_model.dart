@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
+import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
@@ -14,8 +15,10 @@ import 'package:stacked_services/stacked_services.dart';
 
 class ListCauseCheckListItemsModel extends BaseViewModel {
   CauseDataService _causeDataService = locator<CauseDataService>();
-  CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
-  CustomNavigationService customNavigationService = locator<CustomNavigationService>();
+  CustomBottomSheetService customBottomSheetService =
+      locator<CustomBottomSheetService>();
+  CustomNavigationService customNavigationService =
+      locator<CustomNavigationService>();
   AppBaseViewModel appBaseViewModel = locator<AppBaseViewModel>();
   LocationService _locationService = locator<LocationService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
@@ -28,10 +31,12 @@ class ListCauseCheckListItemsModel extends BaseViewModel {
 
   ///DATA
   GoUser get user => _reactiveUserService.user;
+  GoCause? cause;
   late String causeID;
   List<GoCheckListItem> checkListItems = [];
 
   initialize(String id) async {
+    cause = await _causeDataService.getCauseByID(id);
     causeID = id;
     checkListItems = await _causeDataService.getCheckListItems(id);
     notifyListeners();
@@ -55,11 +60,13 @@ class ListCauseCheckListItemsModel extends BaseViewModel {
       if (response != null && response.confirmed) {
         //validate location if required
         if (item.lat != null && item.lon != null && item.address != null) {
-          bool isNearbyLocation = await _locationService.isNearbyLocation(lat: item.lat!, lon: item.lon!);
+          bool isNearbyLocation = await _locationService.isNearbyLocation(
+              lat: item.lat!, lon: item.lon!);
           if (!isNearbyLocation) {
             _dialogService.showDialog(
               title: "Location Error",
-              description: "You are not near the required location to check off this item.",
+              description:
+                  "You are not near the required location to check off this item.",
               buttonTitle: "Ok",
             );
             return;
@@ -68,7 +75,8 @@ class ListCauseCheckListItemsModel extends BaseViewModel {
         //check off item
         checkedOffBy.add(user.id);
 
-        await _causeDataService.checkOffCheckListItem(id: item.id, checkedOffBy: checkedOffBy);
+        await _causeDataService.checkOffCheckListItem(
+            id: item.id, checkedOffBy: checkedOffBy);
         await _userDataService.updateGoUserPoints(user.id, item.points!);
       }
     }

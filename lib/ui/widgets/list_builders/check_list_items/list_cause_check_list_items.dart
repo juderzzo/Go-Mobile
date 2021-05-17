@@ -19,7 +19,9 @@ class ListCauseCheckListItems extends StatelessWidget {
       builder: (context, model, child) => model.isBusy
           ? Container()
           : model.checkListItems.isEmpty
-              ? ZeroStateView(
+              ? 
+              model.cause != null && model.user.id == model.cause!.id ?
+              ZeroStateView(
                   imageAssetName: "coding",
                   header: "No Items Found",
                   subHeader: "Create Action Items for Followers",
@@ -27,7 +29,18 @@ class ListCauseCheckListItems extends StatelessWidget {
                   mainAction: () => model.appBaseViewModel.setBusy(true),
                   secondaryActionButtonTitle: null,
                   secondaryAction: null,
+                ) :
+              ZeroStateView(
+                  imageAssetName: "coding",
+                  header: "No Items Found",
+                  subHeader: "",
+                  // mainActionButtonTitle: "Create Item",
+                  // mainAction: () => model.appBaseViewModel.setBusy(true),
+                  secondaryActionButtonTitle: null,
+                  secondaryAction: null,
                 )
+
+
               : Container(
                   height: screenHeight(context),
                   color: appBackgroundColor(),

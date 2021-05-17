@@ -78,6 +78,10 @@
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This will enable you to access your music files to use in Go!</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This will allow you to access your bluetooth in Go!</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>This will allow you to access your peripheral usage via bluetooth in Go!</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>This will enable you to save events to your calendar</string>
 	<key>NSCameraUsageDescription</key>

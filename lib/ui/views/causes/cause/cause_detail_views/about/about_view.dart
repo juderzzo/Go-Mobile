@@ -22,7 +22,14 @@ class AboutView extends StatelessWidget {
   final VoidCallback? followUnfollowCause;
   final bool? isFollowing;
 
-  AboutView({this.cause, this.images, this.creatorUsername, this.creatorProfilePicURL, this.viewCreator, this.followUnfollowCause, this.isFollowing});
+  AboutView(
+      {this.cause,
+      this.images,
+      this.creatorUsername,
+      this.creatorProfilePicURL,
+      this.viewCreator,
+      this.followUnfollowCause,
+      this.isFollowing});
 
   Widget causeFollowers(BuildContext context) {
     return Container(
@@ -132,7 +139,8 @@ class AboutView extends StatelessWidget {
                   text: TextSpan(
                   text: '$url',
                   style: TextStyle(color: Colors.blue),
-                  recognizer: TapGestureRecognizer()..onTap = () => UrlHandler().launchInWebViewOrVC(url),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => UrlHandler().launchInWebViewOrVC(url),
                 ))
               : Container(),
           verticalSpaceMedium,
@@ -142,11 +150,16 @@ class AboutView extends StatelessWidget {
   }
 
   Widget causeCreator(BuildContext context) {
-    return CauseAuthorBio(username: creatorUsername, profilePicURL: creatorProfilePicURL, bio: cause!.who);
+    return CauseAuthorBio(
+        username: creatorUsername,
+        profilePicURL: creatorProfilePicURL,
+        bio: cause!.who);
   }
 
   @override
   Widget build(BuildContext context) {
+    //print('1111');
+    //print(cause!.videoLink != null && cause!.videoLink!.isNotEmpty);
     return ViewModelBuilder<AboutViewModel>.reactive(
       viewModelBuilder: () => AboutViewModel(),
       onModelReady: (model) => model.initialize(cause!),
@@ -154,7 +167,9 @@ class AboutView extends StatelessWidget {
         child: ListView(
           shrinkWrap: true,
           children: [
-            cause!.videoLink != null && cause!.videoLink!.isNotEmpty ? _CauseVideoAndImages() : _CauseImages(imgURLs: model.contentURLs),
+            cause!.videoLink != null && cause!.videoLink!.isNotEmpty
+                ? _CauseVideoAndImages()
+                : _CauseImages(imgURLs: model.contentURLs),
             SizedBox(
               height: 10,
             ),
@@ -174,6 +189,9 @@ class _CauseImages extends HookViewModelWidget<AboutViewModel> {
 
   @override
   Widget buildViewModelWidget(BuildContext context, AboutViewModel model) {
+    //print("chi");
+
+    //print(imgURLs);
     return Container(
       child: Column(
         children: [
@@ -187,13 +205,15 @@ class _CauseImages extends HookViewModelWidget<AboutViewModel> {
             items: imgURLs.map((url) {
               return Builder(
                 builder: (BuildContext context) {
+                  //print(url);
                   return Container(
                     height: screenWidth(context),
                     width: screenWidth(context),
-                    child: FadeInImage.memoryNetwork(
-                      image: url,
+                    child: Image.network(
+                      url,
                       fit: BoxFit.cover,
-                      placeholder: kTransparentImage,
+
+                      ///placeholder: kTransparentImage,
                     ),
                   );
                 },
@@ -230,11 +250,13 @@ class _CauseVideoAndImages extends HookViewModelWidget<AboutViewModel> {
               onPageChanged: (index, reason) => model.updateImageIndex(index),
             ),
             items: model.contentURLs.map((url) {
+              //print(url);
               return Builder(
                 builder: (BuildContext context) {
-                  if (url.contains('youtube')) {
+                  if (url.contains('you')) {
                     return model.youtubePlayer;
                   }
+
                   return Container(
                     height: screenWidth(context),
                     width: screenWidth(context),
@@ -292,7 +314,9 @@ class _BulletIndicator extends StatelessWidget {
             return Container(
               width: current == index ? 7.0 : 5.0,
               height: current == index ? 7.0 : 5.0,
-              margin: EdgeInsets.only(left: index == 0 ? 0 : 3.5, right: index + 1 == total ? 0 : 3.5),
+              margin: EdgeInsets.only(
+                  left: index == 0 ? 0 : 3.5,
+                  right: index + 1 == total ? 0 : 3.5),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: current == index ? appFontColor() : appFontColorAlt(),

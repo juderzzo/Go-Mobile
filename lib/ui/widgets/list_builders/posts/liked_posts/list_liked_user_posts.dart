@@ -21,12 +21,8 @@ class ListLikedUserPosts extends StatelessWidget {
           : model.dataResults.isEmpty
               ? ZeroStateView(
                   imageAssetName: "coding",
-                  header: "You Have Not Created Any Causes",
-                  subHeader: "Start a Movement and Create a Cause",
-                  mainActionButtonTitle: "Create Cause",
-                  mainAction: () => model.customNavigationService.navigateToCreateCauseView("new"),
-                  secondaryActionButtonTitle: null,
-                  secondaryAction: null,
+                  header: "You have not liked any posts",
+                  subHeader: "",
                 )
               : RefreshIndicator(
                   onRefresh: model.refreshData,

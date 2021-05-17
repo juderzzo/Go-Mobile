@@ -3,16 +3,25 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
+import 'package:go/models/go_cause_model.dart';
 import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
+import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/ui/views/base/app_base_view_model.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class ListCausePostsModel extends BaseViewModel {
   PostDataService _postDataService = locator<PostDataService>();
-  CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
+  CustomBottomSheetService customBottomSheetService =
+      locator<CustomBottomSheetService>();
+  CustomNavigationService _customNavigationService =
+      locator<CustomNavigationService>();
+  NavigationService _navigationService = locator<NavigationService>();
   AppBaseViewModel appBaseViewModel = locator<AppBaseViewModel>();
+  CauseDataService _causeDataService = locator<CauseDataService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
@@ -21,6 +30,7 @@ class ListCausePostsModel extends BaseViewModel {
   ///DATA
   late String causeID;
   List<DocumentSnapshot> dataResults = [];
+  GoCause? cause;
 
   bool loadingAdditionalData = false;
   bool moreDataAvailable = true;
@@ -29,6 +39,8 @@ class ListCausePostsModel extends BaseViewModel {
 
   initialize(String id) async {
     causeID = id;
+    cause = await _causeDataService.getCauseByID(causeID);
+    
     notifyListeners();
     await loadData();
   }
@@ -71,7 +83,8 @@ class ListCausePostsModel extends BaseViewModel {
     notifyListeners();
 
     //load additional data
-    List<DocumentSnapshot> newResults = await _postDataService.loadAdditionalPosts(
+    List<DocumentSnapshot> newResults =
+        await _postDataService.loadAdditionalPosts(
       causeID: causeID,
       lastDocSnap: dataResults[dataResults.length - 1],
       resultsLimit: resultsLimit,
@@ -90,11 +103,26 @@ class ListCausePostsModel extends BaseViewModel {
   }
 
   showContentOptions(dynamic content) async {
-    String val = await customBottomSheetService.showContentOptions(content: content);
+    String val =
+        await customBottomSheetService.showContentOptions(content: content);
     if (val == "deleted content") {
       dataResults.removeWhere((doc) => doc.id == content.id);
       listKey = getRandomString(5);
       notifyListeners();
     }
+  }
+
+  navigateToCreatePostView(String id) async {
+    if (cause != null) {
+      _customNavigationService.navigateToCreateForumPostView(id, "new");
+    } else {
+      await _causeDataService.getCauseByID(causeID).then((GoCause cause){
+        _customNavigationService.navigateToCreateForumPostView(id, "new");
+      });
+    }
+  }
+
+  navigateBack() {
+    _navigationService.back();
   }
 }

@@ -23,12 +23,12 @@ class ListCausePosts extends StatelessWidget {
           : model.dataResults.isEmpty
               ? ZeroStateView(
                   imageAssetName: "coding",
-                  header: "No Causes Found",
-                  subHeader: "Start a Movement and Create a Cause",
-                  mainActionButtonTitle: "Create Cause",
-                  mainAction: () => model.appBaseViewModel.setBusy(true),
-                  secondaryActionButtonTitle: null,
-                  secondaryAction: null,
+                  header: "No Posts Found",
+                  subHeader: "Make the first cause post",
+                  mainActionButtonTitle: "Create Post",
+                  mainAction: () => model.navigateToCreatePostView(causeID),
+                  // secondaryActionButtonTitle: null,
+                  // secondaryAction: null,
                 )
               : Container(
                   height: screenHeight(context),

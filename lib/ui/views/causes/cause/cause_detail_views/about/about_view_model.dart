@@ -52,6 +52,9 @@ class AboutViewModel extends BaseViewModel {
         images.add(
           NetworkImage(url),
         );
+        contentURLs.add(
+          url,
+        );
         orgLength++;
       });
 
@@ -78,6 +81,9 @@ class AboutViewModel extends BaseViewModel {
       cause.imageURLs!.forEach((url) {
         images.add(
           NetworkImage(url),
+        );
+        contentURLs.add(
+          url,
         );
         orgLength++;
       });
