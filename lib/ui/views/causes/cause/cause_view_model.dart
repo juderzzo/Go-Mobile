@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
+import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/models/go_user_model.dart';
@@ -14,6 +15,7 @@ import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class CauseViewModel extends StreamViewModel<GoCause> {
   DialogService _dialogService = locator<DialogService>();
@@ -49,6 +51,12 @@ class CauseViewModel extends StreamViewModel<GoCause> {
 
   int resultsLimit = 15;
 
+  ///YOUTUBE PLAYER
+  String? videoID;
+  bool hasVideo = false;
+  YoutubePlayerController? youtubePlayerController;
+  YoutubePlayer? youtubePlayer;
+
   initialize(String id) async {
     setBusy(true);
     causeID = id;
@@ -60,7 +68,33 @@ class CauseViewModel extends StreamViewModel<GoCause> {
         isAdmin = cause!.admins!.contains(user.id);
       }
     }
+
+    //configure youtube player
+    if (cause!.videoLink != null && cause!.videoLink!.isNotEmpty) {
+      videoID = YoutubePlayer.convertUrlToId(cause!.videoLink!);
+      youtubePlayerController = YoutubePlayerController(
+        initialVideoId: videoID!,
+        flags: YoutubePlayerFlags(
+          isLive: true,
+          enableCaption: true,
+          disableDragSeek: true,
+          autoPlay: true,
+          hideControls: false,
+          mute: false,
+          controlsVisibleAtStart: true,
+        ),
+      );
+
+      youtubePlayer = YoutubePlayer(
+        controller: youtubePlayerController!,
+        liveUIColor: CustomColors.goGreen,
+        actionsPadding: EdgeInsets.only(bottom: 10.0),
+      );
+      hasVideo = true;
+    }
+
     notifyListeners();
+    setBusy(false);
   }
 
   followUnfollowCause() {

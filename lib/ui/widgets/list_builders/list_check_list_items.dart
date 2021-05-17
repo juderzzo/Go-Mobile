@@ -40,7 +40,9 @@ class ListCheckListItemsForEditing extends StatelessWidget {
 
   Widget listCauses() {
     return RefreshIndicator(
-      onRefresh: refreshData as Future<void> Function(),
+      onRefresh: () async {
+        // refreshData();
+      },
       backgroundColor: appBackgroundColor(),
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),

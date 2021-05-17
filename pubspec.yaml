@@ -67,6 +67,7 @@ dependencies:
 
   #Youtube Videos
   youtube_player_flutter: ^8.0.0
+  youtube_player_iframe: ^2.0.0
   
 
   #UI

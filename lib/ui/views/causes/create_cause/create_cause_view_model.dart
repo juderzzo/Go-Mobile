@@ -26,6 +26,7 @@ class CreateCauseViewModel extends BaseViewModel {
   GoUser get user => _reactiveUserService.user;
 
   bool isEditing = false;
+  bool isUploading = false;
   File? img1;
   File? img2;
   File? img3;
@@ -63,6 +64,7 @@ class CreateCauseViewModel extends BaseViewModel {
     } else {
       cause = GoCause().generateNewCause(creatorID: user.id!);
     }
+    print(cause.toMap());
     notifyListeners();
     setBusy(false);
   }
@@ -156,7 +158,8 @@ class CreateCauseViewModel extends BaseViewModel {
     if (cause.videoLink != null && cause.videoLink!.length < 2) {
       cause.videoLink = "";
     }
-    setBusy(true);
+    isUploading = true;
+    notifyListeners();
     if (!isValidString(cause.name)) {
       formError = "Cause Name Required";
     } else if (!isValidString(cause.goal)) {
@@ -173,7 +176,8 @@ class CreateCauseViewModel extends BaseViewModel {
       }
     }
     if (formError != null) {
-      setBusy(false);
+      isUploading = false;
+      notifyListeners();
       _dialogService.showDialog(
         title: "Form Error",
         description: formError,
@@ -188,8 +192,10 @@ class CreateCauseViewModel extends BaseViewModel {
         uploaded = await _causeDataService.createCause(cause: cause, img1: img1, img2: img2, img3: img3);
       }
 
+      isUploading = false;
+      notifyListeners();
+
       if (uploaded) {
-        setBusy(false);
         _customBottomSheetService.showCausePublishedBottomSheet(cause);
       }
     }

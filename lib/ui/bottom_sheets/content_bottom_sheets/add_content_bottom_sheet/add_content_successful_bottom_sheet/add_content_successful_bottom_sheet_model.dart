@@ -17,7 +17,7 @@ class AddContentSuccessfulBottomSheetModel extends BaseViewModel {
     if (content is GoCause) {
       url = await _dynamicLinkService.createCauseLink(cause: content);
     } else if (content is GoForumPost) {
-      url = await _dynamicLinkService.createPostLink(postAuthorUsername: "@${_reactiveUserService.user.username}", post: content);
+      url = await _dynamicLinkService.createPostLink(post: content);
     }
     _shareService.shareLink(url!);
   }
@@ -27,7 +27,7 @@ class AddContentSuccessfulBottomSheetModel extends BaseViewModel {
     if (content is GoCause) {
       url = await _dynamicLinkService.createCauseLink(cause: content);
     } else if (content is GoForumPost) {
-      url = await _dynamicLinkService.createPostLink(postAuthorUsername: "@${_reactiveUserService.user.username}", post: content);
+      url = await _dynamicLinkService.createPostLink(post: content);
     }
     copyShareableLink(link: url);
   }

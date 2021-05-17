@@ -24,7 +24,7 @@ class ListCauseCheckListItems extends StatelessWidget {
                   header: "No Items Found",
                   subHeader: "Create Action Items for Followers",
                   mainActionButtonTitle: "Create Item",
-                  mainAction: () => model.appBaseViewModel.setBusy(true),
+                  mainAction: () => model.customNavigationService.navigateToCreateActionItems(causeID),
                   secondaryActionButtonTitle: null,
                   secondaryAction: null,
                 )

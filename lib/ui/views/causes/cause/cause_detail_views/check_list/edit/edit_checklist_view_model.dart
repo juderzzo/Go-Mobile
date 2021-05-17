@@ -30,6 +30,7 @@ class EditCheckListViewModel extends BaseViewModel {
     cause = await _causeDataService!.getCauseByID(causeID);
     // print(cause);
     checkListItems = await _causeDataService!.getCheckListItems(causeID);
+
     currentUID = await _authService!.getCurrentUserID();
     notifyListeners();
     setBusy(false);
@@ -45,6 +46,8 @@ class EditCheckListViewModel extends BaseViewModel {
 
   updateItemHeader({String? id, String? header}) {
     int itemIndex = checkListItems.indexWhere((item) => item.id == id);
+    print(itemIndex);
+    print(checkListItems[itemIndex].toMap());
     checkListItems[itemIndex].header = header;
     notifyListeners();
   }

@@ -21,6 +21,7 @@ class CreateCauseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateCauseViewModel>.reactive(
+      initialiseSpecialViewModelsOnce: true,
       onModelReady: (model) => model.initialize(id!),
       viewModelBuilder: () => CreateCauseViewModel(),
       builder: (context, model, child) => Scaffold(
@@ -38,7 +39,7 @@ class CreateCauseView extends StatelessWidget {
             height: screenHeight(context),
             width: screenWidth(context),
             color: appBackgroundColor(),
-            child: _CauseForm(),
+            child: model.isBusy ? Container() : _CauseForm(),
           ),
         ),
       ),
@@ -172,7 +173,7 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
             backgroundColor: CustomColors.goGreen,
             text: "Publish",
             textColor: Colors.white,
-            isBusy: model.isBusy,
+            isBusy: model.isBusy || model.isUploading ? true : false,
             onPressed: () => model.validateAndSubmitForm(),
           ),
         ],
@@ -223,6 +224,7 @@ class _CauseNameField extends HookViewModelWidget<CreateCauseViewModel> {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseName) {
         nameController.text = model.loadPreviousCauseName();
+        print(nameController.text);
       }
     });
 
@@ -247,12 +249,30 @@ class _CauseImage extends HookViewModelWidget<CreateCauseViewModel> {
   @override
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
     return model.isEditing
-        ? CauseImgPreview(
-            onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
-            height: height,
-            width: width,
-            imgURL: null,
-          )
+        ? (imgNum == 1 && model.img1 != null) || (imgNum == 2 && model.img2 != null) || (imgNum == 3 && model.img3 != null)
+            ? CauseImgPreview(
+                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                height: height,
+                width: width,
+                file: imgNum == 1
+                    ? model.img1
+                    : imgNum == 2
+                        ? model.img2
+                        : model.img3,
+              )
+            : model.cause.imageURLs!.length < imgNum
+                ? AddImageButton(
+                    onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                    iconSize: iconSize,
+                    height: height,
+                    width: width,
+                  )
+                : CauseImgPreview(
+                    onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                    height: height,
+                    width: width,
+                    imgURL: model.cause.imageURLs![imgNum - 1],
+                  )
         : (imgNum == 1 && model.img1 == null) || (imgNum == 2 && model.img2 == null) || (imgNum == 3 && model.img3 == null)
             ? AddImageButton(
                 onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),

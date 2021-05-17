@@ -46,7 +46,7 @@ class DynamicLinkService {
     return dynamicURL.toString();
   }
 
-  Future<String> createPostLink({required String postAuthorUsername, required GoForumPost post}) async {
+  Future<String> createPostLink({required GoForumPost post}) async {
     //set post uri
 
     Uri postURI = Uri.parse('https://appgo.page.link/post?id=${post.id}');
@@ -64,7 +64,7 @@ class DynamicLinkService {
         appStoreId: iosAppStoreID,
       ),
       socialMetaTagParameters: SocialMetaTagParameters(
-        title: "Checkout $postAuthorUsername's post on Go!",
+        title: "Checkout this Post on Go!", //"Checkout $postAuthorUsername's post on Go!",
         description: post.body!.length > 200 ? post.body!.substring(0, 190) + "..." : post.body,
         imageUrl: null,
         //imageUrl: post.imageURL != null ? Uri.parse(post.imageURL) : null,

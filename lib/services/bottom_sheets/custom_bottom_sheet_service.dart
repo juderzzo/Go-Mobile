@@ -94,34 +94,42 @@ class CustomBottomSheetService {
     GoUser user = _reactiveUserService.user;
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       barrierDismissible: true,
-      variant: user.id == content.authorID ? BottomSheetType.contentAuthorOptions : BottomSheetType.contentOptions,
+      variant: content is GoCause
+          ? content.admins!.contains(user.id)
+              ? BottomSheetType.causeCreatorOptions
+              : BottomSheetType.causeOptions
+          : user.id == content.authorID
+              ? BottomSheetType.postAuthorOptions
+              : BottomSheetType.postOptions,
     );
 
     if (sheetResponse != null) {
       String? res = sheetResponse.responseData;
       if (res == "edit") {
         if (content is GoCause) {
-          //edit post
-          //_navigationService.navigateTo(Routes.CreatePostViewRoute(id: content.id, promo: 0));
+          //edit cause
+          _navigationService.navigateTo(Routes.CreateCauseViewRoute(id: content.id));
         } else if (content is GoForumPost) {
-          //edit event
-          // _navigationService.navigateTo(Routes.CreateEventViewRoute(id: content.id, promo: 0));
+          //edit post
+          _navigationService.navigateTo(Routes.CreateForumPostViewRoute(causeID: content.causeID, id: content.id));
         }
       } else if (res == "share") {
         if (content is GoCause) {
           //share cause link
-
+          String url = await _dynamicLinkService.createCauseLink(cause: content);
+          _shareService.shareLink(url);
         } else if (content is GoForumPost) {
           //share post link
-
+          String url = await _dynamicLinkService.createPostLink(post: content);
+          _shareService.shareLink(url);
         }
       } else if (res == "report") {
         if (content is GoCause) {
           //report cause
-          //_causeDataService.reportCause(postID: content.id, reporterID: user.id);
+          _causeDataService.reportCause(causeID: content.id, reporterID: user.id);
         } else if (content is GoForumPost) {
           //report post
-          //_postDataService.reportPost(eventID: content.id, reporterID: user.id);
+          _postDataService.reportPost(postID: content.id, reporterID: user.id);
         }
       } else if (res == "delete") {
         //delete content

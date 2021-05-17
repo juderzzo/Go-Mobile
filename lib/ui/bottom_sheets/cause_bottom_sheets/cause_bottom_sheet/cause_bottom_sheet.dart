@@ -42,7 +42,7 @@ class CauseBottomSheet extends StatelessWidget {
             verticalSpaceSmall,
             CustomButton(
               onPressed: () => completer!(SheetResponse(responseData: "report")),
-              text: "Report (disabled)",
+              text: "Report",
               textSize: 16,
               textColor: appDestructiveColor(),
               height: 45,

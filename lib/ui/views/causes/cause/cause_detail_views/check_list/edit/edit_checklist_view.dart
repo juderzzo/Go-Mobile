@@ -13,41 +13,10 @@ class EditCheckListView extends StatelessWidget {
   final String? id;
   EditCheckListView(@PathParam() this.id);
 
-  Widget listCheckListItems(EditCheckListViewModel model, BuildContext context) {
-    return Expanded(
-      child: model.checkListItems.isEmpty && !model.isBusy
-          ? Center(
-              child: ZeroStateView(
-                imageAssetName: 'coding',
-                header: "You Have Not Created Any Action Items for This Cause",
-                subHeader: "Create an Action for Followers to Get Involved",
-                mainActionButtonTitle: null,
-                mainAction: null,
-                secondaryActionButtonTitle: null,
-                secondaryAction: null,
-              ),
-            )
-          : ListCheckListItemsForEditing(
-              refreshData: () {},
-              items: model.checkListItems,
-              pageStorageKey: UniqueKey(),
-              scrollController: null,
-              onChangedHeader: (val) => model.updateItemHeader(id: val['id'], header: val['header']),
-              onChangedSubHeader: (val) => model.updateItemSubHeader(id: val['id'], subHeader: val['subHeader']),
-              onSetLocation: (val) => model.updateItemLocationDetails(id: val['id'], lat: val['lat'], lon: val['lon'], address: val['address']),
-              onDelete: (val) {
-                model.deleteCheckListItem(id: val);
-                // model.initialize(context);
-              },
-              onRemoveLocation: (val) => model.deleteItemLocationDetails(id: val),
-              onSetPoints: (val) => model.updateItemPoints(id: val['id'], points: val['points']),
-            ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<EditCheckListViewModel>.reactive(
+      initialiseSpecialViewModelsOnce: true,
       onModelReady: (model) => model.initialize(id),
       viewModelBuilder: () => EditCheckListViewModel(),
       builder: (context, model, child) => Scaffold(
@@ -79,7 +48,35 @@ class EditCheckListView extends StatelessWidget {
           color: appBackgroundColor(),
           child: Column(
             children: [
-              listCheckListItems(model, context),
+              Expanded(
+                child: model.checkListItems.isEmpty && !model.isBusy
+                    ? Center(
+                        child: ZeroStateView(
+                          imageAssetName: 'coding',
+                          header: "You Have Not Created Any Action Items for This Cause",
+                          subHeader: "Create an Action for Followers to Get Involved",
+                          mainActionButtonTitle: null,
+                          mainAction: null,
+                          secondaryActionButtonTitle: null,
+                          secondaryAction: null,
+                        ),
+                      )
+                    : ListCheckListItemsForEditing(
+                        refreshData: () {},
+                        items: model.checkListItems,
+                        pageStorageKey: UniqueKey(),
+                        scrollController: null,
+                        onChangedHeader: (val) => model.updateItemHeader(id: val['id'], header: val['header']),
+                        onChangedSubHeader: (val) => model.updateItemSubHeader(id: val['id'], subHeader: val['subHeader']),
+                        onSetLocation: (val) => model.updateItemLocationDetails(id: val['id'], lat: val['lat'], lon: val['lon'], address: val['address']),
+                        onDelete: (val) {
+                          model.deleteCheckListItem(id: val);
+                          // model.initialize(context);
+                        },
+                        onRemoveLocation: (val) => model.deleteItemLocationDetails(id: val),
+                        onSetPoints: (val) => model.updateItemPoints(id: val['id'], points: val['points']),
+                      ),
+              ),
             ],
           ),
         ),

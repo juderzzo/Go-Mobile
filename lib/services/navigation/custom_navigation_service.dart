@@ -18,8 +18,8 @@ class CustomNavigationService {
     _navigationService.navigateTo(Routes.CreateCauseViewRoute(id: id));
   }
 
-  navigateToCreateActionItems(String id){
-    //_navigationService.navigateTo(Routes.Crea(id: id));
+  navigateToCreateActionItems(String id) {
+    _navigationService.navigateTo(Routes.EditCheckListViewRoute(id: id));
   }
 
   navigateToForumPostView(String id) {
