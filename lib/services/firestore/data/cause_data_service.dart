@@ -105,9 +105,11 @@ class CauseDataService {
         folderName: 'causes',
         fileName: cause.id! + "2",
       );
-      if (cause.imageURLs!.length >= 2) {
-        if (imgURL != null) {
+      if (imgURL != null) {
+        if (cause.imageURLs!.length >= 2) {
           cause.imageURLs![1] = imgURL;
+        } else {
+          cause.imageURLs!.add(imgURL);
         }
       }
     }
@@ -119,9 +121,11 @@ class CauseDataService {
         folderName: 'causes',
         fileName: cause.id! + "3",
       );
-      if (cause.imageURLs!.length >= 3) {
-        if (imgURL != null) {
+      if (imgURL != null) {
+        if (cause.imageURLs!.length >= 3) {
           cause.imageURLs![2] = imgURL;
+        } else {
+          cause.imageURLs!.add(imgURL);
         }
       }
     }
@@ -208,6 +212,29 @@ class CauseDataService {
       });
     }
     return cause;
+  }
+
+  reportCause({required String? causeID, required String? reporterID}) async {
+    String? error;
+    DocumentSnapshot snapshot = await causeRef.doc(causeID).get().catchError((e) {
+      _customDialogService.showErrorDialog(description: e.message);
+      error = e.message;
+    });
+    if (error != null) {
+      return;
+    }
+    if (snapshot.exists) {
+      List reportedBy = snapshot.data()!['reportedBy'] == null ? [] : snapshot.data()!['reportedBy'].toList(growable: true);
+      if (reportedBy.contains(reporterID)) {
+        _customDialogService.showErrorDialog(description: "You've already reported this cause. This cause is currently pending review.");
+        return;
+      } else {
+        reportedBy.add(reporterID);
+        causeRef.doc(causeID).update({"reportedBy": reportedBy});
+        _customDialogService.showSuccessDialog(title: 'Cause Reported', description: "This cause is now pending review");
+        return;
+      }
+    }
   }
 
   //Checklist

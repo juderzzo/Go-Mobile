@@ -12,9 +12,11 @@ import 'package:go/utils/url_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class AboutView extends StatelessWidget {
   final GoCause? cause;
+  final YoutubePlayer? youtubePlayer;
   final List? images;
   final String? creatorUsername;
   final String? creatorProfilePicURL;
@@ -24,6 +26,7 @@ class AboutView extends StatelessWidget {
 
   AboutView(
       {this.cause,
+      this.youtubePlayer,
       this.images,
       this.creatorUsername,
       this.creatorProfilePicURL,
@@ -168,7 +171,7 @@ class AboutView extends StatelessWidget {
           shrinkWrap: true,
           children: [
             cause!.videoLink != null && cause!.videoLink!.isNotEmpty
-                ? _CauseVideoAndImages()
+                ? _CauseVideoAndImages(youtubePlayer: youtubePlayer)
                 : _CauseImages(imgURLs: model.contentURLs),
             SizedBox(
               height: 10,
@@ -237,6 +240,9 @@ class _CauseImages extends HookViewModelWidget<AboutViewModel> {
 ///WE'RE ALSO ON A TIME CONSTRAINTS SO... ¯\_(ツ)_/¯
 ///
 class _CauseVideoAndImages extends HookViewModelWidget<AboutViewModel> {
+  final YoutubePlayer? youtubePlayer;
+  _CauseVideoAndImages({required this.youtubePlayer});
+
   @override
   Widget buildViewModelWidget(BuildContext context, AboutViewModel model) {
     return Container(
@@ -254,7 +260,7 @@ class _CauseVideoAndImages extends HookViewModelWidget<AboutViewModel> {
               return Builder(
                 builder: (BuildContext context) {
                   if (url.contains('you')) {
-                    return model.youtubePlayer;
+                    return youtubePlayer == null ? Container() : youtubePlayer!;
                   }
 
                   return Container(

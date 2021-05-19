@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/constants/custom_colors.dart';
-import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
@@ -25,7 +25,7 @@ class CauseBlockViewModel extends BaseViewModel {
   DynamicLinkService? _dynamicLinkService = locator<DynamicLinkService>();
   ShareService? _shareService = locator<ShareService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
-
+  CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
   GoUser get user => _reactiveUserService.user;
 
   String? creatorUsername;
@@ -54,11 +54,12 @@ class CauseBlockViewModel extends BaseViewModel {
       contentURLs.add(cause.videoLink!);
       orgLength++;
       cause.imageURLs!.forEach((url) {
-        images.add(
-          NetworkImage(url),
+        contentURLs.add(
+          url,
         );
         orgLength++;
       });
+      
 
       //configure youtube player
       videoID = YoutubePlayer.convertUrlToId(cause.videoLink!);
@@ -90,28 +91,6 @@ class CauseBlockViewModel extends BaseViewModel {
 
     isLoading = false;
     notifyListeners();
-  }
-
-  showOptions(GoCause cause) async {
-    var sheetResponse = await _bottomSheetService!.showCustomSheet(
-      variant: isCreator ? BottomSheetType.causeCreatorOptions : BottomSheetType.causeOptions,
-    );
-    if (sheetResponse != null) {
-      String? res = sheetResponse.responseData;
-      //print(cause.imageURLs);
-      print(res);
-
-      if (res == "Edit") {
-      } else if (res == "share") {
-        //share
-        String url = await _dynamicLinkService!.createCauseLink(cause: cause);
-        _shareService!.shareLink(url);
-      } else if (res == "report") {
-      } else if (res == "delete") {
-        //delete
-      }
-      notifyListeners();
-    }
   }
 
   updateImageIndex(int index) {

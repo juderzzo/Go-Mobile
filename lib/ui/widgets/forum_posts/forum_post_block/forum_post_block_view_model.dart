@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go/app/app.locator.dart';
-import 'package:go/enums/bottom_sheet_type.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_forum_post_model.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/comment_data_service.dart';
@@ -30,6 +30,7 @@ class ForumPostBlockViewModel extends BaseViewModel {
   DynamicLinkService? _dynamicLinkService = locator<DynamicLinkService>();
   CustomNavigationService customNavigationService = locator<CustomNavigationService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
+  CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
 
   ShareService? _shareService = locator<ShareService>();
   DialogService? _dialogService = locator<DialogService>();
@@ -85,40 +86,8 @@ class ForumPostBlockViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  showOptions({GoForumPost? post, VoidCallback? refreshAction}) async {
-    var sheetResponse = await _bottomSheetService!.showCustomSheet(
-      variant: isAuthor || isAdmin ? BottomSheetType.postAuthorOptions : BottomSheetType.postOptions,
-    );
-    if (sheetResponse != null) {
-      String? res = sheetResponse.responseData;
-      //print(res);
-      if (res == "edit") {
-        // String data = await _navigationService.navigateTo(Routes.CreateForumPostViewRoute, arguments: {
-        //   'causeID': post.causeID,
-        //   'postID': post.id,
-        // });
-        // if (data != null && data == 'newPostCreated') {
-        //   refreshAction();
-        // }
-      } else if (res == "share") {
-        //share post link
-        String url = await _dynamicLinkService!.createPostLink(postAuthorUsername: "$authorUsername", post: post!);
-        _shareService!.shareLink(url);
-      } else if (res == "report") {
-        //report
-        if (isAuthor || isAdmin) {
-          delete(post!.id);
-        }
-      } else if (res == "delete") {
-        //delete
-
-      }
-      notifyListeners();
-    }
-  }
-
   delete(id) async {
-    _postDataService!.deletePost(id);
+    _postDataService.deletePost(id);
     notifyListeners();
   }
 }

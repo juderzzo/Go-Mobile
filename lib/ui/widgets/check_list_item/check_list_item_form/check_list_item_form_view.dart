@@ -67,6 +67,8 @@ class CheckListItemFormView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CheckListItemFormViewModel>.reactive(
+        initialiseSpecialViewModelsOnce: true,
+        fireOnModelReadyOnce: true,
         onModelReady: (model) => model.initialize(item),
         viewModelBuilder: () => CheckListItemFormViewModel(),
         builder: (context, model, child) {
@@ -87,7 +89,7 @@ class CheckListItemFormView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: SingleLineTextField(
-                          //controller: model.headerController,
+                          controller: model.headerController,
                           hintText: "Action",
                           textLimit: 20,
                           isPassword: false,
@@ -95,7 +97,6 @@ class CheckListItemFormView extends StatelessWidget {
                             'id': item.id,
                             'header': val,
                           }),
-                          controller: null,
                         )),
                     verticalSpaceSmall,
                     Container(
@@ -105,14 +106,15 @@ class CheckListItemFormView extends StatelessWidget {
                       ),
                       width: MediaQuery.of(context).size.width * 3 / 4,
                       child: MultiLineTextField(
-                        //controller: model.subHeaderController,
+                        controller: model.subHeaderController,
                         hintText: "Description",
                         maxLines: 2,
                         onChanged: (val) => onChangedSubHeader({
                           'id': item.id,
                           'subHeader': val,
                         }),
-                        enabled: true, controller: null, initialValue: null,
+                        enabled: true,
+                        initialValue: null,
                       ),
                     ),
                     verticalSpaceSmall,

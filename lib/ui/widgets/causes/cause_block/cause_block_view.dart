@@ -177,7 +177,7 @@ class CauseBlockView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              _Head(causeName: cause.name!, showOptions: () => model.showOptions(cause)),
+              _Head(causeName: cause.name!, showOptions: () => model.customBottomSheetService.showContentOptions(content: cause)),
               cause.videoLink != null ? _CauseVideoAndImages() : _CauseImages(imgURLs: cause.imageURLs!),
               causeDetails(model, context),
               causeOrganizer(model, context),
@@ -298,7 +298,7 @@ class _CauseVideoAndImages extends HookViewModelWidget<CauseBlockViewModel> {
             items: model.contentURLs.map((url) {
               return Builder(
                 builder: (BuildContext context) {
-                  if (url.contains('youtube')) {
+                  if (url.contains('you')) {
                     return model.youtubePlayer;
                   }
                   return Container(

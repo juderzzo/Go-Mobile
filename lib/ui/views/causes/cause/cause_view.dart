@@ -13,6 +13,7 @@ import 'package:go/ui/widgets/navigation/tab_bar/go_tab_bar.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'cause_detail_views/admin/adminview.dart';
 
@@ -24,28 +25,62 @@ class CauseView extends StatelessWidget {
     return ViewModelBuilder<CauseViewModel>.reactive(
       onModelReady: (model) => model.initialize(id!),
       viewModelBuilder: () => CauseViewModel(),
-      builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar().basicActionAppBar(
-          title: model.isBusy ? "" : model.cause!.name!,
-          showBackButton: true,
-          actionWidget: model.isBusy
-              ? Container()
-              : IconButton(
-                  onPressed: () => model.navigateToCreatePostView(),
-                  icon: Icon(FontAwesomeIcons.edit, color: appFontColor(), size: 18),
+      builder: (context, model, child) => model.isBusy
+          ? Scaffold(
+              appBar: CustomAppBar().basicActionAppBar(
+                title: "",
+                showBackButton: true,
+                actionWidget: Container(),
+              ),
+              body: Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48)))
+          : model.hasVideo
+              ? YoutubePlayerBuilder(
+                  player: model.youtubePlayer!,
+                  builder: (_, Widget player) {
+                    return Scaffold(
+                      appBar: CustomAppBar().basicActionAppBar(
+                        title: model.isBusy ? "" : model.cause!.name!,
+                        showBackButton: true,
+                        actionWidget: model.isBusy
+                            ? Container()
+                            : IconButton(
+                                onPressed: () => model.navigateToCreatePostView(),
+                                icon: Icon(FontAwesomeIcons.edit, color: appFontColor(), size: 18),
+                              ),
+                      ),
+                      body: model.isBusy
+                          ? Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48))
+                          : model.isAdmin
+                              ? _AdminCauseViewBody(youtubePlayer: model.youtubePlayer)
+                              : _CauseViewBody(youtubePlayer: model.youtubePlayer),
+                    );
+                  },
+                )
+              : Scaffold(
+                  appBar: CustomAppBar().basicActionAppBar(
+                    title: model.isBusy ? "" : model.cause!.name!,
+                    showBackButton: true,
+                    actionWidget: model.isBusy
+                        ? Container()
+                        : IconButton(
+                            onPressed: () => model.navigateToCreatePostView(),
+                            icon: Icon(FontAwesomeIcons.edit, color: appFontColor(), size: 18),
+                          ),
+                  ),
+                  body: model.isBusy
+                      ? Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48))
+                      : model.isAdmin
+                          ? _AdminCauseViewBody(youtubePlayer: null)
+                          : _CauseViewBody(youtubePlayer: null),
                 ),
-        ),
-        body: model.isBusy
-            ? Center(child: CustomCircleProgressIndicator(color: appActiveColor(), size: 48))
-            : model.isAdmin
-                ? _AdminCauseViewBody()
-                : _CauseViewBody(),
-      ),
     );
   }
 }
 
 class _CauseViewBody extends HookViewModelWidget<CauseViewModel> {
+  final YoutubePlayer? youtubePlayer;
+  _CauseViewBody({required this.youtubePlayer});
+
   @override
   Widget buildViewModelWidget(BuildContext context, CauseViewModel model) {
     final _tabController = useTabController(initialLength: 3);
@@ -60,6 +95,7 @@ class _CauseViewBody extends HookViewModelWidget<CauseViewModel> {
               children: [
                 AboutView(
                   cause: model.cause,
+                  youtubePlayer: youtubePlayer,
                   images: model.images,
                   creatorUsername: "@${model.causeCreator!.username}",
                   creatorProfilePicURL: model.causeCreator!.profilePicURL,
@@ -79,6 +115,8 @@ class _CauseViewBody extends HookViewModelWidget<CauseViewModel> {
 }
 
 class _AdminCauseViewBody extends HookViewModelWidget<CauseViewModel> {
+  final YoutubePlayer? youtubePlayer;
+  _AdminCauseViewBody({required this.youtubePlayer});
   @override
   Widget buildViewModelWidget(BuildContext context, CauseViewModel model) {
     final _tabController = useTabController(initialLength: 4);
@@ -97,6 +135,7 @@ class _AdminCauseViewBody extends HookViewModelWidget<CauseViewModel> {
                 AboutView(
                   cause: model.cause,
                   images: model.images,
+                  youtubePlayer: youtubePlayer,
                   creatorUsername: "@${model.causeCreator!.username}",
                   creatorProfilePicURL: model.causeCreator!.profilePicURL,
                   viewCreator: null,

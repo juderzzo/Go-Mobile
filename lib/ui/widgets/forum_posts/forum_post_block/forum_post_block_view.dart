@@ -59,7 +59,7 @@ class ForumPostBlockView extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () => model.showOptions(refreshAction: refreshAction, post: post),
+            onPressed: () => model.customBottomSheetService.showContentOptions(content: post!),
             icon: Icon(
               FontAwesomeIcons.ellipsisH,
               size: 16,

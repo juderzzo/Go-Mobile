@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_forum_post_model.dart';
+import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/utils/firestore_image_uploader.dart';
@@ -16,7 +17,7 @@ class PostDataService {
   CollectionReference commentsRef = FirebaseFirestore.instance.collection("comments");
   SnackbarService? _snackbarService = locator<SnackbarService>();
   UserDataService? _userDataService = locator<UserDataService>();
-
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
   Future checkIfPostExists(String id) async {
     bool exists = false;
     DocumentSnapshot snapshot = await postRef.doc(id).get().catchError((e) {
@@ -294,6 +295,29 @@ class PostDataService {
       });
     }
     return success;
+  }
+
+  reportPost({required String? postID, required String? reporterID}) async {
+    String? error;
+    DocumentSnapshot snapshot = await postRef.doc(postID).get().catchError((e) {
+      _customDialogService.showErrorDialog(description: e.message);
+      error = e.message;
+    });
+    if (error != null) {
+      return;
+    }
+    if (snapshot.exists) {
+      List reportedBy = snapshot.data()!['reportedBy'] == null ? [] : snapshot.data()!['reportedBy'].toList(growable: true);
+      if (reportedBy.contains(reporterID)) {
+        _customDialogService.showErrorDialog(description: "You've already reported this post. This post is currently pending review.");
+        return;
+      } else {
+        reportedBy.add(reporterID);
+        postRef.doc(postID).update({"reportedBy": reportedBy});
+        _customDialogService.showSuccessDialog(title: 'Post Reported', description: "This post is now pending review");
+        return;
+      }
+    }
   }
 
   ///QUERIES
