@@ -93,6 +93,22 @@ class CommentBlockView extends StatelessWidget {
                             ),
                           ),
                         ),
+                        comment.image == null
+                            ? SizedBox(height: 2)
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(maxHeight: 100),
+                                      child: Image.network(
+                                        comment.image,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                         SizedBox(height: 2),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,

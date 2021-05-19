@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view_model.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
-import 'package:go/ui/widgets/common/custom_text.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/list_builders/list_check_list_items.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
@@ -19,70 +18,54 @@ class EditCheckListView extends StatelessWidget {
       initialiseSpecialViewModelsOnce: true,
       onModelReady: (model) => model.initialize(id),
       viewModelBuilder: () => EditCheckListViewModel(),
-      builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar().basicActionAppBar(
-          title: "Edit Actions",
-          showBackButton: true,
-          actionWidget: model.isBusy
-              ? Padding(
-                  padding: EdgeInsets.only(right: 16),
-                  child: CustomCircleProgressIndicator(
-                    size: 20,
-                    color: appInActiveColorAlt(),
-                  ),
-                )
-              : Container(
-                  margin: EdgeInsets.only(top: 20, right: 16),
-                  child: GestureDetector(
-                    onTap: () => model.submitCheckList(),
-                    child: CustomText(
-                      text: "Update",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: appFontColor(),
-                    ),
-                  ),
-                ),
-        ),
-        body: Container(
-          color: appBackgroundColor(),
-          child: Column(
-            children: [
-              Expanded(
-                child: model.checkListItems.isEmpty && !model.isBusy
-                    ? Center(
-                        child: ZeroStateView(
-                          imageAssetName: 'coding',
-                          header: "You Have Not Created Any Action Items for This Cause",
-                          subHeader: "Create an Action for Followers to Get Involved",
-                          mainActionButtonTitle: null,
-                          mainAction: null,
-                          secondaryActionButtonTitle: null,
-                          secondaryAction: null,
-                        ),
-                      )
-                    : ListCheckListItemsForEditing(
-                        refreshData: () {},
-                        items: model.checkListItems,
-                        pageStorageKey: UniqueKey(),
-                        scrollController: null,
-                        onChangedHeader: (val) => model.updateItemHeader(id: val['id'], header: val['header']),
-                        onChangedSubHeader: (val) => model.updateItemSubHeader(id: val['id'], subHeader: val['subHeader']),
-                        onSetLocation: (val) => model.updateItemLocationDetails(id: val['id'], lat: val['lat'], lon: val['lon'], address: val['address']),
-                        onDelete: (val) {
-                          model.deleteCheckListItem(id: val);
-                          // model.initialize(context);
-                        },
-                        onRemoveLocation: (val) => model.deleteItemLocationDetails(id: val),
-                        onSetPoints: (val) => model.updateItemPoints(id: val['id'], points: val['points']),
-                      ),
-              ),
-            ],
+      builder: (context, model, child) => GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: CustomAppBar().basicAppBar(
+            title: "Edit Actions",
+            showBackButton: true,
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => model.addCheckListItem(),
+          body: Container(
+            color: appBackgroundColor(),
+            child: Column(
+              children: [
+                model.savingItem
+                    ? CustomLinearProgressIndicator(
+                        color: appActiveColor(),
+                      )
+                    : Container(
+                        height: 0,
+                        width: 0,
+                      ),
+                Expanded(
+                  child: model.checkListItems.isEmpty && !model.isBusy
+                      ? Center(
+                          child: ZeroStateView(
+                            imageAssetName: 'coding',
+                            header: "You Have Not Created Any Action Items for This Cause",
+                            subHeader: "Create an Action for Followers to Get Involved",
+                            mainActionButtonTitle: null,
+                            mainAction: null,
+                            secondaryActionButtonTitle: null,
+                            secondaryAction: null,
+                          ),
+                        )
+                      : ListCheckListItemsForEditing(
+                          refreshData: () {},
+                          items: model.checkListItems,
+                          pageStorageKey: UniqueKey(),
+                          scrollController: null,
+                          onDelete: (val) => model.deleteCheckListItem(item: val),
+                          onSave: (val) => model.saveCheckListItem(item: val),
+                        ),
+                ),
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () => model.addCheckListItem(),
+          ),
         ),
       ),
     );

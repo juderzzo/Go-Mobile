@@ -433,13 +433,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.2"
-  flutter_google_places:
-    dependency: "direct main"
-    description:
-      name: flutter_google_places
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   flutter_hooks:
     dependency: "direct main"
     description:
@@ -583,13 +576,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  google_api_headers:
-    dependency: transitive
-    description:
-      name: google_api_headers
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   google_maps_flutter:
     dependency: "direct main"
     description:
@@ -611,6 +597,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.20-nullsafety.4"
+  google_place:
+    dependency: "direct main"
+    description:
+      name: google_place
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -818,13 +811,6 @@ packages:
     dependency: transitive
     description:
       name: package_config
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  package_info:
-    dependency: transitive
-    description:
-      name: package_info
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
