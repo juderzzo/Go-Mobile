@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/enums/bottom_sheet_type.dart';
@@ -17,6 +18,7 @@ import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
+import 'package:go/utils/firestore_image_uploader.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -143,6 +145,20 @@ class ForumPostViewModel extends BaseViewModel {
         timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       );
 
+      //upload img if exists
+      if (commentData['img'] != null) {
+        await FirestoreImageUploader()
+            .uploadImage(
+          img: commentData['img'],
+          storageBucket: 'comments',
+          folderName: '${comment.postID}',
+          fileName: comment.timePostedInMilliseconds.toString(),
+        )
+            .then((v) async {
+          comment.imageURL = await FirebaseStorage.instance.ref('comments/${comment.postID}/${comment.timePostedInMilliseconds.toString()}').getDownloadURL();
+        });
+      }
+
       //send comment & notification
       await _commentDataService!.sendComment(post!.id, post!.authorID, comment);
       if (user.id! != post!.authorID) {
@@ -177,6 +193,21 @@ class ForumPostViewModel extends BaseViewModel {
         originalReplyCommentID: commentToReplyTo!.timePostedInMilliseconds.toString(),
         timePostedInMilliseconds: DateTime.now().millisecondsSinceEpoch,
       );
+
+      //upload img if exists
+      if (commentData['img'] != null) {
+        await FirestoreImageUploader()
+            .uploadImage(
+          img: commentData['img'],
+          storageBucket: 'comments',
+          folderName: '${comment.postID}',
+          fileName: comment.timePostedInMilliseconds.toString(),
+        )
+            .then((v) async {
+          comment.imageURL = await FirebaseStorage.instance.ref('comments/${comment.postID}/${comment.timePostedInMilliseconds.toString()}').getDownloadURL();
+        });
+      }
+
       await _commentDataService!.replyToComment(
         post!.id,
         commentToReplyTo!.senderUID,

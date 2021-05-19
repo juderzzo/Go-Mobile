@@ -86,8 +86,6 @@ class CreateForumPostViewModel extends BaseViewModel {
       } else {
         //first upload the images
         id = getRandomString(35);
-        print("view model");
-        print(id);
         res = await _postDataService!.createPost(
           id: id,
           causeID: causeID,
@@ -98,7 +96,6 @@ class CreateForumPostViewModel extends BaseViewModel {
           commentCount: 0,
         );
       }
-      print("chungus");
       setBusy(false);
       if (res is String) {
         _snackbarService!.showSnackbar(

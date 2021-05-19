@@ -9,20 +9,21 @@ class GoForumPostComment {
   List? replies;
   int? replyCount;
   int? timePostedInMilliseconds;
-  dynamic image;
+  String? imageURL;
 
-  GoForumPostComment(
-      {this.postID,
-      this.senderUID,
-      this.username,
-      this.message,
-      this.isReply,
-      this.replyReceiverUsername,
-      this.originalReplyCommentID,
-      this.replies,
-      this.replyCount,
-      this.timePostedInMilliseconds,
-      this.image});
+  GoForumPostComment({
+    this.postID,
+    this.senderUID,
+    this.username,
+    this.message,
+    this.isReply,
+    this.replyReceiverUsername,
+    this.originalReplyCommentID,
+    this.replies,
+    this.replyCount,
+    this.timePostedInMilliseconds,
+    this.imageURL,
+  });
 
   GoForumPostComment.fromMap(Map<String, dynamic> data)
       : this(
@@ -36,7 +37,7 @@ class GoForumPostComment {
           replies: data['replies'],
           replyCount: data['replyCount'],
           timePostedInMilliseconds: data['timePostedInMilliseconds'],
-          image: data['image'],
+          imageURL: data['imageURL'],
         );
 
   Map<String, dynamic> toMap() => {
@@ -50,6 +51,6 @@ class GoForumPostComment {
         'replies': this.replies,
         'replyCount': this.replyCount,
         'timePostedInMilliseconds': this.timePostedInMilliseconds,
-        'image': this.image
+        'imageURL': this.imageURL
       };
 }

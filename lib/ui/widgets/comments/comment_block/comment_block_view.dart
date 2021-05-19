@@ -7,6 +7,7 @@ import 'package:go/ui/widgets/list_builders/list_comments.dart';
 import 'package:go/ui/widgets/user/user_profile_pic.dart';
 import 'package:go/utils/time_calc.dart';
 import 'package:stacked/stacked.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import 'comment_block_view_model.dart';
 
@@ -93,21 +94,27 @@ class CommentBlockView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        comment.image == null
-                            ? SizedBox(height: 2)
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: ConstrainedBox(
-                                      constraints: BoxConstraints(maxHeight: 100),
-                                      child: Image.network(
-                                        comment.image,
+                        comment.imageURL == null
+                            ? SizedBox(height: 0)
+                            : Container(
+                                constraints: BoxConstraints(
+                                  maxHeight: 300,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Expanded(
+                                        child: FadeInImage.memoryNetwork(
+                                          image: comment.imageURL!,
+                                          fit: BoxFit.cover,
+                                          placeholder: kTransparentImage,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                         SizedBox(height: 2),
                         Row(
