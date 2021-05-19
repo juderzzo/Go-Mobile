@@ -11,16 +11,7 @@ class GoCheckListItem {
   int? points;
 
   GoCheckListItem(
-      {this.id,
-      this.causeID,
-      this.header,
-      this.subHeader,
-      this.lat,
-      this.lon,
-      this.address,
-      this.checkedOffBy,
-      this.dateTimePublished,
-      this.points});
+      {this.id, this.causeID, this.header, this.subHeader, this.lat, this.lon, this.address, this.checkedOffBy, this.dateTimePublished, this.points});
 
   GoCheckListItem.fromMap(Map<String, dynamic> data)
       : this(
@@ -47,4 +38,12 @@ class GoCheckListItem {
         'dateTimePublished': this.dateTimePublished,
         'points': this.points
       };
+
+  bool isValid() {
+    bool isValid = false;
+    if (this.header != null && this.header!.isNotEmpty && this.subHeader != null && this.subHeader!.isNotEmpty) {
+      isValid = true;
+    }
+    return isValid;
+  }
 }

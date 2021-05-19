@@ -3,10 +3,10 @@ import 'package:go/constants/app_colors.dart';
 import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
-import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/check_list_view_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image/image.dart';
 import 'package:stacked/stacked.dart';
+
+import 'check_list_item_view_model.dart';
 
 class CheckListItemView extends StatelessWidget {
   final bool? isChecked;
@@ -19,9 +19,11 @@ class CheckListItemView extends StatelessWidget {
     required this.checkOffItem,
   });
 
-  Widget checker(BuildContext context) {
+  Widget checker(BuildContext context, CheckListItemViewModel model) {
     return GestureDetector(
-      onTap: () => checkOffItem(item),
+      onTap: () {
+        checkOffItem(item);
+      },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -47,21 +49,19 @@ class CheckListItemView extends StatelessWidget {
             isChecked!
                 ? Checkbox(
                     activeColor: CustomColors.goGreen,
-                    onChanged: (bol) {
-                      if(!isChecked!){
+                    onChanged: (val) {
+                      if (!isChecked!) {
+                        model.updateIsChecked(val!);
                         checkOffItem(item);
                       }
-                      
                     },
                     value: isChecked,
                   )
-                : SizedBox(
-                    width: 43, child: Icon(Icons.check_box_outline_blank)),
+                : SizedBox(width: 43, child: Icon(Icons.check_box_outline_blank)),
             item.address == null
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      
                       Text(
                         item.header!,
                         style: TextStyle(
@@ -87,7 +87,6 @@ class CheckListItemView extends StatelessWidget {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      
                       Text(
                         item.header!,
                         style: TextStyle(
@@ -123,47 +122,45 @@ class CheckListItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<CheckListViewModel>.reactive(
-        viewModelBuilder: () => CheckListViewModel(),
+    return ViewModelBuilder<CheckListItemViewModel>.reactive(
+        onModelReady: (model) => model.initialize(item),
+        viewModelBuilder: () => CheckListItemViewModel(),
         builder: (context, model, child) => item.lat == null
-            ? checker(context)
+            ? checker(context, model)
             : Container(
-              decoration: BoxDecoration(
-                          color: appBackgroundColor(),
-                          border: Border.all(
-                              width: 1.0, color: appBorderColorAlt()),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: appShadowColor(),
-                              spreadRadius: 0.3,
-                              blurRadius: 1.5,
-                              offset: Offset(0.0, 1.5),
-                            ),
-                          ],
-                        ),
+                decoration: BoxDecoration(
+                  color: appBackgroundColor(),
+                  border: Border.all(width: 1.0, color: appBorderColorAlt()),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: appShadowColor(),
+                      spreadRadius: 0.3,
+                      blurRadius: 1.5,
+                      offset: Offset(0.0, 1.5),
+                    ),
+                  ],
+                ),
                 child: Column(
                   children: [
                     Container(
-                        
                         height: MediaQuery.of(context).size.height * 1 / 5,
                         width: MediaQuery.of(context).size.height * 3 / 4,
-                        child: GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                                target: LatLng(item.lat!, item.lon!), zoom: 12))),
-                        SizedBox(height: 10,),
-                        Text(
-                        item.address!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: appFontColorAlt(),
-                          fontWeight: FontWeight.w500,
-                        ),
+                        child: GoogleMap(initialCameraPosition: CameraPosition(target: LatLng(item.lat!, item.lon!), zoom: 12))),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      item.address!,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: appFontColorAlt(),
+                        fontWeight: FontWeight.w500,
                       ),
-                      
-                    checker(context)
+                    ),
+                    checker(context, model),
                   ],
                 ),
               ));

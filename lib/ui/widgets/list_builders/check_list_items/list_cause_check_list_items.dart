@@ -29,6 +29,7 @@ class ListCauseCheckListItems extends StatelessWidget {
                   secondaryAction: null,
                 )
               : Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   height: screenHeight(context),
                   color: appBackgroundColor(),
                   child: RefreshIndicator(

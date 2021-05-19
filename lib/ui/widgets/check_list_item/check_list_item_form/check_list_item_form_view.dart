@@ -1,9 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:go/constants/app_colors.dart';
-import 'package:go/constants/custom_colors.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/buttons/custom_text_button.dart';
@@ -11,222 +9,227 @@ import 'package:go/ui/widgets/common/text_field/multi_line_text_field.dart';
 import 'package:go/ui/widgets/common/text_field/single_line_text_field.dart';
 import 'package:go/ui/widgets/common/text_field/text_field_container.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_hooks/stacked_hooks.dart';
 
 import 'check_list_item_form_view_model.dart';
 
 class CheckListItemFormView extends StatelessWidget {
-  GoCheckListItem item;
-  final Function(Map<String, dynamic>) onChangedHeader;
-  final Function(Map<String, dynamic>) onChangedSubHeader;
-  final Function(Map<String, dynamic>) onSetLocation;
-  final Function(Map<String, dynamic>)? onSetPoints;
-  final Function(String?) onDelete;
-  final Function(String?) onRemoveLocation;
-  //int points;
+  final GoCheckListItem item;
+  final Function(GoCheckListItem) onDelete;
+  final Function(GoCheckListItem) onSave;
 
-  CheckListItemFormView(
-      {required this.item,
-      required this.onChangedHeader,
-      required this.onChangedSubHeader,
-      required this.onSetLocation,
-      required this.onDelete,
-      required this.onRemoveLocation,
-      this.onSetPoints});
-
-  Widget dropdown(BuildContext context, CheckListItemFormViewModel model) {
-    return DropdownButton<int>(
-      value: model.points,
-      //icon: const Icon(Icons.arrow_downward),
-      iconSize: 0,
-      elevation: 16,
-      style: TextStyle(
-        color: appTextButtonColor(),
-        fontWeight: FontWeight.bold,
-      ),
-      underline: Container(
-        height: 2,
-        color: appBackgroundColor(),
-      ),
-      onChanged: (int? newValue) {
-        //dropdownValue = newValue;
-        model.points = newValue;
-        print(item.id);
-        print(newValue);
-        onSetPoints!({'id': item.id, 'points': newValue});
-        model.notifyListeners();
-      },
-      items: <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map<DropdownMenuItem<int>>((int value) {
-        return DropdownMenuItem<int>(
-          value: value,
-          child: Text(value.toString()),
-        );
-      }).toList(),
-    );
-  }
+  CheckListItemFormView({
+    required this.item,
+    required this.onDelete,
+    required this.onSave,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CheckListItemFormViewModel>.reactive(
-        initialiseSpecialViewModelsOnce: true,
-        fireOnModelReadyOnce: true,
-        onModelReady: (model) => model.initialize(item),
-        viewModelBuilder: () => CheckListItemFormViewModel(),
-        builder: (context, model, child) {
-          return Container(
-            padding: EdgeInsets.fromLTRB(32.0, 10.0, 0.0, 0.0),
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        width: MediaQuery.of(context).size.width * 3 / 4,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: appTextFieldContainerColor(),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: SingleLineTextField(
-                          controller: model.headerController,
-                          hintText: "Action",
-                          textLimit: 20,
-                          isPassword: false,
-                          onChanged: (val) => onChangedHeader({
-                            'id': item.id,
-                            'header': val,
-                          }),
-                        )),
-                    verticalSpaceSmall,
-                    Container(
-                      decoration: BoxDecoration(
-                        color: appTextFieldContainerColor(),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      width: MediaQuery.of(context).size.width * 3 / 4,
-                      child: MultiLineTextField(
-                        controller: model.subHeaderController,
-                        hintText: "Description",
-                        maxLines: 2,
-                        onChanged: (val) => onChangedSubHeader({
-                          'id': item.id,
-                          'subHeader': val,
-                        }),
-                        enabled: true,
-                        initialValue: null,
-                      ),
-                    ),
-                    verticalSpaceSmall,
-                    model.requiresLocationVerification
-                        ? TextFieldContainer(
-                            height: 48,
-                            width: MediaQuery.of(context).size.width * 3 / 4,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                top: 10,
-                              ),
-                              child: TypeAheadField(
-                                hideOnEmpty: true,
-                                hideOnLoading: true,
-                                direction: AxisDirection.up,
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  controller: model.locationTextController,
-                                  cursorColor: Colors.black,
-                                  decoration: InputDecoration(
-                                    hintText: "Search for Address",
-                                    border: InputBorder.none,
-                                  ),
-                                  autofocus: false,
-                                ),
-                                suggestionsCallback: (searchTerm) async {
-                                  Map<String, dynamic> res =
-                                      await (model.googlePlacesService!.googleSearchAutoComplete(input: searchTerm) as FutureOr<Map<String, dynamic>>);
-                                  model.setPlacesSearchResults(res);
-                                  return model.placeSearchResults.keys.toList();
-                                },
-                                itemBuilder: (context, dynamic place) {
-                                  return ListTile(
-                                    title: Text(
-                                      place,
-                                      style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w500),
-                                    ),
-                                  );
-                                },
-                                onSuggestionSelected: (dynamic val) async {
-                                  Map<String, dynamic> details = await model.getPlaceDetails(val);
-                                  onSetLocation({
-                                    'id': item.id,
-                                    'lat': details['lat'],
-                                    'lon': details['lon'],
-                                    'address': details['address'],
-                                  });
-                                },
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    verticalSpaceSmall,
-                    Row(
-                      children: [
-                        model.requiresLocationVerification
-                            ? CustomTextButton(
-                                onTap: () {
-                                  model.toggleRequiresLocationVerification();
-                                  onRemoveLocation(item.id);
-                                },
-                                text: 'Remove Location',
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: appTextButtonColor(),
-                              )
-                            : CustomTextButton(
-                                onTap: () {
-                                  model.toggleRequiresLocationVerification();
-                                },
-                                text: 'Add Location',
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: appTextButtonColor(),
-                              ),
-                        SizedBox(
-                          width: 150,
-                        ),
-                        CustomTextButton(
-                          text: 'Points: ',
-                          fontSize: 12,
+      initialiseSpecialViewModelsOnce: true,
+      fireOnModelReadyOnce: true,
+      onModelReady: (model) => model.initialize(item),
+      viewModelBuilder: () => CheckListItemFormViewModel(),
+      builder: (context, model, child) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 16),
+          width: screenWidth(context),
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _HeaderField(),
+              verticalSpaceSmall,
+              _SubHeaderField(),
+              verticalSpaceSmall,
+              model.requiresLocationVerification ? _LocationField() : Container(),
+              verticalSpaceSmall,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  model.requiresLocationVerification
+                      ? CustomTextButton(
+                          onTap: () => model.toggleRequiresLocationVerification(),
+                          text: 'Remove Location',
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: CustomColors.goGreen,
-                          onTap: () {},
+                          color: appTextButtonColor(),
+                        )
+                      : CustomTextButton(
+                          onTap: () {
+                            model.toggleRequiresLocationVerification();
+                          },
+                          text: 'Add Location',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: appTextButtonColor(),
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        dropdown(context, model),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 75.0),
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                    child: GestureDetector(
-                      onTap: () {
-                        onDelete(item.id);
-                      },
-                      child: Icon(
-                        Icons.remove,
-                        size: 15,
-                        color: Colors.white,
-                      ),
-                    ),
+                  SizedBox(
+                    width: 150,
                   ),
-                ),
-              ],
+                  _ItemPointsDropDown(),
+                ],
+              ),
+              verticalSpaceSmall,
+              Row(
+                children: [
+                  CustomTextButton(
+                    onTap: () => onSave(model.saveItem()),
+                    text: 'Save Item',
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: appTextButtonColor(),
+                  ),
+                  horizontalSpaceMedium,
+                  CustomTextButton(
+                    onTap: () => onDelete(item),
+                    text: 'Delete Item',
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: appDestructiveColor(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _HeaderField extends HookViewModelWidget<CheckListItemFormViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CheckListItemFormViewModel model) {
+    final _textController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (model.checkListItem.isValid() && model.loadedPreviousHeader == false) {
+        _textController.text = model.loadPreviousHeader();
+      }
+    });
+
+    return SingleLineTextField(
+      controller: _textController,
+      hintText: "Action",
+      textLimit: 20,
+      isPassword: false,
+      onChanged: (val) {
+        model.updateHeader(val);
+        _textController.selection = TextSelection.fromPosition(TextPosition(offset: _textController.text.length));
+      },
+    );
+  }
+}
+
+class _SubHeaderField extends HookViewModelWidget<CheckListItemFormViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CheckListItemFormViewModel model) {
+    final _textController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (model.checkListItem.isValid() && model.loadedPreviousSubHeader == false) {
+        _textController.text = model.loadPreviousSubHeader();
+      }
+    });
+
+    return MultiLineTextField(
+      controller: _textController,
+      hintText: "Description",
+      maxLines: 2,
+      enabled: true,
+      initialValue: null,
+      onChanged: (val) {
+        model.updateSubHeader(val);
+        _textController.selection = TextSelection.fromPosition(TextPosition(offset: _textController.text.length));
+      },
+    );
+  }
+}
+
+class _ItemPointsDropDown extends HookViewModelWidget<CheckListItemFormViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CheckListItemFormViewModel model) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomTextButton(
+            onTap: () {},
+            text: 'Reward: ',
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: appFontColor(),
+          ),
+          DropdownButton<int>(
+            value: model.checkListItem.points ?? 0,
+            iconSize: 0,
+            elevation: 16,
+            style: TextStyle(
+              color: appTextButtonColor(),
+              fontWeight: FontWeight.bold,
+            ),
+            underline: Container(
+              color: appTextFieldContainerColor(),
+            ),
+            onChanged: (val) => model.updatePoints(val!),
+            items: <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map<DropdownMenuItem<int>>((int value) {
+              return DropdownMenuItem<int>(
+                value: value,
+                child: Text("$value points"),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LocationField extends HookViewModelWidget<CheckListItemFormViewModel> {
+  @override
+  Widget buildViewModelWidget(BuildContext context, CheckListItemFormViewModel model) {
+    final _textController = useTextEditingController();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (model.checkListItem.isValid() && model.loadedPreviousSubHeader == false) {
+        _textController.text = model.loadPreviousSubHeader();
+      }
+    });
+
+    return TextFieldContainer(
+      child: TypeAheadField(
+        hideOnEmpty: true,
+        hideOnLoading: true,
+        direction: AxisDirection.up,
+        textFieldConfiguration: TextFieldConfiguration(
+          controller: model.locationTextController,
+          cursorColor: Colors.black,
+          decoration: InputDecoration(
+            hintText: "Search for Address",
+            border: InputBorder.none,
+          ),
+          autofocus: false,
+        ),
+        suggestionsCallback: (searchTerm) async {
+          Map<String, dynamic> res = await model.googlePlacesService!.googleSearchAutoComplete(input: searchTerm);
+          model.setPlacesSearchResults(res);
+          return model.placeSearchResults.keys.toList();
+        },
+        itemBuilder: (context, dynamic place) {
+          return ListTile(
+            title: Text(
+              place,
+              style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w500),
             ),
           );
-        });
+        },
+        onSuggestionSelected: (dynamic val) async {
+          Map<String, dynamic> details = await model.getPlaceDetails(val);
+          model.updateLocation(details['lat'], details['lon'], details['address']);
+        },
+      ),
+    );
   }
 }

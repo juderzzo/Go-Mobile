@@ -1,19 +1,23 @@
 import 'package:go/app/app.locator.dart';
-import 'package:go/services/auth/auth_service.dart';
+import 'package:go/models/go_check_list_item.dart';
+import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
-class XViewModel extends BaseViewModel {
-  AuthService? _authService = locator<AuthService>();
-  DialogService? _dialogService = locator<DialogService>();
-  NavigationService? _navigationService = locator<NavigationService>();
+class CheckListItemViewModel extends BaseViewModel {
+  ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
+  bool isChecked = false;
 
-  ///NAVIGATION
-// replaceWithPage() {
-//   _navigationService.replaceWith(PageRouteName);
-// }
-//
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
+  initialize(GoCheckListItem item) {
+    if (item.checkedOffBy != null && item.checkedOffBy!.isNotEmpty) {
+      if (item.checkedOffBy!.contains(_reactiveUserService.user.id!)) {
+        isChecked = true;
+        notifyListeners();
+      }
+    }
+  }
+
+  updateIsChecked(bool val) {
+    isChecked = val;
+    notifyListeners();
+  }
 }

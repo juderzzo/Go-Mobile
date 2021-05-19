@@ -4,6 +4,7 @@ import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/models/go_notification_model.dart';
 import 'package:go/services/auth/auth_service.dart';
+import 'package:go/services/dialogs/custom_dialog_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/notification_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
@@ -18,10 +19,12 @@ class EditCheckListViewModel extends BaseViewModel {
   SnackbarService? _snackbarService = locator<SnackbarService>();
   UserDataService? _userDataService = locator<UserDataService>();
   NotificationDataService? _notificationDataService = locator<NotificationDataService>();
+  CustomDialogService _customDialogService = locator<CustomDialogService>();
 
   GoCause? cause;
   String? currentUID;
   bool send = false;
+  bool savingItem = false;
   List<GoCheckListItem> checkListItems = [];
 
   initialize(String? id) async {
@@ -37,64 +40,44 @@ class EditCheckListViewModel extends BaseViewModel {
   }
 
   addCheckListItem() {
-    GoCheckListItem item =
-        GoCheckListItem(id: getRandomString(30), causeID: cause!.id, checkedOffBy: [], dateTimePublished: DateTime.now().millisecondsSinceEpoch, points: 0);
+    GoCheckListItem item = GoCheckListItem(
+      id: getRandomString(30),
+      causeID: cause!.id,
+      checkedOffBy: [],
+      dateTimePublished: DateTime.now().millisecondsSinceEpoch,
+      points: 0,
+    );
     checkListItems.add(item);
     send = true;
     notifyListeners();
   }
 
-  updateItemHeader({String? id, String? header}) {
-    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
-    print(itemIndex);
-    print(checkListItems[itemIndex].toMap());
-    checkListItems[itemIndex].header = header;
-    notifyListeners();
-  }
-
-  updateItemSubHeader({String? id, String? subHeader}) {
-    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
-    checkListItems[itemIndex].subHeader = subHeader;
-    notifyListeners();
-  }
-
-  updateItemPoints({String? id, int? points}) {
-    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
-    checkListItems[itemIndex].points = points;
-    notifyListeners();
-  }
-
-  updateItemLocationDetails({String? id, double? lat, double? lon, String? address}) {
-    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
-    checkListItems[itemIndex].lat = lat;
-    checkListItems[itemIndex].lon = lon;
-    checkListItems[itemIndex].address = address;
-    notifyListeners();
-  }
-
-  deleteItemLocationDetails({String? id}) {
-    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
-    checkListItems[itemIndex].lat = null;
-    checkListItems[itemIndex].lon = null;
-    checkListItems[itemIndex].address = null;
-    notifyListeners();
-  }
-
-  editItemPoints({String? id, int? points}) {
-    int itemIndex = checkListItems.indexWhere((item) => item.id == id);
-    checkListItems[itemIndex].points = points;
-    notifyListeners();
-  }
-
-  deleteCheckListItem({required String id}) {
-    for (int i = 0; i < checkListItems.length; i++) {
-      if (checkListItems[i].id == id) {
-        checkListItems.removeAt(i);
-        //i--;
-      }
+  saveCheckListItem({required GoCheckListItem item}) async {
+    if (!item.isValid()) {
+      return;
     }
-    send = true;
-    checkListItems.forEach((element) {});
+    savingItem = true;
+    notifyListeners();
+    print(item.toMap());
+    int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
+    checkListItems[itemIndex] = item;
+    notifyListeners();
+    bool updatedCheckList = await _causeDataService!.updateCheckListItems(causeID: cause!.id, items: checkListItems);
+    if (updatedCheckList) {
+      if (send) {
+        sendChecklistNotifications();
+      }
+      _customDialogService.showSuccessDialog(title: "Action Saved", description: "This Action Item Has Been Saved");
+    } else {
+      _customDialogService.showErrorDialog(description: "There was an issue saving your item. Please Try Again.");
+    }
+    savingItem = false;
+    notifyListeners();
+  }
+
+  deleteCheckListItem({required GoCheckListItem item}) {
+    int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
+    checkListItems.removeAt(itemIndex);
     notifyListeners();
   }
 

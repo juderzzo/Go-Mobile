@@ -9,34 +9,17 @@ class ListCheckListItemsForEditing extends StatelessWidget {
   final VoidCallback refreshData;
   final Key pageStorageKey;
   final ScrollController? scrollController;
-  final Function(Map<String, dynamic>) onChangedHeader;
-  final Function(Map<String, dynamic>) onChangedSubHeader;
-  final Function(Map<String, dynamic>) onSetLocation;
-  final Function(Map<String, dynamic>) onSetPoints;
-  final Function(String) onDelete;
-  final Function(String) onRemoveLocation;
+  final Function(GoCheckListItem) onDelete;
+  final Function(GoCheckListItem) onSave;
 
   ListCheckListItemsForEditing({
     required this.refreshData,
     required this.items,
     required this.pageStorageKey,
     required this.scrollController,
-    required this.onChangedHeader,
-    required this.onChangedSubHeader,
-    required this.onSetLocation,
     required this.onDelete,
-    required this.onRemoveLocation,
-    required this.onSetPoints,
+    required this.onSave,
   });
-
-  void printItems() {
-    String ans = "";
-    items.forEach((element) {
-      ans += " ,";
-      ans += " ${element.header}";
-    });
-    print(ans);
-  }
 
   Widget listCauses() {
     return RefreshIndicator(
@@ -61,14 +44,8 @@ class ListCheckListItemsForEditing extends StatelessWidget {
 
           return CheckListItemFormView(
             item: items[index],
-            onChangedHeader: (val) => onChangedHeader(val),
-            onChangedSubHeader: (val) => onChangedSubHeader(val),
-            onSetLocation: (val) => onSetLocation(val),
-            onDelete: (val) {
-              onDelete(val!);
-            },
-            onRemoveLocation: (val) => onRemoveLocation(val!),
-            onSetPoints: (val) => onSetPoints(val),
+            onDelete: (val) => onDelete(val),
+            onSave: (val) => onSave(val),
           );
         },
       ),
