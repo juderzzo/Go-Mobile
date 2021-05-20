@@ -369,22 +369,22 @@ class GoChecklistTabBar extends StatelessWidget {
               ),
             ),
           ),
-          Tab(
-            child: Container(
-              height: 30,
-              width: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Donate!",
-                  style: TextStyle(fontWeight: fontWeight, fontSize: tabController!.index == 2 ? 16 : 12),
-                ),
-              ),
-            ),
-          ),
+          // Tab(
+          //   child: Container(
+          //     height: 30,
+          //     width: 100,
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(60),
+          //     ),
+          //     child: Align(
+          //       alignment: Alignment.center,
+          //       child: Text(
+          //         "Donate!",
+          //         style: TextStyle(fontWeight: fontWeight, fontSize: tabController!.index == 2 ? 16 : 12),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
