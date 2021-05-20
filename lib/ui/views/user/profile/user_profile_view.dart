@@ -86,7 +86,7 @@ class _UserProfileViewState extends State<UserProfileView> with SingleTickerProv
 
           ///BIO & WEBSITE
           Container(
-            margin: EdgeInsets.only(top: 12, bottom: 12),
+            margin: EdgeInsets.all(12),
             child: Column(
               children: [
                 model.user!.bio != null && model.user!.bio!.isNotEmpty
@@ -129,6 +129,7 @@ class _UserProfileViewState extends State<UserProfileView> with SingleTickerProv
               ],
             ),
           ),
+          //SizedBox(height: 20,)
         ],
       ),
     );
@@ -222,7 +223,7 @@ class _UserProfileViewState extends State<UserProfileView> with SingleTickerProv
                                 forceElevated: innerBoxIsScrolled,
                                 expandedHeight: ((model.user!.bio != null && model.user!.bio!.isNotEmpty) ||
                                         (model.user!.personalSite != null && model.user!.personalSite!.isNotEmpty))
-                                    ? 250
+                                    ? 300
                                     : 200,
                                 leading: Container(),
                                 backgroundColor: appBackgroundColor(),
@@ -231,6 +232,7 @@ class _UserProfileViewState extends State<UserProfileView> with SingleTickerProv
                                     child: Column(
                                       children: [
                                         model.user == null ? Container() : userDetails(model),
+                                        
                                       ],
                                     ),
                                   ),
