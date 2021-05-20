@@ -22,12 +22,16 @@ class CheckListViewModel extends BaseViewModel {
   bool? working;
   bool canWatchVideo = true;
   String? link = "";
+  bool? isCreator = false;
 
   initialize(id) async {
     working = false;
+    String? uid = await _authService!.getCurrentUserID();
     //print(busy("f"));
     GoCause cause = await _causeDataService!.getCauseByID(id);
     link = cause.charityURL;
+    isCreator = (cause.creatorID == uid);
+    print(isCreator);
 
     monetizer = await monetized(id);
 

@@ -205,12 +205,11 @@ class ForumPostBlockView extends StatelessWidget {
                     postHead(model),
                     postBody(model, context),
                     verticalSpaceSmall,
-                    displayBottomBorder!
-                        ? Divider(
+                        Divider(
                             thickness: 8.0,
                             color: appPostBorderColor(),
                           )
-                        : Container(),
+                        
                   ],
                 ),
               ),

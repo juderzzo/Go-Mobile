@@ -203,7 +203,7 @@ class _CheckListViewState extends State<CheckListView> with SingleTickerProvider
                   shrinkWrap: true,
                   children: _tabController!.index == 0
                       ? [
-                          isCauseAdmin
+                          isCauseAdmin || (model.isCreator != null && model.isCreator!)
                               ? CustomButton(
                                   text: checkListItems!.length > 0 ? "Update Action List" : "Create Action List",
                                   textSize: 16,

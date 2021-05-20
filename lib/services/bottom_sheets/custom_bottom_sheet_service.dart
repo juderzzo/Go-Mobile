@@ -95,7 +95,7 @@ class CustomBottomSheetService {
     var sheetResponse = await _bottomSheetService.showCustomSheet(
       barrierDismissible: true,
       variant: content is GoCause
-          ? content.admins!.contains(user.id)
+          ? content.admins!.contains(user.id) || content.creatorID == user.id
               ? BottomSheetType.causeCreatorOptions
               : BottomSheetType.causeOptions
           : user.id == content.authorID

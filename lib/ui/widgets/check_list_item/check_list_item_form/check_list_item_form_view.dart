@@ -66,7 +66,7 @@ class CheckListItemFormView extends StatelessWidget {
                           color: appTextButtonColor(),
                         ),
                   SizedBox(
-                    width: 150,
+                    width: MediaQuery.of(context).size.width * 1/4,
                   ),
                   _ItemPointsDropDown(),
                 ],

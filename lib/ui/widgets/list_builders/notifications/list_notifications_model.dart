@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_user_model.dart';
+import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/firestore/data/notification_data_service.dart';
 import 'package:go/services/navigation/custom_navigation_service.dart';
@@ -11,10 +12,14 @@ import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:stacked/stacked.dart';
 
 class ListNotificationsModel extends ReactiveViewModel {
-  NotificationDataService _notificationDataService = locator<NotificationDataService>();
-  CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
-  CustomNavigationService customNavigationService = locator<CustomNavigationService>();
+  NotificationDataService _notificationDataService =
+      locator<NotificationDataService>();
+  CustomBottomSheetService customBottomSheetService =
+      locator<CustomBottomSheetService>();
+  CustomNavigationService customNavigationService =
+      locator<CustomNavigationService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
+  AuthService _authService = locator<AuthService>();
 
   ///HELPERS
   ScrollController scrollController = ScrollController();
@@ -53,7 +58,8 @@ class ListNotificationsModel extends ReactiveViewModel {
 
   loadData() async {
     setBusy(true);
-
+    String? uid = await _authService.getCurrentUserID();
+    _notificationDataService.changeUnreadNotificationStatus(uid);
     //load data with params
     dataResults = await _notificationDataService.loadNotifications(
       uid: user.id,
@@ -76,7 +82,8 @@ class ListNotificationsModel extends ReactiveViewModel {
     notifyListeners();
 
     //load additional posts
-    List<DocumentSnapshot> newResults = await _notificationDataService.loadAdditionalNotifications(
+    List<DocumentSnapshot> newResults =
+        await _notificationDataService.loadAdditionalNotifications(
       uid: user.id,
       lastDocSnap: dataResults[dataResults.length - 1],
       resultsLimit: resultsLimit,

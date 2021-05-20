@@ -2,6 +2,7 @@ import 'package:go/app/app.locator.dart';
 import 'package:go/enums/notifcation_type.dart';
 import 'package:go/services/auth/auth_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -10,6 +11,8 @@ class NotificationBlockViewModel extends BaseViewModel {
   NavigationService? _navigationService = locator<NavigationService>();
   UserDataService? _userDataService = locator<UserDataService>();
   BottomSheetService? _bottomSheetService = locator<BottomSheetService>();
+  CustomNavigationService _customNavigationService =
+      locator<CustomNavigationService>();
 
   initialize() async {}
 
@@ -45,15 +48,27 @@ class NotificationBlockViewModel extends BaseViewModel {
 
   ///NAVIGATION
   navigateToCauseView(String? id, int? tab) {
+    if(id != null){
+       _customNavigationService.navigateToCauseView(id);
+    }
+   
     // _navigationService.navigateTo(Routes.CauseViewRoute, arguments: {'id': id, 'tab': tab});
   }
 
   navigateToPostView(String? id) {
     print(id);
+
+    if(id != null){
+       _customNavigationService.navigateToForumPostView(id);
+    }
+
     //.navigateTo(Routes.ForumPostViewRoute, arguments: {'postID': id});
   }
 
   navigateToUserView(String uid) {
+    if(uid != null){
+       _customNavigationService.navigateToUserView(uid);
+    }
     //_navigationService.navigateTo(Routes.UserProfileViewRoute, arguments: {'uid': uid});
   }
 }

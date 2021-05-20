@@ -60,6 +60,8 @@ class ListNotifications extends StatelessWidget {
                         if (index < model.dataResults.length) {
                           GoNotification notification;
                           notification = GoNotification.fromMap(model.dataResults[index].data()!);
+                          //mark the notifcation as read
+                          
                           return NotificationBlockView(
                             notification: notification,
                           );

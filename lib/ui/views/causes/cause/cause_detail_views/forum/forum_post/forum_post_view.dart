@@ -52,10 +52,13 @@ class ForumPostView extends StatelessWidget {
   }
 
   Widget postImg(BuildContext context, String url) {
-    return FadeInImage.memoryNetwork(
-      image: url,
-      fit: BoxFit.cover,
-      placeholder: kTransparentImage,
+    // return FadeInImage.memoryNetwork(
+    //   image: url,
+    //   fit: BoxFit.cover,
+    //   placeholder: kTransparentImage,
+    // );
+    return Image.network(
+      url,
     );
   }
 
@@ -74,7 +77,8 @@ class ForumPostView extends StatelessWidget {
         ),
       );
       linkifiedText.add(usernameTextSpan);
-      linkifiedText.addAll(linkify(text: model.post!.body!.trim(), fontSize: 14));
+      linkifiedText
+          .addAll(linkify(text: model.post!.body!.trim(), fontSize: 14));
     }
 
     return Padding(
@@ -112,7 +116,8 @@ class ForumPostView extends StatelessWidget {
             ],
           ),
           Text(
-            TimeCalc().getPastTimeFromMilliseconds(model.post!.dateCreatedInMilliseconds!),
+            TimeCalc().getPastTimeFromMilliseconds(
+                model.post!.dateCreatedInMilliseconds!),
             style: TextStyle(
               color: appFontColorAlt(),
             ),
@@ -181,7 +186,8 @@ class ForumPostView extends StatelessWidget {
         refreshingData: false,
         results: model.commentResults,
         replyToComment: (val) => model.toggleReply(model.focusNode, val),
-        deleteComment: (val) => model.showDeleteCommentConfirmation(context: context, comment: val),
+        deleteComment: (val) =>
+            model.showDeleteCommentConfirmation(context: context, comment: val),
       ),
     );
   }
@@ -196,7 +202,8 @@ class ForumPostView extends StatelessWidget {
           title: "Post",
           showBackButton: true,
           actionWidget: IconButton(
-            onPressed: model.post == null ? null : () => model.showContentOptions(),
+            onPressed:
+                model.post == null ? null : () => model.showContentOptions(),
             icon: Icon(
               FontAwesomeIcons.ellipsisH,
               size: 16,
@@ -249,11 +256,15 @@ class ForumPostView extends StatelessWidget {
                                         context: context,
                                         commentData: val,
                                       )
-                                  : (val) => model.submitComment(context: context, commentData: val),
+                                  : (val) => model.submitComment(
+                                      context: context, commentData: val),
                               focusNode: model.focusNode,
-                              commentTextController: model.commentTextController,
+                              commentTextController:
+                                  model.commentTextController,
                               isReplying: model.isReplying,
-                              replyReceiverUsername: model.isReplying ? model.commentToReplyTo!.username : null,
+                              replyReceiverUsername: model.isReplying
+                                  ? model.commentToReplyTo!.username
+                                  : null,
                               contentID: '',
                             ),
                           ),
