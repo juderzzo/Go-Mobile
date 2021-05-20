@@ -43,13 +43,12 @@ class ListCauses extends StatelessWidget {
               displayBottomBorder = false;
             }
 
-          if (cause.approved!) {
+          
             return CauseBlockView(
               cause: cause,
               displayBottomBorder: displayBottomBorder,
             );
-          }
-          return Container();
+          
         },
       ),
     );

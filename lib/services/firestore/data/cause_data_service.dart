@@ -13,12 +13,15 @@ import 'package:go/utils/mail_sender.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CauseDataService {
-  CollectionReference causeRef = FirebaseFirestore.instance.collection('causes');
-  CollectionReference checkRef = FirebaseFirestore.instance.collection('checks');
+  CollectionReference causeRef =
+      FirebaseFirestore.instance.collection('causes');
+  CollectionReference checkRef =
+      FirebaseFirestore.instance.collection('checks');
   SnackbarService? _snackbarService = locator<SnackbarService>();
   CustomDialogService _customDialogService = locator<CustomDialogService>();
   PostDataService _postDataService = locator<PostDataService>();
-  FirebaseStorageService _firebaseStorageService = locator<FirebaseStorageService>();
+  FirebaseStorageService _firebaseStorageService =
+      locator<FirebaseStorageService>();
 
   Future checkIfCauseExists(String id) async {
     bool exists = false;
@@ -31,7 +34,11 @@ class CauseDataService {
     return exists;
   }
 
-  Future<bool> createCause({required GoCause cause, required File? img1, required File? img2, required File? img3}) async {
+  Future<bool> createCause(
+      {required GoCause cause,
+      required File? img1,
+      required File? img2,
+      required File? img3}) async {
     bool created = true;
     mail();
 
@@ -72,7 +79,7 @@ class CauseDataService {
     }
 
     mail(id: cause.id);
-
+    cause.approved = true;
     await causeRef.doc(cause.id).set(cause.toMap()).catchError((e) {
       _customDialogService.showErrorDialog(description: e.message);
       created = false;
@@ -80,7 +87,11 @@ class CauseDataService {
     return created;
   }
 
-  Future<bool> updateCause({required GoCause cause, required File? img1, required File? img2, required File? img3}) async {
+  Future<bool> updateCause(
+      {required GoCause cause,
+      required File? img1,
+      required File? img2,
+      required File? img3}) async {
     bool updated = true;
     mail();
 
@@ -190,7 +201,8 @@ class CauseDataService {
 
   Future followUnfollowCause(String? causeID, String? uid) async {
     GoCause? cause;
-    DocumentSnapshot snapshot = await causeRef.doc(causeID).get().catchError((e) {
+    DocumentSnapshot snapshot =
+        await causeRef.doc(causeID).get().catchError((e) {
       return e.message;
     });
     if (snapshot.exists) {
@@ -216,7 +228,8 @@ class CauseDataService {
 
   reportCause({required String? causeID, required String? reporterID}) async {
     String? error;
-    DocumentSnapshot snapshot = await causeRef.doc(causeID).get().catchError((e) {
+    DocumentSnapshot snapshot =
+        await causeRef.doc(causeID).get().catchError((e) {
       _customDialogService.showErrorDialog(description: e.message);
       error = e.message;
     });
@@ -224,14 +237,20 @@ class CauseDataService {
       return;
     }
     if (snapshot.exists) {
-      List reportedBy = snapshot.data()!['reportedBy'] == null ? [] : snapshot.data()!['reportedBy'].toList(growable: true);
+      List reportedBy = snapshot.data()!['reportedBy'] == null
+          ? []
+          : snapshot.data()!['reportedBy'].toList(growable: true);
       if (reportedBy.contains(reporterID)) {
-        _customDialogService.showErrorDialog(description: "You've already reported this cause. This cause is currently pending review.");
+        _customDialogService.showErrorDialog(
+            description:
+                "You've already reported this cause. This cause is currently pending review.");
         return;
       } else {
         reportedBy.add(reporterID);
         causeRef.doc(causeID).update({"reportedBy": reportedBy});
-        _customDialogService.showSuccessDialog(title: 'Cause Reported', description: "This cause is now pending review");
+        _customDialogService.showSuccessDialog(
+            title: 'Cause Reported',
+            description: "This cause is now pending review");
         return;
       }
     }
@@ -240,7 +259,8 @@ class CauseDataService {
   //Checklist
   Future<List<GoCheckListItem>> getCheckListItems(String? causeID) async {
     List<GoCheckListItem> causeCheckListItems = [];
-    QuerySnapshot snapshot = await checkRef.where("causeID", isEqualTo: causeID).get();
+    QuerySnapshot snapshot =
+        await checkRef.where("causeID", isEqualTo: causeID).get();
     if (snapshot.docs.isNotEmpty) {
       snapshot.docs.forEach((doc) {
         GoCheckListItem item = GoCheckListItem.fromMap(doc.data());
@@ -250,16 +270,19 @@ class CauseDataService {
     return causeCheckListItems;
   }
 
-  Future<bool> updateCheckListItems({String? causeID, required List<GoCheckListItem> items}) async {
+  Future<bool> updateCheckListItems(
+      {String? causeID, required List<GoCheckListItem> items}) async {
     bool updated = true;
     //delete old instances of check list items
-    QuerySnapshot snapshot = await checkRef.where("causeID", isEqualTo: causeID).get();
+    QuerySnapshot snapshot =
+        await checkRef.where("causeID", isEqualTo: causeID).get();
     if (snapshot.docs.isNotEmpty) {
       snapshot.docs.forEach((doc) async {
         await checkRef.doc(doc.id).delete().catchError((e) {
           _snackbarService!.showSnackbar(
             title: 'Action List Submission Error',
-            message: "There was an issues submitting your checklist. Please try again.",
+            message:
+                "There was an issues submitting your checklist. Please try again.",
             duration: Duration(seconds: 5),
           );
           return false;
@@ -271,7 +294,8 @@ class CauseDataService {
       await checkRef.doc(item.id).set(item.toMap()).catchError((e) {
         _snackbarService!.showSnackbar(
           title: 'Action List Submission Error',
-          message: "There was an issues submitting your checklist. Please try again.",
+          message:
+              "There was an issues submitting your checklist. Please try again.",
           duration: Duration(seconds: 5),
         );
         return false;
@@ -281,7 +305,9 @@ class CauseDataService {
   }
 
   Future<bool> checkOffCheckListItem({String? id, List? checkedOffBy}) async {
-    await checkRef.doc(id).update({'checkedOffBy': checkedOffBy}).catchError((e) {
+    await checkRef
+        .doc(id)
+        .update({'checkedOffBy': checkedOffBy}).catchError((e) {
       _snackbarService!.showSnackbar(
         title: 'Error',
         message: "There was an issues signing off this item. Please try again.",
@@ -298,7 +324,10 @@ class CauseDataService {
     required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = causeRef.where('approved', isEqualTo: true).orderBy('followerCount', descending: true).limit(resultsLimit);
+    Query query = causeRef
+        .where('approved', isEqualTo: true)
+        .orderBy('followerCount', descending: true)
+        .limit(resultsLimit);
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
         title: 'Error',
@@ -320,7 +349,11 @@ class CauseDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = causeRef.where('approved', isEqualTo: true).orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    query = causeRef
+        .where('approved', isEqualTo: true)
+        .orderBy('followerCount', descending: true)
+        .startAfterDocument(lastDocSnap)
+        .limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
@@ -342,8 +375,11 @@ class CauseDataService {
   }) async {
     List<DocumentSnapshot> docs = [];
     String? error;
-    Query query =
-        causeRef.where('approved', isEqualTo: true).where('followers', arrayContains: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
+    Query query = causeRef
+        .where('approved', isEqualTo: true)
+        .where('followers', arrayContains: uid)
+        .orderBy('followerCount', descending: true)
+        .limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       error = e.message;
@@ -394,7 +430,11 @@ class CauseDataService {
     required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = causeRef.where("approved", isEqualTo: true).where('creatorID', isEqualTo: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
+    Query query = causeRef
+        .where("approved", isEqualTo: true)
+        .where('creatorID', isEqualTo: uid)
+        .orderBy('followerCount', descending: true)
+        .limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
@@ -444,7 +484,10 @@ class CauseDataService {
     required int resultsLimit,
   }) async {
     List<DocumentSnapshot> docs = [];
-    Query query = causeRef.where('creatorID', isEqualTo: uid).orderBy('followerCount', descending: true).limit(resultsLimit);
+    Query query = causeRef
+        .where('creatorID', isEqualTo: uid)
+        .orderBy('followerCount', descending: true)
+        .limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
@@ -468,7 +511,11 @@ class CauseDataService {
   }) async {
     Query query;
     List<DocumentSnapshot> docs = [];
-    query = causeRef.where('creatorID', isEqualTo: uid).orderBy('followerCount', descending: true).startAfterDocument(lastDocSnap).limit(resultsLimit);
+    query = causeRef
+        .where('creatorID', isEqualTo: uid)
+        .orderBy('followerCount', descending: true)
+        .startAfterDocument(lastDocSnap)
+        .limit(resultsLimit);
 
     QuerySnapshot snapshot = await query.get().catchError((e) {
       _snackbarService!.showSnackbar(
@@ -486,14 +533,18 @@ class CauseDataService {
   Future deleteCause(String? id) async {
     //first you have to delet the posts in this cause, so get all the posts
     //where the cause ID is the same as this
-    QuerySnapshot posts = await FirebaseFirestore.instance.collection('posts').where('causeID', isEqualTo: id).get();
+    QuerySnapshot posts = await FirebaseFirestore.instance
+        .collection('posts')
+        .where('causeID', isEqualTo: id)
+        .get();
 
     for (int i = 0; i < posts.docs.length; i++) {
       _postDataService.deletePost(posts.docs[i].reference.id);
     }
 
     //delete the cause and the images associated with it
-    await FirebaseFirestore.instance.runTransaction((Transaction deleteTransaction) async {
+    await FirebaseFirestore.instance
+        .runTransaction((Transaction deleteTransaction) async {
       GoCause cause = await getCauseByID(id);
       List imageURLs = cause.imageURLs!;
       imageURLs.forEach((url) {

@@ -28,7 +28,8 @@ class CustomBottomSheetService {
   ShareService _shareService = locator<ShareService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
   PostDataService _postDataService = locator<PostDataService>();
-  CustomNavigationService _customNavigationService = locator<CustomNavigationService>();
+  CustomNavigationService _customNavigationService =
+      locator<CustomNavigationService>();
 
   Future<String?> showImageSelectorBottomSheet() async {
     String? source;
@@ -108,15 +109,18 @@ class CustomBottomSheetService {
       if (res == "edit") {
         if (content is GoCause) {
           //edit cause
-          _navigationService.navigateTo(Routes.CreateCauseViewRoute(id: content.id));
+          _navigationService
+              .navigateTo(Routes.CreateCauseViewRoute(id: content.id));
         } else if (content is GoForumPost) {
           //edit post
-          _navigationService.navigateTo(Routes.CreateForumPostViewRoute(causeID: content.causeID, id: content.id));
+          _navigationService.navigateTo(Routes.CreateForumPostViewRoute(
+              causeID: content.causeID, id: content.id));
         }
       } else if (res == "share") {
         if (content is GoCause) {
           //share cause link
-          String url = await _dynamicLinkService.createCauseLink(cause: content);
+          String url =
+              await _dynamicLinkService.createCauseLink(cause: content);
           _shareService.shareLink(url);
         } else if (content is GoForumPost) {
           //share post link
@@ -126,10 +130,28 @@ class CustomBottomSheetService {
       } else if (res == "report") {
         if (content is GoCause) {
           //report cause
-          _causeDataService.reportCause(causeID: content.id, reporterID: user.id);
+          if (user.id == content.creatorID) {
+            bool deletedContent =
+                await deleteContentConfirmation(content: content);
+            if (deletedContent) {
+              return "deleted content";
+            }
+          } else {
+            _causeDataService.reportCause(
+                causeID: content.id, reporterID: user.id);
+          }
         } else if (content is GoForumPost) {
           //report post
-          _postDataService.reportPost(postID: content.id, reporterID: user.id);
+          if (user.id == content.authorID) {
+            bool deletedContent =
+                await deleteContentConfirmation(content: content);
+            if (deletedContent) {
+              return "deleted content";
+            }
+          } else {
+            _postDataService.reportPost(
+                postID: content.id, reporterID: user.id);
+          }
         }
       } else if (res == "delete") {
         //delete content

@@ -141,7 +141,7 @@ class CauseBlockView extends StatelessWidget {
             TextSpan(
               text: model.creatorUsername,
               style: TextStyle(color: appTextButtonColor()),
-              recognizer: TapGestureRecognizer()..onTap = () => model.navigateToUserView(cause!.creatorID),
+              recognizer: TapGestureRecognizer()..onTap = () => model.customNavigationService.navigateToUserView(cause.creatorID!),
             ),
           ],
         ),

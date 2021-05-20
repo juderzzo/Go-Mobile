@@ -170,6 +170,8 @@ class CreateCauseViewModel extends BaseViewModel {
       formError = "Please describe who you are in regards to this cause";
     } else if (isValidString(cause.charityURL) && !UrlHandler().isValidUrl(cause.charityURL!)) {
       formError = "Please provide a valid URL your cause";
+    } else if (img1 == null && img2 == null && img3 == null && cause.videoLink == null){
+      formError = "Please provide atleast one image or youtube video for your cause";
     } else if (cause.videoLink != null && !(cause.videoLink!.length < 2)) {
       if (YoutubePlayer.convertUrlToId(cause.videoLink!) == null) {
         formError = "Please provide a valid youtube link or leave the field blank";

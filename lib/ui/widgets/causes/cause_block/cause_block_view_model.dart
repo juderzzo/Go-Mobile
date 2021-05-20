@@ -10,6 +10,7 @@ import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/dynamic_links/dynamic_link_service.dart';
 import 'package:go/services/firestore/data/cause_data_service.dart';
 import 'package:go/services/firestore/data/user_data_service.dart';
+import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/services/share/share_service.dart';
 import 'package:stacked/stacked.dart';
@@ -25,7 +26,10 @@ class CauseBlockViewModel extends BaseViewModel {
   DynamicLinkService? _dynamicLinkService = locator<DynamicLinkService>();
   ShareService? _shareService = locator<ShareService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
-  CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
+  CustomBottomSheetService customBottomSheetService =
+      locator<CustomBottomSheetService>();
+  CustomNavigationService customNavigationService =
+      locator<CustomNavigationService>();
   GoUser get user => _reactiveUserService.user;
 
   String? creatorUsername;
@@ -59,7 +63,6 @@ class CauseBlockViewModel extends BaseViewModel {
         );
         orgLength++;
       });
-      
 
       //configure youtube player
       videoID = YoutubePlayer.convertUrlToId(cause.videoLink!);
