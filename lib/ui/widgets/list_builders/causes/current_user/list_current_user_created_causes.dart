@@ -19,8 +19,8 @@ class ListCurrentUserCreatedCauses extends StatelessWidget {
           : model.dataResults.isEmpty
               ? ZeroStateView(
                   imageAssetName: "coding",
-                  header: "You Have Not Created Any Causes",
-                  subHeader: "Start a Movement and Create a Cause",
+                  header: "You Have Not Followed Any Causes",
+                  subHeader: null,
                   mainActionButtonTitle: "Create Cause",
                   mainAction: () => model.customNavigationService.navigateToCreateCauseView("new"),
                   secondaryActionButtonTitle: null,

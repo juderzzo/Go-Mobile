@@ -8,7 +8,7 @@ import 'package:go/ui/widgets/common/custom_text.dart';
 class ZeroStateView extends StatelessWidget {
   final String imageAssetName;
   final String header;
-  final String subHeader;
+  final String? subHeader;
   final String? mainActionButtonTitle;
   final VoidCallback? mainAction;
   final String? secondaryActionButtonTitle;
@@ -17,7 +17,7 @@ class ZeroStateView extends StatelessWidget {
   ZeroStateView({
     required this.imageAssetName,
     required this.header,
-    required this.subHeader,
+    this.subHeader,
     this.mainActionButtonTitle,
     this.mainAction,
     this.secondaryActionButtonTitle,
@@ -50,8 +50,9 @@ class ZeroStateView extends StatelessWidget {
           verticalSpaceMedium,
           CustomText(text: header, fontSize: 18, fontWeight: FontWeight.bold, color: appFontColor()),
           verticalSpaceTiny,
+          subHeader == null ? Container():
           CustomText(text: subHeader, fontSize: 14, fontWeight: FontWeight.w400, color: appFontColor()),
-          verticalSpaceMedium,
+          verticalSpaceSmall,
           mainAction == null
               ? Container()
               : CustomButton(

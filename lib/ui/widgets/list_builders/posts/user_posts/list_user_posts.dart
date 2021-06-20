@@ -21,7 +21,7 @@ class ListUserPosts extends StatelessWidget {
           : model.dataResults.isEmpty
               ? ZeroStateView(
                   imageAssetName: "coding",
-                  header: "You have created any posts yet",
+                  header: "You have not created any posts yet",
                   subHeader: "",
                   
                 )
