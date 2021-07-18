@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "865785917892-fdfdb83pa3tqddknu44s5l54uehmmo1e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.takeoff.Goapp",
+            "certificate_hash": "f040b3229c4cec325acb5f607d447fe7470e3a0f"
+          }
+        },
+        {
           "client_id": "865785917892-bmcv977vhg0t3hos46s134oauo80kolq.apps.googleusercontent.com",
           "client_type": 3
         }
