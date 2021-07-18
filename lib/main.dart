@@ -37,6 +37,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
 
 void main() async {
   // Register all the models and services before the app starts
+
   await ThemeManager.initialise();
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,8 +63,7 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
+    DeviceOrientation.portraitDown,
   ]);
 
   runApp(GoApp());

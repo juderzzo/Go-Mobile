@@ -30,7 +30,7 @@ class OnboardingView extends StatelessWidget {
                 child: IntroductionScreen(
                   globalBackgroundColor: appBackgroundColor(),
                   key: model.introKey,
-                  freeze: true,
+                  freeze: false,
                   onChange: (val) {
                     model.updatePageNum(val);
                     if (model.pageNum == 5) {
@@ -114,7 +114,7 @@ class OnboardingPages {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              "Welcome to Go! Be the Change!",
+              "Welcome",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700),
             )
@@ -126,7 +126,7 @@ class OnboardingPages {
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 18.0, height: 1.5),
       ),
-      image: _OnboardingImage(assetName: 'coding'),
+      image: _OnboardingImage(assetName: 'go_logo_slogan'),
       decoration: pageDecoration,
     );
   }
@@ -182,7 +182,7 @@ class OnboardingPages {
           ),
         ],
       ),
-      image: _OnboardingImage(assetName: 'coding'),
+      image: _OnboardingImage(assetName: 'email'),
       decoration: pageDecoration,
     );
   }
@@ -206,7 +206,7 @@ class OnboardingPages {
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 18.0, height: 1.5),
       ),
-      image: _OnboardingImage(assetName: 'coding'),
+      image: _OnboardingImage(assetName: 'notifBell'),
       decoration: pageDecoration,
       footer: Container(
         child: Column(
@@ -268,7 +268,7 @@ class OnboardingPages {
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 18.0, height: 1.5),
       ),
-      image: _OnboardingImage(assetName: 'coding'),
+      image: _OnboardingImage(assetName: 'pinpoint'),
       decoration: pageDecoration,
       footer: Container(
         child: Column(
@@ -315,6 +315,7 @@ class OnboardingPages {
     return PageViewModel(
       decoration: finalPageDecor,
       image: Container(),
+      
       titleWidget: Column(
         children: [
           CustomText(

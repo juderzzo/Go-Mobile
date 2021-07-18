@@ -18,7 +18,7 @@ class ListHomeCauses extends StatelessWidget {
           ? Container()
           : model.dataResults.isEmpty
               ? ZeroStateView(
-                  imageAssetName: "coding",
+                  imageAssetName: "binos",
                   header: "You're Not Following Any Causes",
                   subHeader: "Explore causes you're interested in",
                   mainActionButtonTitle: "Explore Causes",

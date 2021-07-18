@@ -19,7 +19,7 @@ class ListExploreUsers extends StatelessWidget {
           ? Container()
           : model.dataResults.isEmpty
               ? ZeroStateView(
-                  imageAssetName: "coding",
+                  imageAssetName: "binos",
                   header: "No Users Found",
                   subHeader: "",
                   mainActionButtonTitle: "Create Cause",

@@ -64,7 +64,7 @@ class ZeroStateView extends StatelessWidget {
                   width: 300,
                   backgroundColor: appButtonColor(),
                   isBusy: false,
-                  elevation: 2,
+                  elevation: 12,
                 ),
           verticalSpaceMedium,
           secondaryAction == null
