@@ -19,11 +19,13 @@ class ListLikedUserPosts extends StatelessWidget {
       builder: (context, model, child) => model.isBusy
           ? Container()
           : model.dataResults.isEmpty
-              ? ZeroStateView(
-                  imageAssetName: "coding",
-                  header: "You have not liked any posts",
-                  subHeader: "",
+              ? Container(
+                child: Center(
+                  child: Text('You have not liked any posts',
+                          style: TextStyle(fontWeight: FontWeight.w700, fontSize:15)
+                  )
                 )
+              )
               : RefreshIndicator(
                   onRefresh: model.refreshData,
                   backgroundColor: appBackgroundColor(),

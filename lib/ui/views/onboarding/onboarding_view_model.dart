@@ -232,4 +232,10 @@ class OnboardingViewModel extends ReactiveViewModel {
   navigateToAppBase() {
     _navigationService.navigateTo(Routes.AppBaseViewRoute);
   }
+
+  static signOut() async {
+    CustomBottomSheetService _customBottomSheetService = locator<CustomBottomSheetService>();
+    _customBottomSheetService.showLogoutBottomSheet();
+  }
+
 }

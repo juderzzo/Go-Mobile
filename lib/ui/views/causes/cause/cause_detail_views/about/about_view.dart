@@ -120,17 +120,17 @@ class AboutView extends StatelessWidget {
           ),
           verticalSpaceMedium,
           CustomText(
-            text: cause!.resources!.length > 1 ? "Resources" : " ",
+            text: cause!.resources != null ? "Resources" : " ",
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: appFontColor(),
           ),
-          CustomText(
+          cause!.resources != null ? CustomText(
             text: cause!.resources,
             fontSize: 14,
             fontWeight: FontWeight.w400,
             color: appFontColor(),
-          ),
+          ) : Container(),
           CustomText(
             text: url != null && url.isNotEmpty ? "Donate!" : " ",
             fontSize: 16,

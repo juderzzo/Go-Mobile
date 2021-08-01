@@ -19,7 +19,7 @@ class ListExploreCauses extends StatelessWidget {
           ? Container()
           : model.dataResults.isEmpty
               ? ZeroStateView(
-                  imageAssetName: "coding",
+                  imageAssetName: "binos",
                   header: "No Causes Found",
                   subHeader: "Start a Movement and Create a Cause",
                   mainActionButtonTitle: "Create Cause",

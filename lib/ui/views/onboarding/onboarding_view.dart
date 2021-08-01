@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/views/onboarding/onboarding_view_model.dart';
+import 'package:go/ui/views/settings/settings_view_model.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/buttons/custom_text_button.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
@@ -121,10 +122,23 @@ class OnboardingPages {
           ],
         ),
       ),
-      bodyWidget: Text(
-        "Let's answer a few questions to help get you going.",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 18.0, height: 1.5),
+      bodyWidget: Column(
+        children: [
+          Text(
+            "Let's answer a few questions to help get you going.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18.0, height: 1.5),
+          ),
+
+          SizedBox(height: 50,),
+
+          TextButton(
+            child: Text("Log Out", 
+            style: TextStyle(color: Colors.red)
+            ),
+            onPressed: (){OnboardingViewModel.signOut();},
+            )
+        ],
       ),
       image: _OnboardingImage(assetName: 'go_logo_slogan'),
       decoration: pageDecoration,

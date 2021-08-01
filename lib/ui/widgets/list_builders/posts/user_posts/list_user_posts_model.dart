@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
+import 'package:go/app/app.router.dart';
 import 'package:go/models/go_user_model.dart';
 import 'package:go/services/bottom_sheets/custom_bottom_sheet_service.dart';
 import 'package:go/services/firestore/data/post_data_service.dart';
@@ -10,13 +11,14 @@ import 'package:go/services/navigation/custom_navigation_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/utils/custom_string_methods.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class ListUserPostsModel extends BaseViewModel {
   PostDataService _postDataService = locator<PostDataService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
   CustomBottomSheetService customBottomSheetService = locator<CustomBottomSheetService>();
   CustomNavigationService customNavigationService = locator<CustomNavigationService>();
-
+  NavigationService _navigationService = locator<NavigationService>();
   ///HELPERS
   ScrollController scrollController = ScrollController();
   String listKey = "initial-user-posts-created-key";
@@ -107,4 +109,10 @@ class ListUserPostsModel extends BaseViewModel {
       notifyListeners();
     }
   }
+
+  navigateToExplore(){
+    _navigationService.navigateTo(Routes.SearchViewRoute);
+  }
+
+  
 }

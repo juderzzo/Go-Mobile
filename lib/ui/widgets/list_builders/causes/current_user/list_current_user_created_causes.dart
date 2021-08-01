@@ -17,15 +17,14 @@ class ListCurrentUserCreatedCauses extends StatelessWidget {
       builder: (context, model, child) => model.isBusy
           ? Container()
           : model.dataResults.isEmpty
-              ? ZeroStateView(
-                  imageAssetName: "coding",
-                  header: "You Have Not Followed Any Causes",
-                  subHeader: null,
-                  mainActionButtonTitle: "Create Cause",
-                  mainAction: () => model.customNavigationService.navigateToCreateCauseView("new"),
-                  secondaryActionButtonTitle: null,
-                  secondaryAction: null,
+              ? 
+              Container(
+                child: Center(
+                  child: Text('You have not followed any causes',
+                          style: TextStyle(fontWeight: FontWeight.w700, fontSize:15)
                 )
+                )
+              )
               : RefreshIndicator(
                   onRefresh: model.refreshData,
                   backgroundColor: appBackgroundColor(),

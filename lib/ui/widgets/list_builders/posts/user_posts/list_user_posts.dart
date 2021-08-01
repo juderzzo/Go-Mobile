@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_forum_post_model.dart';
+import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
 import 'package:go/ui/widgets/forum_posts/forum_post_block/forum_post_block_view.dart';
@@ -19,12 +20,28 @@ class ListUserPosts extends StatelessWidget {
       builder: (context, model, child) => model.isBusy
           ? Container()
           : model.dataResults.isEmpty
-              ? ZeroStateView(
-                  imageAssetName: "coding",
-                  header: "You have not created any posts yet",
-                  subHeader: "",
+              ? Container(
+                child: Center(
+                  child: 
+                  Column(
+                    children:[
+                      Text('You have not created any posts',
+                          style: TextStyle(fontWeight: FontWeight.w700, fontSize:15)
+                      ),
+                      // CustomFlatButton(
+                      //   onTap: model.navigateToExplore(),
+                      //   fontColor: appTextButtonColor(),
+                      //   fontSize: 14,
+                      //   text: "Explore causes",
+                      //   textAlign: TextAlign.center,
+                      //   showBottomBorder: false
+                      //   ),
+                    ]
+                  )
                   
                 )
+              )
+                
               : RefreshIndicator(
                   onRefresh: model.refreshData,
                   backgroundColor: appBackgroundColor(),
