@@ -217,26 +217,7 @@ class _TextFieldHeader extends StatelessWidget {
   }
 }
 
-class _CauseNameField extends HookViewModelWidget<CreateCauseViewModel> {
-  final nameController = useTextEditingController();
 
-  @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      if (!model.loadedPreviousCauseName) {
-        nameController.text = model.loadPreviousCauseName();
-      } 
-    });
-
-    return SingleLineTextField(
-      controller: nameController,
-      hintText: "Cause Name",
-      textLimit: 75,
-      isPassword: false,
-      onChanged: (val) => model.updateCauseName(val),
-    );
-  }
-}
 
 class _CauseImage extends HookViewModelWidget<CreateCauseViewModel> {
   final int imgNum;
@@ -293,20 +274,39 @@ class _CauseImage extends HookViewModelWidget<CreateCauseViewModel> {
   }
 }
 
+class _CauseNameField extends HookViewModelWidget<CreateCauseViewModel> {
+  final nameController = useTextEditingController();
+
+  @override
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (!model.loadedPreviousCauseName) {
+        nameController.text = model.loadPreviousCauseName();
+      } 
+    });
+
+    return SingleLineTextField(
+      controller: nameController,
+      hintText: "Cause Name",
+      textLimit: 75,
+      isPassword: false,
+      onChanged: (val) => model.updateCauseName(val),
+    );
+  }
+}
+
+
 
 class _CauseGoalsField extends HookViewModelWidget<CreateCauseViewModel> {
-  
+  final goalsController = useTextEditingController();
   
   @override
-  
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    TextEditingController goalsController = TextEditingController();
-  
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseGoal) {
         goalsController.text = model.loadPreviousCauseGoal();
       }
-     // print(model.causeGoal);
+    
     });
 
     return MultiLineTextField(
@@ -322,9 +322,11 @@ class _CauseGoalsField extends HookViewModelWidget<CreateCauseViewModel> {
 
 
 class _CauseWhyField extends HookViewModelWidget<CreateCauseViewModel> {
+  final whyController = useTextEditingController();
+
   @override
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    final whyController = useTextEditingController();
+    
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseWhy) {
@@ -344,9 +346,11 @@ class _CauseWhyField extends HookViewModelWidget<CreateCauseViewModel> {
 }
 
 class _CauseWhoField extends HookViewModelWidget<CreateCauseViewModel> {
+  final whoController = useTextEditingController();
+
   @override
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    final whoController = useTextEditingController();
+    
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseWho) {
@@ -366,9 +370,11 @@ class _CauseWhoField extends HookViewModelWidget<CreateCauseViewModel> {
 }
 
 class _CauseResourcesField extends HookViewModelWidget<CreateCauseViewModel> {
+  final resourcesController = useTextEditingController();
+
   @override
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    final resourcesController = useTextEditingController();
+    
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseResources) {
@@ -388,9 +394,11 @@ class _CauseResourcesField extends HookViewModelWidget<CreateCauseViewModel> {
 }
 
 class _CauseWebsiteField extends HookViewModelWidget<CreateCauseViewModel> {
+  final websiteController = useTextEditingController();
+
   @override
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    final websiteController = useTextEditingController();
+    
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseWebsite) {
@@ -409,9 +417,11 @@ class _CauseWebsiteField extends HookViewModelWidget<CreateCauseViewModel> {
 }
 
 class _CauseVideoLinkField extends HookViewModelWidget<CreateCauseViewModel> {
+  final videoLinkController = useTextEditingController();
+  
   @override
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    final videoLinkController = useTextEditingController();
+    
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseVideoLink) {

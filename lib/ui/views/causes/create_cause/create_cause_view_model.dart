@@ -76,7 +76,6 @@ class CreateCauseViewModel extends BaseViewModel {
   String loadPreviousCauseName() {
     loadedPreviousCauseName = true;
     notifyListeners();
-    print(cause.name.runtimeType);
     return cause.name ?? "";
     
   }
@@ -86,6 +85,8 @@ class CreateCauseViewModel extends BaseViewModel {
     notifyListeners();
     return cause.goal ?? "";
   }
+
+  
 
   String loadPreviousCauseWhy() {
     loadedPreviousCauseWhy = true;
