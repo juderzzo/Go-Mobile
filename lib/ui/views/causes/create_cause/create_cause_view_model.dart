@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_cause_model.dart';
 import 'package:go/models/go_user_model.dart';
@@ -45,6 +46,8 @@ class CreateCauseViewModel extends BaseViewModel {
   bool loadedPreviousCauseWebsite = false;
   bool loadedPreviousCauseVideoLink = false;
 
+ 
+
   initialize(String id) async {
     setBusy(true);
     if (id != "new") {
@@ -64,7 +67,7 @@ class CreateCauseViewModel extends BaseViewModel {
     } else {
       cause = GoCause().generateNewCause(creatorID: user.id!);
     }
-    print(cause.toMap());
+    // print(cause.toMap());
     notifyListeners();
     setBusy(false);
   }
@@ -73,7 +76,9 @@ class CreateCauseViewModel extends BaseViewModel {
   String loadPreviousCauseName() {
     loadedPreviousCauseName = true;
     notifyListeners();
+    print(cause.name.runtimeType);
     return cause.name ?? "";
+    
   }
 
   String loadPreviousCauseGoal() {

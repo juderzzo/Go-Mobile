@@ -50,6 +50,7 @@ class CreateCauseView extends StatelessWidget {
 class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
   @override
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    
     return Container(
       child: ListView(
         shrinkWrap: true,
@@ -217,15 +218,14 @@ class _TextFieldHeader extends StatelessWidget {
 }
 
 class _CauseNameField extends HookViewModelWidget<CreateCauseViewModel> {
+  final nameController = useTextEditingController();
+
   @override
   Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    final nameController = useTextEditingController();
-
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseName) {
         nameController.text = model.loadPreviousCauseName();
-        print(nameController.text);
-      }
+      } 
     });
 
     return SingleLineTextField(
@@ -293,15 +293,20 @@ class _CauseImage extends HookViewModelWidget<CreateCauseViewModel> {
   }
 }
 
-class _CauseGoalsField extends HookViewModelWidget<CreateCauseViewModel> {
-  @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    final goalsController = useTextEditingController();
 
+class _CauseGoalsField extends HookViewModelWidget<CreateCauseViewModel> {
+  
+  
+  @override
+  
+  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+    TextEditingController goalsController = TextEditingController();
+  
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseGoal) {
         goalsController.text = model.loadPreviousCauseGoal();
       }
+     // print(model.causeGoal);
     });
 
     return MultiLineTextField(
@@ -314,6 +319,7 @@ class _CauseGoalsField extends HookViewModelWidget<CreateCauseViewModel> {
     );
   }
 }
+
 
 class _CauseWhyField extends HookViewModelWidget<CreateCauseViewModel> {
   @override
