@@ -49,8 +49,8 @@ class CreateCauseView extends StatelessWidget {
 
 class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     return Container(
       child: ListView(
         shrinkWrap: true,
@@ -69,7 +69,8 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
           ///CAUSE IMAGES
           _TextFieldHeader(
             header: "*Images",
-            subHeader: "Select up to three images for your cause. The leftmost image is required, and will be your title image",
+            subHeader:
+                "Select up to three images for your cause. The leftmost image is required, and will be your title image",
           ),
           verticalSpaceSmall,
           Row(
@@ -85,7 +86,8 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
           ///GOALS FOR CAUSE
           _TextFieldHeader(
             header: "*Goals",
-            subHeader: "What are the goals of your cause? What are you fighting for?",
+            subHeader:
+                "What are the goals of your cause? What are you fighting for?",
           ),
           verticalSpaceSmall,
           _CauseGoalsField(),
@@ -103,7 +105,8 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
           ///WHO CREATED THIS CAUSE
           _TextFieldHeader(
             header: "*Who Are You?",
-            subHeader: "Who are you as a changemaker? What is your experience in the fight for this cause?",
+            subHeader:
+                "Who are you as a changemaker? What is your experience in the fight for this cause?",
           ),
           verticalSpaceSmall,
           _CauseWhoField(),
@@ -112,7 +115,8 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
           ///CAUSE RESOURCES
           _TextFieldHeader(
             header: "Resources",
-            subHeader: "Are there additional resources for anyone looking to learn more about your cause?\n"
+            subHeader:
+                "Are there additional resources for anyone looking to learn more about your cause?\n"
                 "(e.g., websites, books, articles, videos, etc.)",
           ),
           verticalSpaceSmall,
@@ -122,7 +126,8 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
           ///CHARITY LINK
           _TextFieldHeader(
             header: "Charity",
-            subHeader: "Would you like to raise funds for this cause using Go!'s platform? If so, please provide a link to the charity of your choice.",
+            subHeader:
+                "Would you like to raise funds for this cause using Go!'s platform? If so, please provide a link to the charity of your choice.",
           ),
           verticalSpaceSmall,
           _CauseWebsiteField(),
@@ -131,7 +136,8 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
           ///CAUSE TASKS
           _TextFieldHeader(
             header: "Youtube Link",
-            subHeader: "If you feel your cause would be supported by a short video on youtube, please link it here for display",
+            subHeader:
+                "If you feel your cause would be supported by a short video on youtube, please link it here for display",
           ),
 
           verticalSpaceSmall,
@@ -141,7 +147,8 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
           ///CAUSE MONETIZATION
           _TextFieldHeader(
             header: "Monetization",
-            subHeader: "If you would like to monetize your cause by allowing users to watch advertisements, turn the switch to on",
+            subHeader:
+                "If you would like to monetize your cause by allowing users to watch advertisements, turn the switch to on",
           ),
           verticalSpaceSmall,
 
@@ -150,7 +157,12 @@ class _CauseForm extends HookViewModelWidget<CreateCauseViewModel> {
           verticalSpaceMedium,
 
           model.cause.monetized!
-              ? Center(child: Text("On", style: TextStyle(color: CustomColors.goGreen, fontSize: 20, fontWeight: FontWeight.bold)))
+              ? Center(
+                  child: Text("On",
+                      style: TextStyle(
+                          color: CustomColors.goGreen,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)))
               : Center(
                   child: Text(
                     "Off",
@@ -217,8 +229,6 @@ class _TextFieldHeader extends StatelessWidget {
   }
 }
 
-
-
 class _CauseImage extends HookViewModelWidget<CreateCauseViewModel> {
   final int imgNum;
   _CauseImage({required this.imgNum});
@@ -228,41 +238,100 @@ class _CauseImage extends HookViewModelWidget<CreateCauseViewModel> {
   final double width = 110;
 
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
+    print(model.cause.imageURLs);
+    print(model.img1);
+    print(model.img2);
+    print(model.img3);
     return model.isEditing
-        ? (imgNum == 1 && model.img1 != null) || (imgNum == 2 && model.img2 != null) || (imgNum == 3 && model.img3 != null)
-            ? CauseImgPreview(
-                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
-                height: height,
-                width: width,
-                file: imgNum == 1
-                    ? model.img1
-                    : imgNum == 2
-                        ? model.img2
-                        : model.img3,
+        ? (imgNum == 1 && model.img1 != null) ||
+                (imgNum == 2 && model.img2 != null) ||
+                (imgNum == 3 && model.img3 != null)
+            ? Container(
+                child: Stack(
+                  alignment: Alignment(
+                    1.2,-2.8
+                  ),
+                  children: [
+                   
+                      CauseImgPreview(
+                        onTap: () => model.selectImage(
+                            context: context,
+                            imgNum: imgNum,
+                            ratioX: width,
+                            ratioY: height),
+                        height: height,
+                        width: width,
+                        file: imgNum == 1
+                            ? model.img1
+                            : imgNum == 2
+                                ? model.img2
+                                : model.img3,
+                      ),
+                    
+                    IconButton(
+                        icon: Icon(Icons.highlight_remove, color: CustomColors.goGreen,),
+                        onPressed:
+                            imgNum == 2 ? model.removeImg2 : model.removeImg3),
+                  ],
+                ),
               )
             : model.cause.imageURLs!.length < imgNum
                 ? AddImageButton(
-                    onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                    onTap: () => model.selectImage(
+                        context: context,
+                        imgNum: imgNum,
+                        ratioX: width,
+                        ratioY: height),
                     iconSize: iconSize,
                     height: height,
                     width: width,
                   )
-                : CauseImgPreview(
-                    onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
-                    height: height,
-                    width: width,
-                    imgURL: model.cause.imageURLs![imgNum - 1],
+                : Container(
+                    child: Stack(
+                      alignment: Alignment(
+                        1.2,-2.8
+                      ),
+                      children: [
+                        CauseImgPreview(
+                          onTap: () => model.selectImage(
+                              context: context,
+                              imgNum: imgNum,
+                              ratioX: width,
+                              ratioY: height),
+                          height: height,
+                          width: width,
+                          imgURL: model.cause.imageURLs![imgNum - 1],
+                        ),
+                        imgNum != 1
+                            ? IconButton(
+                                icon: Icon(Icons.highlight_remove, color: CustomColors.goGreen,),
+                                onPressed: imgNum == 2 ? model.removeImg2 : model.removeImg3
+                                )
+                            : Container(),
+                      ],
+                    ),
                   )
-        : (imgNum == 1 && model.img1 == null) || (imgNum == 2 && model.img2 == null) || (imgNum == 3 && model.img3 == null)
+        : (imgNum == 1 && model.img1 == null) ||
+                (imgNum == 2 && model.img2 == null) ||
+                (imgNum == 3 && model.img3 == null)
             ? AddImageButton(
-                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                onTap: () => model.selectImage(
+                    context: context,
+                    imgNum: imgNum,
+                    ratioX: width,
+                    ratioY: height),
                 iconSize: iconSize,
                 height: height,
                 width: width,
               )
             : CauseImgPreview(
-                onTap: () => model.selectImage(context: context, imgNum: imgNum, ratioX: width, ratioY: height),
+                onTap: () => model.selectImage(
+                    context: context,
+                    imgNum: imgNum,
+                    ratioX: width,
+                    ratioY: height),
                 height: height,
                 width: width,
                 file: imgNum == 1
@@ -278,11 +347,12 @@ class _CauseNameField extends HookViewModelWidget<CreateCauseViewModel> {
   final nameController = useTextEditingController();
 
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseName) {
         nameController.text = model.loadPreviousCauseName();
-      } 
+      }
     });
 
     return SingleLineTextField(
@@ -295,18 +365,16 @@ class _CauseNameField extends HookViewModelWidget<CreateCauseViewModel> {
   }
 }
 
-
-
 class _CauseGoalsField extends HookViewModelWidget<CreateCauseViewModel> {
   final goalsController = useTextEditingController();
-  
+
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseGoal) {
         goalsController.text = model.loadPreviousCauseGoal();
       }
-    
     });
 
     return MultiLineTextField(
@@ -320,14 +388,12 @@ class _CauseGoalsField extends HookViewModelWidget<CreateCauseViewModel> {
   }
 }
 
-
 class _CauseWhyField extends HookViewModelWidget<CreateCauseViewModel> {
   final whyController = useTextEditingController();
 
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    
-
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseWhy) {
         whyController.text = model.loadPreviousCauseWhy();
@@ -349,9 +415,8 @@ class _CauseWhoField extends HookViewModelWidget<CreateCauseViewModel> {
   final whoController = useTextEditingController();
 
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    
-
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseWho) {
         whoController.text = model.loadPreviousCauseWho();
@@ -373,9 +438,8 @@ class _CauseResourcesField extends HookViewModelWidget<CreateCauseViewModel> {
   final resourcesController = useTextEditingController();
 
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    
-
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseResources) {
         resourcesController.text = model.loadPreviousCauseResources();
@@ -397,9 +461,8 @@ class _CauseWebsiteField extends HookViewModelWidget<CreateCauseViewModel> {
   final websiteController = useTextEditingController();
 
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    
-
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseWebsite) {
         websiteController.text = model.loadPreviousCauseWebsite();
@@ -418,11 +481,10 @@ class _CauseWebsiteField extends HookViewModelWidget<CreateCauseViewModel> {
 
 class _CauseVideoLinkField extends HookViewModelWidget<CreateCauseViewModel> {
   final videoLinkController = useTextEditingController();
-  
-  @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
-    
 
+  @override
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!model.loadedPreviousCauseVideoLink) {
         videoLinkController.text = model.loadPreviousCauseVideoLink();
@@ -439,9 +501,11 @@ class _CauseVideoLinkField extends HookViewModelWidget<CreateCauseViewModel> {
   }
 }
 
-class _CauseMonetizationField extends HookViewModelWidget<CreateCauseViewModel> {
+class _CauseMonetizationField
+    extends HookViewModelWidget<CreateCauseViewModel> {
   @override
-  Widget buildViewModelWidget(BuildContext context, CreateCauseViewModel model) {
+  Widget buildViewModelWidget(
+      BuildContext context, CreateCauseViewModel model) {
     return Container(
       width: 200.0,
       child: Switch(

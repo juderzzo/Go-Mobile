@@ -20,9 +20,11 @@ class CreateCauseViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   CauseDataService _causeDataService = locator<CauseDataService>();
-  CustomBottomSheetService _customBottomSheetService = locator<CustomBottomSheetService>();
+  CustomBottomSheetService _customBottomSheetService =
+      locator<CustomBottomSheetService>();
   ReactiveUserService _reactiveUserService = locator<ReactiveUserService>();
-  PermissionHandlerService _permissionHandlerService = locator<PermissionHandlerService>();
+  PermissionHandlerService _permissionHandlerService =
+      locator<PermissionHandlerService>();
 
   GoUser get user => _reactiveUserService.user;
 
@@ -45,8 +47,6 @@ class CreateCauseViewModel extends BaseViewModel {
   bool loadedPreviousCauseResources = false;
   bool loadedPreviousCauseWebsite = false;
   bool loadedPreviousCauseVideoLink = false;
-
- 
 
   initialize(String id) async {
     setBusy(true);
@@ -72,12 +72,37 @@ class CreateCauseViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  removeImg2() {
+    if (cause.imageURLs!.length == 3) {
+      cause.imageURLs![1] = cause.imageURLs![2];
+      cause.imageURLs!.removeLast();
+      img3 = null;
+    } else {
+      //length of 2
+      if (cause.imageURLs!.length == 2) {
+        cause.imageURLs!.removeLast();
+        
+      }
+      
+      img2 = null;
+    }
+
+    notifyListeners();
+  }
+
+  removeImg3() {
+    if (cause.imageURLs!.length == 3) {
+      cause.imageURLs!.removeLast();
+    }
+    img3 = null;
+    notifyListeners();
+  }
+
   ///LOAD PREVIOUS DATA FOR EDITING
   String loadPreviousCauseName() {
     loadedPreviousCauseName = true;
     notifyListeners();
     return cause.name ?? "";
-    
   }
 
   String loadPreviousCauseGoal() {
@@ -85,8 +110,6 @@ class CreateCauseViewModel extends BaseViewModel {
     notifyListeners();
     return cause.goal ?? "";
   }
-
-  
 
   String loadPreviousCauseWhy() {
     loadedPreviousCauseWhy = true;
@@ -174,13 +197,20 @@ class CreateCauseViewModel extends BaseViewModel {
       formError = "Please describe why your cause is important";
     } else if (!isValidString(cause.who)) {
       formError = "Please describe who you are in regards to this cause";
-    } else if (isValidString(cause.charityURL) && !UrlHandler().isValidUrl(cause.charityURL!)) {
+    } else if (isValidString(cause.charityURL) &&
+        !UrlHandler().isValidUrl(cause.charityURL!)) {
       formError = "Please provide a valid URL your cause";
-    } else if (img1 == null && img2 == null && img3 == null && cause.videoLink == null){
-      formError = "Please provide atleast one image or youtube video for your cause";
+    } else if (img1 == null &&
+        img2 == null &&
+        img3 == null &&
+        cause.videoLink == null &&
+        cause.imageURLs!.length == 0) {
+      formError =
+          "Please provide atleast one image or youtube video for your cause";
     } else if (cause.videoLink != null && !(cause.videoLink!.length < 2)) {
       if (YoutubePlayer.convertUrlToId(cause.videoLink!) == null) {
-        formError = "Please provide a valid youtube link or leave the field blank";
+        formError =
+            "Please provide a valid youtube link or leave the field blank";
       }
     }
     if (formError != null) {
@@ -195,9 +225,11 @@ class CreateCauseViewModel extends BaseViewModel {
     } else {
       bool uploaded = true;
       if (isEditing) {
-        uploaded = await _causeDataService.updateCause(cause: cause, img1: img1, img2: img2, img3: img3);
+        uploaded = await _causeDataService.updateCause(
+            cause: cause, img1: img1, img2: img2, img3: img3);
       } else {
-        uploaded = await _causeDataService.createCause(cause: cause, img1: img1, img2: img2, img3: img3);
+        uploaded = await _causeDataService.createCause(
+            cause: cause, img1: img1, img2: img2, img3: img3);
       }
 
       isUploading = false;
@@ -210,21 +242,30 @@ class CreateCauseViewModel extends BaseViewModel {
   }
 
   ///BOTTOM SHEETS
-  selectImage({required BuildContext context, int? imgNum, double? ratioX, double? ratioY}) async {
+  selectImage(
+      {required BuildContext context,
+      int? imgNum,
+      double? ratioX,
+      double? ratioY}) async {
     File? img;
     FocusScope.of(context).requestFocus(FocusNode());
-    String? source = await _customBottomSheetService.showImageSelectorBottomSheet();
+    String? source =
+        await _customBottomSheetService.showImageSelectorBottomSheet();
     if (source != null) {
       //get image from camera or gallery
       if (source == "camera") {
-        bool hasCameraPermission = await _permissionHandlerService.hasCameraPermission();
+        bool hasCameraPermission =
+            await _permissionHandlerService.hasCameraPermission();
         if (hasCameraPermission) {
-          img = await GoImagePicker().retrieveImageFromCamera(ratioX: 1, ratioY: 1);
+          img = await GoImagePicker()
+              .retrieveImageFromCamera(ratioX: 1, ratioY: 1);
         }
       } else if (source == "gallery") {
-        bool hasPhotosPermission = await _permissionHandlerService.hasPhotosPermission();
+        bool hasPhotosPermission =
+            await _permissionHandlerService.hasPhotosPermission();
         if (hasPhotosPermission) {
-          img = await GoImagePicker().retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
+          img = await GoImagePicker()
+              .retrieveImageFromLibrary(ratioX: 1, ratioY: 1);
         }
       }
     }
@@ -233,7 +274,13 @@ class CreateCauseViewModel extends BaseViewModel {
     } else if (imgNum == 2) {
       img2 = img;
     } else {
-      img3 = img;
+      // img num = 3 but we need to see if the 2nd is empty 
+      if(img2 == null && (cause.imageURLs!.length < 2)){
+        img2 = img;
+      } else {
+        img3 = img;
+      }
+      
     }
     notifyListeners();
   }
