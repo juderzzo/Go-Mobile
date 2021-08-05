@@ -26,6 +26,7 @@ class CheckListItemFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('right page');
     return ViewModelBuilder<CheckListItemFormViewModel>.reactive(
       initialiseSpecialViewModelsOnce: true,
       fireOnModelReadyOnce: true,
@@ -43,14 +44,17 @@ class CheckListItemFormView extends StatelessWidget {
               verticalSpaceSmall,
               _SubHeaderField(),
               verticalSpaceSmall,
-              model.requiresLocationVerification ? _LocationField() : Container(),
+              model.requiresLocationVerification
+                  ? _LocationField()
+                  : Container(),
               verticalSpaceSmall,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   model.requiresLocationVerification
                       ? CustomTextButton(
-                          onTap: () => model.toggleRequiresLocationVerification(),
+                          onTap: () =>
+                              model.toggleRequiresLocationVerification(),
                           text: 'Remove Location',
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -66,7 +70,7 @@ class CheckListItemFormView extends StatelessWidget {
                           color: appTextButtonColor(),
                         ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 1/4,
+                    width: MediaQuery.of(context).size.width * 1 / 4,
                   ),
                   _ItemPointsDropDown(),
                 ],
@@ -101,11 +105,13 @@ class CheckListItemFormView extends StatelessWidget {
 
 class _HeaderField extends HookViewModelWidget<CheckListItemFormViewModel> {
   @override
-  Widget buildViewModelWidget(BuildContext context, CheckListItemFormViewModel model) {
+  Widget buildViewModelWidget(
+      BuildContext context, CheckListItemFormViewModel model) {
     final _textController = useTextEditingController();
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      if (model.checkListItem.isValid() && model.loadedPreviousHeader == false) {
+      if (model.checkListItem.isValid() &&
+          model.loadedPreviousHeader == false) {
         _textController.text = model.loadPreviousHeader();
       }
     });
@@ -117,7 +123,8 @@ class _HeaderField extends HookViewModelWidget<CheckListItemFormViewModel> {
       isPassword: false,
       onChanged: (val) {
         model.updateHeader(val);
-        _textController.selection = TextSelection.fromPosition(TextPosition(offset: _textController.text.length));
+        _textController.selection = TextSelection.fromPosition(
+            TextPosition(offset: _textController.text.length));
       },
     );
   }
@@ -125,11 +132,13 @@ class _HeaderField extends HookViewModelWidget<CheckListItemFormViewModel> {
 
 class _SubHeaderField extends HookViewModelWidget<CheckListItemFormViewModel> {
   @override
-  Widget buildViewModelWidget(BuildContext context, CheckListItemFormViewModel model) {
+  Widget buildViewModelWidget(
+      BuildContext context, CheckListItemFormViewModel model) {
     final _textController = useTextEditingController();
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      if (model.checkListItem.isValid() && model.loadedPreviousSubHeader == false) {
+      if (model.checkListItem.isValid() &&
+          model.loadedPreviousSubHeader == false) {
         _textController.text = model.loadPreviousSubHeader();
       }
     });
@@ -142,15 +151,18 @@ class _SubHeaderField extends HookViewModelWidget<CheckListItemFormViewModel> {
       initialValue: null,
       onChanged: (val) {
         model.updateSubHeader(val);
-        _textController.selection = TextSelection.fromPosition(TextPosition(offset: _textController.text.length));
+        _textController.selection = TextSelection.fromPosition(
+            TextPosition(offset: _textController.text.length));
       },
     );
   }
 }
 
-class _ItemPointsDropDown extends HookViewModelWidget<CheckListItemFormViewModel> {
+class _ItemPointsDropDown
+    extends HookViewModelWidget<CheckListItemFormViewModel> {
   @override
-  Widget buildViewModelWidget(BuildContext context, CheckListItemFormViewModel model) {
+  Widget buildViewModelWidget(
+      BuildContext context, CheckListItemFormViewModel model) {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,7 +186,8 @@ class _ItemPointsDropDown extends HookViewModelWidget<CheckListItemFormViewModel
               color: appTextFieldContainerColor(),
             ),
             onChanged: (val) => model.updatePoints(val!),
-            items: <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map<DropdownMenuItem<int>>((int value) {
+            items: <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                .map<DropdownMenuItem<int>>((int value) {
               return DropdownMenuItem<int>(
                 value: value,
                 child: Text("$value points"),
@@ -189,11 +202,13 @@ class _ItemPointsDropDown extends HookViewModelWidget<CheckListItemFormViewModel
 
 class _LocationField extends HookViewModelWidget<CheckListItemFormViewModel> {
   @override
-  Widget buildViewModelWidget(BuildContext context, CheckListItemFormViewModel model) {
+  Widget buildViewModelWidget(
+      BuildContext context, CheckListItemFormViewModel model) {
     final _textController = useTextEditingController();
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      if (model.checkListItem.isValid() && model.loadedPreviousSubHeader == false) {
+      if (model.checkListItem.isValid() &&
+          model.loadedPreviousSubHeader == false) {
         _textController.text = model.loadPreviousSubHeader();
       }
     });
@@ -213,7 +228,8 @@ class _LocationField extends HookViewModelWidget<CheckListItemFormViewModel> {
           autofocus: false,
         ),
         suggestionsCallback: (searchTerm) async {
-          Map<String, dynamic> res = await model.googlePlacesService!.googleSearchAutoComplete(input: searchTerm);
+          Map<String, dynamic> res = await model.googlePlacesService!
+              .googleSearchAutoComplete(input: searchTerm);
           model.setPlacesSearchResults(res);
           return model.placeSearchResults.keys.toList();
         },
@@ -221,13 +237,20 @@ class _LocationField extends HookViewModelWidget<CheckListItemFormViewModel> {
           return ListTile(
             title: Text(
               place,
-              style: TextStyle(color: appFontColor(), fontSize: 14.0, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: appFontColor(),
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500),
             ),
           );
         },
         onSuggestionSelected: (dynamic val) async {
+          print('Location selected');
           Map<String, dynamic> details = await model.getPlaceDetails(val);
-          model.updateLocation(details['lat'], details['lon'], details['address']);
+          print('chi');
+          print(details);
+          model.updateLocation(
+              details['lat'], details['lon'], details['address']);
         },
       ),
     );

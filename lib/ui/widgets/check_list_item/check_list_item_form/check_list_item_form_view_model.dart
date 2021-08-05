@@ -82,15 +82,14 @@ class CheckListItemFormViewModel extends BaseViewModel {
   Future<Map<String, dynamic>> getPlaceDetails(String place) async {
     PlatformDataService _platformDataService = locator<PlatformDataService>();
     String? googleKey = await _platformDataService.getGoogleApiKey();
-
     //set location text
     locationTextController.text = place;
     notifyListeners();
-
     //get place ID for LAT & LON
     String? placeID = placeSearchResults[place];
-    Map<String, dynamic> details = await googlePlacesService!.getDetailsFromPlaceID(placeID: placeID!);
-
+    Map<String, dynamic> details =
+        await googlePlacesService!.getDetailsFromPlaceID(placeID: placeID!);
+   
     //set place details
     details = {
       'lat': details['lat'],
@@ -112,10 +111,13 @@ class CheckListItemFormViewModel extends BaseViewModel {
 
   GoCheckListItem saveItem() {
     if (checkListItem.header == null || checkListItem.header!.isEmpty) {
-      _customDialogService.showErrorDialog(description: "Action Title Required");
+      _customDialogService.showErrorDialog(
+          description: "Action Title Required");
       return GoCheckListItem();
-    } else if (checkListItem.subHeader == null || checkListItem.subHeader!.isEmpty) {
-      _customDialogService.showErrorDialog(description: "Action Description Required");
+    } else if (checkListItem.subHeader == null ||
+        checkListItem.subHeader!.isEmpty) {
+      _customDialogService.showErrorDialog(
+          description: "Action Description Required");
       return GoCheckListItem();
     }
     return checkListItem;

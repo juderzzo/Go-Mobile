@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+//useless page
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_check_list_item.dart';
@@ -39,7 +39,8 @@ class CheckListView extends StatefulWidget {
       refreshData: refreshData);
 }
 
-class _CheckListViewState extends State<CheckListView> with SingleTickerProviderStateMixin {
+class _CheckListViewState extends State<CheckListView>
+    with SingleTickerProviderStateMixin {
   final List<GoCheckListItem>? checkListItems;
   final bool isCauseAdmin;
   final String? causeID;
@@ -151,6 +152,8 @@ class _CheckListViewState extends State<CheckListView> with SingleTickerProvider
   Widget listEvents(CheckListViewModel model) {
     List events = [];
     checkListItems!.forEach((element) {
+      print('1111');
+      print(element.address);
       if (element.lat != null) {
         events.add(element);
       }
@@ -190,10 +193,12 @@ class _CheckListViewState extends State<CheckListView> with SingleTickerProvider
         viewModelBuilder: () => CheckListViewModel(),
         onModelReady: (model) {
           model.initialize(causeID);
+          print('events');
           eventList = listEvents(model);
           announcementList = listCheckListItems(model);
         },
         builder: (context, model, child) {
+          
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
             color: appBackgroundColor(),
@@ -203,9 +208,12 @@ class _CheckListViewState extends State<CheckListView> with SingleTickerProvider
                   shrinkWrap: true,
                   children: _tabController!.index == 0
                       ? [
-                          isCauseAdmin || (model.isCreator != null && model.isCreator!)
+                          isCauseAdmin ||
+                                  (model.isCreator != null && model.isCreator!)
                               ? CustomButton(
-                                  text: checkListItems!.length > 0 ? "Update Action List" : "Create Action List",
+                                  text: checkListItems!.length > 0
+                                      ? "Update Action List"
+                                      : "Create Action List",
                                   textSize: 16,
                                   textColor: appFontColor(),
                                   height: 40,
@@ -224,28 +232,30 @@ class _CheckListViewState extends State<CheckListView> with SingleTickerProvider
                           //monetization(model),
                         ]
                       : _tabController!.index == 1
-                      ? [
-                          isCauseAdmin
-                              ? CustomButton(
-                                  text: checkListItems!.length > 0 ? "Update Action List" : "Create Action List",
-                                  textSize: 16,
-                                  textColor: appFontColor(),
-                                  height: 40,
-                                  width: 320,
-                                  backgroundColor: appButtonColor(),
-                                  elevation: 2,
-                                  isBusy: false,
-                                  onPressed: () {
-                                    model.navigateToEdit(causeID);
-                                  },
-                                )
-                              : Container(),
-                          verticalSpaceSmall,
-                          announcementList!
-                        ]
-                      : [
-                          monetization(model),
-                        ],
+                          ? [
+                              isCauseAdmin
+                                  ? CustomButton(
+                                      text: checkListItems!.length > 0
+                                          ? "Update Action List"
+                                          : "Create Action List",
+                                      textSize: 16,
+                                      textColor: appFontColor(),
+                                      height: 40,
+                                      width: 320,
+                                      backgroundColor: appButtonColor(),
+                                      elevation: 2,
+                                      isBusy: false,
+                                      onPressed: () {
+                                        model.navigateToEdit(causeID);
+                                      },
+                                    )
+                                  : Container(),
+                              verticalSpaceSmall,
+                              announcementList!
+                            ]
+                          : [
+                              monetization(model),
+                            ],
                 ),
                 Spacer(),
                 tabBar(model),

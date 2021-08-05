@@ -8,13 +8,15 @@ class GooglePlacesService {
   PlatformDataService _platformDataService = locator<PlatformDataService>();
   LocationService _locationService = locator<LocationService>();
 
-  Future<Map<String, dynamic>> googleSearchAutoComplete({required String input}) async {
+  Future<Map<String, dynamic>> googleSearchAutoComplete(
+      {required String input}) async {
     String? key = await _platformDataService.getGoogleApiKey();
     GooglePlace googlePlace = GooglePlace(key!);
     Map<String, dynamic> places = {};
 
     if (input.trim().isNotEmpty) {
-      AutocompleteResponse? response = await googlePlace.autocomplete.get(input).catchError((e) {
+      AutocompleteResponse? response =
+          await googlePlace.autocomplete.get(input).catchError((e) {
         print(e);
       });
 
@@ -26,16 +28,19 @@ class GooglePlacesService {
         });
       }
     }
-
+    print(places);
     return places;
   }
 
-  Future<Map<String, dynamic>> getDetailsFromPlaceID({required String placeID}) async {
+  Future<Map<String, dynamic>> getDetailsFromPlaceID(
+      {required String placeID}) async {
+    print('Clled');
     String? key = await _platformDataService.getGoogleApiKey();
     GooglePlace googlePlace = GooglePlace(key!);
     Map<String, dynamic> placeDetails = {};
 
-    DetailsResponse? response = await googlePlace.details.get(placeID).catchError((e) {
+    DetailsResponse? response =
+        await googlePlace.details.get(placeID).catchError((e) {
       print(e);
     });
 
@@ -43,13 +48,21 @@ class GooglePlacesService {
       DetailsResult details = response.result!;
       double lat = details.geometry!.location!.lat!;
       double lon = details.geometry!.location!.lng!;
+
       placeDetails['lat'] = lat;
       placeDetails['lon'] = lon;
+     
       placeDetails['streetAddress'] = details.formattedAddress;
-      placeDetails['cityName'] = await _locationService.getCityNameFromLatLon(lat, lon);
-      placeDetails['province'] = await _locationService.getProvinceFromLatLon(lat, lon);
-      placeDetails['areaCode'] = await _locationService.getZipFromLatLon(lat, lon);
+      // placeDetails['cityName'] =
+      //     await _locationService.getCityNameFromLatLon(lat, lon);
+      // placeDetails['province'] =
+      //     await _locationService.getProvinceFromLatLon(lat, lon);
+      // placeDetails['areaCode'] =
+      //     await _locationService.getZipFromLatLon(lat, lon);
+      
     }
+    print(placeDetails['lat']);
+    print(placeDetails.runtimeType);
 
     return placeDetails;
   }

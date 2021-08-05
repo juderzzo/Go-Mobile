@@ -57,6 +57,7 @@ class ListCauseCheckListItems extends StatelessWidget {
                             ),
                             itemCount: model.checkListItems.length,
                             itemBuilder: (context, index) {
+                              //print(model.checkListItems[index].address);
                               //show announcements if tab is 1 show events if tab is 0
                               if (_tabController.index == 0) {
                                 return model.checkListItems[index].lat != null
