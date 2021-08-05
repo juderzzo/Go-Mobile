@@ -18,7 +18,8 @@ class EditCheckListViewModel extends BaseViewModel {
   CauseDataService? _causeDataService = locator<CauseDataService>();
   SnackbarService? _snackbarService = locator<SnackbarService>();
   UserDataService? _userDataService = locator<UserDataService>();
-  NotificationDataService? _notificationDataService = locator<NotificationDataService>();
+  NotificationDataService? _notificationDataService =
+      locator<NotificationDataService>();
   CustomDialogService _customDialogService = locator<CustomDialogService>();
 
   GoCause? cause;
@@ -62,20 +63,26 @@ class EditCheckListViewModel extends BaseViewModel {
     int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
     checkListItems[itemIndex] = item;
     notifyListeners();
-    bool updatedCheckList = await _causeDataService!.updateCheckListItems(causeID: cause!.id, items: checkListItems);
+    bool updatedCheckList = await _causeDataService!
+        .updateCheckListItems(causeID: cause!.id, items: checkListItems);
     if (updatedCheckList) {
       if (send) {
         sendChecklistNotifications();
       }
-      _customDialogService.showSuccessDialog(title: "Action Saved", description: "This Action Item Has Been Saved");
+      _customDialogService.showSuccessDialog(
+          title: "Action Saved",
+          description: "This Action Item Has Been Saved");
     } else {
-      _customDialogService.showErrorDialog(description: "There was an issue saving your item. Please Try Again.");
+      _customDialogService.showErrorDialog(
+          description:
+              "There was an issue saving your item. Please Try Again.");
     }
     savingItem = false;
     notifyListeners();
   }
 
   deleteCheckListItem({required GoCheckListItem item}) {
+    print('delete checklist item');
     int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
     checkListItems.removeAt(itemIndex);
     notifyListeners();
@@ -84,8 +91,13 @@ class EditCheckListViewModel extends BaseViewModel {
   bool checkListIsValid() {
     bool isValid = true;
     int numberOfIncompleteItems = 0;
-    numberOfIncompleteItems =
-        checkListItems.where((item) => item.header == null || item.header!.isEmpty || item.subHeader == null || item.subHeader!.isEmpty).length;
+    numberOfIncompleteItems = checkListItems
+        .where((item) =>
+            item.header == null ||
+            item.header!.isEmpty ||
+            item.subHeader == null ||
+            item.subHeader!.isEmpty)
+        .length;
     if (numberOfIncompleteItems > 0) {
       isValid = false;
     }
@@ -95,7 +107,8 @@ class EditCheckListViewModel extends BaseViewModel {
   submitCheckList() async {
     if (checkListIsValid()) {
       bool updatedCheckList = false;
-      updatedCheckList = await _causeDataService!.updateCheckListItems(causeID: cause!.id, items: checkListItems);
+      updatedCheckList = await _causeDataService!
+          .updateCheckListItems(causeID: cause!.id, items: checkListItems);
       if (updatedCheckList) {
         if (send) {
           sendChecklistNotifications();
@@ -115,12 +128,19 @@ class EditCheckListViewModel extends BaseViewModel {
   sendChecklistNotifications() async {
     ///print("chog");
     //get all the cause followers
-    _notificationDataService!.getCauseFollowers(cause!.id).then((mentionedUsernames) {
+    _notificationDataService!
+        .getCauseFollowers(cause!.id)
+        .then((mentionedUsernames) {
       //print(mentionedUsernames);
       mentionedUsernames!.forEach((username) async {
         // print("chog");
-        GoNotification notification = GoNotification().generateGoChecklistNotification(
-            causeName: cause!.name.toString(), senderUID: currentUID, receiverUID: username, causeID: cause!.id, isEvent: false);
+        GoNotification notification = GoNotification()
+            .generateGoChecklistNotification(
+                causeName: cause!.name.toString(),
+                senderUID: currentUID,
+                receiverUID: username,
+                causeID: cause!.id,
+                isEvent: false);
         //print(notification.toMap());
         _notificationDataService!.sendNotification(notif: notification);
       });

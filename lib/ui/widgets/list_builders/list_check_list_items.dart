@@ -44,7 +44,10 @@ class ListCheckListItemsForEditing extends StatelessWidget {
 
           return CheckListItemFormView(
             item: items[index],
-            onDelete: (val) => onDelete(val),
+            onDelete: (val) {
+              onDelete(val);
+              onSave(val);
+            },
             onSave: (val) => onSave(val),
           );
         },
