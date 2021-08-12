@@ -18,6 +18,9 @@ class CheckListItemFormViewModel extends BaseViewModel {
   bool loadedPreviousHeader = false;
   bool loadedPreviousSubHeader = false;
   bool loadedPreviousLocation = false;
+  TextEditingController headerController = new TextEditingController();
+  TextEditingController subHeaderController = new TextEditingController();
+  TextEditingController locationController = new TextEditingController();
 
   Map<String, dynamic> placeSearchResults = {};
 
@@ -27,14 +30,17 @@ class CheckListItemFormViewModel extends BaseViewModel {
     if (item.lat != null && item.lon != null && item.address != null) {
       requiresLocationVerification = true;
     }
+    loadPreviousHeader();
+    loadPreviousSubHeader();
     notifyListeners();
     setBusy(false);
   }
 
   String loadPreviousHeader() {
     String val = checkListItem.header ?? "";
-    loadedPreviousHeader = true;
+
     notifyListeners();
+    loadedPreviousHeader = true;
     return val;
   }
 
@@ -48,6 +54,8 @@ class CheckListItemFormViewModel extends BaseViewModel {
   String loadPreviousLocation() {
     String val = checkListItem.address ?? "";
     loadedPreviousLocation = true;
+    print('value');
+    print(val);
     notifyListeners();
     return val;
   }
@@ -89,7 +97,7 @@ class CheckListItemFormViewModel extends BaseViewModel {
     String? placeID = placeSearchResults[place];
     Map<String, dynamic> details =
         await googlePlacesService!.getDetailsFromPlaceID(placeID: placeID!);
-   
+
     //set place details
     details = {
       'lat': details['lat'],

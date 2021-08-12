@@ -40,22 +40,26 @@ class EditCheckListView extends StatelessWidget {
                 Expanded(
                   child: model.checkListItems.isEmpty && !model.isBusy
                       ? Center(
-                          child: ZeroStateView(
-                            imageAssetName: 'coding',
-                            header: "You Have Not Created Any Action Items for This Cause",
-                            subHeader: "Create an Action for Followers to Get Involved",
-                            mainActionButtonTitle: null,
-                            mainAction: null,
-                            secondaryActionButtonTitle: null,
-                            secondaryAction: null,
-                          ),
-                        )
+                          child: Container(
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                              Text('You have created any actions',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 17)),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text('Click the "+"  to get started')
+                            ])))
                       : ListCheckListItemsForEditing(
                           refreshData: () {},
                           items: model.checkListItems,
                           pageStorageKey: UniqueKey(),
                           scrollController: null,
-                          onDelete: (val) => model.deleteCheckListItem(item: val),
+                          onDelete: (val) =>
+                              model.deleteCheckListItem(item: val),
                           onSave: (val) => model.saveCheckListItem(item: val),
                         ),
                 ),

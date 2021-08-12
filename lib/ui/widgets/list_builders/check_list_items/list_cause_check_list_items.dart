@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go/constants/app_colors.dart';
+import 'package:go/models/go_check_list_item.dart';
 import 'package:go/ui/shared/ui_helpers.dart';
 import 'package:go/ui/widgets/buttons/custom_button.dart';
 import 'package:go/ui/widgets/check_list_item/check_list_item/check_list_item_view.dart';
@@ -25,9 +26,9 @@ class ListCauseCheckListItems extends StatelessWidget {
           ? Container()
           : model.checkListItems.isEmpty
               ? ZeroStateView(
-                  imageAssetName: "coding",
-                  header: "No Items Found",
-                  subHeader: "Create Action Items for Followers",
+                  imageAssetName: "binos",
+                  header: "No Actions Found",
+                  subHeader: " ",
                   mainActionButtonTitle: "Create Item",
                   mainAction: () => model.customNavigationService
                       .navigateToCreateActionItems(causeID),
@@ -59,7 +60,27 @@ class ListCauseCheckListItems extends StatelessWidget {
                             itemBuilder: (context, index) {
                               //print(model.checkListItems[index].address);
                               //show announcements if tab is 1 show events if tab is 0
+                              Iterable<GoCheckListItem> announcements = model
+                                  .checkListItems
+                                  .where((element) => element.lat == null);
+
                               if (_tabController.index == 0) {
+                                if (announcements.length ==
+                                    model.checkListItems.length) {
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 100,
+                                      ),
+                                      ZeroStateView(
+                                        imageAssetName: "binos",
+                                        header: "There are no events",
+                                        subHeader:
+                                            "Click announcements to see what's new",
+                                      ),
+                                    ],
+                                  );
+                                }
                                 return model.checkListItems[index].lat != null
                                     ? CheckListItemView(
                                         item: model.checkListItems[index],
@@ -70,6 +91,21 @@ class ListCauseCheckListItems extends StatelessWidget {
                                             model.checkOffItem(item))
                                     : Container();
                               } else if (_tabController.index == 1) {
+                                if (announcements.isEmpty) {
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 100,
+                                      ),
+                                      ZeroStateView(
+                                        imageAssetName: "binos",
+                                        header: "There are no events",
+                                        subHeader:
+                                            "Click announcements to see what's new",
+                                      ),
+                                    ],
+                                  );
+                                }
                                 return model.checkListItems[index].lat == null
                                     ? CheckListItemView(
                                         item: model.checkListItems[index],

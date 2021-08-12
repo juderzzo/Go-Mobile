@@ -121,6 +121,7 @@ class _AdminCauseViewBody extends HookViewModelWidget<CauseViewModel> {
   Widget buildViewModelWidget(BuildContext context, CauseViewModel model) {
     final _tabController = useTabController(initialLength: 4);
     return Container(
+      color: appBackgroundColor(),
       width: screenWidth(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

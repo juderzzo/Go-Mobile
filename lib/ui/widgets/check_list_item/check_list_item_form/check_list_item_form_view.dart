@@ -26,7 +26,6 @@ class CheckListItemFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('right page');
     return ViewModelBuilder<CheckListItemFormViewModel>.reactive(
       initialiseSpecialViewModelsOnce: true,
       fireOnModelReadyOnce: true,
@@ -53,8 +52,9 @@ class CheckListItemFormView extends StatelessWidget {
                 children: [
                   model.requiresLocationVerification
                       ? CustomTextButton(
-                          onTap: () =>
-                              model.toggleRequiresLocationVerification(),
+                          onTap: () {
+                            model.toggleRequiresLocationVerification();
+                          },
                           text: 'Remove Location',
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -102,6 +102,7 @@ class CheckListItemFormView extends StatelessWidget {
     );
   }
 }
+
 
 class _HeaderField extends HookViewModelWidget<CheckListItemFormViewModel> {
   @override
@@ -205,11 +206,11 @@ class _LocationField extends HookViewModelWidget<CheckListItemFormViewModel> {
   Widget buildViewModelWidget(
       BuildContext context, CheckListItemFormViewModel model) {
     final _textController = useTextEditingController();
-
     WidgetsBinding.instance!.addPostFrameCallback((_) {
+      print(model.loadedPreviousLocation);
       if (model.checkListItem.isValid() &&
-          model.loadedPreviousSubHeader == false) {
-        _textController.text = model.loadPreviousSubHeader();
+          model.loadedPreviousLocation == false) {
+        _textController.text = model.loadPreviousLocation();
       }
     });
 
@@ -247,7 +248,6 @@ class _LocationField extends HookViewModelWidget<CheckListItemFormViewModel> {
         onSuggestionSelected: (dynamic val) async {
           print('Location selected');
           Map<String, dynamic> details = await model.getPlaceDetails(val);
-          print('chi');
           print(details);
           model.updateLocation(
               details['lat'], details['lon'], details['address']);

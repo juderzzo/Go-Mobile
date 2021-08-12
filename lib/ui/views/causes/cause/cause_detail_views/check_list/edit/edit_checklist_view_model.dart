@@ -59,7 +59,6 @@ class EditCheckListViewModel extends BaseViewModel {
     }
     savingItem = true;
     notifyListeners();
-    print(item.toMap());
     int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
     checkListItems[itemIndex] = item;
     notifyListeners();
@@ -81,11 +80,25 @@ class EditCheckListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  deleteCheckListItem({required GoCheckListItem item}) {
+  deleteCheckListItem({required GoCheckListItem item}) async {
     print('delete checklist item');
     int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
     checkListItems.removeAt(itemIndex);
     notifyListeners();
+    bool updatedCheckList = await _causeDataService!
+        .updateCheckListItems(causeID: cause!.id, items: checkListItems);
+    if (updatedCheckList) {
+      if (send) {
+        sendChecklistNotifications();
+      }
+      _customDialogService.showSuccessDialog(
+          title: "Action Saved",
+          description: "This Action Item Has Been Deleted");
+    } else {
+      _customDialogService.showErrorDialog(
+          description:
+              "There was an issue deleting your item. Please Try Again.");
+    }
   }
 
   bool checkListIsValid() {
