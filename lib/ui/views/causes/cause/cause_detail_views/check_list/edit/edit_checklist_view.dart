@@ -51,7 +51,6 @@ class EditCheckListView extends StatelessWidget {
                           ),
                         )
                       : ListCheckListItemsForEditing(
-                          refreshData: () {},
                           items: model.checkListItems,
                           pageStorageKey: UniqueKey(),
                           scrollController: null,

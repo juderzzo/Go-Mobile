@@ -6,14 +6,12 @@ import 'package:go/ui/widgets/check_list_item/check_list_item_form/check_list_it
 
 class ListCheckListItemsForEditing extends StatelessWidget {
   final List<GoCheckListItem> items;
-  final VoidCallback refreshData;
   final Key pageStorageKey;
   final ScrollController? scrollController;
   final Function(GoCheckListItem) onDelete;
   final Function(GoCheckListItem) onSave;
 
   ListCheckListItemsForEditing({
-    required this.refreshData,
     required this.items,
     required this.pageStorageKey,
     required this.scrollController,
@@ -21,12 +19,11 @@ class ListCheckListItemsForEditing extends StatelessWidget {
     required this.onSave,
   });
 
-  Widget listCauses() {
-    return RefreshIndicator(
-      onRefresh: () async {
-        // refreshData();
-      },
-      backgroundColor: appBackgroundColor(),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: screenHeight(context) * 4 / 5,
+      color: appBackgroundColor(),
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         controller: scrollController,
@@ -49,15 +46,6 @@ class ListCheckListItemsForEditing extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: screenHeight(context) * 4 / 5,
-      color: appBackgroundColor(),
-      child: listCauses(),
     );
   }
 }

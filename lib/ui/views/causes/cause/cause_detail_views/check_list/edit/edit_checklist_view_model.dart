@@ -39,6 +39,11 @@ class EditCheckListViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  Future<void> refreshList() async {
+    checkListItems = await _causeDataService!.getCheckListItems(cause!.id);
+    notifyListeners();
+  }
+
   addCheckListItem() {
     GoCheckListItem item = GoCheckListItem(
       id: getRandomString(30),
