@@ -1,4 +1,6 @@
 import 'package:go/app/app.locator.dart';
+import 'package:go/enums/dialog_type.dart';
+import 'package:go/models/go_check_list_item.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -49,5 +51,18 @@ class CustomDialogService {
       description: "Your post has been deleted",
       buttonTitle: "Ok",
     );
+  }
+
+  Future<GoCheckListItem?> showActionItemFormDialog({GoCheckListItem? item}) async {
+    GoCheckListItem? result;
+    DialogResponse? response = await _dialogService.showCustomDialog(
+      barrierDismissible: false,
+      customData: {'item': item != null ? item : null},
+      variant: DialogType.actionItemForm,
+    );
+    if (response != null) {
+      result = response.responseData;
+    }
+    return result;
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/models/go_check_list_item.dart';
 import 'package:go/services/dialogs/custom_dialog_service.dart';
@@ -7,9 +6,9 @@ import 'package:go/services/firestore/data/platform_data_service.dart';
 import 'package:go/services/location/google_places_service.dart';
 import 'package:stacked/stacked.dart';
 
-class CheckListItemFormViewModel extends BaseViewModel {
+class ActionItemFormDialogModel extends BaseViewModel {
   CustomDialogService _customDialogService = locator<CustomDialogService>();
-  GooglePlacesService? googlePlacesService = locator<GooglePlacesService>();
+  GooglePlacesService googlePlacesService = locator<GooglePlacesService>();
 
   TextEditingController locationTextController = TextEditingController();
   bool requiresLocationVerification = false;
@@ -21,15 +20,17 @@ class CheckListItemFormViewModel extends BaseViewModel {
 
   Map<String, dynamic> placeSearchResults = {};
 
-  // initialize(GoCheckListItem item) async {
-  //   setBusy(true);
-  //   checkListItem = item;
-  //   if (item.lat != null && item.lon != null && item.address != null) {
-  //     requiresLocationVerification = true;
-  //   }
-  //   notifyListeners();
-  //   setBusy(false);
-  // }
+  bool savingItem = false;
+
+  initialize(GoCheckListItem item) async {
+    setBusy(true);
+    checkListItem = item;
+    if (item.lat != null && item.lon != null && item.address != null) {
+      requiresLocationVerification = true;
+    }
+    notifyListeners();
+    setBusy(false);
+  }
 
   String loadPreviousHeader() {
     String val = checkListItem.header ?? "";
@@ -87,7 +88,7 @@ class CheckListItemFormViewModel extends BaseViewModel {
     notifyListeners();
     //get place ID for LAT & LON
     String? placeID = placeSearchResults[place];
-    Map<String, dynamic> details = await googlePlacesService!.getDetailsFromPlaceID(placeID: placeID!);
+    Map<String, dynamic> details = await googlePlacesService.getDetailsFromPlaceID(placeID: placeID!);
 
     //set place details
     details = {
@@ -108,23 +109,26 @@ class CheckListItemFormViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  GoCheckListItem saveItem() {
-    if (checkListItem.header == null || checkListItem.header!.isEmpty) {
-      _customDialogService.showErrorDialog(description: "Action Title Required");
-      return GoCheckListItem();
-    } else if (checkListItem.subHeader == null || checkListItem.subHeader!.isEmpty) {
-      _customDialogService.showErrorDialog(description: "Action Description Required");
-      return GoCheckListItem();
+  ///Sign Up Via Email
+  saveCheckListItem({required GoCheckListItem item}) async {
+    if (!item.isValid()) {
+      return;
     }
-    return checkListItem;
+    savingItem = true;
+    notifyListeners();
+    // int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
+    // checkListItems[itemIndex] = item;
+    // notifyListeners();
+    // bool updatedCheckList = await _causeDataService!.updateCheckListItems(causeID: cause!.id, items: checkListItems);
+    // if (updatedCheckList) {
+    //   if (send) {
+    //     sendChecklistNotifications();
+    //   }
+    //   _customDialogService.showSuccessDialog(title: "Action Saved", description: "This Action Item Has Been Saved");
+    // } else {
+    //   _customDialogService.showErrorDialog(description: "There was an issue saving your item. Please Try Again.");
+    // }
+    savingItem = false;
+    notifyListeners();
   }
-
-  ///NAVIGATION
-// replaceWithPage() {
-//   _navigationService.replaceWith(PageRouteName);
-// }
-//
-// navigateToPage() {
-//   _navigationService.navigateTo(PageRouteName);
-// }
 }

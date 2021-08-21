@@ -27,38 +27,41 @@ class EditCheckListView extends StatelessWidget {
           ),
           body: Container(
             color: appBackgroundColor(),
-            child: Column(
-              children: [
-                model.savingItem
-                    ? CustomLinearProgressIndicator(
-                        color: appActiveColor(),
-                      )
-                    : Container(
-                        height: 0,
-                        width: 0,
-                      ),
-                Expanded(
-                  child: model.checkListItems.isEmpty && !model.isBusy
-                      ? Center(
-                          child: ZeroStateView(
-                            imageAssetName: 'coding',
-                            header: "You Have Not Created Any Action Items for This Cause",
-                            subHeader: "Create an Action for Followers to Get Involved",
-                            mainActionButtonTitle: null,
-                            mainAction: null,
-                            secondaryActionButtonTitle: null,
-                            secondaryAction: null,
-                          ),
+            child: RefreshIndicator(
+              onRefresh: () => model.refreshList(),
+              child: Column(
+                children: [
+                  model.updatingCheckList
+                      ? CustomLinearProgressIndicator(
+                          color: appActiveColor(),
                         )
-                      : ListCheckListItemsForEditing(
-                          items: model.checkListItems,
-                          pageStorageKey: UniqueKey(),
-                          scrollController: null,
-                          onDelete: (val) => model.deleteCheckListItem(item: val),
-                          onSave: (val) => model.saveCheckListItem(item: val),
+                      : Container(
+                          height: 0,
+                          width: 0,
                         ),
-                ),
-              ],
+                  Expanded(
+                    child: model.checkListItems.isEmpty && !model.isBusy
+                        ? Center(
+                            child: ZeroStateView(
+                              imageAssetName: 'coding',
+                              header: "You Have Not Created Any Action Items for This Cause",
+                              subHeader: "Create an Action for Followers to Get Involved",
+                              mainActionButtonTitle: null,
+                              mainAction: null,
+                              secondaryActionButtonTitle: null,
+                              secondaryAction: null,
+                            ),
+                          )
+                        : ListCheckListItemsForEditing(
+                            items: model.checkListItems,
+                            pageStorageKey: model.key,
+                            scrollController: null,
+                            onDelete: (val) => model.deleteCheckListItem(item: val),
+                            onSave: (val) => model.saveCheckListItem(item: val),
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
           floatingActionButton: FloatingActionButton(

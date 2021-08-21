@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:go/app/app.locator.dart';
 import 'package:go/app/app.router.dart';
 import 'package:go/models/go_cause_model.dart';
@@ -24,8 +25,9 @@ class EditCheckListViewModel extends BaseViewModel {
   GoCause? cause;
   String? currentUID;
   bool send = false;
-  bool savingItem = false;
+  bool updatingCheckList = false;
   List<GoCheckListItem> checkListItems = [];
+  PageStorageKey key = PageStorageKey('initial');
 
   initialize(String? id) async {
     setBusy(true);
@@ -44,16 +46,11 @@ class EditCheckListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  addCheckListItem() {
-    GoCheckListItem item = GoCheckListItem(
-      id: getRandomString(30),
-      causeID: cause!.id,
-      checkedOffBy: [],
-      dateTimePublished: DateTime.now().millisecondsSinceEpoch,
-      points: 0,
-    );
-    checkListItems.add(item);
-    send = true;
+  Future<void> addCheckListItem() async {
+    GoCheckListItem? item = await _customDialogService.showActionItemFormDialog(item: null);
+    if (item != null) {
+      checkListItems.add(item);
+    }
     notifyListeners();
   }
 
@@ -61,7 +58,7 @@ class EditCheckListViewModel extends BaseViewModel {
     if (!item.isValid()) {
       return;
     }
-    savingItem = true;
+    updatingCheckList = true;
     notifyListeners();
     print(item.toMap());
     int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
@@ -76,13 +73,19 @@ class EditCheckListViewModel extends BaseViewModel {
     } else {
       _customDialogService.showErrorDialog(description: "There was an issue saving your item. Please Try Again.");
     }
-    savingItem = false;
+    updatingCheckList = false;
     notifyListeners();
   }
 
-  deleteCheckListItem({required GoCheckListItem item}) {
+  deleteCheckListItem({required GoCheckListItem item}) async {
+    updatingCheckList = true;
+    notifyListeners();
     int itemIndex = checkListItems.indexWhere((val) => val.id == item.id);
     checkListItems.removeAt(itemIndex);
+    await _causeDataService!.updateCheckListItems(causeID: cause!.id, items: checkListItems);
+    updatingCheckList = false;
+    _customDialogService.showSuccessDialog(title: "Action Deleted", description: "Action Item Has Been Deleted");
+    key = PageStorageKey(getRandomString(5));
     notifyListeners();
   }
 

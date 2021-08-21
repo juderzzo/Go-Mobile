@@ -11,6 +11,7 @@ import 'package:go/services/firestore/data/user_data_service.dart';
 import 'package:go/services/firestore/utils/firebase_messaging_service.dart';
 import 'package:go/services/reactive/user/reactive_user_service.dart';
 import 'package:go/ui/bottom_sheets/setup_bottom_sheet_ui.dart';
+import 'package:go/ui/dialogs/setup_dialog_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
 
@@ -44,6 +45,7 @@ void main() async {
   await Firebase.initializeApp();
 
   setupLocator();
+  setupDialogUi();
   setupBottomSheetUI();
   setupSnackBarUi();
 
