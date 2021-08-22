@@ -48,7 +48,6 @@ class EditCheckListViewModel extends BaseViewModel {
 
   Future<void> addCheckListItem() async {
     GoCheckListItem? item = await _customDialogService.showActionItemFormDialog(item: null);
-    print(item!.toMap());
     if (item != null) {
       item.id = getRandomString(35);
       item.causeID = cause!.id;
