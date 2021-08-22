@@ -22,13 +22,15 @@ class ActionItemFormDialogModel extends BaseViewModel {
 
   bool savingItem = false;
 
-  initialize(GoCheckListItem item) async {
+  initialize({GoCheckListItem? item}) async {
     setBusy(true);
-    checkListItem = item;
-    if (item.lat != null && item.lon != null && item.address != null) {
-      requiresLocationVerification = true;
+    if (item != null) {
+      checkListItem = item;
+      if (item.lat != null && item.lon != null && item.address != null) {
+        requiresLocationVerification = true;
+      }
+      notifyListeners();
     }
-    notifyListeners();
     setBusy(false);
   }
 

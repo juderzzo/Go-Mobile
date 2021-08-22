@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/ui/views/causes/cause/cause_detail_views/check_list/edit/edit_checklist_view_model.dart';
+import 'package:go/ui/widgets/check_list_item/editable_check_list_item/editable_check_list_item.dart';
 import 'package:go/ui/widgets/common/custom_progress_indicator.dart';
 import 'package:go/ui/widgets/common/zero_state_view.dart';
-import 'package:go/ui/widgets/list_builders/list_check_list_items.dart';
 import 'package:go/ui/widgets/navigation/app_bar/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -52,12 +52,28 @@ class EditCheckListView extends StatelessWidget {
                               secondaryAction: null,
                             ),
                           )
-                        : ListCheckListItemsForEditing(
-                            items: model.checkListItems,
-                            pageStorageKey: model.key,
-                            scrollController: null,
-                            onDelete: (val) => model.deleteCheckListItem(item: val),
-                            onSave: (val) => model.saveCheckListItem(item: val),
+                        : Container(
+                            child: ListView.builder(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              key: model.key,
+                              addAutomaticKeepAlives: true,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.only(
+                                top: 4.0,
+                                bottom: 4.0,
+                              ),
+                              itemCount: model.checkListItems.length,
+                              itemBuilder: (context, index) {
+                                //print(items[index].id);
+                                //print(items[index].header);
+
+                                return EditableCheckListItem(
+                                  item: model.checkListItems[index],
+                                  editItem: () => model.editCheckListItem(item: model.checkListItems[index]),
+                                  deleteItem: () => model.deleteCheckListItem(item: model.checkListItems[index]),
+                                );
+                              },
+                            ),
                           ),
                   ),
                 ],

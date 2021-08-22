@@ -27,6 +27,7 @@ class ActionItemFormDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ActionItemFormDialogModel>.reactive(
+      onModelReady: (model) => model.initialize(item: request.customData['item'] == null ? null : request.customData['item']),
       viewModelBuilder: () => ActionItemFormDialogModel(),
       builder: (context, model, child) => Dialog(
         child: Container(
@@ -77,9 +78,6 @@ class ActionItemFormDialog extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: appTextButtonColor(),
                               ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 1 / 4,
-                        ),
                         _ItemPointsDropDown(),
                       ],
                     ),
