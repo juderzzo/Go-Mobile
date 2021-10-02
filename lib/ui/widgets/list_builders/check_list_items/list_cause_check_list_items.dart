@@ -25,12 +25,11 @@ class ListCauseCheckListItems extends StatelessWidget {
           ? Container()
           : model.checkListItems.isEmpty
               ? ZeroStateView(
-                  imageAssetName: "coding",
+                  imageAssetName: "checklistItems",
                   header: "No Items Found",
-                  subHeader: "Create Action Items for Followers",
-                  mainActionButtonTitle: "Create Item",
-                  mainAction: () => model.customNavigationService
-                      .navigateToCreateActionItems(causeID),
+                  subHeader: "Hang on! The creator will post items soon! ",
+                  mainActionButtonTitle: null,
+                  mainAction: null,
                   secondaryActionButtonTitle: null,
                   secondaryAction: null,
                 )
