@@ -152,13 +152,7 @@ class ListCausePostsModel extends BaseViewModel {
           return Container(
                   height: screenHeight(context),
                   color: appBackgroundColor(),
-                  child: RefreshIndicator(
-                    onRefresh: refreshData,
-                    backgroundColor: appBackgroundColor(),
-                    child: RefreshIndicator(
-                      onRefresh: refreshData,
-                      backgroundColor: appBackgroundColor(),
-                      child: ListView.builder(
+                  child: ListView.builder(
                         physics: AlwaysScrollableScrollPhysics(),
                         controller: scrollController,
                         // key: UniqueKey(),
@@ -193,26 +187,27 @@ class ListCausePostsModel extends BaseViewModel {
                               });
                               return Align(
                                 alignment: Alignment.center,
-                                child: CustomCircleProgressIndicator(size: 10, color: appActiveColor()),
+                                //child: CustomCircleProgressIndicator(size: 10, color: appActiveColor()),
                               );
                             }
                           }
                           return Container();
                         },
                       ),
-                    ),
-                  ),
+                    
                 );
                 
         }
         //print(dataResults);
           //print(snapshot.hasError);
           //print(snapshot.data);
-          return Center(
+        else{
+            return Center(
             child: CircularProgressIndicator(
               color: CustomColors.goGreen,
             ),
           );
+        }
               // model.dataResults == null || model.dataResults.isEmpty ? ZeroStateView(
               //     imageAssetName: "forum",
               //     header: "No Posts Found",

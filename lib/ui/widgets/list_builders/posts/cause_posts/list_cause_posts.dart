@@ -19,10 +19,13 @@ class ListCausePosts extends StatelessWidget {
     return ViewModelBuilder<ListCausePostsModel>.reactive(
       onModelReady: (model) => model.initialize(causeID),
       viewModelBuilder: () => ListCausePostsModel(),
-      builder: (context, model, child) => model.builder
-
-        
-            
+      builder: (context, model, child) => RefreshIndicator(
+                      onRefresh: () async {
+                        await model.initialize(causeID);
+                      },
+                      backgroundColor: appBackgroundColor(),
+                      child: model.builder 
+    )
     );
   }
 }
