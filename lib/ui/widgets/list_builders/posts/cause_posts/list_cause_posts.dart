@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go/constants/app_colors.dart';
 import 'package:go/models/go_forum_post_model.dart';
@@ -18,72 +19,10 @@ class ListCausePosts extends StatelessWidget {
     return ViewModelBuilder<ListCausePostsModel>.reactive(
       onModelReady: (model) => model.initialize(causeID),
       viewModelBuilder: () => ListCausePostsModel(),
-      builder: (context, model, child) => model.isBusy
-          ? Container()
-          : model.dataResults.isEmpty
-              ? ZeroStateView(
-                  imageAssetName: "coding",
-                  header: "No Posts Found",
-                  subHeader: "Make the first cause post",
-                  mainActionButtonTitle: "Create Post",
-                  mainAction: () => model.navigateToCreatePostView(causeID),
-                  // secondaryActionButtonTitle: null,
-                  // secondaryAction: null,
-                )
-              : Container(
-                  height: screenHeight(context),
-                  color: appBackgroundColor(),
-                  child: RefreshIndicator(
-                    onRefresh: model.refreshData,
-                    backgroundColor: appBackgroundColor(),
-                    child: RefreshIndicator(
-                      onRefresh: model.refreshData,
-                      backgroundColor: appBackgroundColor(),
-                      child: ListView.builder(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        controller: model.scrollController,
-                        // key: UniqueKey(),
-                        addAutomaticKeepAlives: true,
-                        shrinkWrap: true,
-                        padding: EdgeInsets.only(
-                          top: 4.0,
-                          bottom: 4.0,
-                        ),
-                        itemCount: model.dataResults.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index < model.dataResults.length) {
-                            GoForumPost post;
-                            bool displayBottomBorder = true;
+      builder: (context, model, child) => model.builder
 
-                            ///GET POST OBJECT
-                            post = GoForumPost.fromMap(model.dataResults[index].data()!);
-
-                            ///DISPLAY BOTTOM BORDER
-                            if (model.dataResults.last == model.dataResults[index]) {
-                              displayBottomBorder = false;
-                            }
-                            return ForumPostBlockView(
-                              refreshAction: null,
-                              post: post,
-                              displayBottomBorder: displayBottomBorder,
-                            );
-                          } else {
-                            if (model.moreDataAvailable) {
-                              WidgetsBinding.instance!.addPostFrameCallback((_) {
-                                model.loadAdditionalData();
-                              });
-                              return Align(
-                                alignment: Alignment.center,
-                                child: CustomCircleProgressIndicator(size: 10, color: appActiveColor()),
-                              );
-                            }
-                          }
-                          return Container();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
+        
+            
     );
   }
 }
